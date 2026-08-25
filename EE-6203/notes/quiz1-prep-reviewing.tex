@@ -112,6 +112,13 @@ Final value:
 x[\infty]=\lim_{z\to1}(1-z^{-1})X(z),
 \]
 valid only if all poles of $(1-z^{-1})X(z)$ lie strictly inside $|z|=1$.
+Inspect the product for validity; interpret the limit as the final value of the sequence represented by $X(z)$.
+
+\emph{LHS} = left-hand side. In the derivation,
+\[
+\mathrm{LHS}=\sum_{k=0}^{\infty}[x[k]-x[k-1]],
+\]
+which telescopes to $x[\infty]$ for a causal sequence ($x[-1]=0$).
 
 A simple pole of $X(z)$ at $z=1$ may represent a finite constant. A repeated pole there grows, and other unit-circle poles oscillate; neither case has a final value.
 
@@ -139,6 +146,11 @@ the transform is $X(z)=z/[(z+1)(z+2)]$ and
 \[
 x[k]=(-1)^k-(-2)^k.
 \]
+
+\textbf{Recurrence check:} verify the initial values, generate the first new
+sample(s) from the original time-domain rule, and compare them with the
+proposed formula; then substitute the formula for general $k$ for a complete
+check.
 
 \textbf{Common mistakes:} treating an advance as a pure $z^n$ multiplier; using the final-value theorem on an oscillatory/unstable sequence; doing PFE on the wrong form; ignoring the ROC. \src{21--70}
 

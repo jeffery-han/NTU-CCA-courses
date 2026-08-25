@@ -65,6 +65,12 @@
 
 ## Update record
 
+- 2026-08-25: Added a beginner/review clarification that LHS means left-hand side and that the final-value derivation uses a telescoping sum, with causality giving $x[-1]=0$.
+
+- 2026-08-25: Added a recurrence-verification checklist: check initial values, generate the first new sample(s) from the original time-domain rule, compare with the proposed formula, and then substitute for general k for a complete check.
+
+- 2026-08-25: Clarified the two roles in the final-value theorem: inspect the poles of the product (1-z^{-1})X(z), while interpreting the limit as the final value of the sequence represented by X(z).
+
 - 2026-08-25: Clarified the indexing reason for expanding X(z)/z in the inverse-transform method: X(z)/z has coefficients of z^{-k-1}, so 1/(z-p) maps directly to p^k under the causal interpretation; the compact review note now records the equivalent z/(z-p) table pair.
 
 - 2026-08-21: Created both note files and this manifest from the complete 225-page Weeks 1-4 source. Visually reviewed all source pages; pages 196-225 were treated as a recap rather than duplicate new content. Both notes compile successfully (`beginner-notes.pdf`: 12 pages; `notes.pdf`: 5 pages) and all rendered output pages were visually checked.

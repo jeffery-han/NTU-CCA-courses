@@ -1,0 +1,5 @@
+# Keep Git focused on the course folders.  Ignore all other root-level files
+# and directories, including macOS and local automation artifacts.
+/*
+!/.gitignore
+!/EE-*/

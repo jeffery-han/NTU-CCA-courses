@@ -206,6 +206,15 @@ For a sequence that actually converges,
 \]
 The final-value theorem is valid when all poles of $(1-z^{-1})X(z)$ are strictly inside the unit circle; equivalently, all poles of $X(z)$ are inside it except possibly one simple pole at $z=1$. Do not use it for a growing or sustained oscillatory sequence: the algebraic limit can look finite even when the time sequence has no final value.
 
+Notice the two different roles in this statement. The transform whose poles we inspect is the product $(1-z^{-1})X(z)$, because multiplication by $(1-z^{-1})$ represents the discrete difference that removes a convergent constant. But the value produced by
+$\lim_{z\to1}(1-z^{-1})X(z)$ is $\lim_{k\to\infty}x[k]$, the final value of the sequence represented by $X(z)$.
+
+In the lecture derivation, \emph{LHS} means ``left-hand side'': the expression on the left of an equals sign. Thus
+\[
+\mathrm{LHS}=\sum_{k=0}^{\infty}[x[k]-x[k-1]].
+\]
+Expanding the first terms gives $[x[0]-x[-1]]+[x[1]-x[0]]+[x[2]-x[1]]+\cdots$; the middle terms cancel (the sum telescopes), leaving the final value because a causal sequence has $x[-1]=0$.
+
 Why is the exception at $z=1$ so narrow? A \emph{simple} pole there represents a constant term, which has a finite limit. A repeated pole at $z=1$ produces polynomial growth, while a conjugate pair elsewhere on the unit circle produces sustained oscillation. Neither sequence converges, so in either case substituting $z=1$ would manufacture an answer to a limit that does not exist.
 
 \subsection{Inverse $z$ transforms}
@@ -273,6 +282,13 @@ Partial fractions give
 x[k]=(-1)^k-(-2)^k,\qquad k\ge 0.
 \]
 A direct substitution at $k=0$ gives $x[2]=-3$, matching the formula.
+
+This illustrates a practical verification routine for any recurrence solution:
+first check the stated initial values, then use the original time-domain
+recurrence to generate the first one or two new samples and compare them with
+the proposed formula. This catches shifted indices and incorrect initial
+terms quickly. A complete proof additionally substitutes the proposed formula
+into the recurrence for a general $k$.
 
 \subsection*{Knowledge check 2: sequences and the $z$ transform}
 
