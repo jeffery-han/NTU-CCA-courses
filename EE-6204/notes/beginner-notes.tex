@@ -1,0 +1,170 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=25mm]{geometry}
+\usepackage{amsmath,amssymb,mathtools,enumitem}
+\usepackage{xurl}
+\usepackage[hidelinks]{hyperref}
+\renewcommand{\texttt}[1]{\nolinkurl{#1}}
+\setlist[itemize]{nosep,leftmargin=*}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\T}{\mathsf{T}}
+\newcommand{\source}[1]{\par\smallskip\noindent\textit{Source: #1.}\par\smallskip}
+\title{EE6204 Systems Analysis\\\large Beginner Notes: Linear and Nonlinear Programming}
+\author{Living course note}
+\date{Updated: 24 August 2026}
+\begin{document}
+\maketitle
+\noindent\textbf{Scope and sources.} This self-contained note develops the supplied Linear Programming and Nonlinear Programming material from \texttt{resources/lecture-01-04-linear-and-nonlinear-programming.pdf} (PDF pp.~1--142), with introductory support from \texttt{resources/introduction-to-linear-programming.pdf} and Week~1 teaching emphasis from \texttt{resources/week-01-transcript.txt}. Newly archived public examinations and student solutions are not used here until their calculations are independently reviewed.
+\tableofcontents
+
+\section{Optimisation: choosing the best feasible action}
+An optimisation problem is a structured way to make a decision. We choose values for \emph{decision variables}, measure their quality using an \emph{objective function}, and enforce limits using \emph{constraints}. In a general minimisation problem,
+\[
+ \min_{x\in\R^n} f(x)\quad\text{subject to}\quad x\in\mathcal F,
+\]
+where $\mathcal F$ is the \emph{feasible set}: the choices that satisfy every constraint. A numerical answer is not a valid solution if it violates a capacity, demand, safety, or non-negativity condition.
+
+\subsection{How to formulate a real problem}
+Start in words and make each modelling choice explicit.
+\begin{enumerate}
+\item Define each variable, including units: for example, ``$x$ = number of suits produced per week.''
+\item State whether the objective is to maximise a benefit (profit, throughput) or minimise a cost, time, or waste.
+\item Translate each physical condition into an equation or inequality.
+\item State the domain. Production amounts usually require $x\geq0$; whole objects may require $x\in\mathbb Z$.
+\end{enumerate}
+Check signs against the wording: ``at most'' gives $\leq$; ``at least'' gives $\geq$. A cost-minimisation model must also include a reason to produce. Otherwise, producing nothing can be the correct mathematical minimum but the wrong operational model.
+
+\section{Linear programming (LP)}
+An LP has a linear objective and linear constraints. A standard maximisation form is
+\[
+ \max\ c^\T x\quad\text{subject to}\quad Ax\leq b,\qquad x\geq0.
+\]
+``Linear'' means a variable appears only to the first power with a constant coefficient. Terms such as $x_1x_2$, $x_1^2$, or $x_1/x_2$ make a model nonlinear.
+
+\subsection{Worked formulation: product mix}
+Suppose $x$ suits and $y$ gowns earn 30 and 50 units of profit. If material stocks impose three resource limits, the model is
+\[
+\begin{aligned}
+ \max\quad&30x+50y\\
+ \text{s.t.}\quad&2x+y\leq16,\\
+ &x+2y\leq11,\\
+ &x+3y\leq15,\\
+ &x,y\geq0.
+\end{aligned}
+\]
+Every coefficient must have a physical interpretation. In the first constraint, $2$ is the amount of the first material used per suit, $1$ the amount per gown, and $16$ the available amount. The last two inequalities exclude negative production; they are constraints too.
+
+\section{The graphical view of an LP}
+With two variables, a linear equality is a straight line and a linear inequality keeps one side of that line. The feasible region is the intersection of all allowed half-planes. To draw it, replace each inequality by equality to obtain a boundary, use a test point to choose the permitted side, and retain only points satisfying every constraint.
+
+The objective has level lines $c^\T x=z$. Slide such a line in the improving direction until it makes its last contact with the feasible region. For a finite optimum, a corner (also called an extreme point) attains an optimum. This is why evaluating feasible corners solves a two-variable LP.
+
+Recognise three special outcomes:
+\begin{itemize}
+\item \textbf{Infeasible:} no point satisfies all constraints simultaneously.
+\item \textbf{Unbounded:} one can improve the objective forever along a feasible direction.
+\item \textbf{Multiple optima:} the objective line is parallel to an optimal feasible edge, so every point on that edge has the same best value.
+\end{itemize}
+Graphing gives valuable intuition but does not scale to many variables, where the feasible set is a high-dimensional polyhedron.
+
+\section{Preparing an LP for systematic solution}
+Simplex methods use equality constraints and nonnegative variables. The following conversions preserve the feasible choices when the new variables are included:
+\begin{align*}
+ a_i^\T x\leq b_i&\quad\Longrightarrow\quad a_i^\T x+s_i=b_i,\quad s_i\geq0 &&\text{(slack variable)},\\
+ a_i^\T x\geq b_i&\quad\Longrightarrow\quad a_i^\T x-e_i=b_i,\quad e_i\geq0 &&\text{(surplus variable)},\\
+ x_k\text{ free}&\quad\Longrightarrow\quad x_k=x_k^+-x_k^-,\quad x_k^+,x_k^-\geq0.
+\end{align*}
+A slack variable measures unused capacity: if $2x+y+s=16$, then $s=0$ means the resource is fully used. A surplus variable measures the amount by which a lower-bound requirement is exceeded. These are not arbitrary algebraic tricks; they give an inequality's missing amount an explicit nonnegative meaning.
+
+\section{How the simplex method moves between corners}
+The graphical method suggests the simplex idea: a finite LP optimum can be found at a corner, so move between adjacent corners instead of searching every point. After converting constraints to equality form, choose a set of basic variables whose columns form an invertible basis. Set all nonbasic variables to zero and solve for the basic variables. The result is a \emph{basic feasible solution} only when every basic variable is nonnegative.
+
+In a tableau, one pivot performs a controlled exchange:
+\begin{enumerate}
+\item Choose an entering variable whose reduced cost indicates improvement under the tableau's sign convention.
+\item For rows with a positive entering-column coefficient, compute the nonnegative ratios $b_i/a_{ij}$. The smallest ratio identifies the leaving variable; this prevents loss of feasibility.
+\item Scale the pivot row and eliminate the other entries in the pivot column.
+\item Stop when no reduced cost offers improvement. If no row is eligible for the ratio test, the objective is unbounded in that direction.
+\end{enumerate}
+Never memorise ``most positive'' or ``most negative'' without checking how the objective row was defined. The invariant is clearer: the entering variable must improve the objective, and the leaving variable must be the first basic variable that would otherwise become negative.
+
+Equality and $\geq$ rows may lack an obvious starting basis. An artificial variable supplies a temporary identity column. In the two-phase method, Phase~I minimises the sum of artificial variables. A positive Phase~I optimum proves that the original constraints are infeasible; otherwise remove the artificials and optimise the true objective in Phase~II.
+\source{\texttt{resources/lecture-01-04-linear-and-nonlinear-programming.pdf}, PDF pp.~16--59.}
+
+\section{Duality and sensitivity: prices hidden inside constraints}
+For the pair
+\[
+ \min c^\T x\quad\text{s.t. }Ax\geq b,\ x\geq0,
+ \qquad
+ \max b^\T w\quad\text{s.t. }A^\T w\leq c,\ w\geq0,
+\]
+the dual variable $w_i$ measures the marginal value of the corresponding primal requirement, within an allowable perturbation range. Weak duality says every feasible dual value bounds every feasible primal value. At finite optima, strong duality makes the two values equal.
+
+Complementary slackness explains which quantities can be positive:
+\[
+ w_i\big((Ax)_i-b_i\big)=0,
+ \qquad
+ x_j\big(c_j-(A^\T w)_j\big)=0.
+\]
+A slack resource constraint therefore has zero shadow price; a positive activity makes its dual constraint tight. This is a logical either--or statement, not permission to divide by a term that might be zero.
+
+If an optimal basis $B$ is kept after $b$ changes to $b+\Delta b$, its new basic solution is $B^{-1}(b+\Delta b)$. The old basis remains feasible exactly while this vector is nonnegative. Objective-coefficient changes instead require the reduced costs to retain their optimal signs. Outside an allowable range, re-optimise rather than extrapolating.
+\source{\texttt{resources/lecture-01-04-linear-and-nonlinear-programming.pdf}, PDF pp.~60--90.}
+
+\section{Structured LPs: transportation and assignment}
+In a transportation model, $x_{ij}$ is the amount shipped from source $i$ to destination $j$:
+\[
+ \min\sum_{i,j}c_{ij}x_{ij},\qquad
+ \sum_jx_{ij}=s_i,\quad \sum_ix_{ij}=d_j,\quad x_{ij}\geq0.
+\]
+Balance total supply and demand, adding a clearly interpreted dummy source or destination if necessary. Starting from a basic allocation, calculate row and column potentials from $u_i+v_j=c_{ij}$ on basic cells. A negative reduced cost $c_{ij}-u_i-v_j$ identifies an improving nonbasic cell for minimisation. Add it, trace a closed alternating $+/-$ loop, and shift the largest amount allowed by the cells marked minus.
+
+The assignment problem is a one-to-one special structure. The Hungarian method subtracts row minima, then column minima, and seeks independent zeros. When too few independent zeros exist, cover all zeros with the minimum number of lines, adjust uncovered and doubly covered entries, and repeat. These reductions preserve all complete-assignment comparisons because every complete assignment uses exactly one element from each row and column.
+\source{\texttt{resources/lecture-01-04-linear-and-nonlinear-programming.pdf}, PDF pp.~65--90.}
+
+\section{Nonlinear optimisation: stationary points are only candidates}
+For a differentiable scalar function, Newton's iteration seeks a stationary point:
+\[
+ x_{k+1}=x_k-\frac{f'(x_k)}{f''(x_k)}.
+\]
+It is fast near a regular solution but can fail when $f''$ is small, the starting point is poor, or the stationary point is not the desired optimum. Always classify the result. In several variables, solve
+\[
+ H(x_k)p_k=-\nabla f(x_k),\qquad x_{k+1}=x_k+p_k,
+\]
+where $H=\nabla^2f$. At a stationary point, $H\succ0$ certifies a strict local minimum, $H\prec0$ a strict local maximum, and an indefinite Hessian a saddle. These are local claims unless convexity supplies a global guarantee.
+
+Derivative-free interval searches use a different construction. Fibonacci and golden-section search repeatedly discard a portion of a unimodal interval while reusing one previous function value. They return a bracket with stated uncertainty, not an exact optimizer.
+\source{\texttt{resources/lecture-01-04-linear-and-nonlinear-programming.pdf}, PDF pp.~97--128.}
+
+\section{Constraints, Lagrange multipliers, and KKT conditions}
+For equality constraints $h_i(x)=0$, define
+\[
+ L(x,\lambda)=f(x)-\sum_i\lambda_i h_i(x).
+\]
+At a regular constrained optimum, stationarity $\nabla_xL=0$ holds together with all original constraints. Geometrically, the objective gradient lies in the span of the active constraint normals: no feasible first-order direction can improve the objective.
+
+For the course convention
+\[
+ \min f(x)\quad\text{s.t.}\quad h_i(x)=0,\qquad g_j(x)\geq0,
+\]
+use $L=f-\lambda^\T h-\mu^\T g$. The Karush--Kuhn--Tucker conditions are
+\begin{align*}
+ \nabla_xL&=0 &&\text{(stationarity)},\\
+ h_i(x)&=0,quad g_j(x)\geq0 &&\text{(primal feasibility)},\\
+ \mu_j&\geq0 &&\text{(dual feasibility)},\\
+ \mu_jg_j(x)&=0 &&\text{(complementary slackness)}.
+\end{align*}
+An inactive inequality has $g_j(x)>0$ and therefore $\mu_j=0$; an active inequality has $g_j(x)=0$ and may carry a positive multiplier. KKT conditions alone do not prove a global optimum for a nonconvex problem. With convex objective/feasible geometry and an appropriate regularity condition, they become a global certificate.
+\source{\texttt{resources/lecture-01-04-linear-and-nonlinear-programming.pdf}, PDF pp.~120--141.}
+
+\section{Full-course learning checklist}
+\begin{itemize}
+\item Can I identify variables, objective, constraints, and domains in a word problem?
+\item Can I turn ``at most'' and ``at least'' into correctly signed inequalities?
+\item Can I draw a two-variable feasible region and diagnose infeasibility, unboundedness, or multiple optima?
+\item Can I add slack or surplus variables and explain their physical meaning?
+\item Can I explain the entering/leaving logic of one simplex pivot and the purpose of Phase~I?
+\item Can I form a primal--dual pair and use complementary slackness without reversing signs?
+\item Can I distinguish a stationary point, local optimum, and convex global optimum?
+\item Can I write all four KKT components using one consistent inequality convention?
+\end{itemize}
+\end{document}

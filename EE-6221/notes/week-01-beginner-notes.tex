@@ -1,0 +1,84 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=25mm]{geometry}
+\usepackage{amsmath,amssymb,mathtools,enumitem}
+\usepackage{xurl}
+\usepackage[hidelinks]{hyperref}
+\renewcommand{\texttt}[1]{\nolinkurl{#1}}
+\setlist[itemize]{nosep,leftmargin=*}
+\newcommand{\trans}{\mathsf{T}}
+\newcommand{\source}[1]{\par\smallskip\noindent\textit{Source: #1.}\par\smallskip}
+\title{EE6221 Robotics\\\large Beginner Notes: Week 1 -- Robot Manipulators and Coordinate Frames}
+\author{Living course note}
+\date{22 August 2026}
+\begin{document}
+\maketitle
+\noindent\textbf{Scope and sources.} This note covers Week~1 only: robot-manipulator vocabulary, why robots are used, basic specifications, and the coordinate-frame mathematics needed before kinematics modelling. It uses \texttt{resources/lecture-01-manipulator-kinematics.pdf}, pp.~1--52, \texttt{resources/course-outline-part-01.pdf}, and \texttt{resources/week-01-transcript.txt}. The handout controls formulas and terminology.
+\tableofcontents
+
+\section{\enspace What is a robot manipulator?}
+For this course, a robot is an industrial, reprogrammable, multifunctional manipulator. A manipulator is a chain of rigid \emph{links} joined by actuated \emph{joints}; the final link carries an \emph{end effector}, such as a gripper, hand, or tool. Moving the joints changes the end effector's \emph{pose}: its position and orientation.
+
+The two fundamental joint types are:
+\begin{itemize}
+\item \textbf{Revolute (R):} the link rotates about an axis; its joint coordinate is an angle.
+\item \textbf{Prismatic (P):} the link slides along an axis; its joint coordinate is a displacement.
+\end{itemize}
+The number of independently controlled joint coordinates is the robot's degrees of freedom (DoF). The first few joints often position the wrist, while wrist joints orient the tool. A robot can be useful with fewer than six DoF, but then it may be unable to realise arbitrary position-and-orientation requests.
+
+\section{\enspace Why and how robots are used}
+Robots are particularly useful for repetitive, hazardous, precise, or reconfigurable tasks. In contrast to a hard-automation machine designed for one fixed task, a reprogrammable robot can change task by changing its program and tooling. This flexibility has a cost: it may be less economical than dedicated equipment at very high production volumes, while manual work can be preferable at very low volumes.
+
+Common manipulator structures are named from the major joint types: Cartesian PPP, cylindrical RPP, spherical RRP, SCARA RRP, and articulated RRR. Their structure affects the workspace: the set of tool poses that can be reached. The workspace is not simply a ball around the base. Joint limits, link dimensions, collisions, and orientation requirements restrict it.
+
+Useful specifications include payload (allowable load), reach, stroke, speed, repeatability, accuracy, and resolution. \emph{Accuracy} is closeness to the commanded pose; \emph{repeatability} is how consistently the robot returns to a pose. A robot may be repeatable but inaccurate if a systematic calibration error shifts every placement.
+\source{\texttt{resources/lecture-01-manipulator-kinematics.pdf}, pp.~1--22; \texttt{resources/week-01-transcript.txt}.}
+
+\section{\enspace Why coordinate frames are essential}
+Saying ``the tool is at $(1,2,3)$'' is incomplete: those numbers only have meaning relative to a coordinate frame. We write $\{A\}$ for a base or reference frame and $\{B\}$ for a frame attached to a robot link. A physical vector is the same geometric object, but its components change when expressed in another frame.
+
+If ${}^{A}\!R_B$ describes frame $\{B\}$ relative to frame $\{A\}$, then
+\[
+ {}^{A}\!v={}^{A}\!R_B\,{}^{B}\!v.
+\]
+The columns of ${}^{A}\!R_B$ are the $x_B$, $y_B$, and $z_B$ axes written in frame $\{A\}$. This gives an immediate interpretation: a rotation matrix tells an observer in $\{A\}$ which way the axes attached to $\{B\}$ point.
+
+\section{\enspace Rotations and homogeneous transformations}
+A valid three-dimensional rotation matrix satisfies
+\[
+ R\trans R=I,\qquad R^{-1}=R\trans,\qquad\det R=+1.
+\]
+For example, a right-handed rotation about the $z$ axis is
+\[
+ R_z(\theta)=\begin{bmatrix}
+ \cos\theta&-\sin\theta&0\\
+ \sin\theta&\cos\theta&0\\
+ 0&0&1
+ \end{bmatrix}.
+\]
+Matrix order matters. Rotations about fixed axes premultiply an existing orientation; rotations about moving (body) axes postmultiply. Always state the frame and physical order instead of relying on a memorised product.
+
+Rotation alone cannot account for different origins. If the origin of $\{B\}$ is at ${}^{A}\!p_B$, a point $P$ satisfies
+\[
+ {}^{A}\!p_P={}^A\!R_B{}^B\!p_P+{}^A\!p_B.
+\]
+Homogeneous coordinates combine both operations:
+\[
+ {}^A\!T_B=\begin{bmatrix}{}^A\!R_B&{}^A\!p_B\\0&1\end{bmatrix},\qquad
+ \begin{bmatrix}{}^A\!p_P\\1\end{bmatrix}={}^A\!T_B\begin{bmatrix}{}^B\!p_P\\1\end{bmatrix}.
+\]
+The inverse is
+\[
+ ({}^A\!T_B)^{-1}=\begin{bmatrix}({}^A\!R_B)\trans&-({}^A\!R_B)\trans{}^A\!p_B\\0&1\end{bmatrix}.
+\]
+The translated term must be rotated when inverting; simply negating it is a common mistake.
+\source{\texttt{resources/lecture-01-manipulator-kinematics.pdf}, pp.~23--52; \texttt{resources/week-01-transcript.txt}.}
+
+\section{\enspace Week 1 learning checklist}
+\begin{itemize}
+\item Can I distinguish a link, joint, end effector, pose, and workspace?
+\item Can I explain why a reprogrammable robot differs from hard automation?
+\item Can I state the source and target frame for every rotation or transformation?
+\item Can I explain why the columns of a rotation matrix are axes expressed in another frame?
+\item Can I invert a homogeneous transform without forgetting to rotate the translation?
+\end{itemize}
+\end{document}

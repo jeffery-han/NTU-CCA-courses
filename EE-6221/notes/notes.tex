@@ -1,0 +1,263 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=25mm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{xurl}
+\usepackage[hidelinks]{hyperref}
+\renewcommand{\texttt}[1]{\nolinkurl{#1}}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\trans}{\mathsf{T}}
+\newcommand{\Rot}{\operatorname{Rot}}
+\newcommand{\Tran}{\operatorname{Tran}}
+\newcommand{\atanTwo}{\operatorname{atan2}}
+
+\title{EE6221 Robotics: Course Notes\\\large Robotics Foundations and Manipulator Kinematics}
+\author{Living course note}
+\date{Updated: 24 August 2026}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Scope.} This review is grounded in the supplied course outline and the 156-page handout. It develops the manipulator material through direct and inverse kinematics, elementary trajectory planning, and differential motion/statics. Public exact-code files for robot control, mobile robots, and intelligent sensors are now archived under \texttt{resources/public-archive-2026-08-24/}, but they have not yet been reviewed or synthesised here.
+
+\noindent\textbf{Sources.}
+\begin{itemize}
+  \item \texttt{resources/course-outline-part-01.pdf}, p.~1: course sequence and references.
+  \item \texttt{resources/lecture-01-manipulator-kinematics.pdf}, pp.~1--156: robotics overview, kinematics, trajectory planning, and Jacobian material. Page references below refer to this handout.
+\end{itemize}
+
+\tableofcontents
+
+\section{Course map and basic language}
+
+The supplied outline orders the course as: applications, manipulator kinematics, trajectory planning, robot control, and mobile robots. Kinematics is the bridge from actuator coordinates to a task written in physical space: it tells us where the tool is and how it is oriented for a given set of joint values.
+
+An industrial manipulator is modelled as a serial chain of rigid \emph{links} joined by actuated \emph{joints}, with a base at one end and an end-effector (tool) at the other (pp.~1--2, 21--22). The two joint types used throughout are:
+\begin{itemize}
+  \item \textbf{Revolute (R):} rotation about a joint axis; its variable is an angle.
+  \item \textbf{Prismatic (P):} translation along a joint axis; its variable is a displacement.
+\end{itemize}
+
+The first three, ``major'', axes principally determine the reachable wrist positions; later wrist axes chiefly determine tool orientation (pp.~5--6). Common position architectures are PPP Cartesian, RPP cylindrical, RRP spherical/SCARA, and RRR articulated. A six-axis arm can generally place a tool at an arbitrary position and orientation within its workspace; more than six axes introduces kinematic redundancy (pp.~16, 98).
+
+\paragraph{Workspace vocabulary.} The \emph{work envelope} is the locus of wrist positions reachable by the manipulator. \emph{Reach} is a maximum distance, whereas \emph{stroke} is an available travel distance; neither alone guarantees every orientation is achievable. Point-to-point motion only prescribes discrete destinations, while continuous-path motion prescribes the intervening path (pp.~12, 17--19).
+
+\section{Frames, rotations, and homogeneous transformations}
+
+\subsection{Coordinates and the active/passive distinction}
+
+Let $F=\{\mathbf f_1,\mathbf f_2,\mathbf f_3\}$ and $M=\{\mathbf m_1,\mathbf m_2,\mathbf m_3\}$ be right-handed orthonormal frames. The superscript on $\prescript{F}{}{\mathbf p}$ means ``coordinates of the same geometric point $\mathbf p$ expressed in frame $F$.'' If $M$ is rotated with respect to $F$, define
+\[
+  \prescript{F}{}{\mathbf p} = \prescript{F}{}{R}_{M}\,\prescript{M}{}{\mathbf p}.
+\]
+Thus $\prescript{F}{}{R}_{M}$ converts a coordinate description from the mobile frame to the fixed frame; it is not a second physical point. Its columns are the axes of $M$ expressed in $F$:
+\[
+  \prescript{F}{}{R}_{M} =
+  \begin{bmatrix}
+    \prescript{F}{}{\mathbf m}_1 & \prescript{F}{}{\mathbf m}_2 & \prescript{F}{}{\mathbf m}_3
+  \end{bmatrix}.
+\]
+This convention matches the handout's rotation derivation (pp.~25--33).
+
+For a proper rotation, $R\trans R=I$ and $R^{-1}=R\trans$. These are high-value checks: if either fails numerically by more than rounding error, the matrix is not a valid rigid-body orientation.
+
+\subsection{Fundamental and composite rotations}
+
+Using the right-hand rule, rotations about the $x$, $y$, and $z$ axes are
+\[
+R_x(\phi)=\begin{bmatrix}1&0&0\\0&\cos\phi&-\sin\phi\\0&\sin\phi&\cos\phi\end{bmatrix},\quad
+R_y(\phi)=\begin{bmatrix}\cos\phi&0&\sin\phi\\0&1&0\\-\sin\phi&0&\cos\phi\end{bmatrix},\quad
+R_z(\phi)=\begin{bmatrix}\cos\phi&-\sin\phi&0\\\sin\phi&\cos\phi&0\\0&0&1\end{bmatrix}.
+\]
+They map mobile coordinates into fixed coordinates under the convention above (pp.~28--33). Matrix multiplication is not commutative. Consequently, always state both the axis and the frame to which that axis belongs:
+\begin{itemize}
+  \item rotation about a \emph{fixed} frame axis: premultiply the current transformation;
+  \item rotation about a \emph{mobile} frame axis: postmultiply it.
+\end{itemize}
+This fixed/mobile rule is the main defence against incorrect rotation order (pp.~34--35). The handout uses a yaw-pitch-roll composition as an orientation convention (pp.~36--39); its angles must not be silently substituted for a different yaw-pitch-roll convention.
+
+\subsection{Homogeneous transformations}
+
+Rotation alone cannot translate an origin. Represent a point as $\bar{\mathbf p}=[\mathbf p\trans\;1]\trans$ and a rigid transformation as
+\[
+  \prescript{F}{}{T}_{M}=
+  \begin{bmatrix}
+    \prescript{F}{}{R}_{M} & \prescript{F}{}{\mathbf p}_{M}\\
+    \mathbf 0\trans & 1
+  \end{bmatrix},
+  \qquad
+  \prescript{F}{}{\bar{\mathbf q}}=
+  \prescript{F}{}{T}_{M}\prescript{M}{}{\bar{\mathbf q}}.
+\]
+Here $\prescript{F}{}{\mathbf p}_{M}$ is the origin of $M$ written in $F$, not the position of an arbitrary point. Composition follows frame cancellation:
+\[
+  \prescript{F}{}{T}_{N}=\prescript{F}{}{T}_{M}\prescript{M}{}{T}_{N}.
+\]
+For $T=[R\;\mathbf p;\mathbf0\trans\;1]$, the inverse is
+\[
+  T^{-1}=\begin{bmatrix}R\trans&-R\trans\mathbf p\\\mathbf0\trans&1\end{bmatrix}.
+\]
+These formulas and the fixed/mobile multiplication rule appear in pp.~39--52. A useful audit is dimensional and semantic: $T_{AB}$ must map coordinates from $B$ to $A$.
+
+\section{Direct kinematics and the D--H arm equation}
+
+\subsection{The problem}
+
+Let $\mathbf q\in\R^n$ collect the joint variables. \textbf{Direct kinematics} asks for the tool pose relative to the base, given $\mathbf q$ (p.~23):
+\[
+  \prescript{0}{}{T}_{n}(\mathbf q)=
+  \begin{bmatrix}R(\mathbf q)&\mathbf p(\mathbf q)\\\mathbf0\trans&1\end{bmatrix}.
+\]
+The $3\times3$ block gives the tool-frame orientation and $\mathbf p$ gives the tool-tip position. This composite transform is the \emph{arm matrix} (pp.~66--72).
+
+\subsection{Standard Denavit--Hartenberg parameters}
+
+The handout adopts the classical D--H convention. Attach a frame to each link so that $z_{k-1}$ is the axis of joint $k$ and $x_k$ is the common normal between $z_{k-1}$ and $z_k$ (pp.~53--60). The adjacent-link relationship is described by:
+\[
+\begin{array}{c|c|c}
+\text{parameter} & \text{meaning} & \text{joint-dependent when}\\ \hline
+\theta_k & \text{rotation about }z_{k-1} & \text{joint }k\text{ is revolute}\\
+d_k & \text{translation along }z_{k-1} & \text{joint }k\text{ is prismatic}\\
+a_k & \text{translation along }x_k & \text{never (link geometry)}\\
+\alpha_k & \text{rotation about }x_k & \text{never (link geometry)}
+\end{array}
+\]
+Only one of $\theta_k$ and $d_k$ is a joint variable. Starting at frame $k-1$, the transformation to frame $k$ is
+\[
+  \prescript{k-1}{}{T}_{k}
+  =R_z(\theta_k)\Tran_z(d_k)\Tran_x(a_k)R_x(\alpha_k)
+  =\begin{bmatrix}
+  c_k&-s_kc_{\alpha k}&s_ks_{\alpha k}&a_kc_k\\
+  s_k& c_kc_{\alpha k}&-c_ks_{\alpha k}&a_ks_k\\
+  0&s_{\alpha k}&c_{\alpha k}&d_k\\
+  0&0&0&1
+  \end{bmatrix},
+\]
+where $c_k=\cos\theta_k$, $s_k=\sin\theta_k$, $c_{\alpha k}=\cos\alpha_k$, and $s_{\alpha k}=\sin\alpha_k$ (pp.~66--70). Then
+\[
+  \prescript{0}{}{T}_{n}(\mathbf q)=
+  \prescript{0}{}{T}_{1}\prescript{1}{}{T}_{2}\cdots\prescript{n-1}{}{T}_{n}.
+\]
+
+\paragraph{Practical workflow.} Draw every $z$-axis first, then each common normal $x$-axis, and finally obtain $y$ by the right-hand rule. Tabulate $(\theta,d,a,\alpha)$ before multiplying matrices. A D--H frame assignment is not unique (pp.~61--65), but a consistent assignment yields the same physical tool pose.
+
+\subsection{Example: planar 2R position}
+
+For two coplanar revolute links of lengths $a_1,a_2$, with base angles $q_1,q_2$, the tool-tip position is
+\[
+  x=a_1\cos q_1+a_2\cos(q_1+q_2),\qquad
+  y=a_1\sin q_1+a_2\sin(q_1+q_2).
+\]
+This small example exposes two durable ideas: joint angles enter nonlinearly, and the second link's contribution is expressed with the accumulated angle $q_1+q_2$. The handout applies the same product-of-transforms method to a five-axis articulated robot and a four-axis SCARA robot (pp.~74--86).
+
+\subsection{Tool orientation vectors}
+
+
+If $R=[\mathbf r_1\;\mathbf r_2\;\mathbf r_3]$, its columns are respectively the tool \emph{normal}, \emph{sliding}, and \emph{approach} vectors. The approach vector points along the tool roll axis; together the vectors form a right-handed orthonormal tool frame (pp.~57--58). For the handout's SCARA example, the approach direction is fixed vertically, which explains why it is appropriate for top-down light assembly but cannot realize arbitrary orientations (pp.~83--85).
+
+\section{Inverse kinematics}
+
+\subsection{Statement, feasibility, and multiplicity}
+
+\textbf{Inverse kinematics (IK)} reverses the arm equation: given a desired position $\mathbf p_d$ and orientation $R_d$, find joint values $\mathbf q$ such that
+\[
+  \prescript{0}{}{T}_{n}(\mathbf q)=
+  \begin{bmatrix}R_d&\mathbf p_d\\\mathbf0\trans&1\end{bmatrix}.
+\]
+Manipulation tasks are naturally specified this way (pp.~87--89). Before solving, check:
+\begin{enumerate}
+  \item the requested position lies inside the work envelope;
+  \item the requested orientation is realizable by the available orientation axes;
+  \item joint limits and collision constraints are respected (an engineering requirement beyond pure geometry).
+\end{enumerate}
+The handout stresses the first two feasibility conditions and notes that arbitrary 3D pose requires at least six independent degrees of freedom (pp.~96--99).
+
+IK can have no solution, one solution, or several solutions. The five-axis example has distinct elbow-up and elbow-down branches; a controller must select a branch compatible with limits and continuity from the current joint state (pp.~101--105). Use $\atanTwo(y,x)$ rather than $\arctan(y/x)$ where an angle's quadrant matters.
+
+\subsection{Analytic and numerical approaches}
+
+\textbf{Analytic IK} exploits a robot's particular geometry to isolate variables using trigonometry. It is fast and exact in ideal arithmetic, but is robot-specific. \textbf{Numerical IK} minimizes a pose error, for example
+\[
+  \min_{\mathbf q}\;\lVert\mathbf w(\mathbf q)-\widehat{\mathbf w}\rVert^2,
+\]
+and is more broadly applicable but requires an initial guess and careful convergence handling (pp.~96--97).
+
+For its articulated-robot examples, the handout represents a tool configuration by a six-vector
+\[
+  \mathbf w=\begin{bmatrix}\mathbf p\\e^{q_n/\pi}\mathbf r_3\end{bmatrix}\in\R^6,
+\]
+where the scaled approach vector retains the approach direction and encodes the tool-roll angle $q_n$ in its magnitude (pp.~91--95). Treat this as the course's convenient task-coordinate representation for these examples, not as a universal replacement for rotation matrices.
+
+\section{Trajectory planning}
+
+\subsection{Frames for a pick-and-place task}
+
+A robust pick-and-place plan is more than a start and end point. The handout's minimal sequence uses a pick pose, lift-off pose, place pose, and set-down pose; via points are added to avoid obstacles (pp.~118--122). If $[R_{\rm pick},\mathbf p_{\rm pick}]$ is the pick pose and $\mathbf r_3$ is its approach vector, a lift-off pose preserves orientation and moves back a safe approach distance $v$:
+\[
+  R_{\rm lift}=R_{\rm pick},\qquad
+  \mathbf p_{\rm lift}=\mathbf p_{\rm pick}-v\mathbf r_3.
+\]
+The sign is meaningful: the approach vector points toward the object, so subtracting it retreats from the object under this convention.
+
+\subsection{Path versus trajectory}
+
+A \emph{path} is spatial: a curve $\Gamma$ in tool-configuration space. A \emph{trajectory} adds time. The handout parameterizes a trajectory as $\mathbf w(t)=\Gamma(s(t))$, where $s:[0,T]\to[0,1]$, $s(0)=0$, and $s(T)=1$ (pp.~123--125). The derivative $\dot{s}(t)$ is the speed profile. Keeping path and timing separate makes it easier to reuse a geometric path with a different timing law.
+
+\subsection{Cubic interpolation}
+
+For a segment between tool configurations $\mathbf w_0$ and $\mathbf w_1$, choose
+\[
+  \mathbf w(t)=\mathbf a t^3+\mathbf b t^2+\mathbf c t+\mathbf d,\qquad 0\leq t\leq T,
+\]
+and impose $\mathbf w(0)=\mathbf w_0$, $\dot{\mathbf w}(0)=\mathbf v_0$, $\mathbf w(T)=\mathbf w_1$, $\dot{\mathbf w}(T)=\mathbf v_1$. The coefficients are
+\[
+\begin{aligned}
+\mathbf d&=\mathbf w_0, & \mathbf c&=\mathbf v_0,\\
+\mathbf a&=\frac{2(\mathbf w_0-\mathbf w_1)+T(\mathbf v_0+\mathbf v_1)}{T^3},
+&\mathbf b&=\frac{3(\mathbf w_1-\mathbf w_0)-T(2\mathbf v_0+\mathbf v_1)}{T^2}.
+\end{aligned}
+\]
+For several knot points, adjacent cubics should be joined with continuous velocity and acceleration (pp.~130--132). Position continuity alone is usually not enough for smooth robot motion.
+
+\section{Differential motion, Jacobians, and singularities}
+
+\subsection{Velocity kinematics}
+
+Let $\mathbf x=\mathbf w(\mathbf q)\in\R^6$ be the course's tool-configuration function. Differentiating gives
+\[
+  \dot{\mathbf x}=V(\mathbf q)\dot{\mathbf q},
+  \qquad
+  V(\mathbf q)=\frac{\partial\mathbf w}{\partial\mathbf q}\in\R^{6\times n}.
+\]
+$V$ is the tool-configuration Jacobian: column $j$ is the instantaneous tool motion caused by unit rate at joint $j$ (pp.~133--141). It is local: it maps velocities at the current configuration, not finite changes over an arbitrary interval.
+
+When the rank and dimensions permit it, a Moore--Penrose pseudoinverse maps a desired tool rate to a joint rate,
+\[
+  \dot{\mathbf q}=V(\mathbf q)^\dagger\dot{\mathbf x}.
+\]
+For full column rank with $n\leq6$, $V^\dagger=(V\trans V)^{-1}V\trans$; for full row rank with $n\geq6$, $V^\dagger=V\trans(VV\trans)^{-1}$. These are the resolved-motion rate-control relations developed in pp.~142--150. In implementation, an SVD-based pseudoinverse is safer near ill-conditioning than explicitly forming matrix inverses.
+
+\subsection{Singularities}
+
+A joint configuration is singular when the Jacobian loses its maximum possible rank:
+\[
+  \operatorname{rank}V(\widetilde{\mathbf q})<\min(6,n).
+\]
+At or near a singularity, some tool velocities cannot be produced and some required joint rates become very large. The handout distinguishes boundary singularities (on the workspace boundary) from interior singularities, where aligned axes can cause self-motion: joints move while the tool configuration does not (pp.~150--156).
+
+For a square, nonsingular Jacobian, $|\det V|$ measures local volume scaling. More generally, use singular values to diagnose dexterity: a small smallest singular value means that the pose is close to singular. Trajectories should avoid these regions or slow down and use a damped numerical strategy.
+
+\section{Revision checklist}
+
+\begin{itemize}
+  \item Can I state the source and target frame of every $R$ and $T$?
+  \item Can I explain why fixed-axis operations premultiply while mobile-axis operations postmultiply?
+  \item Can I construct one D--H row and identify the sole joint variable for R and P joints?
+  \item Can I multiply D--H transforms into an arm matrix and read off $R(\mathbf q)$ and $\mathbf p(\mathbf q)$?
+  \item Before IK, did I check reachability, orientation, joint limits, and solution branches?
+  \item Can I distinguish a geometric path from a time-parameterized trajectory?
+  \item Can I use $\dot{\mathbf x}=V\dot{\mathbf q}$ and explain what fails at a singularity?
+\end{itemize}
+
+\end{document}

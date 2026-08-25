@@ -1,0 +1,496 @@
+\documentclass[10pt]{article}
+\usepackage[a4paper,margin=19mm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{booktabs,array,multicol}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{xurl}
+\usepackage[hidelinks]{hyperref}
+
+\newcommand{\Z}{\mathcal{Z}}
+\newcommand{\Lcal}{\mathcal{L}}
+\newcommand{\e}{\mathrm{e}}
+\newcommand{\unitstep}{\mathbf{1}}
+\newcommand{\src}[1]{\hfill{\small\color{gray}[PDF pp. #1]}}
+\newcommand{\weeklabel}[1]{\par\smallskip\noindent{\color{blue!60!black}\textbf{#1}}\par\smallskip}
+\setlist{nosep,leftmargin=*}
+\setlength{\parskip}{0.35em}
+\setlength{\parindent}{0pt}
+
+\title{EE6203 Computer Controlled Systems\\\large Weeks 1--4 Review Notes}
+\author{Based on lectures by Dr Wen Changyun}
+\date{Updated 25 August 2026}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section*{Weekly coverage map}
+\addcontentsline{toc}{section}{Weekly coverage map}
+
+\begin{center}
+\begin{tabular}{c p{0.62\textwidth} c}
+\toprule
+Week & Topics & PDF pages\\
+\midrule
+1 & Feedback, digital-control architecture, signals, $z$-transform pairs/properties, poles/zeros, initial/final values & 1--48\\
+2 & Inverse $z$ methods, difference equations, impulse sampling, starred transforms, ZOH & 49--88\\
+Self-study & First-order hold (optional) & 89--93\\
+3 & Pulse transfer functions, sampled block diagrams, ZOH/plant, controller and PID models & 94--143\\
+4 & $s$--$z$ mapping, stability, transient/steady-state response, disturbances & 144--195\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Weeks 1--3 are verified from the supplied transcripts. Week 2 explicitly hands pulse transfer functions to the next lecture. The Week 3 transcript completes Chapter 3, starts Chapter 4, and confirms that Quiz 1 covers Chapters 1--3 only.
+
+\textbf{Additional practice sources:} \path{resources/course-exercises.pdf} (5 pages) and \path{resources/course-exercises-solutions.pdf} (26 pages). The solution compilation retains some older EE4273 headings and handwriting, so incorporated calculations are independently re-derived.
+
+\section{Digital-control essentials}
+
+\weeklabel{Week 1}
+
+Unity feedback: $e(t)=r(t)-y(t)$, where $t$ is time, $r(t)$ is the reference or setpoint, $y(t)$ is the measured output, and $e(t)$ is the tracking error. The signals $r$, $y$, and $e$ have the same physical unit. Main requirements: stability, transient response, steady-state accuracy, and possibly optimality.
+
+\textbf{Design vs. analysis:} design chooses a controller from the plant and specifications; analysis verifies the closed-loop stability and performance.
+
+Periodic sampling:
+\[
+t_k=kT,\qquad \omega_s=\frac{2\pi}{T},\qquad x[k]=x(kT).
+\]
+Sampled-data means discrete time with continuous amplitude; digital means discrete time and quantized amplitude. ADC sampling and amplitude quantization are distinct. Typical path:
+\[
+r\to\text{sum}\to\text{ADC}\to\text{computer}\to\text{DAC+ZOH}\to\text{plant}\to y.
+\]
+
+\textbf{Checklist:} identify every sampler and hold before simplifying a block diagram. \src{7--20}
+
+\section{The $z$ transform}
+
+\weeklabel{Week 1 through final values; Week 2 from inverse methods onward}
+
+\subsection{Definitions and pairs}
+
+One-sided causal transform and power-series interpretation:
+\[
+X(z)=\Z\{x[k]\}=\sum_{k=0}^{\infty}x[k]z^{-k}
+=x[0]+x[1]z^{-1}+\cdots.
+\]
+
+\begin{center}
+\begin{tabular}{>{$}l<{$}>{$}l<{$}}
+\toprule
+x[k] & X(z)\\
+\midrule
+\delta[k-n] & z^{-n}\\
+\unitstep[k] & (1-z^{-1})^{-1}=z/(z-1)\\[3pt]
+k\unitstep[k] & z^{-1}/(1-z^{-1})^2=z/(z-1)^2\\[3pt]
+a^k\unitstep[k] & (1-az^{-1})^{-1}=z/(z-a)\\[3pt]
+\sin(\omega kT)\unitstep[k] & z\sin(\omega T)/(z^2-2z\cos\omega T+1)\\[3pt]
+\cos(\omega kT)\unitstep[k] & (z^2-z\cos\omega T)/(z^2-2z\cos\omega T+1)\\
+\bottomrule
+\end{tabular}
+\end{center}
+In the last two rows, every $\omega$ in a trigonometric argument is multiplied by $T$.
+
+\subsection{Properties}
+
+\begin{align*}
+\Z\{\alpha x[k]+\beta y[k]\}&=\alpha X(z)+\beta Y(z),\\
+\Z\{a^kx[k]\}&=X(z/a),\\
+\Z\{x[k-n]\unitstep[k-n]\}&=z^{-n}X(z),\\
+\Z\{x[k+n]\}&=z^nX(z)-\sum_{i=0}^{n-1}z^{n-i}x[i],\\
+\Z\{\e^{-akT}x[k]\}&=X(z\e^{aT}).
+\end{align*}
+
+Initial value:
+\[
+x[0]=\lim_{z\to\infty}X(z).
+\]
+Final value:
+\[
+x[\infty]=\lim_{z\to1}(1-z^{-1})X(z),
+\]
+valid only if all poles of $(1-z^{-1})X(z)$ lie strictly inside $|z|=1$.
+
+A simple pole of $X(z)$ at $z=1$ may represent a finite constant. A repeated pole there grows, and other unit-circle poles oscillate; neither case has a final value.
+
+\subsection{Inverse methods}
+
+\weeklabel{Week 2 begins}
+
+\begin{itemize}
+  \item Long division in $z^{-1}$: read off samples; usually no closed form.
+  \item Recurrence computation: apply $\delta[k]$ to the difference equation; efficient for a sample table.
+  \item Partial fractions: expand $X(z)/z$; simple $1/(z-p)$ terms give $p^k$ and a closed form.
+  \item Why: $X(z)/z=\sum_{k\ge0}x[k]z^{-k-1}$, so $1/(z-p)=\sum_{k\ge0}p^kz^{-k-1}$; equivalently, $z/(z-p)\leftrightarrow p^k\unitstep[k]$.
+  \item Repeated pole: expect $k p^{k-1}$ factors.
+  \item Complex pair: combine into real damped sine/cosine terms.
+  \item Residues: $x[k]=(2\pi\mathrm{j})^{-1}\oint X(z)z^{k-1}\mathrm{d}z$.
+\end{itemize}
+
+Inverse $z$ transformation determines $x[k]$, not a unique continuous $x(t)$; reconstruction between samples needs an extra assumption.
+
+For
+\[
+x[k+2]+3x[k+1]+2x[k]=0,\quad x[0]=0,\ x[1]=1,
+\]
+the transform is $X(z)=z/[(z+1)(z+2)]$ and
+\[
+x[k]=(-1)^k-(-2)^k.
+\]
+
+\textbf{Common mistakes:} treating an advance as a pure $z^n$ multiplier; using the final-value theorem on an oscillatory/unstable sequence; doing PFE on the wrong form; ignoring the ROC. \src{21--70}
+
+\section{Sampled-data modeling}
+
+\weeklabel{Week 2 through the ZOH; Week 3 from pulse transfer functions onward}
+
+\subsection{Sampler and holds}
+
+Ideal impulse sampler:
+\[
+x^*(t)=\sum_{k=0}^{\infty}x(kT)\delta(t-kT),\qquad
+X^*(s)=\sum_{k=0}^{\infty}x(kT)\e^{-kTs}.
+\]
+With $z=\e^{sT}$, $X^*(s)=X(z)$.
+
+The coefficient $x(kT)$ is an impulse's area (strength), not a finite height. Also, $z=\e^{sT}$ links $X^*(s)$ to $X(z)$; it does not justify substituting into an ordinary $X(s)$ or $G_p(s)$.
+
+Zero-order hold:
+\[
+h(kT+\tau)=x(kT),\ 0\le\tau<T,
+\qquad G_{h0}(s)=\frac{1-\e^{-sT}}{s}.
+\]
+Equivalently, the ZOH is a sum of one-period rectangular windows; their Laplace transform produces $(1-\e^{-sT})/s$. First-order hold (optional Week 2 self-study):
+\[
+G_{h1}(s)=\left(\frac{1-\e^{-sT}}{s}\right)^2\frac{Ts+1}{T}.
+\]
+
+\subsection{Pulse transfer function}
+
+\weeklabel{Week 3 begins}
+
+At sampling instants, continuous convolution becomes
+\[
+y(kT)=\sum_{h=0}^{k}g((k-h)T)x(hT),
+\]
+so
+\[
+Y(z)=G(z)X(z),\qquad G(z)=\Z\{g(kT)\}.
+\]
+
+\textbf{Input-sampler rule:}
+\begin{itemize}
+  \item sampler before $G(s)$: $Y(z)=G(z)X(z)$;
+  \item no input sampler: $Y(z)=\Z\{G(s)X(s)\}$, generally not $G(z)X(z)$;
+  \item sampler between cascaded $G,H$: pulse TF $G(z)H(z)$;
+  \item no intermediate sampler: pulse TF $GH(z)=\Z\{G(s)H(s)\}\ne G(z)H(z)$.
+\end{itemize}
+
+ZOH plus plant:
+\[
+G(z)=\Z\left\{\frac{1-\e^{-sT}}{s}G_p(s)\right\}
+=(1-z^{-1})\Z\left\{\frac{G_p(s)}{s}\right\}.
+\]
+
+\subsection{Digital controller and PID}
+
+Controller recurrence
+\[
+m[k]+\sum_{i=1}^na_im[k-i]=\sum_{j=0}^mb_je[k-j]
+\]
+gives
+\[
+G_D(z)=\frac{M(z)}{E(z)}
+=\frac{\sum_{j=0}^mb_jz^{-j}}{1+\sum_{i=1}^na_iz^{-i}}.
+\]
+Unity-feedback sampled loop:
+\[
+\frac{C(z)}{R(z)}=\frac{G_D(z)G(z)}{1+G_D(z)G(z)}.
+\]
+
+Trapezoidal-integral/backward-difference PID:
+\[
+G_D(z)=K_P+\frac{K_I}{1-z^{-1}}+K_D(1-z^{-1}),
+\]
+\[
+K_P=K-\frac{KT}{2T_i},\qquad K_I=\frac{KT}{T_i},\qquad K_D=\frac{KT_d}{T}.
+\]
+
+\textbf{Common mistakes:} substituting $z=\e^{sT}$ directly into $G_p(s)$; moving or deleting samplers while reducing a diagram; forgetting that $G(z)H(z)\ne GH(z)$. \src{71--143}
+
+\section{$s$-plane to $z$-plane mapping}
+
+\weeklabel{Chapter 4: retained for later course study; not assessed in Quiz 1.}
+
+\weeklabel{Week 4}
+
+For $s=\sigma+\mathrm{j}\omega$,
+\[
+z=\e^{sT}=\e^{\sigma T}\e^{\mathrm{j}\omega T},\qquad
+|z|=\e^{\sigma T},\quad \arg z=\omega T\pmod{2\pi}.
+\]
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+$s$-plane object & $z$-plane image\\
+\midrule
+$\sigma<0$ & $|z|<1$\\
+$\sigma=0$ & unit circle\\
+$\sigma=\sigma_0$ & circle $|z|=\e^{\sigma_0T}$\\
+$\omega=\omega_0$ & radial line $\arg z=\omega_0T$\\
+primary strip & $-\pi/T\le\omega\le\pi/T$ maps once around\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+For $s=-\zeta\omega_n\pm\mathrm{j}\omega_d$,
+\[
+|z|=\e^{-\zeta\omega_nT},\qquad \arg z=\pm\omega_dT.
+\]
+With the 2\% approximation $t_s\approx4/(\zeta\omega_n)$,
+\[
+t_s\le t_s^{\max}\quad\Rightarrow\quad
+|z|\le \exp(-4T/t_s^{\max}).
+\]
+Constant damping-ratio rays map to logarithmic spirals. Frequencies separated by $2\pi/T$ map to the same angle. \src{144--161}
+
+\section{Discrete-time stability}
+
+\weeklabel{Week 4}
+
+Closed-loop asymptotic stability: all roots of $P(z)$ strictly inside $|z|=1$. Simple unit-circle poles are marginal; repeated unit-circle poles are unstable.
+
+For
+\[
+P(z)=a_0z^n+a_1z^{n-1}+\cdots+a_n,\qquad a_0>0,
+\]
+the first Jury conditions are
+\[
+|a_n|<a_0,\qquad P(1)>0,\qquad (-1)^nP(-1)>0.
+\]
+They are sufficient for $n=2$. For higher order, continue the Jury table with alternating forward/reversed rows and require successive leading/trailing magnitude inequalities.
+
+Example from the source:
+\[
+P(z)=z^2+(0.3679K-1.3679)z+(0.3679+0.2642K)
+\]
+is stable for
+\[
+0<K<2.3925.
+\]
+
+Bilinear route:
+\[
+z=\frac{w+1}{w-1},\qquad w=\frac{z+1}{z-1}.
+\]
+This maps $|z|<1$ to $\Re(w)<0$. Substitute, clear the denominator, and apply Routh. Jury is usually shorter; Routh also counts unstable roots. \src{162--179}
+
+\section{Transient and steady-state response}
+
+\weeklabel{Week 4}
+
+Step-response terms: delay time $t_d$, rise time $t_r$, peak time $t_p$, maximum overshoot
+\[
+M_p=\frac{c(t_p)-c(\infty)}{c(\infty)}100\%,
+\]
+and settling time $t_s$ (usually a 2\% band).
+
+For the standard loop,
+\[
+E(z)=\frac{R(z)}{1+G(z)H(z)},\qquad
+e_{ss}=\lim_{z\to1}(1-z^{-1})E(z).
+\]
+Static error constants:
+\begin{align*}
+K_p&=\lim_{z\to1}GH,&e_{ss,\text{step}}&=\frac{1}{1+K_p},\\
+K_v&=\lim_{z\to1}\frac{(1-z^{-1})GH}{T},&e_{ss,\text{ramp}}&=\frac{1}{K_v},\\
+K_a&=\lim_{z\to1}\frac{(1-z^{-1})^2GH}{T^2},&e_{ss,\text{accel}}&=\frac{1}{K_a}.
+\end{align*}
+
+\begin{center}
+\begin{tabular}{c c c c}
+\toprule
+Type & Step & Ramp & Acceleration\\
+\midrule
+0 & $1/(1+K_p)$ & $\infty$ & $\infty$\\
+1 & $0$ & $1/K_v$ & $\infty$\\
+2 & $0$ & $0$ & $1/K_a$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+System type is the number of uncancelled open-loop poles at $z=1$. The table assumes a stable loop and the lecture's standard configuration. Actuating error $R-B$ need not equal tracking error $R-C$.
+
+For the lecture disturbance configuration,
+\[
+E(z)=-\frac{G(z)}{1+G_D(z)G(z)}N(z).
+\]
+Large loop gain reduces error. An uncancelled controller pole at $z=1$, with no plant zero there, gives zero steady-state error to a constant disturbance if the closed loop is stable. \src{180--195}
+
+\section{Exam workflow}
+
+\begin{enumerate}
+  \item Draw the sampled-data topology and label $T$.
+  \item Convert ZOH plus plant with $(1-z^{-1})\Z\{G_p(s)/s\}$.
+  \item Preserve samplers when combining blocks.
+  \item Form the characteristic polynomial; apply Jury or bilinear/Routh.
+  \item Map performance regions using both $|z|=\e^{\sigma T}$ and $\arg z=\omega T$.
+  \item For steady-state error, verify stability, input transform, error definition, and final-value conditions.
+  \item Check the first few samples or substitute a boundary gain to catch algebra errors.
+\end{enumerate}
+
+The source recap on PDF pages 196--225 repeats these four chapters and adds no distinct topic.
+
+\clearpage
+\appendix
+\section{Quiz 1 closed-book review}
+
+\textbf{Confirmed format and scope:} 30 minutes; Chapters 1--3 only; closed book; calculator permitted; necessary transform pairs supplied; show working for non-multiple-choice questions. Unclear transcript details about the exact time, seating, and absence arrangements are omitted.
+
+The two unofficial recalled versions differ, but together emphasize direct $z$-transform construction, one-sided difference equations, final-value conditions, sampler/ZOH modeling, and pulse-transfer topology. Use the following as a memory sheet; the lecture PDF and Week 3 announcement remain authoritative. Chapter 4 mapping, Jury/bilinear stability, transient response, system type, and steady-state-error tables are not Quiz 1 material.
+
+\subsection{Core formulas to reconstruct}
+
+\begin{multicols}{2}
+\textbf{Definition and pairs}
+\begin{align*}
+X(z)&=\sum_{k=0}^{\infty}x[k]z^{-k},\\
+\Z\{\delta[k-n]\}&=z^{-n},\\
+\Z\{\unitstep[k]\}&=\frac{1}{1-z^{-1}},\\
+\Z\{a^k\unitstep[k]\}&=\frac{1}{1-az^{-1}},\\
+\Z\{k\unitstep[k]\}&=\frac{z^{-1}}{(1-z^{-1})^2}.
+\end{align*}
+
+\columnbreak
+\textbf{One-sided shifts and values}
+\begin{align*}
+\Z\{x[k-n]\unitstep[k-n]\}&=z^{-n}X(z),\\
+\Z\{x[k+1]\}&=zX(z)-zx[0],\\
+\Z\{x[k+2]\}&=z^2X-z^2x[0]-zx[1],\\
+x[0]&=\lim_{z\to\infty}X(z),\\
+x[\infty]&=\lim_{z\to1}(1-z^{-1})X(z).
+\end{align*}
+\end{multicols}
+
+Final value is valid iff every pole of $(1-z^{-1})X(z)$ is strictly inside $|z|=1$.  One simple pole of $X$ at $z=1$ is allowed; a repeated pole there, another unit-circle pole, or any outside pole is not.
+
+\subsection{Inverse-transform decision}
+
+\begin{center}
+\begin{tabular}{p{0.24\textwidth}p{0.55\textwidth}}
+\toprule
+Need & Fastest method\\
+\midrule
+First few samples & Long division in $z^{-1}$ or direct recurrence.\\
+Closed form & Partial fractions of $X(z)/z$; pair $1/(z-a)$ with $a^k$.\\
+Repeated/complex poles & Include polynomial factors in $k$; combine conjugates into real sine/cosine terms.\\
+Theory/general inversion & Contour integral and residues.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Sampling, ZOH, and topology}
+
+\begin{align*}
+x^*(t)&=\sum_{k=0}^{\infty}x(kT)\delta(t-kT),\\
+X^*(s)&=\sum_{k=0}^{\infty}x(kT)\e^{-kTs},
+&z&=\e^{sT},\\
+G_{h0}(s)&=\frac{1-\e^{-sT}}{s},
+&G(z)&=(1-z^{-1})\Z\!\left\{\frac{G_p(s)}{s}\right\}.
+\end{align*}
+
+\begin{itemize}
+  \item Input sampler present: $Y(z)=G(z)X(z)$.
+  \item No input sampler: $Y(z)=\Z\{G(s)X(s)\}$; do not separate the factors.
+  \item Intermediate sampler: cascades reduce to $G(z)H(z)$.
+  \item No intermediate sampler: use $GH(z)=\Z\{G(s)H(s)\}\ne G(z)H(z)$.
+  \item A pulse transfer function $C(z)/R(z)$ does not exist if the external input remains inseparably inside a starred continuous-time product.
+\end{itemize}
+
+\subsection{Exercise-backed checks}
+
+For a parameter recurrence
+\[
+y[k+1]-\beta y[k]=\unitstep[k],\qquad y[0]=0,
+\]
+\[
+Y(z)=\frac{z}{(z-1)(z-\beta)},\qquad
+y[k]=\frac{1-\beta^k}{1-\beta}\quad(\beta\ne1).
+\]
+After cancelling the permitted simple pole at $z=1$, inspect $z=\beta$: the final-value theorem is valid exactly for $|\beta|<1$.  $\beta=1$ grows, $\beta=-1$ oscillates, and $|\beta|>1$ diverges.
+
+For a controller recurrence with zero initial conditions, collect present and delayed controller/output terms before closing the loop:
+\[
+m[k]+\sum_{i=1}^{n}a_im[k-i]=\sum_{j=0}^{r}b_je[k-j]
+\quad\Longrightarrow\quad
+G_D(z)=\frac{\sum_{j=0}^{r}b_jz^{-j}}{1+\sum_{i=1}^{n}a_iz^{-i}}.
+\]
+Reduce sampler--ZOH--plant topology to $G(z)$ \emph{first}; then use $G_D(z)G(z)$ only when the resulting sampled loop permits it.
+
+Useful supplied-exercise patterns:
+\begin{itemize}
+  \item $\Z\{kx[k]\}=-z\,\mathrm{d}X/\mathrm{d}z$; apply it repeatedly for powers such as $k^3$.
+  \item A repeated pole $(1-az^{-1})^{-2}$ produces a factor $k a^{k-1}$.
+  \item A factor $z^{-n}$ delays a causal sequence by $n$ samples and inserts $n$ leading zeros.
+  \item Deriving a pulse transfer through a transform table and through inverse Laplace plus sampling must give the same result.
+\end{itemize}
+
+\subsection{Sampled feedback and PID}
+
+For a correctly reduced unity negative-feedback loop,
+\[
+\frac{C(z)}{R(z)}=\frac{G_D(z)G(z)}{1+G_D(z)G(z)}.
+\]
+For the course's digital PID realization,
+\[
+G_D(z)=K_P+\frac{K_I}{1-z^{-1}}+K_D(1-z^{-1}).
+\]
+Do not identify an arbitrary controller recurrence as PID until it has been rearranged into the stated realization.
+
+With $T=1$, a ZOH and plant $K/s$ reduce to
+\[
+G(z)=\frac{Kz^{-1}}{1-z^{-1}}.
+\]
+For a unit-step reference in unity feedback,
+\[
+C(z)=\frac{Kz^{-1}}{[1-(1-K)z^{-1}](1-z^{-1})},
+\qquad c[k]=1-(1-K)^k.
+\]
+The samples converge to one for $0<K<2$ because $|1-K|<1$. This is a Chapter 3 pulse-transfer/pole check, not a Chapter 4 Jury calculation.
+
+\subsection{Thirty-second setup checklist}
+
+\begin{enumerate}
+  \item Label $T$, every sampler, every hold, and every continuous/sampled signal.
+  \item For piecewise data, write the sample table and begin with the defining sum.
+  \item For a recurrence, write the initial-condition terms before collecting $Y(z)$.
+  \item For a ZOH/plant, transform $G_p(s)/s$ and multiply by $(1-z^{-1})$.
+  \item Before final value, cancel only algebraically and inspect the remaining poles.
+  \item If a parameter controls a pole, split the answer into parameter ranges before taking a limit.
+  \item For a controller recurrence, obtain $G_D(z)$ before forming any closed-loop fraction.
+  \item Check by first samples, recurrence balance, DC gain, or a boundary pole.
+\end{enumerate}
+
+\subsection{Six-day drill route}
+
+\begin{center}
+\begin{tabular}{c p{0.69\textwidth}}
+\toprule
+Day & Two-hour focus\\
+\midrule
+1 & Definition, transform-pair derivations, finite and piecewise sums.\\
+2 & One-sided shifts, difference equations, inverse methods, final value, and parameter-pole cases.\\
+3 & $x(t)$ versus $x[k]$, impulse sampling, starred and $z$ transforms.\\
+4 & ZOH/plant conversion, controller recurrences, pulse-transfer topology, open/closed loops.\\
+5 & Repeated-pole and delayed inversions; controller/PID recurrences; supplied Exercise groups 2--4.\\
+6 & Formula dump, two 30-minute mocks, marking, and error repair.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Use the worked methods, archetypes, drills, solutions, and two mocks in Appendix A of \emph{quiz1-prep-learning.pdf}. Target at least 80\% on the second mock with no repeated conceptual error. \src{21--143}
+
+\end{document}

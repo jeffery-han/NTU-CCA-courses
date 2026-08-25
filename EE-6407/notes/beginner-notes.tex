@@ -1,0 +1,402 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=25mm]{geometry}
+\usepackage{amsmath,amssymb,enumitem,booktabs,array}
+\usepackage[hidelinks]{hyperref}
+\setlist[itemize]{nosep,leftmargin=*}
+\setlist[enumerate]{leftmargin=*}
+\renewcommand{\arraystretch}{1.18}
+\setlength{\emergencystretch}{2em}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\source}[1]{\par\smallskip\noindent\textit{Source: #1.}\par\smallskip}
+\title{EE6407 Genetic Algorithms and Machine Learning\\
+\large Quiz 1 Preparation Notes: Evolutionary Computing Part 1 (Weeks 1--4)}
+\author{Living course note}
+\date{24 August 2026}
+\begin{document}
+\maketitle
+\noindent\textbf{Scope and sources.} This is the detailed, self-contained
+teaching note for Quiz~1. It covers the complete four-week Part~1 scope:
+problem classification, computational complexity, evolutionary-computing
+foundations, the evolutionary-algorithm loop and components, 8-queens, the
+simple genetic algorithm, and optimisation context. The authoritative source
+is \path{../resources/lecture-01-evolutionary-computing-part-1.pdf}, PDF
+pp.~1--36, supported by the Week~1 and Week~2 transcripts. Historical
+questions are used only as pattern evidence; every worked answer here is
+independently derived.
+\tableofcontents
+
+\section{\enspace Evolutionary computing in one idea}
+Evolutionary computing (EC) is a family of methods for searching for good solutions by maintaining and improving a population of candidates. Genetic algorithms (GAs) are an important member of this family. In lecture, the names \emph{evolutionary computing}, \emph{evolutionary algorithm}, and \emph{genetic algorithm} may be used informally, but strictly a GA is one specific type of evolutionary algorithm.
+
+EC is useful when a problem has a large, irregular, discrete, mixed, or non-differentiable search space, or when exact optimisation would be too expensive. It does not automatically guarantee the best possible answer. It is a stochastic method for finding high-quality candidates within a computational budget.
+
+\section{\enspace Classifying the problem before choosing a method}
+Represent a system abstractly as $y=M(x)$:
+\begin{itemize}
+\item If $M$ and desired output $y$ are known but $x$ is unknown, we have an \textbf{optimisation} problem.
+\item If input--output pairs are known but $M$ is unknown, we have a \textbf{modelling} or learning problem.
+\item If $x$ and $M$ are known but $y$ is unknown, we have a \textbf{simulation} problem.
+\end{itemize}
+Many machine-learning tasks can be written as optimisation: select model parameters to minimise prediction error. The distinction is still useful because it clarifies what information is available and what the method must find.
+
+The \emph{search space} $S$ contains all candidates the algorithm may consider. The \emph{feasible set} $\mathcal F\subseteq S$ contains those satisfying every hard constraint. An objective function $f:S\to\R$ measures quality. A constraint-satisfaction problem asks for any member of $\mathcal F$; a constrained optimisation problem asks for the best member.
+
+\section{\enspace Why search can become difficult}
+The number of candidate solutions can grow much faster than intuition suggests. For a route through $n$ labelled cities, there are $n!$ possible orders before considering symmetries. Exhaustive enumeration is therefore impractical even at modest $n$.
+
+Complexity words provide context. A decision problem is in $\mathbf P$ if it can be solved in polynomial time. It is in $\mathbf{NP}$ if a proposed yes-answer can be verified in polynomial time. NP-complete problems are the hardest known problems in NP under polynomial reductions, and NP-hard problems are at least as hard but need not be decision problems. Whether $\mathbf P=\mathbf{NP}$ is unresolved. These labels motivate heuristic search; they do not prove that an EA will solve a particular instance well.
+
+\section{\enspace The simplified evolutionary metaphor}
+Evolutionary algorithms borrow four ideas from a simplified account of natural evolution: resources are limited, individuals differ, some differences affect reproductive success and are heritable, and random variation supplies new differences. In computing, \emph{fitness} is a deliberately designed numerical score rather than a biological fact.
+
+The terms below connect the problem to its representation:
+\begin{itemize}
+\item A \emph{phenotype} is the candidate solution in the original problem domain.
+\item A \emph{genotype} is the encoding manipulated by the algorithm.
+\item A \emph{chromosome} is a complete genotype; a \emph{gene} is one component; an \emph{allele} is a possible value of that component.
+\end{itemize}
+The representation is an engineering decision. It should make valid solutions reachable and should work naturally with the variation operators introduced later. A poor representation can make a simple problem unnecessarily difficult.
+
+\section{\enspace Foundations checkpoint}
+\begin{itemize}
+\item Can I distinguish optimisation, modelling, and simulation using $y=M(x)$?
+\item Can I identify a search space, a feasible set, and an objective?
+\item Can I explain why combinatorial spaces make exhaustive search difficult?
+\item Can I distinguish evolutionary computing from a genetic algorithm?
+\item Can I explain genotype, phenotype, chromosome, gene, and allele?
+\end{itemize}
+\source{\path{../resources/lecture-01-evolutionary-computing-part-1.pdf},
+PDF pp.~2--16; \path{../resources/week-01-transcript.txt}.}
+
+\clearpage
+\section{Quiz 1 scope and evidence}
+
+\subsection{What is confirmed, and what is only supporting evidence?}
+This note prepares the complete four-week Part~1 scope presently contained in
+\path{../resources/lecture-01-evolutionary-computing-part-1.pdf}. The supplied
+deck and transcript establish a closed-book written Quiz~1 worth 10\%, held
+in the final hour of Week~4. The exact date, time, and venue must still be
+checked in NTULearn; tentative transcript details are not treated as
+confirmed.
+
+{\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.18\textwidth}
+  >{\raggedright\arraybackslash}p{0.22\textwidth}
+  >{\raggedright\arraybackslash}p{0.50\textwidth}@{}}
+\toprule
+\textbf{Confidence} & \textbf{Evidence} & \textbf{How it is used here}\\
+\midrule
+Current and authoritative & Lecture 1 Part~1 deck, PDF pages 1--36 & Defines the examinable Part~1 concepts: classification, complexity, EC foundations, the EA loop and components, 8-queens, the simple GA example, EA behaviour, and optimisation context.\\
+Current supporting context & Week~1 and Week~2 transcripts & Supports the assessment format and lecturer emphasis. Any tentative logistics remain unconfirmed.\\
+Historical pattern only & Legacy quiz PDF pages 1--2; 2021, 2022, and 2024 walkthroughs & Suggests useful question forms involving classification, representation, encoding, fitness, and a hand-worked SGA generation. Answers below are newly derived.\\
+Frequency evidence only & Exam-topic workbook, Sheet1 A1:G24 & Shows recurring older-exam themes. It does not establish the present Quiz~1 scope.\\
+\bottomrule
+\end{tabular}
+}
+
+\paragraph{Deliberately excluded.}
+Differential evolution and particle swarm optimisation are outside this
+preparation pack. Also excluded are advanced crossover families, schema
+theory, niching, multi-objective optimisation, and machine learning. These
+topics appeared in older or later materials but are not in the approved
+Part~1 scope.
+
+\source{Lecture~1 Part~1 deck, PDF pp.~1--36; Week~1 and Week~2 transcripts;
+historical-pattern sources indexed in \path{../STATUS.md}.}
+
+\clearpage
+\section{One-page memory core}
+\begin{tabular}{@{}>{\bfseries\raggedright\arraybackslash}p{0.23\textwidth}
+  >{\raggedright\arraybackslash}p{0.71\textwidth}@{}}
+\toprule
+Problem classification & For $y=M(x)$: unknown $x$ means optimisation; unknown $M$ means modelling/learning; unknown $y$ means simulation.\\
+Search language & Search space $S$: all encodable candidates. Feasible set $\mathcal F\subseteq S$: candidates satisfying hard constraints. Objective $f$: quality. CSP seeks any feasible candidate; COP seeks the best feasible candidate.\\
+Complexity & $\mathbf P$: solvable in polynomial time. $\mathbf{NP}$: a proposed yes-certificate is verifiable in polynomial time. NP-complete: in NP and NP-hard. NP-hard: at least as hard as every NP problem, but may be an optimisation problem and need not be in NP.\\
+EA cycle & Initialise $\rightarrow$ evaluate $\rightarrow$ select parents $\rightarrow$ vary by recombination/mutation $\rightarrow$ evaluate offspring $\rightarrow$ select survivors $\rightarrow$ test termination.\\
+Representation & Phenotype is the domain solution; genotype is its encoding. A useful encoding makes intended solutions reachable and lets operators preserve or repair validity.\\
+Selection & Fitness-proportionate selection: $p_i=f_i/\sum_j f_j$ when fitnesses are non-negative and larger is better. Selection favours; it does not guarantee.\\
+8-queens & Permutation $q=(q_1,\ldots,q_N)$ places one queen in column $i$, row $q_i$. Queens $i,j$ conflict diagonally when $|q_i-q_j|=|i-j|$. With $C$ diagonal conflicts, $f=\binom N2-C$.\\
+Binary decoding & For bits $b_{L-1}\cdots b_0$, $z=\sum_{k=0}^{L-1}2^k b_k$. Optional interval map: $x=a+\dfrac{z}{2^L-1}(b-a)$.\\
+Mutation checks & Across $N$ strings of length $L$, expected flipped bits are $NLp_m$. Probability of no flip is $(1-p_m)^{NL}$.\\
+Optimisation context & A neighbourhood defines local moves. A local optimum is best only in its neighbourhood; a global optimum is best in the whole feasible set. No single optimiser is best across all possible problems.\\
+\bottomrule
+\end{tabular}
+
+\paragraph{Closed-book recall test.}
+Cover the table and reconstruct the three $y=M(x)$ cases, the P/NP relationships, the seven EA stages, the 8-queens conflict test, roulette selection, and binary decoding.
+
+\clearpage
+\section{Five worked archetypes}
+
+\subsection{Archetype 1: classify the problem before choosing an algorithm}
+\textbf{Question.} A factory knows a simulator $M$ that predicts energy use $y$ for a machine setting $x$. Classify each task:
+\begin{enumerate}[label=(\alph*)]
+\item Find a setting that minimises energy while meeting production constraints.
+\item Predict the energy used by one specified setting.
+\item Infer a predictive relationship from logged settings and measured energy.
+\end{enumerate}
+\textbf{Construction.} Write $y=M(x)$ and ask which object is unknown.
+\begin{enumerate}[label=(\alph*)]
+\item $M$ is known and the desired low-energy outcome is specified, but $x$ is unknown: \textbf{optimisation}. The search space contains encodable settings, the feasible set satisfies production constraints, and the objective is predicted energy.
+\item $x$ and $M$ are known, while $y$ is requested: \textbf{simulation}.
+\item Input--output examples are known, while $M$ is unknown: \textbf{modelling/learning}.
+\end{enumerate}
+\textbf{Trap.} The use of a computer model does not automatically make a task simulation. Classification depends on what is unknown.
+
+\subsection{Archetype 2: reason correctly about P, NP, NP-complete, and NP-hard}
+\textbf{Question.} Assess the claim that NP means non-polynomial and therefore an NP-hard optimisation problem cannot be checked efficiently.
+
+\textbf{Answer.} The claim combines two errors.
+\begin{enumerate}
+\item NP means \emph{nondeterministic polynomial time}, commonly characterised by polynomial-time verification of a proposed yes-certificate for a decision problem. It does not mean that the problem is proved to require non-polynomial time.
+\item NP-hard is a hardness relation. An NP-hard problem need not itself be a decision problem or belong to NP. For an optimisation problem, checking that a candidate is feasible and calculating its objective may be easy even when proving that it is globally optimal is hard.
+\end{enumerate}
+If a decision problem is both in NP and NP-hard, it is NP-complete. Every problem in P is also in NP. Whether $\mathbf P=\mathbf{NP}$ remains unresolved.
+
+\subsection{Archetype 3: trace the evolutionary algorithm loop}
+\textbf{Question.} A population contains four binary strings. Describe one generation without confusing parent selection and survivor selection.
+\begin{enumerate}
+\item \textbf{Represent and initialise:} choose an encoding and create the initial population.
+\item \textbf{Evaluate:} decode each genotype, calculate its objective, and convert it to the fitness used by selection.
+\item \textbf{Select parents:} sample candidates for reproduction. Better fitness normally means greater probability, not certainty.
+\item \textbf{Recombine:} exchange genetic material between selected parents to make offspring.
+\item \textbf{Mutate:} randomly change genes, supplying new variation.
+\item \textbf{Evaluate offspring:} decode and score the new candidates.
+\item \textbf{Select survivors:} decide which parents and/or offspring form the next population.
+\item \textbf{Terminate or repeat:} stop at a target, budget, or stagnation condition; otherwise begin the next generation.
+\end{enumerate}
+\textbf{Trap.} Parent selection answers who reproduces; survivor selection answers who remains. They can use different rules.
+
+\subsection{Archetype 4: represent and score 8-queens}
+For $N=4$, let $q_i$ be the row of the queen in column $i$. The permutation $q=(2,4,1,3)$ automatically gives one queen in each row and column. For every pair $i<j$, compare $|q_i-q_j|$ with $|i-j|$:
+\[
+\begin{array}{c|cccccc}
+(i,j)&(1,2)&(1,3)&(1,4)&(2,3)&(2,4)&(3,4)\\
+\hline
+|q_i-q_j|&2&1&1&3&1&2\\
+|i-j|&1&2&3&1&2&1
+\end{array}
+\]
+No pair is equal, so $C=0$ and $f(q)=\binom42-C=6$. A swap mutation exchanging the last two positions gives $q'=(2,4,3,1)$. It remains a valid permutation, but pair $(2,3)$ conflicts, so $C=1$ and $f(q')=5$.
+
+\textbf{Operator lesson.} Swap mutation preserves the permutation. Recombination must likewise preserve it or be followed by repair.
+
+\subsection{Archetype 5: calculate one complete SGA generation}
+Maximise $f(x)=x^2$ for an unsigned four-bit integer. Start with:
+\[
+\begin{array}{c|c|c|c}
+\text{chromosome}&x&f(x)&p_i=f_i/\sum f_j\\
+\hline
+0011&3&9&9/311=0.0289\\
+0101&5&25&25/311=0.0804\\
+1001&9&81&81/311=0.2605\\
+1110&14&196&196/311=0.6302
+\end{array}
+\]
+The fitness sum is $311$. Suppose roulette draws produce the mating pool
+$[1110,1001,1110,0101]$. Pair adjacent parents and cross after bit 2:
+\[
+\begin{aligned}
+11|10,\;10|01&\longrightarrow 11|01=1101,\quad 10|10=1010,\\
+11|10,\;01|01&\longrightarrow 11|01=1101,\quad 01|10=0110.
+\end{aligned}
+\]
+Suppose mutation flips the final bit of the fourth offspring only, so $0110\to0111$. With generational replacement the next population is
+$[1101,1010,1101,0111]$, decoding to $[13,10,13,7]$, with fitnesses $[169,100,169,49]$. Its total fitness is $487$ and its best fitness is $169$.
+
+\textbf{Checks.} The roulette outcomes and mutation event are sampled events, not guarantees. Decode after variation, recompute fitness, and use the correct generation's fitness sum.
+
+\clearpage
+\section{Progressive drills}
+\textit{Attempt all twelve without notes. Hints are brief; complete solutions begin on the next page.}
+\begin{enumerate}[label=\textbf{D\arabic*.}]
+\item For $y=M(x)$, classify: (i) estimating $M$ from examples; (ii) finding $x$ for a desired $y$ with known $M$; (iii) finding $y$ for known $x,M$.\par\emph{Hint: identify the unknown object.}
+\item A delivery problem has all possible route encodings $S$, a maximum-distance rule, and total fuel use $f$. Identify the search space, feasible set, and objective.\par\emph{Hint: constraints define a subset of the search space.}
+\item How many ordered routes are there through eight labelled cities before symmetry reductions? Why does this number matter?\par\emph{Hint: order all eight objects.}
+\item Correct the claim that every NP-hard problem is an NP-complete decision problem and NP means non-polynomial.\par\emph{Hint: separate membership from hardness.}
+\item Put these in a valid EA order: mutation, termination test, initialisation, offspring evaluation, parent selection, survivor selection, population evaluation, recombination.\par\emph{Hint: candidates must exist before evaluation.}
+\item Three candidates have fitnesses $2,3,5$. Calculate their roulette-selection probabilities.\par\emph{Hint: divide by total fitness.}
+\item Explain in one sentence why repeatedly selecting only the current best candidate can be risky.\par\emph{Hint: think about diversity and local optima.}
+\item For $q=(2,4,1,3)$ in 4-queens, calculate the diagonal conflicts and fitness $\binom42-C$.\par\emph{Hint: test every pair.}
+\item Parents $(1,2,3,4)$ and $(4,3,2,1)$ undergo ordinary one-point crossover after position 2. Write the children and explain the validity problem.\par\emph{Hint: a permutation contains each row once.}
+\item Decode the unsigned binary string $10110$.\par\emph{Hint: use place values $16,8,4,2,1$.}
+\item Map $10110$ linearly to $[10,20]$, including both endpoints.\par\emph{Hint: use $10+\frac{z}{31}(20-10)$.}
+\item Six strings each have length eight and independent bit-mutation probability $p_m=0.005$. Find the expected flips and probability of no flips.\par\emph{Hint: there are $48$ trials.}
+\end{enumerate}
+
+\clearpage
+\section{Solutions to the progressive drills}
+\begin{enumerate}[label=\textbf{D\arabic*.}]
+\item (i) Modelling/learning; (ii) optimisation; (iii) simulation.
+\item $S$ is every encodable route; $\mathcal F$ is the subset obeying the maximum-distance rule; minimise total fuel use $f$.
+\item $8!=40320$. Factorial growth makes exhaustive enumeration rapidly expensive.
+\item NP is polynomial-time verification of yes-certificates for decision problems, not non-polynomial. NP-hard problems need not be in NP or be decision problems. NP-complete problems are both in NP and NP-hard.
+\item
+\[
+\begin{aligned}
+\text{initialise}&\to\text{evaluate population}\to\text{select parents}
+\to\text{recombine}\to\text{mutate}\\
+&\to\text{evaluate offspring}\to\text{select survivors}
+\to\text{test termination}.
+\end{aligned}
+\]
+\item Total $10$; probabilities $0.2,0.3,0.5$, summing to $1$.
+\item It can destroy diversity and cause premature convergence around a local optimum.
+\item No conflicting pair, so $C=0$ and $f=6$.
+\item Children $(1,2,2,1)$ and $(4,3,3,4)$ repeat and omit rows; use a permutation-preserving crossover or repair.
+\item $10110_2=16+4+2=22$.
+\item $x=10+\frac{22}{31}(10)=17.0968$ approximately.
+\item Expected flips $=6(8)(0.005)=0.24$; no-flip probability $=0.995^{48}\approx0.7862$.
+\end{enumerate}
+
+\clearpage
+\section{Mock Quiz A: foundations and a hand-worked generation}
+\noindent\textbf{Conditions:} 60 minutes, closed book, 100 marks.
+
+\subsection*{Question 1: Problem formulation (20 marks; 10 minutes)}
+A trained surrogate predicts drag $y=M(x)$ from an airfoil design $x$.
+\begin{enumerate}[label=(\alph*)]
+\item Classify finding the lowest-drag design subject to strength constraints. Identify $S$, $\mathcal F$, and the objective. \hfill[10]
+\item Classify (i) predicting drag for a given design and (ii) learning the surrogate from examples. \hfill[6]
+\item Distinguish a CSP from a constrained optimisation problem. \hfill[4]
+\end{enumerate}
+
+\subsection*{Question 2: Complexity and EC foundations (20 marks; 10 minutes)}
+\begin{enumerate}[label=(\alph*)]
+\item Define P, NP, NP-complete, and NP-hard. \hfill[12]
+\item Explain why NP-hardness motivates heuristic search but does not prove an EA will perform well. \hfill[4]
+\item Distinguish genotype from phenotype, with one example. \hfill[4]
+\end{enumerate}
+
+\subsection*{Question 3: The EA loop (20 marks; 10 minutes)}
+\begin{enumerate}[label=(\alph*)]
+\item Write one complete generation of a general EA in a correct order. \hfill[12]
+\item Distinguish parent selection from survivor selection. \hfill[4]
+\item Give two sensible termination conditions. \hfill[4]
+\end{enumerate}
+
+\subsection*{Question 4: 4-queens representation (20 marks; 12 minutes)}
+Use $q_i=$ row in column $i$ and fitness $f=\binom42-C$.
+\begin{enumerate}[label=(\alph*)]
+\item For $q=(1,3,4,2)$, list every diagonal conflict and calculate $f$. \hfill[10]
+\item Explain which constraints the permutation enforces automatically. \hfill[4]
+\item Explain why ordinary one-point crossover may fail and give a remedy. \hfill[6]
+\end{enumerate}
+
+\subsection*{Question 5: Simple GA calculation (20 marks; 18 minutes)}
+Maximise $f(x)=x^2$ using three-bit unsigned strings. The population is $010,011,101,110$.
+\begin{enumerate}[label=(\alph*)]
+\item Decode, calculate all fitnesses, and calculate roulette probabilities. \hfill[10]
+\item The mating pool is $110,101,011,110$. Cross adjacent parents after bit 1. \hfill[6]
+\item Flip the last bit of the first child only. Give the next population and best fitness. \hfill[4]
+\end{enumerate}
+
+\clearpage
+\section{Mock Quiz A: marking guide}
+\begin{description}[leftmargin=0pt,labelindent=0pt]
+\item[Q1 (20).] Optimisation (2); $S$ all encodable designs (2); $\mathcal F$ strength-feasible designs (2); minimise drag (2); known $M$/unknown $x$ (2). Simulation (3), modelling/learning (3). CSP seeks any feasible candidate (2); constrained optimisation seeks the best (2).
+\item[Q2 (20).] P solvable in polynomial time (3); NP has polynomially verifiable yes-certificates (3); NP-complete is in NP and NP-hard (3); NP-hard need not be in NP (3). Motivation without algorithm-specific guarantee (4). Genotype is encoding; phenotype is domain solution, with example (4).
+\item[Q3 (20).] Initialise, evaluate, parent select, recombine, mutate, evaluate offspring, survivor select, terminate/repeat: 12. Parent selection chooses reproducers; survivor selection forms the next population: 4. Any two of target, evaluation/time budget, or stagnation: 4.
+\item[Q4 (20).] Only $(2,3)$ conflicts (6); $C=1$, $f=5$ (4). One queen per column and row (4). Ordinary crossover can duplicate/omit rows (3); permutation-preserving crossover or repair (3).
+\item[Q5 (20).] Decodings $2$, $3$, $5$, $6$ (2); fitnesses $4$, $9$,
+$25$, $36$ (2); sum $74$ (2); probabilities $4/74$, $9/74$, $25/74$,
+$36/74$ (4). The crosses are
+\[
+1|10,\;1|01\to101,\;110
+\qquad\text{and}\qquad
+0|11,\;1|10\to010,\;111
+\]
+(6). Mutate $101\to100$; the next population is $100$, $110$, $010$,
+$111$ (2), and its best fitness is $49$ (2).
+\end{description}
+\noindent\textbf{Total: 100 marks.}
+
+\clearpage
+\section{Mock Quiz B: representation, operators, and optimisation context}
+\noindent\textbf{Conditions:} 60 minutes, closed book, 100 marks.
+
+\subsection*{Question 1: Representation and encoding (20 marks; 12 minutes)}
+\begin{enumerate}[label=(\alph*)]
+\item Define chromosome, gene, allele, genotype, and phenotype. \hfill[10]
+\item Decode $11010_2$ and map it linearly to $[-2,3]$, including endpoints. \hfill[6]
+\item State two properties of a useful representation. \hfill[4]
+\end{enumerate}
+
+\subsection*{Question 2: Selection and variation (20 marks; 10 minutes)}
+Four candidates have fitnesses $1,2,3,4$.
+\begin{enumerate}[label=(\alph*)]
+\item Calculate roulette probabilities. \hfill[6]
+\item Explain why the best candidate is not guaranteed to be selected. \hfill[4]
+\item Distinguish recombination from mutation and state one role of each. \hfill[6]
+\item State one danger of excessive selection pressure. \hfill[4]
+\end{enumerate}
+
+\subsection*{Question 3: 5-queens fitness (20 marks; 12 minutes)}
+Use $q=(1,2,3,5,4)$ and fitness $f=\binom52-C$.
+\begin{enumerate}[label=(\alph*)]
+\item Identify all diagonal conflicts. \hfill[12]
+\item Calculate $C$ and $f$. \hfill[4]
+\item Explain why swap mutation preserves row/column feasibility. \hfill[4]
+\end{enumerate}
+
+\subsection*{Question 4: SGA checks (25 marks; 16 minutes)}
+Five strings have length six; bit mutation is independent with $p_m=0.01$.
+\begin{enumerate}[label=(\alph*)]
+\item Find expected flips and probability of no flips. \hfill[8]
+\item Cross $101|011$ and $010|110$ at the shown point. \hfill[5]
+\item Decode both children as unsigned integers. \hfill[4]
+\item For minimising $g(x)=(x-20)^2$, explain why raw $g$ is wrong in a larger-is-better roulette rule and give a valid transformation. \hfill[8]
+\end{enumerate}
+
+\subsection*{Question 5: Search behaviour (15 marks; 10 minutes)}
+\begin{enumerate}[label=(\alph*)]
+\item Distinguish local and global optima using a neighbourhood. \hfill[6]
+\item Explain exploration versus exploitation. \hfill[5]
+\item State the practical message of no free lunch. \hfill[4]
+\end{enumerate}
+
+\clearpage
+\section{Mock Quiz B: marking guide}
+\begin{description}[leftmargin=0pt,labelindent=0pt]
+\item[Q1 (20).] Chromosome/genotype, gene/component, allele/value, genotype/encoding, phenotype/domain solution: 2 each. $11010_2=26$ (2); $x=-2+\frac{26}{31}(5)=2.1935$ (4). Any two useful representation properties: 2 each.
+\item[Q2 (20).] Total $10$, probabilities $0.1,0.2,0.3,0.4$ (6). Stochastic selection is not certainty (4). Recombination combines parental material (3); mutation supplies random new variation (3). Excess pressure can destroy diversity and cause premature convergence (4).
+\item[Q3 (20).] Conflicts $(1,2),(1,3),(2,3),(4,5)$: 3 each. Thus $C=4$, $f=10-4=6$ (4). Swapping retains each row once, while columns are positions (4).
+\item[Q4 (25).] There are $30$ bits; expected flips $0.3$ (4); no-flip probability $0.99^{30}\approx0.7397$ (4). Children $101110$ and $010011$ (5), decoding to $46$ and $19$ (4). Raw $g$ rewards larger error (4); for example $F=1/(1+g)$ is positive and decreases with error (4).
+\item[Q5 (15).] Local is best in its neighbourhood; global is best in the whole feasible set (6). Exploration samples new regions; exploitation improves promising regions (5). No optimiser dominates all possible problems, so problem knowledge and empirical testing matter (4).
+\end{description}
+\noindent\textbf{Total: 100 marks.}
+
+\clearpage
+\section{Eight-day preparation schedule: 24--31 August}
+\begin{tabular}{@{}>{\bfseries\raggedright\arraybackslash}p{0.12\textwidth}
+  >{\raggedright\arraybackslash}p{0.27\textwidth}
+  >{\raggedright\arraybackslash}p{0.55\textwidth}@{}}
+\toprule
+Date & Focus & Minimum deliverable\\
+\midrule
+24 Aug & Scope and classification & Reproduce the scope map; solve D1--D3 without notes.\\
+25 Aug & Complexity and EC foundations & Explain P/NP/NP-complete/NP-hard aloud; solve D4.\\
+26 Aug & EA loop and components & Draw the complete loop from memory; solve D5--D7.\\
+27 Aug & Representation and 8-queens & Recalculate Archetype 4; solve D8--D9.\\
+28 Aug & SGA arithmetic & Recalculate Archetype 5; solve D10--D12 and check every sum.\\
+29 Aug & Timed Mock A & Attempt in 60 minutes; mark in a different colour; relearn every lost mark.\\
+30 Aug & Timed Mock B & Attempt in 60 minutes; mark and write a one-line cause for each error.\\
+31 Aug & Retrieval and weak spots & Recite the memory core, redo missed questions, and stop heavy study early.\\
+\bottomrule
+\end{tabular}
+
+\subsection{Quiz-day checklist}
+\begin{itemize}
+\item Verify the official date, time, venue, and permitted materials in NTULearn.
+\item Before calculating, write the encoding, objective direction, and fitness convention.
+\item For roulette selection, calculate the fitness sum and check probabilities sum to 1.
+\item After crossover or mutation, check chromosome length and representation validity.
+\item For 8-queens, test each pair once using $i<j$; do not double-count.
+\item For complexity questions, do not expand NP as non-polynomial.
+\item Reserve the final five minutes for arithmetic and unanswered subparts.
+\end{itemize}
+
+\source{\path{../resources/lecture-01-evolutionary-computing-part-1.pdf},
+PDF pp.~1--36. Historical sources were used only to design original question
+patterns; all calculations and solutions here were independently derived.}
+\end{document}

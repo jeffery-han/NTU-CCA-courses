@@ -1,0 +1,642 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=23mm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{booktabs,array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{xurl}
+\usepackage[hidelinks]{hyperref}
+
+\newcommand{\Z}{\mathcal{Z}}
+\newcommand{\e}{\mathrm{e}}
+\newcommand{\jmathunit}{\mathrm{j}}
+\newcommand{\unitstep}{\mathbf{1}}
+\newcommand{\code}[1]{\emph{#1}}
+\newcommand{\term}[1]{\textbf{#1}}
+\newcommand{\sourcepages}[1]{\par\smallskip\noindent{\footnotesize\color{gray}\textit{Week 1 source: lecture-note PDF pages #1 and the Week 1 transcript.}}}
+\newsavebox{\notebox}
+\newenvironment{keybox}[1]
+  {\begin{center}\begin{lrbox}{\notebox}\begin{minipage}{0.91\linewidth}\small\textbf{#1}\par\smallskip}
+  {\end{minipage}\end{lrbox}\fcolorbox{blue!55!black}{blue!4}{\usebox{\notebox}}\end{center}}
+
+\setlist{nosep,leftmargin=*}
+\setlength{\parskip}{0.55em}
+\setlength{\parindent}{0pt}
+
+\title{EE6203 Computer Controlled Systems\\
+\large Week 1 from Zero: Notes for a Computer-Science Student}
+\author{Based on lectures by Dr Wen Changyun}
+\date{21 August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{keybox}{Who this note is for}
+You know programming, algorithms, and perhaps basic calculus, but have not studied signals or control. This note explains every Week 1 idea before using it. It covers only the material taught in Week 1: feedback, digital-control architecture, signal types, the $z$ transform, its main pairs and properties, poles and zeros, and the initial- and final-value theorems. Inverse $z$ transforms begin in Week 2 and are not developed here.
+\end{keybox}
+
+\tableofcontents
+\newpage
+
+\section{The course in one picture}
+
+Control is about making a changing real-world quantity behave as desired. Examples include keeping a room at a chosen temperature, making a motor shaft reach a requested angle, or keeping a drone level.
+
+The basic loop is
+\[
+\begin{aligned}
+\boxed{r}&\longrightarrow
+\boxed{\text{compare}}\longrightarrow
+\boxed{e}\longrightarrow
+\boxed{\text{controller}}\longrightarrow
+\boxed{u}\\
+&\longrightarrow\boxed{\text{plant}}\longrightarrow\boxed{y},
+\qquad \text{with }y\text{ fed back to compare.}
+\end{aligned}
+\]
+
+The symbols are simply names for variables:
+
+\begin{center}
+\begin{tabular}{c p{0.23\textwidth} p{0.55\textwidth}}
+\toprule
+Symbol & Control word & Plain meaning\\
+\midrule
+$r$ & reference & the target value requested by the user or a higher-level program\\
+$y$ & output & what the physical system is actually doing\\
+$e=r-y$ & error & target minus measurement\\
+$u$ & control input & the command applied to the physical system\\
+-- & plant & the system being controlled: motor, vehicle, heater, robot, and so on\\
+-- & controller & the algorithm that computes $u$ from available information\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{A CS translation}
+
+A digital controller is like a program running forever:
+
+\begin{quote}
+\small
+\emph{while the system is running:}\\
+\hspace*{1em}read the sensor into $y$\\
+\hspace*{1em}set $e$ to reference minus $y$\\
+\hspace*{1em}compute $u$ from $e$ and stored history\\
+\hspace*{1em}write $u$ to the actuator\\
+\hspace*{1em}wait until the next sample
+\end{quote}
+
+The unfamiliar part is that the program interacts with physics. The program updates at particular clock ticks, but the motor or room continues evolving between ticks.
+
+\begin{keybox}{First mental model}
+Think of control as a feedback service with a strict periodic scheduler. The sensor supplies observations, the controller is the update function, the actuator applies the returned command, and the plant is the external stateful process.
+\end{keybox}
+
+\subsection{A thermostat example}
+
+Suppose the desired temperature is $r=22^\circ$C and the sensor reads $y=19^\circ$C. Then
+\[
+e=r-y=22-19=3^\circ\text{C}.
+\]
+A simple controller might command heater power $u=K e$, where $K>0$ is a chosen gain. A larger positive error produces more heat. As the room warms, $y$ approaches $r$, so $e$ and the command shrink.
+
+Why feed the measurement back? Without feedback, the program would not notice an open window, a crowded room, or a heater that is weaker than expected. Feedback repeatedly corrects the command using the observed result.
+
+\section{What makes a controller good?}
+
+The Week 1 lecture gives four goals.
+
+\subsection{Stability}
+
+A stable closed loop does not let its signals grow without bound under normal bounded commands and disturbances. In software language, stability is stronger than ``the code does not crash.'' The code can run perfectly while commanding a motor whose speed grows dangerously.
+
+\begin{center}
+\begin{tabular}{p{0.28\textwidth}p{0.62\textwidth}}
+\toprule
+Behavior & Interpretation\\
+\midrule
+Output approaches a finite value & typically stable\\
+Output oscillates with decreasing amplitude & stable, but perhaps slow or uncomfortable\\
+Output oscillates forever & marginal behavior; no final value\\
+Output grows without limit & unstable\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Transient performance}
+
+The \term{transient} is the temporary behavior after a command or disturbance changes. Common measurements are:
+
+\begin{itemize}
+  \item \term{rise time}: how quickly the output moves toward the target;
+  \item \term{overshoot}: how far it passes beyond the target;
+  \item \term{settling time}: how long it takes to enter and remain near the target.
+\end{itemize}
+
+Two systems may both be stable and eventually correct, yet one may be clearly better because it is faster and overshoots less.
+
+\subsection{Steady-state accuracy}
+
+The \term{steady state} is the long-run behavior after the transient has died away. The steady-state error is the limiting value of $e$. Ideally,
+\[
+\lim_{t\to\infty}e(t)=0,
+\]
+meaning that the output eventually matches the reference.
+
+\subsection{Optimality}
+
+Several controllers may satisfy the first three goals. Optimal control adds a cost function, perhaps penalizing both error and energy use, and chooses the controller with the smallest cost. This is mentioned in Week 1 but developed later in the course.
+
+\subsection{Design versus analysis}
+
+These are different jobs:
+
+\begin{itemize}
+  \item \term{Design}: given a plant model and requirements, choose the controller.
+  \item \term{Analysis}: given the complete loop, verify stability and performance.
+\end{itemize}
+
+This resembles software construction and verification. Producing an implementation is design; checking its invariants, latency, and behavior under inputs is analysis.
+
+\sourcepages{7--11}
+
+\section{Why digital control is a mixed-time system}
+
+Many physical plants evolve continuously. A computer does not: it reads and writes at isolated instants. A typical path is
+\[
+\text{continuous sensor signal}
+\xrightarrow{\text{ADC}}
+\text{numbers}
+\xrightarrow{\text{program}}
+\text{numbers}
+\xrightarrow{\text{DAC/hold}}
+\text{continuous actuator signal}.
+\]
+
+\term{ADC} means analog-to-digital conversion. It samples the sensor and represents the result numerically. \term{DAC} means digital-to-analog conversion. In practice a hold keeps the latest command active until the next one arrives.
+
+Digital control is attractive because software is cheap to change, complicated logic is implementable, and one processor can run several control routines. The cost is extra modeling: we must reason about both continuous physics and discrete computations.
+
+\subsection{Signal vocabulary without signal-processing prerequisites}
+
+A \term{signal} is just a variable indexed by something, usually time. There are two separate questions:
+
+\begin{enumerate}
+  \item At which times does the variable exist?
+  \item Which amplitude values may it take?
+\end{enumerate}
+
+\begin{center}
+\begin{tabular}{>{\bfseries}p{0.19\textwidth}p{0.34\textwidth}p{0.34\textwidth}}
+\toprule
+ & Continuous amplitude & Quantized amplitude\\
+\midrule
+Continuous time & analog signal, such as an ideal voltage $x(t)$ & a continuously indexed variable restricted to levels\\
+Discrete time & sampled-data signal $x[k]$ & digital signal stored with finite precision\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\term{Sampling} discretizes time. \term{Quantization} discretizes amplitude. They are not the same operation. This course initially ignores amplitude quantization and studies sampled values as exact real numbers.
+
+\subsection{Periodic sampling}
+
+The course assumes a fixed sampling period $T$:
+\[
+t_k=kT,\qquad k=0,1,2,\ldots,
+\qquad x[k]=x(kT).
+\]
+For example, if $T=0.1$ s, then $x[3]$ is the value observed at $t=0.3$ s. The sampling frequency is $f_s=1/T$ samples per second, and its angular form is $\omega_s=2\pi/T$ radians per second.
+
+The brackets in $x[k]$ emphasize that $k$ is an integer index, not physical time. The notation $x(kT)$ emphasizes the physical sampling instant. They describe the same sample sequence.
+
+\begin{keybox}{Important information loss}
+The samples do not tell us what happened between $kT$ and $(k+1)T$. Many continuous curves can pass through the same points. A reconstruction rule or additional assumption is needed to choose an intersample waveform.
+\end{keybox}
+
+\sourcepages{12--20}
+
+\section{The discrete-time math you need}
+
+\subsection{A sequence is an indexed array}
+
+A causal sequence begins at $k=0$:
+\[
+x[0],x[1],x[2],\ldots
+\]
+You can think of it as an infinite array or iterator. Two special sequences appear frequently:
+
+\begin{align*}
+\delta[k]&=
+\begin{cases}1,&k=0,\\0,&k\ne0,\end{cases}
+&\text{unit impulse, analogous to a one-hot sample},\\
+\unitstep[k]&=
+\begin{cases}1,&k\ge0,\\0,&k<0,\end{cases}
+&\text{unit step, a value switched on from index 0.}
+\end{align*}
+
+A one-step delayed sequence is $x[k-1]$. Under the causal convention, missing negative indices are treated as zero unless initial conditions say otherwise.
+
+\subsection{A difference equation is a recurrence}
+
+Continuous systems are often modeled by differential equations. Discrete systems use \term{difference equations}, which are ordinary recurrences. For example,
+\[
+y[k]=0.8y[k-1]+u[k].
+\]
+This is no stranger than an update in a loop:
+
+\begin{quote}
+\small
+set $y$ to zero\\
+\emph{for each new input $u$:}\\
+\hspace*{1em}set $y$ to $0.8y+u$\\
+\hspace*{1em}emit the new $y$
+\end{quote}
+
+The previous output is memory. The multiplier $0.8$ says that old state gradually decays. The $z$ transform is useful because it turns delayed terms such as $y[k-1]$ into algebraic factors.
+
+\subsection{Three pieces of algebra}
+
+You mainly need these ideas:
+
+\begin{enumerate}
+  \item \term{Geometric series}: if $|q|<1$, then
+  \[
+  1+q+q^2+\cdots=\frac{1}{1-q}.
+  \]
+  \item \term{Complex magnitude}: for $p=a+\jmathunit b$,
+  $|p|=\sqrt{a^2+b^2}$. Magnitude controls growth or decay of $p^k$.
+  \item \term{Rational function}: a polynomial divided by another polynomial. Its denominator roots are called poles; numerator roots are called zeros.
+\end{enumerate}
+
+\section{The $z$ transform as a sequence encoding}
+
+For a causal sequence,
+\[
+X(z)=\Z\{x[k]\}=\sum_{k=0}^{\infty}x[k]z^{-k}
+=x[0]+x[1]z^{-1}+x[2]z^{-2}+\cdots.
+\]
+
+Treat $z$ as a symbolic variable for now. The transform packages the entire sequence into one expression, with the exponent recording the sample index.
+
+\subsection{Finite-array example}
+
+If
+\[
+x[0]=2,\qquad x[1]=3,\qquad x[2]=5,
+\qquad x[k]=0\ \text{afterward},
+\]
+then
+\[
+X(z)=2+3z^{-1}+5z^{-2}.
+\]
+The coefficient of $z^{-2}$ is the value at index 2. This is similar to a generating function used in combinatorics and algorithm analysis.
+
+\subsection{Why $z^{-1}$ means delay}
+
+Let $y[k]=x[k-1]$, with $x[k]=0$ for negative $k$. Then
+\begin{align*}
+Y(z)&=x[0]z^{-1}+x[1]z^{-2}+x[2]z^{-3}+\cdots\\
+&=z^{-1}X(z).
+\end{align*}
+Thus one multiplication by $z^{-1}$ shifts every coefficient one position later. In a block diagram, $z^{-1}$ is a one-sample memory element, much like reading the previous element in a buffer.
+
+\begin{keybox}{The most useful intuition in Week 1}
+$z^{-1}$ is not mysterious: it means ``delay by one sample.'' A polynomial in $z^{-1}$ describes a combination of current and stored past values.
+\end{keybox}
+
+\subsection{Why transforms help with recurrences}
+
+Apply the zero-initial-condition delay rule to
+\[
+y[k]=0.8y[k-1]+u[k].
+\]
+Taking $z$ transforms gives
+\[
+Y(z)=0.8z^{-1}Y(z)+U(z).
+\]
+The recurrence has become an algebraic equation:
+\[
+\frac{Y(z)}{U(z)}=\frac{1}{1-0.8z^{-1}}.
+\]
+This ratio describes the discrete system. Solving difference equations fully, including nonzero initial conditions and inverse transforms, is Week 2; this preview only explains the purpose of the tool.
+
+\sourcepages{21--25}
+
+\section{Transform pairs, derived rather than memorized}
+
+\subsection{Impulse}
+
+Only the $k=0$ sample is nonzero:
+\[
+\Z\{\delta[k]\}=1.
+\]
+A delay by $n$ samples gives
+\[
+\Z\{\delta[k-n]\}=z^{-n}.
+\]
+
+\subsection{Unit step}
+
+Every sample is one:
+\[
+\Z\{\unitstep[k]\}
+=1+z^{-1}+z^{-2}+\cdots.
+\]
+Use the geometric series with $q=z^{-1}$:
+\[
+\Z\{\unitstep[k]\}=\frac{1}{1-z^{-1}}=\frac{z}{z-1}.
+\]
+
+\subsection{Exponential sequence}
+
+For $x[k]=a^k\unitstep[k]$,
+\[
+X(z)=1+az^{-1}+a^2z^{-2}+\cdots
+=\frac{1}{1-az^{-1}}=\frac{z}{z-a}.
+\]
+This single pair explains much of discrete-time behavior:
+
+\begin{center}
+\begin{tabular}{c p{0.62\textwidth}}
+\toprule
+Pole $a$ & Behavior of $a^k$\\
+\midrule
+$|a|<1$ & magnitude decays to zero\\
+$|a|=1$ & magnitude persists; a complex $a$ may oscillate forever\\
+$|a|>1$ & magnitude grows without bound\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Ramp and sinusoids}
+
+The main Week 1 table also includes
+\begin{align*}
+\Z\{k\unitstep[k]\}
+&=\frac{z^{-1}}{(1-z^{-1})^2}=\frac{z}{(z-1)^2},\\
+\Z\{\sin(\omega kT)\unitstep[k]\}
+&=\frac{z\sin(\omega T)}{z^2-2z\cos(\omega T)+1},\\
+\Z\{\cos(\omega kT)\unitstep[k]\}
+&=\frac{z^2-z\cos(\omega T)}{z^2-2z\cos(\omega T)+1}.
+\end{align*}
+
+Do not try to memorize these on first contact. Understand the impulse, step, and exponential pairs first. The ramp can be derived by differentiating the geometric series, while the sinusoidal pairs follow from complex exponentials.
+
+\sourcepages{26--33}
+
+\section{Properties as algebraic APIs}
+
+Assume $\Z\{x[k]\}=X(z)$ and $\Z\{y[k]\}=Y(z)$.
+
+\subsection{Linearity}
+
+\[
+\Z\{\alpha x[k]+\beta y[k]\}
+=\alpha X(z)+\beta Y(z).
+\]
+This works because summation distributes over addition and constants. It lets us transform complicated signals one component at a time.
+
+\subsection{Delay}
+
+For a causal sequence,
+\[
+\Z\{x[k-n]\unitstep[k-n]\}=z^{-n}X(z).
+\]
+The step factor makes the delayed sequence zero before it starts. In code, delaying by $n$ means prefixing the stream with $n$ zeros.
+
+\subsection{Advance and initial values}
+
+Advancing is not simply multiplication by $z$ for a one-sided transform, because values fall off the beginning of the sequence:
+\[
+\Z\{x[k+1]\}=zX(z)-zx[0].
+\]
+More generally,
+\[
+\Z\{x[k+n]\}
+=z^nX(z)-z^nx[0]-z^{n-1}x[1]-\cdots-zx[n-1].
+\]
+This is analogous to slicing an array from a later index: the removed prefix must be accounted for.
+
+\subsection{Multiplication by an exponential}
+
+\[
+\Z\{a^kx[k]\}=X(z/a).
+\]
+For samples of a continuous exponential, $a=\e^{-cT}$, so
+\[
+\Z\{\e^{-ckT}x[k]\}=X(z\e^{cT}).
+\]
+The lecture calls this the complex translation theorem. The name matters less than the substitution pattern.
+
+\sourcepages{34--40}
+
+\section{Poles, zeros, and the unit circle}
+
+A rational transform can be written
+\[
+X(z)=\frac{N(z)}{D(z)}
+=K\frac{(z-z_1)\cdots(z-z_m)}{(z-p_1)\cdots(z-p_n)}.
+\]
+
+\begin{itemize}
+  \item A \term{zero} $z_i$ is a root of the numerator: $N(z_i)=0$.
+  \item A \term{pole} $p_i$ is a root of the denominator: $D(p_i)=0$.
+\end{itemize}
+
+The term ``pole'' comes from the function becoming unbounded near a denominator root. In discrete time, poles are important because a pole at $p$ typically contributes a mode proportional to $p^k$.
+
+\subsection{Why the unit circle matters}
+
+The unit circle is the set $|z|=1$ in the complex plane. For a mode $p^k$:
+
+\begin{itemize}
+  \item $|p|<1$: repeated multiplication shrinks the mode;
+  \item $|p|=1$: the mode does not decay;
+  \item $|p|>1$: repeated multiplication grows the mode.
+\end{itemize}
+
+This is the discrete-time version of asking whether a loop update contracts or expands its state. Later the course turns this intuition into the closed-loop stability rule.
+
+\subsection{Tiny examples}
+
+\[
+X_1(z)=\frac{z}{z-0.5}
+\quad\Longleftrightarrow\quad
+x_1[k]=(0.5)^k\unitstep[k],
+\]
+whose pole $0.5$ is inside the unit circle and whose samples decay.
+
+\[
+X_2(z)=\frac{z}{z-1.2}
+\quad\Longleftrightarrow\quad
+x_2[k]=(1.2)^k\unitstep[k],
+\]
+whose pole $1.2$ is outside the unit circle and whose samples grow.
+
+\sourcepages{41--43}
+
+\section{Initial and final values without inversion}
+
+These theorems read useful values directly from $X(z)$.
+
+\subsection{Initial-value theorem}
+
+From
+\[
+X(z)=x[0]+x[1]z^{-1}+x[2]z^{-2}+\cdots,
+\]
+all negative powers vanish as $z\to\infty$. Therefore
+\[
+x[0]=\lim_{z\to\infty}X(z).
+\]
+
+\paragraph{Example.}
+For
+\[
+X(z)=\frac{2z^2+3z}{z^2-0.5z},
+\]
+divide numerator and denominator by $z^2$:
+\[
+x[0]=\lim_{z\to\infty}
+\frac{2+3z^{-1}}{1-0.5z^{-1}}=2.
+\]
+
+\subsection{Final-value theorem}
+
+If the sequence really converges, then
+\[
+\lim_{k\to\infty}x[k]
+=\lim_{z\to1}(1-z^{-1})X(z).
+\]
+
+The convergence condition is essential: all poles of $(1-z^{-1})X(z)$ must lie strictly inside the unit circle. Equivalently, all poles of $X(z)$ must be inside, except possibly one \emph{simple} pole at $z=1$.
+
+\begin{keybox}{Why the pole check comes first}
+Substitution can return a neat number even when the time sequence grows or oscillates forever. First ask whether a final value exists; only then evaluate the formula.
+\end{keybox}
+
+\paragraph{Valid example.}
+For $0<a<1$, let
+\[
+X(z)=\frac{z}{(z-1)(z-a)}.
+\]
+There is one simple pole at $1$ and one pole $a$ inside the unit circle, so the theorem applies:
+\begin{align*}
+x[\infty]
+&=\lim_{z\to1}(1-z^{-1})\frac{z}{(z-1)(z-a)}\\
+&=\lim_{z\to1}\frac{1}{z-a}
+=\frac{1}{1-a}.
+\end{align*}
+
+\paragraph{Invalid example: growth.}
+For $X(z)=z/(z-1.2)$, the pole $1.2$ is outside the unit circle. The sequence $(1.2)^k$ grows, so it has no finite final value.
+
+\paragraph{Invalid example: oscillation.}
+The sequence $x[k]=(-1)^k$ has a pole at $z=-1$, on the unit circle. It alternates forever, so its limit does not exist.
+
+\paragraph{Why a simple pole at $z=1$ is allowed.}
+A simple pole at $1$ corresponds to a constant component. The factor $(1-z^{-1})$ cancels it when computing the final value. A repeated pole at $1$ corresponds to growth such as a ramp, so it is not allowed.
+
+\sourcepages{41--48}
+
+\section{A complete Week 1 reasoning example}
+
+Consider the recurrence
+\[
+x[k]=0.6x[k-1]+0.4\unitstep[k],
+\qquad x[-1]=0.
+\]
+This can represent a simple state that moves 40\% of the remaining way toward one at every update.
+
+\subsection*{1. Compute a few samples}
+
+\[
+x[0]=0.4,\quad
+x[1]=0.6(0.4)+0.4=0.64,\quad
+x[2]=0.784.
+\]
+The values suggest convergence toward one.
+
+\subsection*{2. Transform the recurrence}
+
+Because $x[-1]=0$,
+\[
+X(z)=0.6z^{-1}X(z)+0.4\frac{1}{1-z^{-1}}.
+\]
+Therefore
+\[
+X(z)=\frac{0.4}{(1-z^{-1})(1-0.6z^{-1})}.
+\]
+
+\subsection*{3. Inspect the poles}
+
+The poles are $z=1$ and $z=0.6$. The first is simple and the second is inside the unit circle, so a final value exists.
+
+\subsection*{4. Use the final-value theorem}
+
+\[
+x[\infty]
+=\lim_{z\to1}(1-z^{-1})X(z)
+=\lim_{z\to1}\frac{0.4}{1-0.6z^{-1}}
+=1.
+\]
+
+This example connects a program-like recurrence, a transform, poles, and the final-value theorem without requiring an inverse transform.
+
+\section{What to understand, memorize, and postpone}
+
+\subsection{Understand deeply}
+
+\begin{itemize}
+  \item Feedback repeatedly compares target and measurement.
+  \item The plant is physical and usually continuous; the controller is digital and updates at samples.
+  \item Sampling discretizes time; quantization discretizes amplitude.
+  \item A difference equation is a recurrence with memory.
+  \item $z^{-1}$ means a one-sample delay.
+  \item A pole $p$ is linked to behavior like $p^k$; its magnitude predicts decay or growth.
+  \item The final-value theorem is conditional, not a substitution trick.
+\end{itemize}
+
+\subsection{Memorize for fluent problem solving}
+
+\[
+X(z)=\sum_{k=0}^{\infty}x[k]z^{-k},\qquad
+\Z\{\unitstep[k]\}=\frac{1}{1-z^{-1}},\qquad
+\Z\{a^k\unitstep[k]\}=\frac{1}{1-az^{-1}}.
+\]
+
+Also remember linearity, the delay rule, and the initial/final-value formulas with their conditions.
+
+\subsection{Postpone until Week 2}
+
+\begin{itemize}
+  \item inverse $z$ transforms;
+  \item partial-fraction expansion;
+  \item solving general difference equations with nonzero initial conditions;
+  \item impulse-sampler and zero-order-hold models.
+\end{itemize}
+
+\section{Week 1 self-check}
+
+You are ready to move on if you can answer these without looking back:
+
+\begin{enumerate}
+  \item In a thermostat, identify $r$, $y$, $e$, $u$, the controller, and the plant.
+  \item Explain why stable and accurate are not synonyms.
+  \item Explain the difference between sampled-data and digital signals.
+  \item If $T=0.02$ s, at what physical time is sample $x[15]$ taken?
+  \item Write the $z$ transform of the finite sequence $[4,-1,2]$.
+  \item Explain in one sentence why $z^{-1}$ is a delay.
+  \item Find the pole of $z/(z-0.7)$ and predict whether its sequence decays.
+  \item State the condition that must be checked before using the final-value theorem.
+\end{enumerate}
+
+\paragraph{Answers.}
+For question 4, $15T=0.30$ s. For question 5, $4-z^{-1}+2z^{-2}$. For question 7, the pole is $0.7$, so the corresponding exponential mode decays. The remaining answers should be explainable in words, not only repeated as formulas.
+
+\section*{Source note}
+
+This teaching note is based only on the material actually taught in Week 1, verified against \path{resources/lecture-notes-weeks-01-04.pdf}, PDF pages 1--48, and \path{resources/week-01-transcript.txt}. Administrative details and repeated spoken phrasing are omitted; conceptual explanations and examples are rewritten for a reader without prior control or signals background.
+
+\end{document}

@@ -1,0 +1,1314 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=24mm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{booktabs,array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{xurl}
+\usepackage[hidelinks]{hyperref}
+
+\newcommand{\Z}{\mathcal{Z}}
+\newcommand{\Lcal}{\mathcal{L}}
+\newcommand{\dd}{\,\mathrm{d}}
+\newcommand{\e}{\mathrm{e}}
+\newcommand{\unitstep}{\mathbf{1}}
+\newcommand{\sourcepages}[1]{\par\smallskip\noindent{\small\color{gray}\textit{Source: \path{resources/lecture-notes-weeks-01-04.pdf}, PDF pages #1.}}}
+\newcommand{\weeklabel}[1]{\par\smallskip\noindent{\color{blue!60!black}\textbf{Taught in #1.}}\par\smallskip}
+\newcommand{\commonerror}[1]{\par\smallskip\noindent\colorbox{red!8}{\parbox{\dimexpr\linewidth-2\fboxsep\relax}{\textbf{Common error.} #1}}\par\smallskip}
+\newcommand{\examcheck}[1]{\par\smallskip\noindent\colorbox{blue!7}{\parbox{\dimexpr\linewidth-2\fboxsep\relax}{\textbf{Exam check.} #1}}\par\smallskip}
+\newcommand{\resourcesource}[1]{\par\smallskip\noindent{\small\color{gray}\textit{Practice source: #1.}}}
+\setlist{nosep}
+\setlength{\parskip}{0.55em}
+\setlength{\parindent}{0pt}
+
+\title{EE6203 Computer Controlled Systems\\\large Beginner Teaching Notes for Weeks 1--4}
+\author{Source lecturer: Dr Wen Changyun}
+\date{Updated 25 August 2026}
+
+\begin{document}
+\maketitle
+
+\textbf{Primary sources.} \path{resources/lecture-notes-weeks-01-04.pdf}, 225 PDF pages, together with \path{resources/week-01-transcript.txt}, \path{resources/week-02-transcript.txt}, and \path{resources/week-03-transcript.txt}. Pages 1--195 contain the full lectures; pages 196--225 are a recap of Chapters 1--4. The transcripts establish the weekly handoffs and add the lecturer's spoken explanations. The supplied \path{resources/course-exercises.pdf} and \path{resources/course-exercises-solutions.pdf} provide extra Chapters 1--3 practice; their calculations are checked independently before use because parts of the solution compilation retain older EE4273 tutorial headings and handwritten annotations.
+
+\tableofcontents
+\newpage
+
+\section*{Week-by-week roadmap}
+\addcontentsline{toc}{section}{Week-by-week roadmap}
+
+\begin{center}
+\begin{tabular}{>{\bfseries}p{0.13\textwidth}p{0.63\textwidth}p{0.13\textwidth}}
+\toprule
+Week & Topics taught & Source pages\\
+\midrule
+1 & Feedback and computer-control architecture; signal types; $z$-transform definition, elementary pairs, properties, poles/zeros, and initial/final-value theorems & 1--48\\
+2 & Four inverse-$z$ methods; solving difference equations; impulse-sampler model; starred transform; zero-order hold & 49--88\\
+Self-study & First-order-hold derivation (explicitly identified as optional and not examined in the Week 2 lecture) & 89--93\\
+3 & Pulse transfer functions; sampler-topology rules; ZOH-plus-plant models; digital controllers, closed loops, and digital PID & 94--143\\
+4 & $s$-to-$z$ mapping; Jury and bilinear/Routh stability tests; transient and steady-state response; disturbance rejection & 144--195\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The Week 1--3 boundaries are verified directly from their transcripts. Week 2 ends by announcing pulse transfer functions for the next lecture. The Week 3 transcript completes Chapter 3, then starts Chapter 4; this fixes the Week 3/4 boundary at PDF page 144 and confirms that Quiz 1 covers Chapters 1--3 only.
+
+\section{Why computer-controlled systems are different}
+
+\weeklabel{Week 1}
+
+\subsection{The feedback objective}
+
+A feedback controller compares a reference $r(t)$ with a measured output $y(t)$. In unity feedback,
+\[
+e(t)=r(t)-y(t),
+\]
+where the symbols mean:
+\begin{itemize}
+  \item $t$ is the time at which the signals are evaluated, usually measured in seconds;
+  \item $r(t)$ is the \emph{reference} or \emph{setpoint}: the desired output at time $t$;
+  \item $y(t)$ is the plant's actual measured output at time $t$;
+  \item $e(t)$ is the \emph{tracking error}: the gap between desired and measured output at time $t$.
+\end{itemize}
+Thus the equation reads, ``error now equals desired value now minus measured value now.'' The signals $r$, $y$, and $e$ have the same physical unit. For example, if a thermostat requests $r=22\,{}^\circ\mathrm{C}$ and measures $y=20.5\,{}^\circ\mathrm{C}$, then $e=1.5\,{}^\circ\mathrm{C}$. The controller chooses the plant input so that the error becomes small. ``Small'' has several meanings:
+\begin{itemize}
+  \item \textbf{stability}: bounded commands and disturbances should not make the response diverge;
+  \item \textbf{transient quality}: rise time, overshoot, peak time, and settling time should be acceptable;
+  \item \textbf{steady-state accuracy}: the remaining tracking error after transients die out should be small;
+  \item \textbf{optimality}: a chosen cost, such as error energy plus control effort, may be minimized.
+\end{itemize}
+
+In an analog implementation the controller is built from continuous-time circuitry. In a digital implementation an analog-to-digital converter (ADC) samples the error, a processor computes a control law at discrete instants, and a digital-to-analog converter (DAC), normally followed by a zero-order hold (ZOH), drives the continuous-time plant. The controller therefore evolves in discrete time even though the plant usually evolves continuously.
+
+Digital control is attractive because algorithms are easy to change, complicated logic can be implemented economically, and one processor can support different programs. Its extra design questions are equally important: How fast should we sample? What continuous signal does the hold apply between samples? How do continuous poles and performance specifications appear in the discrete model?
+
+The lecturer separates two control tasks that are easy to mix up. \emph{Design} means choosing the controller from a plant model and a set of specifications. \emph{Analysis} means checking the resulting closed loop: Is it stable? How fast does it respond? How large is the final error? A proposed controller is not finished merely because its formula has been found; it must pass the analysis step.
+
+\subsection{Signal vocabulary}
+
+Two independent distinctions are often confused:
+\begin{center}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.25\textwidth}>{\raggedright\arraybackslash}p{0.31\textwidth}>{\raggedright\arraybackslash}p{0.31\textwidth}}
+\toprule
+ & Continuous amplitude & Quantized amplitude\\
+\midrule
+Continuous time & analog signal & continuous-time quantized signal\\
+Discrete time & sampled-data signal & digital signal\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+A \emph{discrete-time} signal is defined only at isolated instants. Under periodic sampling,
+\[
+t_k=kT,\qquad k=0,1,2,\ldots,
+\]
+where $T$ is the sampling period and $\omega_s=2\pi/T$ is the sampling angular frequency. We write $x[k]$ or $x(kT)$ for the sample. A sampled-data signal still has continuous-valued samples; a digital signal also quantizes their amplitudes to a finite set.
+
+\textbf{Pitfall.} Sampling is quantization of the time axis. ADC amplitude quantization is a separate operation. A sampled sequence can be modeled before any amplitude quantization is considered.
+
+\subsection*{Knowledge check 1: feedback and signal language}
+
+Try these before reading the feedback.
+\begin{enumerate}[label=\textbf{Q\arabic*.},wide]
+  \item A temperature sensor is read every $0.02$ seconds, but each recorded sample may take any real value. Is the resulting signal discrete-time, digital, both, or neither?
+  \item Classify each task as \emph{design} or \emph{analysis}: (a) choosing controller gains to meet a settling-time requirement; (b) checking whether the resulting closed-loop poles are stable.
+  \item For $T=0.02$ s, calculate the sampling frequency $f_s$ in hertz and the sampling angular frequency $\omega_s$ in rad/s.
+\end{enumerate}
+
+\paragraph{Answers and feedback.}
+\begin{enumerate}[label=\textbf{A\arabic*.},wide]
+  \item It is discrete-time only under the stated assumptions. Time has been sampled, but the amplitudes have not been quantized, so it is not yet a digital signal in the course's terminology.
+  \item (a) Design; (b) analysis. Choosing a controller comes first, but it must still be analysed afterward.
+  \item $f_s=1/T=50$ Hz and $\omega_s=2\pi f_s=100\pi$ rad/s.
+\end{enumerate}
+
+\examcheck{If you cannot state whether a signal is continuous, sampled, or quantized, pause before writing any transform. The signal type determines the mathematical model.}
+
+\sourcepages{7--20}
+
+\section{Sequences, difference equations, and the $z$ transform}
+
+\weeklabel{Week 1 through the initial/final-value theorems; Week 2 from inverse transforms onward}
+
+\subsection{Why a transform is useful}
+
+A linear time-invariant discrete system is naturally described by a difference equation, for example
+\[
+y[k]+a_1y[k-1]+\cdots+a_ny[k-n]
+=b_0u[k]+b_1u[k-1]+\cdots+b_mu[k-m].
+\]
+The $z$ transform turns shifts of a sequence into powers of $z^{-1}$, converting this recurrence into an algebraic equation. This is the discrete-time counterpart of using the Laplace transform on a differential equation.
+
+For a causal sampled signal, the one-sided transform is
+\[
+X(z)=\Z\{x[k]\}=\sum_{k=0}^{\infty}x[k]z^{-k}.
+\]
+The two-sided form is $X(z)=\sum_{k=-\infty}^{\infty}x[k]z^{-k}$. Unless stated otherwise, this course uses causal sequences and the one-sided form. Expanding
+\[
+X(z)=x[0]+x[1]z^{-1}+x[2]z^{-2}+\cdots
+\]
+shows directly why $z^{-1}$ represents a one-sample delay.
+
+The formal sum converges only for a region of convergence (ROC). The lecture calculations mainly use causal rational transforms; then the ROC is outside the outermost pole. The ROC matters when a transform could represent more than one time-domain sequence.
+
+\subsection{A compact transform table}
+
+Let $\delta[k]$ be the Kronecker impulse, $\unitstep[k]=1$ for $k\ge 0$, and $0$ otherwise. For causal sequences,
+\begin{center}
+\begin{tabular}{>{$}l<{$}>{$}l<{$}}
+\toprule
+x[k] & X(z)\\
+\midrule
+\delta[k-n] & z^{-n}\\
+\unitstep[k] & \dfrac{1}{1-z^{-1}}=\dfrac{z}{z-1}\\[6pt]
+k\unitstep[k] & \dfrac{z^{-1}}{(1-z^{-1})^2}=\dfrac{z}{(z-1)^2}\\[6pt]
+a^k\unitstep[k] & \dfrac{1}{1-az^{-1}}=\dfrac{z}{z-a}\\[6pt]
+\e^{-akT}\unitstep[k] & \dfrac{1}{1-\e^{-aT}z^{-1}}\\[6pt]
+\sin(\omega kT)\unitstep[k] & \dfrac{z\sin(\omega T)}{z^2-2z\cos(\omega T)+1}\\[6pt]
+\cos(\omega kT)\unitstep[k] & \dfrac{z^2-z\cos(\omega T)}{z^2-2z\cos(\omega T)+1}\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+For example, the ramp result follows by differentiating the geometric series:
+\[
+\sum_{k=0}^{\infty}kq^k=\frac{q}{(1-q)^2},\qquad q=z^{-1}.
+\]
+The sinusoidal pairs follow from Euler's formula and the exponential pair.
+
+\subsection{Properties and shift rules}
+
+If $\Z\{x[k]\}=X(z)$ and $\Z\{y[k]\}=Y(z)$, then
+\begin{align*}
+\Z\{\alpha x[k]+\beta y[k]\}&=\alpha X(z)+\beta Y(z),\\
+\Z\{a^kx[k]\}&=X(z/a),\\
+\Z\{x[k-n]\unitstep[k-n]\}&=z^{-n}X(z).
+\end{align*}
+The last equation is the causal delay theorem. Advancing a one-sided sequence introduces initial-condition terms:
+\[
+\Z\{x[k+n]\}=z^nX(z)-z^nx[0]-z^{n-1}x[1]-\cdots-zx[n-1].
+\]
+This is essential when transforming a difference equation with specified initial values.
+
+For a sampled continuous-time signal, multiplication by an exponential gives the complex translation rule
+\[
+\Z\{\e^{-akT}x[k]\}=X(z\e^{aT}).
+\]
+
+\subsection{Initial and final values}
+
+From the power series,
+\[
+x[0]=\lim_{z\to\infty}X(z).
+\]
+For a sequence that actually converges,
+\[
+\lim_{k\to\infty}x[k]=\lim_{z\to 1}(1-z^{-1})X(z).
+\]
+The final-value theorem is valid when all poles of $(1-z^{-1})X(z)$ are strictly inside the unit circle; equivalently, all poles of $X(z)$ are inside it except possibly one simple pole at $z=1$. Do not use it for a growing or sustained oscillatory sequence: the algebraic limit can look finite even when the time sequence has no final value.
+
+Why is the exception at $z=1$ so narrow? A \emph{simple} pole there represents a constant term, which has a finite limit. A repeated pole at $z=1$ produces polynomial growth, while a conjugate pair elsewhere on the unit circle produces sustained oscillation. Neither sequence converges, so in either case substituting $z=1$ would manufacture an answer to a limit that does not exist.
+
+\subsection{Inverse $z$ transforms}
+
+\weeklabel{Week 2 (beginning here)}
+
+Four methods appear in the source.
+
+\paragraph{Power-series or long division.} Rewrite $X(z)$ in powers of $z^{-1}$ and read off the coefficients. This quickly gives the first few samples, even when no convenient closed form is apparent.
+
+\paragraph{Difference-equation computation.} If
+\[
+G(z)=\frac{b_0+b_1z^{-1}+\cdots+b_mz^{-m}}
+{1+a_1z^{-1}+\cdots+a_nz^{-n}},
+\]
+then its impulse response is obtained by applying $u[k]=\delta[k]$ to
+\[
+y[k]=-\sum_{i=1}^{n}a_i y[k-i]+\sum_{j=0}^{m}b_j u[k-j]
+\]
+with zero initial conditions.
+
+\paragraph{Partial fractions.} For simple poles, expand $X(z)/z$ rather than $X(z)$:
+\[
+\frac{X(z)}{z}=\frac{a_0}{z}+\sum_i\frac{a_i}{z-p_i}
+\quad\Longrightarrow\quad
+x[k]=a_0\delta[k]+\sum_i a_ip_i^k\unitstep[k].
+\]
+The reason for dividing by $z$ is the indexing of the transform series:
+$X(z)/z=\sum_{k\ge 0}x[k]z^{-k-1}$. Since
+$1/(z-p)=\sum_{k\ge 0}p^kz^{-k-1}$, a term $a_i/(z-p_i)$ directly contributes
+$a_i p_i^k$ under the usual causal interpretation. Equivalently, after
+multiplying back by $z$, the familiar table pair is
+$z/(z-p)\leftrightarrow p^k\unitstep[k]$.
+Repeated poles generate factors such as $kp^{k-1}$. Complex-conjugate poles should be combined into real damped sine and cosine terms.
+
+\paragraph{Inversion integral.} Formally,
+\[
+x[k]=\frac{1}{2\pi\mathrm{j}}\oint_C X(z)z^{k-1}\dd z,
+\]
+where $C$ encloses the relevant poles counter-clockwise. The residue theorem makes this useful for symbolic derivations, but partial fractions are usually quicker for rational transforms.
+
+The methods answer slightly different practical needs. Long division and recurrence computation efficiently produce a table of samples but usually not one formula valid for every $k$. Partial fractions are the preferred route to a closed form. Expanding $X(z)/z$ is especially convenient because multiplying back by $z$ produces terms of the tabulated form $z/(z-p)$. The inversion integral is the general theoretical formula and becomes a residue calculation for rational $X(z)$.
+
+An inverse $z$ transform recovers the sample sequence $x[k]$, not a unique continuous curve $x(t)$. Infinitely many continuous-time signals can pass through the same sample points. Recovering a particular intersample waveform requires an additional reconstruction assumption, such as a specified hold or a band-limited interpolation model.
+
+\subsection{Worked difference-equation example}
+
+Solve
+\[
+x[k+2]+3x[k+1]+2x[k]=0,\qquad x[0]=0,\quad x[1]=1.
+\]
+Using the one-sided advance formulas,
+\begin{align*}
+\Z\{x[k+2]\}&=z^2X(z)-z^2x[0]-zx[1],\\
+\Z\{x[k+1]\}&=zX(z)-zx[0].
+\end{align*}
+Therefore
+\[
+(z^2+3z+2)X(z)-z=0,
+\qquad
+X(z)=\frac{z}{(z+1)(z+2)}.
+\]
+Partial fractions give
+\[
+x[k]=(-1)^k-(-2)^k,\qquad k\ge 0.
+\]
+A direct substitution at $k=0$ gives $x[2]=-3$, matching the formula.
+
+\subsection*{Knowledge check 2: sequences and the $z$ transform}
+
+\begin{enumerate}[label=\textbf{Q\arabic*.},wide]
+  \item A causal sequence begins $x[0]=3$, $x[1]=-1$, $x[2]=2$, and is zero afterward. Write $X(z)$ directly from the definition.
+  \item For a one-sided transform, what is $\Z\{y[k+1]\}$ when $y[0]=4$? Explain the role of the extra term.
+  \item Let
+  \[
+  X(z)=\frac{z}{(z-1)(z+0.6)}.
+  \]
+  Decide whether the final-value theorem is valid and, if it is, calculate $x[\infty]$.
+\end{enumerate}
+
+\paragraph{Answers and feedback.}
+\begin{enumerate}[label=\textbf{A\arabic*.},wide]
+  \item $X(z)=3-z^{-1}+2z^{-2}$. For a finite sequence, the defining sum simply stops.
+  \item $\Z\{y[k+1]\}=zY(z)-4z$. Advancing the sequence removes the known initial sample from the transformed sum, so it must be subtracted explicitly.
+  \item Multiplying by $(1-z^{-1})$ removes the permitted simple pole at $z=1$ and leaves a pole at $z=-0.6$, which is inside the unit circle. Therefore the theorem is valid and
+  \[
+  x[\infty]=\lim_{z\to1}\frac{1}{z+0.6}=\frac{5}{8}.
+  \]
+\end{enumerate}
+
+\commonerror{A correct algebraic limit is not enough. Full credit requires the pole check for $(1-z^{-1})X(z)$.}
+
+\sourcepages{21--70}
+
+\section{Modeling sampled-data control systems}
+
+\weeklabel{Week 2 through the ZOH model; Week 3 from pulse transfer functions onward}
+
+\subsection{Impulse sampling and the starred transform}
+
+An ideal impulse sampler replaces a continuous signal by
+\[
+x^*(t)=\sum_{k=0}^{\infty}x(kT)\delta(t-kT).
+\]
+Its Laplace transform is
+\[
+X^*(s)=\sum_{k=0}^{\infty}x(kT)\e^{-kTs}.
+\]
+With $z=\e^{sT}$, this becomes exactly the $z$ transform:
+\[
+X^*(s)\big|_{z=\e^{sT}}=\sum_{k=0}^{\infty}x(kT)z^{-k}=X(z).
+\]
+The impulse sampler is a mathematical abstraction. A physical sampler emits narrow pulses rather than ideal impulses, but the abstraction preserves the sample strengths and makes continuous/discrete interconnections tractable.
+
+Here ``strength'' means impulse \emph{area}, not a finite pulse height: the coefficient $x(kT)$ multiplies an ideal delta whose width is zero and whose integral is one. This convention is what makes the Laplace transform of each delayed impulse simply $x(kT)\e^{-kTs}$.
+
+For an impulse-sampled input driving a continuous plant $G(s)$,
+\[
+Y(s)=G(s)X^*(s),\qquad
+Y^*(s)=[G(s)X^*(s)]^*.
+\]
+The star means ``sample the corresponding time signal.'' One must not generally split a star across an arbitrary product. It is safe to write
+\[
+[G(s)X^*(s)]^*=G^*(s)X^*(s)
+\]
+because the second factor already represents a sampled impulse train.
+
+\textbf{Interpretation.} The substitution $z=\e^{sT}$ relates the starred transform $X^*(s)$ to $X(z)$. It does \emph{not} permit direct substitution into the ordinary Laplace transform $X(s)$ or a continuous plant $G_p(s)$.
+
+\subsection{Zero-order and first-order holds}
+
+A hold reconstructs a continuous signal from samples. The ZOH keeps each value constant until the next one arrives:
+\[
+h(kT+\tau)=x(kT),\qquad 0\le \tau<T.
+\]
+For an impulse-train input its transfer function is
+\[
+G_{h0}(s)=\frac{1-\e^{-sT}}{s}.
+\]
+This formula is not a plant model; it is the model of the reconstruction device before the plant.
+
+The staircase can be written as a sum of rectangular windows,
+\[
+h(t)=\sum_{k=0}^{\infty}x(kT)
+\bigl[\unitstep(t-kT)-\unitstep(t-(k+1)T)\bigr].
+\]
+Each window lasts one sample period. Taking its Laplace transform factors the expression into the sampled impulse train and $(1-\e^{-sT})/s$, explaining rather than merely memorizing the ZOH transfer function.
+
+A first-order hold linearly extrapolates between samples. Its source formula is
+\[
+G_{h1}(s)=\left(\frac{1-\e^{-sT}}{s}\right)^2\frac{Ts+1}{T}.
+\]
+It is useful conceptually, but its derivation was assigned as optional self-study in Week 2. The ZOH is the standard assumption in this course and in most digital-control implementations.
+
+\subsection{Pulse transfer functions from convolution}
+
+\weeklabel{Week 3 (beginning here)}
+
+Let $g(t)=\Lcal^{-1}\{G(s)\}$ and suppose the input is the sampled train $x^*(t)$. Continuous convolution gives
+\[
+y(t)=\int_0^\infty g(t-\tau)x^*(\tau)\dd\tau
+=\sum_{h=0}^{\infty}g(t-hT)x(hT).
+\]
+At $t=kT$, causality removes terms with $h>k$:
+\[
+y(kT)=\sum_{h=0}^{k}g((k-h)T)x(hT).
+\]
+This is discrete convolution. Taking the $z$ transform gives
+\[
+Y(z)=G(z)X(z),\qquad
+G(z)=\Z\{g(kT)\}.
+\]
+The rational function $G(z)$ is the \emph{pulse transfer function}; it relates sampled input values to sampled output values.
+
+\subsection{The input-sampler rule}
+
+Block-diagram placement matters.
+\begin{itemize}
+  \item If a sampler is present before $G(s)$, then $Y(z)=G(z)X(z)$ with $G(z)=\Z\{G(s)\}$, meaning the transform of the sampled impulse response.
+  \item Without the input sampler, $Y(z)=\Z\{G(s)X(s)\}$, which generally cannot be factored into $G(z)X(z)$.
+\end{itemize}
+Similarly, two continuous elements separated by a sampler produce $G(z)H(z)$, while the same elements without an intermediate sampler produce
+\[
+GH(z)=\Z\{G(s)H(s)\},
+\]
+and in general $GH(z)\ne G(z)H(z)$.
+
+\textbf{Design habit.} Before doing any algebra, mark every sampler and hold on the block diagram. Most modeling mistakes in this topic are topology mistakes, not transform mistakes.
+
+\subsection{Plant preceded by a ZOH}
+
+If a continuous plant $G_p(s)$ is driven through a ZOH, the combined pulse transfer function is
+\[
+G(z)=\Z\left\{\frac{1-\e^{-sT}}{s}G_p(s)\right\}
+=(1-z^{-1})\Z\left\{\frac{G_p(s)}{s}\right\}.
+\]
+The second form follows because multiplying a Laplace transform by $\e^{-sT}$ delays its time signal by $T$, which multiplies its $z$ transform by $z^{-1}$.
+
+\paragraph{Example.} For $G_p(s)=1/[s(s+1)]$ and $T=1$,
+\[
+\frac{G_p(s)}{s}=\frac{1}{s^2(s+1)}
+=-\frac{1}{s}+\frac{1}{s^2}+\frac{1}{s+1}.
+\]
+Sample the inverse Laplace transform $-1+t+\e^{-t}$ and multiply its $z$ transform by $(1-z^{-1})$. This is safer than trying to substitute $z=\e^{sT}$ directly into a continuous transfer function.
+
+\subsection{Digital controllers and closed loops}
+
+For a controller recurrence
+\[
+m[k]+a_1m[k-1]+\cdots+a_nm[k-n]
+=b_0e[k]+b_1e[k-1]+\cdots+b_ne[k-n],
+\]
+the zero-initial-condition pulse transfer function is
+\[
+G_D(z)=\frac{M(z)}{E(z)}
+=\frac{b_0+b_1z^{-1}+\cdots+b_nz^{-n}}
+{1+a_1z^{-1}+\cdots+a_nz^{-n}}.
+\]
+For unity negative feedback with the ZOH/plant pulse transfer function $G(z)$,
+\[
+\frac{C(z)}{R(z)}=\frac{G_D(z)G(z)}{1+G_D(z)G(z)}.
+\]
+This familiar formula is valid after the mixed continuous/discrete system has been reduced correctly to the sampled block diagram.
+
+\subsection{Digital PID by numerical approximation}
+
+The analog PID law is
+\[
+m(t)=K\left[e(t)+\frac{1}{T_i}\int_0^t e(\tau)\dd\tau
++T_d\frac{\dd e(t)}{\dd t}\right].
+\]
+Using trapezoidal integration and a backward two-point difference for the derivative yields
+\[
+G_D(z)=K_P+\frac{K_I}{1-z^{-1}}+K_D(1-z^{-1}),
+\]
+where
+\[
+K_P=K-\frac{KT}{2T_i},\qquad
+K_I=\frac{KT}{T_i},\qquad
+K_D=\frac{KT_d}{T}.
+\]
+The integral term introduces a pole at $z=1$, which accumulates error and can remove constant steady-state error in a stable loop. The derivative term magnifies rapid sample-to-sample changes, so noise and sampling rate matter in implementation.
+
+\subsection*{Knowledge check 3: sampling, holds, and pulse transfer functions}
+
+\begin{enumerate}[label=\textbf{Q\arabic*.},wide]
+  \item Match each object to its meaning: $x(t)$, $x[k]$, $x^*(t)$, and $X(z)$. Which one is an impulse train, and which one is a generating function for the sample sequence?
+  \item A sampled input drives a ZOH and the continuous plant $G_p(s)=a/(s+a)$, where $a>0$. Derive the combined pulse transfer function in terms of $T$.
+  \item Two continuous blocks $G(s)$ and $H(s)$ are cascaded after an input sampler. What expression is used (a) when a synchronized sampler lies between them and (b) when no intermediate sampler is present?
+\end{enumerate}
+
+\paragraph{Answers and feedback.}
+\begin{enumerate}[label=\textbf{A\arabic*.},wide]
+  \item $x(t)$ is continuous-time; $x[k]=x(kT)$ is the sample sequence; $x^*(t)=\sum x(kT)\delta(t-kT)$ is the impulse train; and $X(z)=\sum x[k]z^{-k}$ is the sequence's generating function.
+  \item Since
+  \[
+  \frac{G_p(s)}{s}=\frac{a}{s(s+a)}=\frac1s-\frac1{s+a},
+  \]
+  \[
+  G(z)=(1-z^{-1})\Z\{1-\e^{-akT}\}
+  =\frac{(1-\e^{-aT})z^{-1}}{1-\e^{-aT}z^{-1}}.
+  \]
+  \item With the intermediate sampler, use $G(z)H(z)$. Without it, combine the continuous blocks first and use $GH(z)=\Z\{G(s)H(s)\}$. In general these are not equal.
+\end{enumerate}
+
+\examcheck{Circle every sampler and hold before reducing a block diagram. A missing intermediate sampler changes the algebra, not merely the drawing.}
+
+\sourcepages{71--143}
+
+\section{The map from the $s$ plane to the $z$ plane}
+
+\weeklabel{Week 4}
+
+\examcheck{This section and the remaining Chapter 4 material are retained for later course study, but the Week 3 announcement explicitly excludes Chapter 4 from Quiz 1. Quiz 1 preparation resumes in Appendix A and uses Chapters 1--3 only.}
+
+\subsection{Geometry of $z=\e^{sT}$}
+
+Write a continuous pole as $s=\sigma+\mathrm{j}\omega$. Sampling maps it to
+\[
+z=\e^{sT}=\e^{\sigma T}\e^{\mathrm{j}\omega T}.
+\]
+Therefore
+\[
+|z|=\e^{\sigma T},\qquad \arg z=\omega T\pmod{2\pi}.
+\]
+This one equation explains the main geometry:
+\begin{itemize}
+  \item the left half-plane $\sigma<0$ maps inside the unit circle;
+  \item the imaginary axis maps to the unit circle;
+  \item the right half-plane maps outside the unit circle;
+  \item vertical lines $\sigma=\text{constant}$ map to circles centered at the origin;
+  \item horizontal lines $\omega=\text{constant}$ map to radial lines;
+  \item frequencies separated by integer multiples of $\omega_s=2\pi/T$ map to the same angle.
+\end{itemize}
+
+The primary strip $-\omega_s/2\le\omega\le\omega_s/2$ maps once around the $z$ plane. Complementary strips map onto the same region; this many-to-one mapping is the geometric face of aliasing.
+
+\subsection{Translating performance regions}
+
+For a dominant continuous pole $s=-\zeta\omega_n\pm\mathrm{j}\omega_d$,
+\[
+|z|=\e^{-\zeta\omega_nT},\qquad
+\arg z=\pm\omega_dT,
+\quad \omega_d=\omega_n\sqrt{1-\zeta^2}.
+\]
+Constant damping-ratio rays in the $s$ plane therefore become logarithmic spirals in the $z$ plane.
+
+Using the usual 2\% approximation $t_s\approx4/(\zeta\omega_n)$, a requirement $t_s\le t_s^{\max}$ implies
+\[
+\zeta\omega_n\ge\frac{4}{t_s^{\max}}
+\quad\Longrightarrow\quad
+|z|\le \exp\left(-\frac{4T}{t_s^{\max}}\right).
+\]
+For example, if $T=1$ s and $t_s\le4$ s, the dominant poles should satisfy $|z|\le\e^{-1}\approx0.3679$, with any damping-ratio constraint further narrowing the allowable region.
+
+\subsection*{Knowledge check 4: mapping poles into the $z$ plane}
+
+\begin{enumerate}[label=\textbf{Q\arabic*.},wide]
+  \item Map the continuous pole $s=-2+\mathrm{j}3$ into polar $z$-plane form when $T=0.1$ s.
+  \item Which continuous frequencies map to the same discrete angle as $\omega=4$ rad/s? State the general family.
+  \item A design requires all mapped poles to satisfy $|z|<0.8$. Express the equivalent condition on the continuous real part $\sigma$ for a general sampling period $T$.
+\end{enumerate}
+
+\paragraph{Answers and feedback.}
+\begin{enumerate}[label=\textbf{A\arabic*.},wide]
+  \item $z=\e^{sT}=\e^{-0.2}\e^{\mathrm{j}0.3}$, so $|z|=\e^{-0.2}\approx0.8187$ and $\arg z=0.3$ rad.
+  \item Because discrete angles repeat every $2\pi$, the family is $\omega_m=4+2\pi m/T$, $m\in\mathbb{Z}$. This periodic identification is the frequency-domain source of aliasing.
+  \item Since $|z|=\e^{\sigma T}$, the requirement is $\sigma<\ln(0.8)/T$. The logarithm is negative, so the allowed poles lie sufficiently far into the left half-plane.
+\end{enumerate}
+
+\commonerror{Map both parts of a pole: $\sigma$ determines radius and $\omega$ determines angle. Using only one loses half of the performance information.}
+
+\sourcepages{144--161}
+
+\section{Stability tests in discrete time}
+
+\weeklabel{Week 4}
+
+\subsection{Pole criterion}
+
+For a closed-loop characteristic polynomial $P(z)$, asymptotic stability requires every root to lie strictly inside $|z|=1$. A simple real pole at $z=1$ or a single simple conjugate pair on the unit circle gives marginal behavior; repeated unit-circle poles are unstable. Closed-loop zeros shape the response but do not determine internal asymptotic stability.
+
+\subsection{Jury stability test}
+
+The Jury test checks whether all roots of
+\[
+P(z)=a_0z^n+a_1z^{n-1}+\cdots+a_n,\qquad a_0>0,
+\]
+lie inside the unit circle without explicitly solving for them. Necessary boundary checks are
+\begin{align*}
+|a_n|&<a_0,\\
+P(1)&>0,\\
+(-1)^nP(-1)&>0.
+\end{align*}
+For a second-order polynomial these three inequalities are also sufficient.
+
+For higher order, construct alternating forward and reversed coefficient rows. Using the source convention for
+$P(z)=a_0z^n+\cdots+a_n$, the next two shortened rows begin with
+\[
+b_k=a_na_{k+1}-a_0a_{n-1-k},\qquad k=0,1,\ldots,n-1,
+\]
+and
+\[
+c_k=b_{n-1}b_{k+1}-b_0b_{n-2-k},\qquad k=0,1,\ldots,n-2.
+\]
+Reverse each new row before forming the next determinant row. An irrelevant common sign may differ between table conventions. At each stage the magnitude of the leading member must dominate the trailing member, as in
+\[
+|b_{n-1}|>|b_0|,\quad |c_{n-2}|>|c_0|,\quad\ldots.
+\]
+Use one consistent table convention throughout; changing signs or coefficient order halfway through is a common error.
+
+\paragraph{Second-order gain example.} Suppose the characteristic polynomial is
+\[
+P(z)=z^2+(0.3679K-1.3679)z+(0.3679+0.2642K).
+\]
+The three second-order Jury conditions yield
+\[
+|0.3679+0.2642K|<1,\qquad P(1)>0,\qquad P(-1)>0,
+\]
+whose intersection is $0<K<2.3925$. At the upper endpoint the poles lie on the unit circle and the system is critically stable.
+
+\subsection{Bilinear transformation and the Routh test}
+
+The bilinear change of variable
+\[
+z=\frac{w+1}{w-1},\qquad w=\frac{z+1}{z-1}
+\]
+maps the inside of the unit circle to the left half of the $w$ plane. Substitute $z=(w+1)/(w-1)$ into $P(z)$, clear the denominator, and apply the continuous-time Routh test to the resulting polynomial in $w$.
+
+Jury usually needs less arithmetic for a simple stability decision. The bilinear/Routh route can additionally reveal the number of roots outside the unit circle through the number of right-half-plane roots in $w$.
+
+\subsection*{Knowledge check 5: discrete-time stability}
+
+\begin{enumerate}[label=\textbf{Q\arabic*.},wide]
+  \item A characteristic polynomial has poles $0.7$, $-0.4$, and $-1.05$. Is the closed loop asymptotically stable? Identify the deciding pole.
+  \item Apply the complete second-order Jury test to $P(z)=z^2-0.4z+q$. Find the full stable interval for $q$.
+  \item When is the bilinear/Routh route more informative than a direct Jury stability decision?
+\end{enumerate}
+
+\paragraph{Answers and feedback.}
+\begin{enumerate}[label=\textbf{A\arabic*.},wide]
+  \item No. The pole at $-1.05$ has magnitude $1.05>1$ and therefore lies outside the unit circle.
+  \item The conditions are
+  \[
+  |q|<1,\qquad P(1)=0.6+q>0,\qquad P(-1)=1.4+q>0.
+  \]
+  Their intersection is $-0.6<q<1$.
+  \item Jury is efficient when only a stable/unstable decision is required. After mapping to the $w$ plane, a Routh table can also count how many roots lie outside the unit circle through the number of right-half-plane roots.
+\end{enumerate}
+
+\examcheck{For a second-order polynomial, use all three Jury inequalities and intersect them. For higher order, those boundary checks alone are only necessary.}
+
+\sourcepages{162--179}
+
+\section{Transient response and steady-state accuracy}
+
+\weeklabel{Week 4}
+
+\subsection{Time-domain specifications}
+
+For a unit-step response, the source uses:
+\begin{itemize}
+  \item delay time $t_d$: first time the response reaches half its final value;
+  \item rise time $t_r$: time to rise through a specified percentage band, commonly 10--90\%;
+  \item peak time $t_p$: time of the first maximum;
+  \item maximum overshoot $M_p=[c(t_p)-c(\infty)]/c(\infty)\times100\%$;
+  \item settling time $t_s$: time after which the response remains within a tolerance band, commonly 2\%.
+\end{itemize}
+Absolute stability only says transients decay. Relative stability describes how quickly and with how much oscillation they decay.
+
+\subsection{Final-value calculation of error}
+
+For the standard sampled loop in the source, the actuating error is
+\[
+E(z)=R(z)-B(z)=\frac{R(z)}{1+G(z)H(z)}.
+\]
+If the loop is stable and the final-value theorem applies,
+\[
+e_{ss}=\lim_{z\to1}(1-z^{-1})E(z).
+\]
+Be careful: this $E(z)$ is the actuating error $R(z)-B(z)$, not necessarily the tracking error $R(z)-C(z)$ when the feedback path is not unity.
+
+\subsection{Static error constants and system type}
+
+For the configuration and input normalizations used in the lecture notes,
+\begin{align*}
+K_p&=\lim_{z\to1}G(z)H(z),
+&e_{ss,\,\text{step}}&=\frac{1}{1+K_p},\\
+K_v&=\lim_{z\to1}\frac{(1-z^{-1})G(z)H(z)}{T},
+&e_{ss,\,\text{ramp}}&=\frac{1}{K_v},\\
+K_a&=\lim_{z\to1}\frac{(1-z^{-1})^2G(z)H(z)}{T^2},
+&e_{ss,\,\text{accel.}}&=\frac{1}{K_a}.
+\end{align*}
+The input transforms are
+\[
+R_{\rm step}(z)=\frac{1}{1-z^{-1}},\quad
+R_{\rm ramp}(z)=\frac{Tz^{-1}}{(1-z^{-1})^2},\quad
+R_{\rm accel}(z)=\frac{T^2(1+z^{-1})z^{-1}}{2(1-z^{-1})^3}.
+\]
+
+The \emph{system type} is the number of uncancelled poles at $z=1$ in the open-loop pulse transfer function. For the standard loop:
+\begin{center}
+\begin{tabular}{c c c c}
+\toprule
+Type & Step error & Ramp error & Acceleration error\\
+\midrule
+0 & $1/(1+K_p)$ & $\infty$ & $\infty$\\
+1 & $0$ & $1/K_v$ & $\infty$\\
+2 & $0$ & $0$ & $1/K_a$\\
+\bottomrule
+\end{tabular}
+\end{center}
+This table is meaningful only for a stable closed loop and the stated configuration; do not use it blindly after moving samplers or feedback blocks.
+
+\subsection{Constant disturbances}
+
+For the disturbance configuration in the source, with $R(z)=0$,
+\[
+E(z)=-\frac{G(z)}{1+G_D(z)G(z)}N(z).
+\]
+Large loop gain reduces the disturbance-induced error. More strongly, if $G_D(z)$ has an uncancelled pole at $z=1$ and $G(z)$ has no zero there, the steady-state error due to a constant disturbance is zero, provided the closed loop is stable. This is the discrete-time form of the internal-model idea: rejecting a constant requires an integrator in the loop.
+
+\subsection*{Knowledge check 6: performance and steady-state accuracy}
+
+\begin{enumerate}[label=\textbf{Q\arabic*.},wide]
+  \item A discrete pole has radius $0.8$ with $T=0.1$ s. Find the real part $\sigma$ of its continuous-time counterpart. What does the sign tell you?
+  \item For the standard stable loop, let
+  \[
+  L(z)=G(z)H(z)=\frac{K}{(z-1)(z-0.5)},\qquad K>0.
+  \]
+  Identify the system type and obtain the unit-step and unit-ramp steady-state errors.
+  \item Why can an uncancelled controller pole at $z=1$ eliminate the steady-state error caused by a constant disturbance, assuming the resulting closed loop is stable?
+\end{enumerate}
+
+\paragraph{Answers and feedback.}
+\begin{enumerate}[label=\textbf{A\arabic*.},wide]
+  \item From $|z|=\e^{\sigma T}$,
+  \[
+  \sigma=\frac{\ln(0.8)}{0.1}\approx-2.231\ \text{s}^{-1}.
+  \]
+  The negative real part corresponds to decay.
+  \item There is one uncancelled pole at $z=1$, so the loop is Type 1. Its step error is zero. For a unit ramp,
+  \[
+  K_v=\lim_{z\to1}\frac{(1-z^{-1})L(z)}{T}
+  =\frac{2K}{T},
+  \qquad e_{ss}=\frac{T}{2K}.
+  \]
+  \item The pole at $z=1$ is discrete integral action. A constant error is accumulated rather than forgotten, so the controller continues changing its output until that constant component is removed. Stability and absence of cancellation at $z=1$ remain essential conditions.
+\end{enumerate}
+
+\commonerror{System type predicts steady-state error only for the stated loop, input normalization, and a stable closed loop. It is not a substitute for checking the actual error transfer function.}
+
+\sourcepages{180--195}
+
+\section{Weeks 1--4 problem-solving checklist}
+
+{\small
+\begin{enumerate}
+  \item Mark continuous signals, sampled signals, every sampler, and every hold.
+  \item State the sampling period $T$ and keep $x[k]$ distinct from $x(t)$.
+  \item Use $G(z)=\Z\{g(kT)\}$; never replace $s$ by $z$ directly.
+  \item For a ZOH/plant block, use $(1-z^{-1})\Z\{G_p(s)/s\}$.
+  \item Before factoring a sampled block diagram, check whether an input or intermediate sampler exists.
+  \item Form the closed-loop characteristic polynomial and test every pole against $|z|<1$.
+  \item Check the hypotheses before using initial- or final-value theorems.
+  \item Translate performance through $z=\e^{sT}$, including both radius and angle.
+  \item Distinguish transient specifications, actuating error, tracking error, and disturbance error.
+  \item Sanity-check results by computing the first few samples from the recurrence.
+\end{enumerate}
+}
+
+\subsection*{Cumulative checkpoint: choose the method before calculating}
+
+\begin{enumerate}[label=\textbf{Q\arabic*.},wide]
+  \item Put these actions in a safe order for a sampled feedback problem: form the closed-loop fraction; mark samplers and holds; convert the ZOH/plant to $G(z)$; transform the controller recurrence to $G_D(z)$.
+  \item Diagnose both mistakes in this proposed solution: ``Replace $s$ by $z$ in $G_p(s)$ to obtain the plant model. Then substitute $z=1$ into the final-value expression; no pole check is needed.''
+  \item Give one independent check for each result: (a) a solved recurrence; (b) a ZOH/plant step response; (c) a stability boundary found by Jury.
+\end{enumerate}
+
+\paragraph{Answers and feedback.}
+\begin{enumerate}[label=\textbf{A\arabic*.},wide]
+  \item Mark samplers and holds; convert the ZOH/plant to $G(z)$; transform the controller recurrence to $G_D(z)$; then form the closed-loop fraction if the reduced topology permits it.
+  \item First, a continuous plant is not discretized by the substitution $s\mapsto z$; with a ZOH use $(1-z^{-1})\Z\{G_p(s)/s\}$. Second, the final-value theorem is legal only after checking every pole of $(1-z^{-1})X(z)$.
+  \item (a) Generate the first few samples directly from the recurrence; (b) compare the final sample value with the plant's DC gain when appropriate; (c) substitute the boundary parameter and verify that a root lies on $|z|=1$.
+\end{enumerate}
+
+\examcheck{A strong solution states the model, performs the algebra, checks the theorem conditions, and finishes with an independent sanity check.}
+
+\sourcepages{196--225 (recap of the same four chapters)}
+
+\appendix
+\section{Quiz 1 preparation pack}
+
+\subsection{How to use this appendix}
+
+This appendix turns Chapters 1--3 into a six-day, closed-book preparation route. The Week 3 transcript gives the authoritative scope for the upcoming Quiz 1: \textbf{30 minutes, Chapters 1--3 only}. A calculator is permitted, necessary transform pairs will be supplied, and working should be shown for non-multiple-choice questions. The transcript's unclear automatic transcription of the exact time, seating, and absence arrangements is intentionally not reproduced here.
+
+\examcheck{Chapter 4 topics---$s$--$z$ mapping, Jury/bilinear stability, transient response, system type, and steady-state error---are not assessed in Quiz 1. They remain in the main notes for later study.}
+
+Two unofficial recalled Quiz 1 descriptions are used only to identify plausible \emph{question structures}; the lecture notes and Week 3 announcement remain authoritative for scope, notation, and conditions. The recalled versions are not the same paper:
+\begin{center}
+\begin{tabular}{>{\bfseries}p{0.16\textwidth}p{0.35\textwidth}p{0.35\textwidth}}
+\toprule
+ & Recalled version A & Recalled version B\\
+\midrule
+First part & Difference equation, unit-step forcing, discrete response, final-value theorem & Piecewise sampled input, direct $z$-transform derivation without a shift theorem or table\\
+Second part & Sampled feedback diagram, output transform, existence of a pulse/impulse transfer function & Open-loop sampler--ZOH--continuous-plant chain, output transform, final-value theorem\\
+Shared skill & \multicolumn{2}{p{0.70\textwidth}}{Translate a time-domain description into the correct transform domain, preserve initial conditions and sampler topology, and check theorem hypotheses before taking a limit.}\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The highest-return order is therefore: direct summation and transform properties; inverse transforms; one-sided shift rules and difference equations; final-value conditions; sampling and holds; pulse-transfer topology; digital controllers and PID.
+
+\subsection{Course-exercise study map}
+
+The supplied exercise set is supporting practice rather than an identified past quiz. Its four groups align with the confirmed scope as follows:
+\begin{center}
+\begin{tabular}{>{\bfseries}p{0.12\textwidth}p{0.34\textwidth}p{0.42\textwidth}}
+\toprule
+Group & Main skill & Best use in preparation\\
+\midrule
+1 & Direct $z$ transforms & Differentiation in $z$, complex translation, cumulative sums, and sampling a plotted signal.\\
+2 & Inverse $z$ transforms & Coefficient reading, repeated-pole partial fractions, initial/final values, inversion integrals, and delays.\\
+3 & Difference equations and pulse transfer & One-sided transforms, two derivations of a pulse-transfer function, and sampled-feedback topology.\\
+4 & Sampled block diagrams and PID & Continuous versus sampled outputs, closed-loop sequences, and digital-controller interconnections.\\
+\bottomrule
+\end{tabular}
+\end{center}
+\resourcesource{\path{resources/course-exercises.pdf}, pp. 1--5; solution methods checked against \path{resources/course-exercises-solutions.pdf}, pp. 1--26.}
+
+\subsection{Prerequisite map and symbol dictionary}
+
+Keep the following objects separate.  Most serious errors come from treating two of them as interchangeable.
+\begin{center}
+\begin{tabular}{>{$}l<{$}p{0.68\textwidth}}
+\toprule
+\text{Symbol} & \text{Meaning}\\
+\midrule
+x(t),\ X(s) & Continuous-time signal and its ordinary Laplace transform.\\
+x[k]=x(kT) & Samples of $x(t)$ at $t=kT$; this is a sequence.\\
+x^*(t),\ X^*(s) & Ideal impulse train $\sum x(kT)\delta(t-kT)$ and its starred Laplace transform.\\
+X(z) & $z$ transform $\sum_{k=0}^{\infty}x[k]z^{-k}$ of the sample sequence.\\
+G_p(s) & Continuous plant; it cannot be converted by simply replacing $s$ with $z$.\\
+G(z) & Pulse transfer function relating sampled input to sampled output when the topology permits such a ratio.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The safe modeling chain is
+\[
+x(t)\xrightarrow{\text{sample at }kT}x[k]
+\xrightarrow{\Z}X(z),
+\qquad
+x[k]\xrightarrow{\text{ZOH}}h(t)\xrightarrow{G_p(s)}y(t)
+\xrightarrow{\text{observe at }kT}y[k].
+\]
+The $z$ transform is a generating function for a sequence.  Expanding it,
+\[
+X(z)=x[0]+x[1]z^{-1}+x[2]z^{-2}+\cdots,
+\]
+shows that $z^{-1}$ labels a one-sample delay.  A difference equation is simply a recurrence; the transform replaces stored past samples by powers of $z^{-1}$.
+
+\subsection{Closed-book memory core}
+
+The following short list should be reproducible before the timed mocks:
+\begin{align*}
+X(z)&=\sum_{k=0}^{\infty}x[k]z^{-k},
+&\Z\{\unitstep[k]\}&=\frac{1}{1-z^{-1}},\\
+\Z\{a^k\unitstep[k]\}&=\frac{1}{1-az^{-1}},
+&\Z\{x[k-n]\unitstep[k-n]\}&=z^{-n}X(z),\\
+\Z\{x[k+1]\}&=zX(z)-zx[0],
+&x[0]&=\lim_{z\to\infty}X(z),\\
+x[\infty]&=\lim_{z\to1}(1-z^{-1})X(z),
+&G_{h0}(s)&=\frac{1-\e^{-sT}}{s},\\
+G(z)&=(1-z^{-1})\Z\!\left\{\frac{G_p(s)}{s}\right\}.
+\end{align*}
+The final-value formula is legal only when every pole of $(1-z^{-1})X(z)$ is strictly inside $|z|=1$.  Equivalently, $X(z)$ may have one simple pole at $z=1$, but no repeated pole there and no other pole on or outside the unit circle.
+
+\commonerror{Do not memorize the final-value expression without its pole condition.  Substitution can produce a neat number for a sequence that grows or oscillates and therefore has no final value.}
+
+\subsection{Source-backed worked methods}
+
+\subsubsection*{Transforming $k^3$ by differentiating in $z$}
+
+Starting from $\Z\{1\}=z/(z-1)$, use
+\[
+\Z\{k x[k]\}=-z\frac{\dd X(z)}{\dd z}.
+\]
+Applying the operator $-z\dd/\dd z$ three times gives
+\[
+\Z\{k^3\}
+=\frac{z(z^2+4z+1)}{(z-1)^4}
+=\frac{z^{-1}(1+4z^{-1}+z^{-2})}{(1-z^{-1})^4}.
+\]
+The numerator coefficients $1,4,1$ come from the repeated product-rule differentiations; they should not be guessed from a table.
+
+\subsubsection*{Repeated-pole inverse transform}
+
+For
+\[
+X(z)=\frac{z^{-1}(0.5-z^{-1})}
+{(1-0.5z^{-1})(1-0.8z^{-1})^2},
+\]
+decomposition into standard causal pairs gives
+\[
+X(z)=\frac{-25/3}{1-0.5z^{-1}}
++\frac{25/3}{1-0.8z^{-1}}
+-\frac{2z^{-1}}{(1-0.8z^{-1})^2}.
+\]
+Since $\Z\{k a^{k-1}\}=z^{-1}/(1-az^{-1})^2$,
+\[
+x[k]=-\frac{25}{3}(0.5)^k+\frac{25}{3}(0.8)^k
+-2k(0.8)^{k-1},\qquad k\ge0.
+\]
+Substitution at $k=0$ gives zero, matching $\lim_{z\to\infty}X(z)$.
+
+\subsubsection*{The same pulse transfer from two routes}
+
+For $X(s)=(s+3)/[(s+1)(s+2)]$,
+\[
+X(s)=\frac{2}{s+1}-\frac{1}{s+2}
+\quad\Longrightarrow\quad
+x(kT)=2\e^{-kT}-\e^{-2kT}.
+\]
+Transforming the sampled sequence yields
+\[
+X(z)=\frac{2}{1-\e^{-T}z^{-1}}
+-\frac{1}{1-\e^{-2T}z^{-1}}
+=\frac{1+\e^{-T}(1-2\e^{-T})z^{-1}}
+{(1-\e^{-T}z^{-1})(1-\e^{-2T}z^{-1})}.
+\]
+Direct partial fractions in $s$ followed by the transform table and inverse Laplace followed by sampling must agree; this equality is a useful algebra check.
+
+\subsubsection*{Closed-loop samples from a ZOH and integrator}
+
+With $T=1$, a ZOH, plant $K/s$, and unity negative feedback,
+\[
+G(z)=(1-z^{-1})\Z\!\left\{\frac{K}{s^2}\right\}
+=\frac{Kz^{-1}}{1-z^{-1}}.
+\]
+For a unit-step input,
+\[
+C(z)=\frac{Kz^{-1}}
+{[1-(1-K)z^{-1}](1-z^{-1})},
+\qquad
+c[k]=1-(1-K)^k.
+\]
+The samples converge to one when $0<K<2$; $K=0$ gives the identically zero response. This conclusion follows from the remaining pole $z=1-K$, not from a Chapter 4 Jury test.
+
+\resourcesource{Exercises 1.1, 2.2, 3.2, and 4.2 in \path{resources/course-exercises.pdf}; all algebra above was re-derived independently.}
+
+\subsection{Six worked question archetypes}
+
+\subsubsection*{Archetype 1: direct transform of a piecewise sampled signal}
+
+Let a continuous signal be sampled with period $T$ and suppose
+\[
+x(t)=\begin{cases}
+0,&t<0,\\
+1,&0\le t<2T,\\
+3,&2T\le t<5T,\\
+0,&t\ge5T.
+\end{cases}
+\]
+Find $X(z)$ directly from the definition, without a transform table or shift theorem.
+
+\textbf{Step 1: sample the intervals.}  The boundary rule matters: $x[0]=1$, $x[1]=1$, $x[2]=x[3]=x[4]=3$, and all later samples are zero.
+
+\textbf{Step 2: substitute into the defining sum.}
+\[
+X(z)=\sum_{k=0}^{\infty}x[k]z^{-k}
+=1+z^{-1}+3z^{-2}+3z^{-3}+3z^{-4}.
+\]
+No property has been used; the coefficients are simply the samples.  If a compact rational form is requested, finite geometric sums may be simplified only after this line is correct.
+
+\commonerror{Do not read a continuous interval as though both endpoints belong to it.  First make a small table of $k$, $kT$, and $x(kT)$; then form the sum.}
+
+\subsubsection*{Archetype 2: recurrence, inverse transform, and final value}
+
+For $k\ge0$, let
+\[
+y[k+1]-\tfrac12y[k]=\unitstep[k],\qquad y[0]=0.
+\]
+The one-sided transform of the advance is $zY(z)-zy[0]$, not merely $zY(z)$ in general.  Therefore
+\[
+\bigl(z-\tfrac12\bigr)Y(z)=\frac{1}{1-z^{-1}}=\frac{z}{z-1},
+\qquad
+Y(z)=\frac{z}{(z-1)(z-\tfrac12)}.
+\]
+Expanding $Y(z)/z$ gives
+\[
+\frac{Y(z)}{z}=\frac{2}{z-1}-\frac{2}{z-\tfrac12},
+\qquad
+y[k]=2\left(1-\left(\tfrac12\right)^k\right)\unitstep[k].
+\]
+For the final value, first cancel the permitted simple pole at $z=1$:
+\[
+(1-z^{-1})Y(z)=\frac{1}{z-\tfrac12}.
+\]
+Its only pole is $z=1/2$, inside the unit circle, so the theorem is valid and
+\[
+y[\infty]=\lim_{z\to1}\frac{1}{z-\tfrac12}=2.
+\]
+The direct steady-state balance $y_\infty-\tfrac12y_\infty=1$ provides an independent check.
+
+\subsubsection*{Archetype 3: sampler, ZOH, plant, and output}
+
+Take $T=1$, a ZOH, $G_p(s)=1/(s+1)$, and sampled unit-step input $x[k]=1$.  The combined ZOH/plant pulse transfer function is
+\begin{align*}
+G(z)
+&=(1-z^{-1})\Z\!\left\{\frac{1}{s(s+1)}\right\}\\
+&=(1-z^{-1})\Z\{1-\e^{-t}\}\big|_{t=k}\\
+&=\frac{(1-\e^{-1})z^{-1}}{1-\e^{-1}z^{-1}}.
+\end{align*}
+The sampled output is therefore
+\[
+Y(z)=G(z)X(z)
+=\frac{(1-\e^{-1})z^{-1}}
+{(1-\e^{-1}z^{-1})(1-z^{-1})}.
+\]
+After the step pole is removed, the remaining pole is $\e^{-1}$, so the final-value theorem applies and $y[\infty]=1$.  This also matches the plant's DC gain.
+
+\commonerror{The factor $(1-z^{-1})$ belongs to the ZOH conversion.  Do not write $G_p(z)$ by substituting $s=z$, and do not forget that a causal ZOH/plant response normally contains a one-sample delay.}
+
+\subsubsection*{Archetype 4: does a pulse transfer function exist?}
+
+Suppose a continuous external input first passes through $F(s)$ and is sampled only afterward.  The sampled contribution is
+\[
+\bigl[F(s)R(s)\bigr]^*.
+\]
+In general this cannot be separated into $F^*(s)R^*(s)$.  Consequently there is no input-independent ratio $C(z)/R(z)$ for that configuration, even though the output can still be calculated for a specified $R(s)$.
+
+By contrast, if a sampler is placed \emph{before} $F(s)$, then
+\[
+Y^*(s)=[F(s)X^*(s)]^*=F^*(s)X^*(s),
+\qquad Y(z)=F(z)X(z),
+\]
+so the pulse transfer function exists.  Output sampling does not repair a missing input sampler; it only states where the continuous output is observed.
+
+\examcheck{Before manipulating a diagram, circle every sampler and hold.  Between two continuous blocks, an intermediate sampler determines whether the result is $G(z)H(z)$ or $\Z\{G(s)H(s)\}$.}
+
+\subsubsection*{Archetype 5: a parameter decides whether a final value exists}
+
+For $k\geq0$, consider
+\[
+y[k+1]-\beta y[k]=\unitstep[k],\qquad y[0]=0.
+\]
+The transform is
+\[
+(z-\beta)Y(z)=\frac{z}{z-1},
+\qquad
+Y(z)=\frac{z}{(z-1)(z-\beta)}.
+\]
+For $\beta\ne1$, partial fractions give
+\[
+y[k]=\frac{1-\beta^k}{1-\beta}\unitstep[k].
+\]
+The pole at $z=1$ is the ordinary step pole; after it is removed, the deciding pole is $z=\beta$.  Thus the final-value theorem is valid exactly when $|\beta|<1$, and then $y[\infty]=1/(1-\beta)$.  At $\beta=1$, the sequence is $y[k]=k$ and grows.  At $\beta=-1$, it alternates.  For $|\beta|>1$, it grows in magnitude.  In all three latter cases, the final value does not exist.
+
+\commonerror{A finite value from blindly substituting $z=1$ is not evidence that a final value exists.  First classify the pole at $z=\beta$.}
+
+\subsubsection*{Archetype 6: controller recurrence before closing the loop}
+
+Suppose a digital controller obeys
+\[
+m[k]-0.4m[k-1]=0.7e[k]-0.2e[k-1],
+\]
+with zero initial conditions.  Transforming each delayed term gives
+\[
+\frac{M(z)}{E(z)}=G_D(z)
+=\frac{0.7-0.2z^{-1}}{1-0.4z^{-1}}.
+\]
+This is the controller block; do not yet mix it with a continuous plant.  First reduce the ZOH-plus-plant to $G(z)$.  Only then, for correctly placed unity negative feedback, write
+\[
+\frac{C(z)}{R(z)}=\frac{G_D(z)G(z)}{1+G_D(z)G(z)}.
+\]
+The recurrence alone does not automatically make the controller a PID.  To identify a requested PID form, rewrite its numerator and denominator against the course's chosen $K_P$, $K_I$, and $K_D$ realization.
+
+\sourcepages{21--70 for the $z$ transform and difference equations; 71--143 for sampling, holds, and pulse-transfer topology}
+
+\subsection{Practice drills}
+
+Attempt these without notes.  Use the hints only after writing a complete setup.  Full solutions follow in the next subsection.
+
+\begin{enumerate}[label=\textbf{D\arabic*.},wide]
+\item A signal sampled with period $T$ has values $x[k]=2$ for $0\le k\le2$, $x[k]=1$ for $3\le k\le5$, and $x[k]=0$ otherwise.  Derive $X(z)$ directly from the definition; do not cite a table or shift theorem.
+
+\item For $k\ge0$,
+\[
+y[k+1]+\tfrac14y[k]=\unitstep[k],\qquad y[0]=0.
+\]
+Find $Y(z)$ and $y[k]$, and decide whether the final-value theorem may be used.  Verify the answer from the steady-state recurrence.
+
+\item A unit-step sequence drives a ZOH and $G_p(s)=2/(s+2)$ with $T=0.5$.  Obtain the combined pulse transfer function, $Y(z)$, and the sampled final value.
+
+\item Let $G(s)=1/(s+1)$ and $H(s)=1/(s+2)$.  Compare two causal systems with an input sampler: (a) a synchronized sampler is also placed between $G$ and $H$; (b) there is no intermediate sampler.  Find the pulse transfer expression for each and show one quick reason they cannot be equal.
+
+\item Find the causal inverse transform of
+\[
+X(z)=\frac{z^{-3}}{(1-z^{-1})(1-0.2z^{-1})}.
+\]
+State the first three samples explicitly and explain how the factor $z^{-3}$ changes the undelayed sequence.
+
+\item For $k\geq0$,
+\[
+v[k+1]-\alpha v[k]=\unitstep[k],\qquad v[0]=0.
+\]
+Obtain $V(z)$ and classify all real values of $\alpha$ for which (i) $v[k]$ converges and (ii) the final-value theorem is valid.
+
+\item A controller satisfies
+\[
+m[k]-0.5m[k-1]=e[k]+0.1e[k-1].
+\]
+Find $G_D(z)=M(z)/E(z)$.  If a correctly reduced ZOH/plant has pulse transfer function $G(z)$ and the feedback is unity negative feedback, obtain $C(z)/R(z).$
+
+\item With $T=1$, a ZOH, plant $K/s$, and unity negative feedback, obtain the pulse transfer $G(z)$ from the sampled error to the sampled output. For a unit-step reference, find $C(z)$ and $c[k]$, then state the range of $K$ for which $c[k]$ converges to one.
+\end{enumerate}
+
+\paragraph{Hints.}
+D1: write six coefficients.  D2: transform $y[k+1]$ with its initial term and expand $Y(z)/z$.  D3: $2/(s(s+2))=1/s-1/(s+2)$.  D4: compare the first sampled impulse-response coefficient.  D5: invert the undelayed rational factor first, then apply a three-sample delay.  D6: after cancelling the simple step pole, inspect $z=\alpha$.  D7: collect present and delayed $m,e$ terms before dividing by $E(z)$.  D8: use $(1-z^{-1})\Z\{K/s^2\}$, then close the sampled unity-feedback loop.
+
+\subsection{Drill solutions}
+
+\paragraph{D1.}
+\[
+X(z)=\sum_{k=0}^{5}x[k]z^{-k}
+=2+2z^{-1}+2z^{-2}+z^{-3}+z^{-4}+z^{-5}.
+\]
+
+\paragraph{D2.}
+Transforming the recurrence gives
+\[
+(z+\tfrac14)Y(z)=\frac{z}{z-1},
+\qquad
+Y(z)=\frac{z}{(z-1)(z+\tfrac14)}.
+\]
+Since
+\[
+\frac{Y(z)}{z}=\frac{4/5}{z-1}-\frac{4/5}{z+1/4},
+\]
+the response is
+\[
+y[k]=\frac45\left(1-\left(-\tfrac14\right)^k\right)\unitstep[k].
+\]
+After cancelling the simple step pole, the remaining pole is $-1/4$, so the final-value theorem is valid and $y[\infty]=4/5$.  The balance $y_\infty+(1/4)y_\infty=1$ gives the same result.
+
+\paragraph{D3.}
+Here $2T=1$, so $a=\e^{-2T}=\e^{-1}$.  Therefore
+\[
+G(z)=(1-z^{-1})\Z\{1-\e^{-2kT}\}
+=\frac{(1-a)z^{-1}}{1-az^{-1}},
+\]
+and
+\[
+Y(z)=\frac{(1-a)z^{-1}}{(1-az^{-1})(1-z^{-1})}.
+\]
+The remaining pole after the final-value cancellation is $a=\e^{-1}<1$, so $y[\infty]=1$.
+
+\paragraph{D4.}
+With an intermediate sampler, each continuous block has its own sampled impulse response:
+\[
+G(z)H(z)=\frac{1}{(1-\e^{-T}z^{-1})(1-\e^{-2T}z^{-1})}.
+\]
+Without the intermediate sampler, combine first in the $s$ domain:
+\[
+GH(z)=\Z\!\left\{\frac{1}{(s+1)(s+2)}\right\}
+=\frac{1}{1-\e^{-T}z^{-1}}-
+\frac{1}{1-\e^{-2T}z^{-1}}.
+\]
+At $k=0$, the first system's convolution coefficient is $1$, whereas the combined continuous impulse response is $1-1=0$.  Thus the two pulse transfer functions cannot be equal.
+
+\paragraph{D5.}
+First decompose the undelayed factor:
+\[
+\frac{1}{(1-z^{-1})(1-0.2z^{-1})}
+=\frac{1.25}{1-z^{-1}}-\frac{0.25}{1-0.2z^{-1}}.
+\]
+Its causal inverse is $1.25-0.25(0.2)^k$. Multiplication by $z^{-3}$ delays this sequence by three samples, so
+\[
+x[k]=0\quad(k=0,1,2),\qquad
+x[k]=1.25\bigl(1-0.2^{k-2}\bigr)\quad(k\ge3).
+\]
+At $k=3$, the formula gives one, which equals the first coefficient obtained by expanding $X(z)$.
+
+\paragraph{D6.}
+\[
+V(z)=\frac{z}{(z-1)(z-\alpha)}.
+\]
+For $\alpha\ne1$,
+\[
+v[k]=\frac{1-\alpha^k}{1-\alpha}\unitstep[k].
+\]
+The response converges exactly when $|\alpha|<1$; then the final-value theorem is also valid and gives $v[\infty]=1/(1-\alpha)$.  At $\alpha=1$, $v[k]=k$.  At $\alpha=-1$ it alternates, and for $|\alpha|>1$ it grows.  Those cases have no final value, so the theorem is invalid.
+
+\paragraph{D7.}
+With zero initial conditions,
+\[
+(1-0.5z^{-1})M(z)=(1+0.1z^{-1})E(z),
+\qquad
+G_D(z)=\frac{1+0.1z^{-1}}{1-0.5z^{-1}}.
+\]
+After the continuous portion has been reduced correctly,
+\[
+\frac{C(z)}{R(z)}=\frac{G_D(z)G(z)}{1+G_D(z)G(z)}.
+\]
+Writing this formula before finding the pulse transfer $G(z)$ would hide a topology error.
+
+\paragraph{D8.}
+The ZOH and integrator give
+\[
+G(z)=(1-z^{-1})\Z\!\left\{\frac{K}{s^2}\right\}
+=\frac{Kz^{-1}}{1-z^{-1}}.
+\]
+Closing the sampled unity-feedback loop and applying $R(z)=1/(1-z^{-1})$ gives
+\[
+C(z)=\frac{Kz^{-1}}
+{[1-(1-K)z^{-1}](1-z^{-1})}.
+\]
+Therefore
+\[
+c[k]=1-(1-K)^k,\qquad k\ge0.
+\]
+The transient factor decays exactly when $|1-K|<1$, hence $0<K<2$. At $K=0$ the response is identically zero; at $K=2$ it alternates and does not converge.
+
+\resourcesource{Drills D5 and D8 adapt Exercises 2.5 and 4.2 from \path{resources/course-exercises.pdf}; solutions were independently re-derived.}
+\sourcepages{21--143 for Chapters 1--3 transform, sampling, and pulse-transfer foundations}
+
+\subsection{Two 30-minute mock quizzes}
+
+Use a blank sheet and no notes.  Spend at most 15 minutes per question.  Mark only after both questions in a mock are complete.
+
+\subsubsection*{Mock A}
+
+\begin{enumerate}[label=\textbf{A\arabic*.},wide]
+\item A causal sampled signal is $x[k]=2^k$ for $0\le k\le3$ and zero afterward.
+  \begin{enumerate}[label=(\alph*)]
+  \item Obtain $X(z)$ from the defining sum only.
+  \item State its first four coefficients and explain why no convergence condition is needed for this finite sequence.
+  \end{enumerate}
+
+\item A unit-step sequence drives a ZOH and $G_p(s)=3/(s+3)$ with sampling period $T$.  Derive $G(z)$ and $Y(z)$, then determine the sampled final value and justify the theorem's use.
+\end{enumerate}
+
+\subsubsection*{Mock B}
+
+\begin{enumerate}[label=\textbf{B\arabic*.},wide]
+\item For $k\geq0$,
+\[
+v[k+1]-\beta v[k]=\unitstep[k],\qquad v[0]=0.
+\]
+Find $V(z)$ and a closed form for $v[k]$ when $\beta\ne1$.  Classify every real $\beta$ for which the final-value theorem is valid.
+
+\item A digital controller obeys
+\[
+m[k]-0.25m[k-1]=0.6e[k]-0.1e[k-1].
+\]
+The correctly reduced ZOH/plant pulse transfer function is
+\[
+G(z)=\frac{0.3z^{-1}}{1-0.7z^{-1}}.
+\]
+  \begin{enumerate}[label=(\alph*)]
+  \item Obtain $G_D(z)=M(z)/E(z)$.
+  \item Obtain $C(z)/R(z)$ for unity negative feedback.
+  \item State the modeling step that must be completed before multiplying $G_D(z)$ by a plant model.
+  \end{enumerate}
+\end{enumerate}
+
+\subsection{Mock solutions and marking guide}
+
+Each mock is worth 20 marks.  Award method marks only when the relevant initial condition, sampler location, or pole condition is stated.
+
+\paragraph{Mock A solution.}
+A1:
+\[
+X(z)=1+2z^{-1}+4z^{-2}+8z^{-3}.
+\]
+The coefficients are $1,2,4,8$.  This polynomial in $z^{-1}$ is a finite sum, so no infinite-series convergence test is required (6 marks).
+
+For A2, let $a=\e^{-3T}$.  Since
+\[
+\frac{G_p(s)}{s}=\frac{3}{s(s+3)}=\frac1s-\frac1{s+3},
+\]
+\[
+G(z)=\frac{(1-a)z^{-1}}{1-az^{-1}},
+\qquad
+Y(z)=\frac{(1-a)z^{-1}}
+{(1-az^{-1})(1-z^{-1})}.
+\]
+After cancelling the simple pole at $z=1$, the only pole is $a\in(0,1)$ for $T>0$.  Hence the theorem is valid and $y[\infty]=1$ (14 marks).
+
+\paragraph{Mock B solution.}
+B1:
+\[
+V(z)=\frac{z}{(z-1)(z-\beta)}.
+\]
+For $\beta\ne1$,
+\[
+v[k]=\frac{1-\beta^k}{1-\beta}\unitstep[k].
+\]
+After the simple step pole is removed, the remaining pole is $\beta$.  Hence the theorem is valid exactly for $|\beta|<1$, and then $v[\infty]=1/(1-\beta)$.  The cases $\beta=1$, $\beta=-1$, and $|\beta|>1$ respectively grow, oscillate, and grow in magnitude (10 marks).
+
+For B2,
+\[
+G_D(z)=\frac{0.6-0.1z^{-1}}{1-0.25z^{-1}},
+\qquad
+\frac{C(z)}{R(z)}=
+\frac{G_D(z)G(z)}{1+G_D(z)G(z)}.
+\]
+The given $G(z)$ is valid only because the sampler, ZOH, and continuous plant have already been reduced to one pulse-transfer block; it would be wrong to replace that modeling step by $s\mapsto z$ (10 marks).
+
+\subsection{Six-day schedule at two hours per day}
+
+\begin{center}
+\begin{tabular}{>{\bfseries}p{0.10\textwidth}p{0.50\textwidth}p{0.29\textwidth}}
+\toprule
+Day & Two-hour session & Exit test\\
+\midrule
+1 & 30 min definitions and sequence tables; 50 min derive step, exponential, ramp, and finite sums; 40 min direct-sum drills & Derive three pairs without notes and complete D1.\\
+2 & 35 min one-sided shifts; 45 min inverse methods; 40 min recurrence and final-value work & Complete Archetype 2 and D2 without looking.\\
+3 & 40 min $x(t)$, $x[k]$, $X^*(s)$, $X(z)$; 40 min sampling examples; 40 min piecewise practice & Explain every symbol in the dictionary and redo Archetype 1.\\
+4 & 40 min ZOH derivation; 45 min pulse-transfer topology; 35 min D3--D4 & Draw and label every sampler/hold before algebra.\\
+5 & 35 min repeated-pole and delayed inversions; 45 min controller/PID recurrences; 40 min supplied Exercise groups 2--4 & Complete D5, D7, and D8 without notes.\\
+6 & 10 min formula dump; 30 min Mock A; 15 min marking; 30 min Mock B; 20 min marking; 15 min error repair & At least 16/20 on Mock B and no repeated conceptual error.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Final problem-solving checklist}
+
+\begin{enumerate}
+  \item Write whether each object is continuous, sampled, or an impulse train.
+  \item For a piecewise input, tabulate $k$, $kT$, and $x(kT)$ before summing.
+  \item For an advance, include every initial-condition term.
+  \item For inversion, choose long division for samples and partial fractions of $X(z)/z$ for a closed form.
+  \item Before applying the final-value theorem, inspect the poles of $(1-z^{-1})X(z)$.
+  \item On a diagram, mark each sampler and hold before combining blocks.
+  \item Convert a ZOH/plant pair with $(1-z^{-1})\Z\{G_p(s)/s\}$.
+  \item Never assume $\Z\{G(s)H(s)\}=G(z)H(z)$ without an intermediate sampler.
+  \item Keep Chapter 4 methods out of Quiz 1 work; use the saved time to check inverse transforms and sampler topology.
+  \item Check the final answer using initial samples, DC gain, a recurrence balance, or a boundary pole.
+\end{enumerate}
+
+\examcheck{Quiz-ready means more than recognizing a formula: you can reconstruct it, state its conditions, choose it from the diagram, and independently check the result.}
+
+\end{document}

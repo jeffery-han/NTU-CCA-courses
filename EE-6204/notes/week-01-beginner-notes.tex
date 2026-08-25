@@ -1,0 +1,88 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=25mm]{geometry}
+\usepackage{amsmath,amssymb,mathtools,enumitem}
+\usepackage{xurl}
+\usepackage[hidelinks]{hyperref}
+\renewcommand{\texttt}[1]{\nolinkurl{#1}}
+\setlist[itemize]{nosep,leftmargin=*}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\T}{\mathsf{T}}
+\newcommand{\source}[1]{\par\smallskip\noindent\textit{Source: #1.}\par\smallskip}
+\title{EE6204 Systems Analysis\\\large Beginner Notes: Week 1 -- Linear Programming Foundations}
+\author{Living course note}
+\date{22 August 2026}
+\begin{document}
+\maketitle
+\noindent\textbf{Scope and sources.} This note covers Week~1 only: the introduction to linear programming, problem formulation, the geometry of two-variable LPs, and conversion toward standard form. It uses \texttt{resources/lecture-01-04-linear-and-nonlinear-programming.pdf} (Lecture~1), \texttt{resources/introduction-to-linear-programming.pdf}, and \texttt{resources/week-01-transcript.txt}. The slides control formal notation; the transcript is used for teaching emphasis.
+\tableofcontents
+
+\section{Optimisation: choosing the best feasible action}
+An optimisation problem is a structured way to make a decision. We choose values for \emph{decision variables}, measure their quality using an \emph{objective function}, and enforce limits using \emph{constraints}. In a general minimisation problem,
+\[
+ \min_{x\in\R^n} f(x)\quad\text{subject to}\quad x\in\mathcal F,
+\]
+where $\mathcal F$ is the \emph{feasible set}: the choices that satisfy every constraint. A numerical answer is not a valid solution if it violates a capacity, demand, safety, or non-negativity condition.
+
+\subsection{How to formulate a real problem}
+Start in words and make each modelling choice explicit.
+\begin{enumerate}
+\item Define each variable, including units: for example, ``$x$ = number of suits produced per week.''
+\item State whether the objective is to maximise a benefit (profit, throughput) or minimise a cost, time, or waste.
+\item Translate each physical condition into an equation or inequality.
+\item State the domain. Production amounts usually require $x\geq0$; whole objects may require $x\in\mathbb Z$.
+\end{enumerate}
+Check signs against the wording: ``at most'' gives $\leq$; ``at least'' gives $\geq$. A cost-minimisation model must also include a reason to produce. Otherwise, producing nothing can be the correct mathematical minimum but the wrong operational model.
+
+\section{Linear programming (LP)}
+An LP has a linear objective and linear constraints. A standard maximisation form is
+\[
+ \max\ c^\T x\quad\text{subject to}\quad Ax\leq b,\qquad x\geq0.
+\]
+``Linear'' means a variable appears only to the first power with a constant coefficient. Terms such as $x_1x_2$, $x_1^2$, or $x_1/x_2$ make a model nonlinear.
+
+\subsection{Worked formulation: product mix}
+Suppose $x$ suits and $y$ gowns earn 30 and 50 units of profit. If material stocks impose three resource limits, the model is
+\[
+\begin{aligned}
+ \max\quad&30x+50y\\
+ \text{s.t.}\quad&2x+y\leq16,\\
+ &x+2y\leq11,\\
+ &x+3y\leq15,\\
+ &x,y\geq0.
+\end{aligned}
+\]
+Every coefficient must have a physical interpretation. In the first constraint, $2$ is the amount of the first material used per suit, $1$ the amount per gown, and $16$ the available amount. The last two inequalities exclude negative production; they are constraints too.
+
+\section{The graphical view of an LP}
+With two variables, a linear equality is a straight line and a linear inequality keeps one side of that line. The feasible region is the intersection of all allowed half-planes. To draw it, replace each inequality by equality to obtain a boundary, use a test point to choose the permitted side, and retain only points satisfying every constraint.
+
+The objective has level lines $c^\T x=z$. Slide such a line in the improving direction until it makes its last contact with the feasible region. For a finite optimum, a corner (also called an extreme point) attains an optimum. This is why evaluating feasible corners solves a two-variable LP.
+
+Recognise three special outcomes:
+\begin{itemize}
+\item \textbf{Infeasible:} no point satisfies all constraints simultaneously.
+\item \textbf{Unbounded:} one can improve the objective forever along a feasible direction.
+\item \textbf{Multiple optima:} the objective line is parallel to an optimal feasible edge, so every point on that edge has the same best value.
+\end{itemize}
+Graphing gives valuable intuition but does not scale to many variables, where the feasible set is a high-dimensional polyhedron.
+
+\section{Preparing an LP for systematic solution}
+Simplex methods use equality constraints and nonnegative variables. The following conversions preserve the feasible choices when the new variables are included:
+\begin{align*}
+ a_i^\T x\leq b_i&\quad\Longrightarrow\quad a_i^\T x+s_i=b_i,\quad s_i\geq0 &&\text{(slack variable)},\\
+ a_i^\T x\geq b_i&\quad\Longrightarrow\quad a_i^\T x-e_i=b_i,\quad e_i\geq0 &&\text{(surplus variable)},\\
+ x_k\text{ free}&\quad\Longrightarrow\quad x_k=x_k^+-x_k^-,\quad x_k^+,x_k^-\geq0.
+\end{align*}
+A slack variable measures unused capacity: if $2x+y+s=16$, then $s=0$ means the resource is fully used. A surplus variable measures the amount by which a lower-bound requirement is exceeded. These are not arbitrary algebraic tricks; they give an inequality's missing amount an explicit nonnegative meaning.
+
+\section{Week 1 learning checklist}
+\begin{itemize}
+\item Can I identify variables, objective, constraints, and domains in a word problem?
+\item Can I turn ``at most'' and ``at least'' into correctly signed inequalities?
+\item Can I draw a two-variable feasible region and diagnose infeasibility, unboundedness, or multiple optima?
+\item Can I add slack or surplus variables and explain their physical meaning?
+\end{itemize}
+\source{\texttt{resources/lecture-01-04-linear-and-nonlinear-programming.pdf}, Lecture~1;\\
+\texttt{resources/introduction-to-linear-programming.pdf}, pp.~1--28;\\
+\texttt{resources/week-01-transcript.txt}.}
+\end{document}
