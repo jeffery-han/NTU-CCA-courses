@@ -349,6 +349,40 @@ The star means ``sample the corresponding time signal.'' One must not generally 
 \]
 because the second factor already represents a sampled impulse train.
 
+\paragraph{When does a block acquire a star?}
+Begin with the signal equation, not by adding stars to blocks by sight.  A star
+first means that the corresponding \emph{signal} is sampled.  For example, in
+the supplied two-loop diagram the continuous output of the second block is
+\[
+C(s)=G_2(s)M^*(s).
+\]
+There is no star on $G_2$ in this continuous-output equation.  If the output is
+then observed at the sampling instants, star the \emph{whole equation}:
+\[
+C^*(s)=[G_2(s)M^*(s)]^*=G_2^*(s)M^*(s).
+\]
+Only the last equality uses the sampled-input identity above.  Thus
+$G_2^*(s)$ is shorthand for the starred transform of the impulse response,
+\[
+G_2^*(s)=\sum_{k=0}^{\infty}g_2(kT)\e^{-kTs},
+\]
+not an arbitrary decoration placed on the ordinary transfer function
+$G_2(s)$.  The same rule gives
+\[
+M^*(s)=G_1^*(s)E^*(s)-G_2^*(s)M^*(s)
+\]
+after starring $M(s)=G_1(s)E^*(s)-C(s)$.  On the outer feedback path there is
+no sampler between $G_2$ and $H$, so they must be combined before starring:
+\[
+[H(s)G_2(s)M^*(s)]^*=(HG_2)^*(s)M^*(s),
+\]
+which is generally not $H^*(s)G_2^*(s)M^*(s)$.
+
+\textbf{Decision rule.} Circle the samplers, decide whether the equation is for
+a continuous signal or its sampled version, and star the complete expression
+only when taking samples.  Factor a starred expression only where an existing
+sampled impulse train permits the identity $[G X^*]^*=G^*X^*$.
+
 \textbf{Interpretation.} The substitution $z=\e^{sT}$ relates the starred transform $X^*(s)$ to $X(z)$. It does \emph{not} permit direct substitution into the ordinary Laplace transform $X(s)$ or a continuous plant $G_p(s)$.
 
 \subsection{Zero-order and first-order holds}
@@ -899,22 +933,52 @@ x[k]=-\frac{25}{3}(0.5)^k+\frac{25}{3}(0.8)^k
 \]
 Substitution at $k=0$ gives zero, matching $\lim_{z\to\infty}X(z)$.
 
-\subsubsection*{The same pulse transfer from two routes}
+\subsubsection*{The same pulse transfer from two genuinely different routes}
 
-For $X(s)=(s+3)/[(s+1)(s+2)]$,
+Consider the input-sampler case (there is \emph{no} ZOH in this calculation) with
 \[
-X(s)=\frac{2}{s+1}-\frac{1}{s+2}
-\quad\Longrightarrow\quad
-x(kT)=2\e^{-kT}-\e^{-2kT}.
+G_p(s)=\frac{s+3}{(s+1)(s+2)}.
 \]
-Transforming the sampled sequence yields
+The requested pulse transfer function is $G(z)=\Z\{g(kT)\}$, where $g(t)$ is the continuous-time impulse response.
+
+\paragraph{Route 1: partial fractions, inverse Laplace, then sample.}
 \[
-X(z)=\frac{2}{1-\e^{-T}z^{-1}}
+G_p(s)=\frac{2}{s+1}-\frac{1}{s+2}
+\quad\Longrightarrow\quad
+g(t)=2\e^{-t}-\e^{-2t},\qquad t\geq0.
+\]
+Thus $g[k]=g(kT)=2\e^{-kT}-\e^{-2kT}$.  Transforming the two geometric sequences gives
+\[
+G(z)=\frac{2}{1-\e^{-T}z^{-1}}
 -\frac{1}{1-\e^{-2T}z^{-1}}
 =\frac{1+\e^{-T}(1-2\e^{-T})z^{-1}}
 {(1-\e^{-T}z^{-1})(1-\e^{-2T}z^{-1})}.
 \]
-Direct partial fractions in $s$ followed by the transform table and inverse Laplace followed by sampling must agree; this equality is a useful algebra check.
+
+\paragraph{Route 2: sampled state evolution.}
+A modal realization is
+\[
+\dot{\mathbf{x}}=
+\begin{bmatrix}-1&0\\0&-2\end{bmatrix}\mathbf{x}
++\begin{bmatrix}1\\1\end{bmatrix}u,
+\qquad
+y=\begin{bmatrix}2&-1\end{bmatrix}\mathbf{x}.
+\]
+For a unit impulse at $t=0$, the state jumps to
+$\mathbf{x}(0^+)=\begin{bmatrix}1&1\end{bmatrix}^{\mathsf T}$.  Between samples it evolves through
+\[
+\Phi=\e^{AT}=
+\begin{bmatrix}\e^{-T}&0\\0&\e^{-2T}\end{bmatrix}.
+\]
+Therefore the sampled impulse response is $g[k]=C\Phi^kB$, and directly
+\[
+G(z)=C(I-\Phi z^{-1})^{-1}B
+=\frac{2}{1-\e^{-T}z^{-1}}
+-\frac{1}{1-\e^{-2T}z^{-1}},
+\]
+which is the same result.
+
+\commonerror{This result has the direct coefficient $g[0]=1$.  It is therefore not the ZOH--plant formula $(1-z^{-1})\Z\{G_p(s)/s\}$, which normally contains a factor $z^{-1}$ because a held input affects the sampled output only after one sampling interval.}
 
 \subsubsection*{Closed-loop samples from a ZOH and integrator}
 

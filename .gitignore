@@ -2,4 +2,6 @@
 # and directories, including macOS and local automation artifacts.
 /*
 !/.gitignore
+!/AGENTS.md
+!/CLAUDE.md
 !/EE-*/

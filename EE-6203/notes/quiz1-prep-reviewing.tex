@@ -169,6 +169,20 @@ With $z=\e^{sT}$, $X^*(s)=X(z)$.
 
 The coefficient $x(kT)$ is an impulse's area (strength), not a finite height. Also, $z=\e^{sT}$ links $X^*(s)$ to $X(z)$; it does not justify substituting into an ordinary $X(s)$ or $G_p(s)$.
 
+\textbf{Star-placement rule:} star signals first, then simplify.  If
+\[
+C(s)=G_2(s)M^*(s),
+\]
+then the continuous-output equation uses unstarred $G_2(s)$, whereas sampling
+the whole output relation gives
+\[
+C^*(s)=[G_2(s)M^*(s)]^*=G_2^*(s)M^*(s).
+\]
+Here $G_2^*(s)=\sum_{k\ge0}g_2(kT)\e^{-kTs}$ is the starred transform of the
+impulse response.  Do not distribute a star through an arbitrary product: with
+no sampler between $H$ and $G_2$, use $(HG_2)^*(s)$, generally not
+$H^*(s)G_2^*(s)$.
+
 Zero-order hold:
 \[
 h(kT+\tau)=x(kT),\ 0\le\tau<T,
@@ -205,6 +219,13 @@ ZOH plus plant:
 G(z)=\Z\left\{\frac{1-\e^{-sT}}{s}G_p(s)\right\}
 =(1-z^{-1})\Z\left\{\frac{G_p(s)}{s}\right\}.
 \]
+
+\textbf{No-ZOH modal check.}  With an input sampler but no hold, $G_p(s)=(s+3)/[(s+1)(s+2)]$ has $g[k]=2\e^{-kT}-\e^{-2kT}$, hence
+\[
+G(z)=\frac{1+\e^{-T}(1-2\e^{-T})z^{-1}}
+{(1-\e^{-T}z^{-1})(1-\e^{-2T}z^{-1})}.
+\]
+The direct term is $g[0]=1$; do not incorrectly attach the ZOH factor $(1-z^{-1})$ to this input-sampler-only model.
 
 \subsection{Digital controller and PID}
 

@@ -3,6 +3,7 @@
 \usepackage[margin=25mm]{geometry}
 \usepackage{amsmath,amssymb,mathtools}
 \usepackage{booktabs}
+\usepackage{array}
 \usepackage{enumitem}
 \usepackage[hidelinks]{hyperref}
 
@@ -15,7 +16,7 @@
        \large Quiz 1 Review Notes --- Evolutionary Computing Part 1
        (Weeks 1--4)}
 \author{Living revision notes}
-\date{Updated 24 August 2026}
+\date{Updated 29 August 2026}
 
 \begin{document}
 \maketitle
@@ -25,7 +26,12 @@ This note covers the complete evolutionary-computing Part~1 material in
 \path{../resources/lecture-01-evolutionary-computing-part-1.pdf}
 (36 PDF pages, 72 numbered slides), supported by the Week~1 and Week~2 class
 transcripts in \path{../resources/week-01-transcript.txt} and
-\path{../resources/week-02-transcript.txt}. The specialised $N$-queens method
+\path{../resources/week-02-transcript.txt}. The Week~3 lecture is covered in
+Section~7 (metaheuristics, deterministic versus heuristic search, the
+no-free-lunch picture, and neighbourhoods) and in Section~8 on representations
+and variation operators; its slide deck is not
+available locally, so \path{../resources/week-03-transcript.txt} is the
+controlling source there and standard formulas are reconstructed. The specialised $N$-queens method
 is based on Gwee and
 Lim, ``An evolution search algorithm for solving N-queen problems,'' supplied
 as \path{../resources/n-queens-evolution-search-paper.pdf} (especially
@@ -36,8 +42,15 @@ algorithm for the problem.
 \paragraph{Assessment facts visible in the supplied lecture slides.}
 Continuous assessment contributes 40\% and the three-hour final examination
 contributes 60\%.  For the first four-week part, one closed-book written quiz
-contributes 10\% and is scheduled for the last hour of Week 4.  Exact date,
-time, room allocation, and any later changes should be checked in NTULearn.
+contributes 10\% and is scheduled in Week~4.  The Week~3 lecture announced:
+answers written on the question paper, submitted in person and signed;
+the cohort split across LT19A, LT2A and LT5 with the allocation published
+separately; one empty seat between neighbours; pen and photo ID only, no
+phones or smart devices; a stated 9:30--10:30 window; absence without a valid
+reason scores zero. The lecturer also stated that the quiz will \emph{not}
+cover the Week~4 lecture, so the Week~3 material is the scope boundary.  The
+audio is ambiguous on the time of day, so verify every logistic detail in
+NTULearn.
 
 \tableofcontents
 
@@ -432,8 +445,62 @@ EAs differ through a population, stochastic selection, and multiple variation
 operators, especially recombination.  Their effective neighbourhood is
 operator-dependent: mutation connects nearby genotypes, while crossover can
 jump between regions defined by parental material.
+\subsection{Metaheuristics and the two inspirations}
 
-\subsection{Domain knowledge and no free lunch}
+A \emph{heuristic} is a rule of thumb for deciding what to try next; a
+\emph{metaheuristic} is a general search scheme built from such rules --- ``a
+heuristic about heuristics'' --- whose rules come from nature rather than from
+problem-specific human knowledge. GAs, ant-colony optimisation, and
+particle-swarm optimisation are all metaheuristics in this sense.
+
+Two inspirations, kept separate: \textbf{Darwinian evolution} (insufficient
+resources $\Rightarrow$ competition; selection retains the fitter;
+reproduction rewards survival) and \textbf{genetics} (DNA as an encoded
+description whose expression is the phenotype).
+
+\subsection{Deterministic versus heuristic search}
+
+\begin{center}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.16\textwidth}
+  >{\raggedright\arraybackslash}p{0.36\textwidth}
+  >{\raggedright\arraybackslash}p{0.38\textwidth}@{}}
+\toprule
+& Deterministic (branch and bound) & Heuristic / metaheuristic (GA)\\
+\midrule
+Guarantee & Optimum, if run to completion & None\\
+Run time & Bounded in principle; astronomically long on hard instances & No useful worst-case bound; stopped by budget\\
+Slogan & Converges, but may not work in affordable time & Works, but certifies nothing\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{The no-free-lunch picture}
+
+Plot performance against \emph{all} problems. Random search is flat and low.
+A method customised for one problem class is a narrow, tall spike. A plain EA
+is broad and moderately high. Adding domain knowledge (EA$_1,\ldots,$EA$_4$)
+\emph{deforms} the curve: higher peak, narrower class. If each curve encloses
+the same area, then every algorithm has the same average performance over all
+problems. That is the no-free-lunch (NFL) theorem of Wolpert and Macready
+(1997): a gain on one problem class is paid for by a loss on another, so no
+all-purpose optimiser exists.
+
+NFL does \emph{not} say algorithm choice is irrelevant on a particular
+problem. Real problems are a structured subset of ``all objective
+functions'', and the working question is which algorithmic bias suits
+\emph{this} problem.
+
+\subsection{Global search, local search, neighbourhoods}
+
+Global optimisation \emph{aims} at the best point in the whole feasible set;
+aiming is not attaining. Local search inspects neighbours only, and
+``neighbour'' must be declared: a small difference in gene values, similarity
+after decoding into the phenotype, or an explicit metric such as Hamming
+distance. A point can be locally optimal under one neighbourhood and not
+another, so ``local optimum'' is undefined until the neighbourhood is stated.
+
+
+\subsection{Domain knowledge and the practical NFL message}
 
 Adding domain knowledge through representations, repair rules, seeded
 solutions, or specialised operators can improve performance on the intended
@@ -445,16 +512,199 @@ theorem's assumptions, gains on some problems are offset by losses on others.
 The practical conclusion is to match algorithm bias to the problem and test
 empirically on representative instances.
 
+\section{Representations and Variation Operators}
+
+Representation is the first design step, because it fixes the search space,
+what counts as valid, and --- decisively --- which operators are legal.
+\textbf{The operators must suit the representation.} Both operator families
+exist to create variation and hence diversity; only the mechanism changes.
+
+\begin{center}
+\begin{tabular}{@{}>{\bfseries\raggedright\arraybackslash}p{0.16\textwidth}
+  >{\raggedright\arraybackslash}p{0.18\textwidth}
+  >{\raggedright\arraybackslash}p{0.23\textwidth}
+  >{\raggedright\arraybackslash}p{0.31\textwidth}@{}}
+\toprule
+Type & Genotype space & Typical problems & Characteristic operators\\
+\midrule
+Binary & $\{0,1\}^L$ & The original GA setting & Bit flip; one-point, multi-point, uniform\\
+Integer & $\{1,\ldots,K\}^L$ & Labelling, graph colouring & Creep, random resetting; binary-style crossovers\\
+Real & $\R^n$, usually boxed & Function optimisation, control gains & Uniform/Gaussian/self-adaptive mutation; arithmetic, blend\\
+Permutation & orderings of $1,\ldots,L$ & TSP, $N$-queens, scheduling & Swap, insert, scramble, inversion; order-1, PMX, cycle, edge\\
+Tree & expression trees & Genetic programming & Subtree mutation; subtree exchange\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Binary}
+
+Encoding maps the phenotype into $\{0,1\}^L$; decoding inverts it before
+every evaluation. Mutation flips each gene independently with probability
+$p_m$; the lecture's guide is
+\[
+  \frac1\mu \ \lesssim\ p_m\ \lesssim\ \frac1L ,
+\]
+$\mu$ being the population size and $L$ the chromosome length. A large $p_m$
+(say $0.8$) degenerates into random search.
+
+Mutation is uniformly \emph{applied} but not uniform in \emph{effect}: a flip
+in a more significant bit moves the decoded value far more than a flip in a
+less significant bit. \textbf{Gray coding} is the standard remedy, since
+numerically adjacent values then differ by one bit.
+
+Crossover: one-point; multi-point ($n$ sites, alternating segments; useful for
+long strings); uniform (per-gene random choice of parent).
+
+\paragraph{Why both operators.} \emph{Only crossover can combine information
+from two parents; only mutation can introduce new information.} The
+allele-frequency argument: starting from a $1{:}1$ ratio of zeros to ones,
+crossover alone leaves the population-wide ratio at $1{:}1$ after any number
+of generations, because it redistributes rather than creates alleles; a lost
+allele is unrecoverable without mutation.
+
+\paragraph{Exploration and exploitation (lecture convention).} Crossover is
+\emph{explorative} --- a large jump to a point between the parents, akin to
+interpolation. Mutation is \emph{exploitative} --- a small perturbation of an
+existing solution. Several textbooks reverse these labels; in this course use
+the lecture's, and justify by step size.
+
+\subsection{Integer}
+
+Genome space $\{1,\ldots,K\}^L$ for categorical decisions. Mutation is either
+\textbf{creep} (add a small $\pm$ value with probability $p$; small steps
+accumulate, individuals drift together, giving \emph{premature convergence})
+or \textbf{random resetting} (draw a fresh value; the true analogue of a bit
+flip, which is always a complete change). Crossovers are as for binary.
+
+\paragraph{Graph colouring.} Regions become vertices, shared borders edges.
+With $k$ colours, $c\in\{1,\ldots,k\}^L$ and
+\[
+  V(c)=\sum_{(u,v)\in E}\mathbf 1[c_u=c_v]\ \to\ \min,
+  \qquad f(c)=|E|-V(c),
+\]
+with $V(c)=0$ at a valid colouring. Unlike the $N$-queens permutation, this
+encoding cannot make the constraint unviolatable, so it is paid for in the
+objective. $k=3$ does not suffice for the US map; $k=4$ always suffices
+(four-colour theorem).
+
+\subsection{Real-valued}
+
+Used where the answer is a vector of reals: control gains, filter
+coefficients. Benchmarks are standard published test functions with known
+optima; the lecture's example is the multimodal \textbf{Ackley function},
+\[
+  f(x)=-20\exp\!\Bigl(-0.2\sqrt{\tfrac1n\textstyle\sum_i x_i^2}\Bigr)
+       -\exp\!\Bigl(\tfrac1n\textstyle\sum_i\cos 2\pi x_i\Bigr)+20+e,
+\]
+minimised at the origin, with $n$ scalable to hundreds or thousands.
+
+\paragraph{Binary coding of a bounded real.} For $z\in[x,y]$ and a string
+$a\in\{0,1\}^L$,
+\[
+  \Gamma(a)=x+\frac{y-x}{2^{L}-1}\sum_{i=1}^{L}a_i2^{\,L-i}.
+\]
+An infinite interval is mapped onto $2^L$ codes, so $L$ sets the resolution:
+finer accuracy costs a larger space and slower evolution. Check example:
+$[0.25,1.88]$, $L=4$, $a=1010$ gives $\sum a_i2^{4-i}=10$ and
+$\Gamma=0.25+\tfrac{1.63}{15}(10)=1.3367$, step $0.1087$.
+
+\paragraph{Mutation.} Uniform reset in $[\mathrm{LB},\mathrm{UB}]$, or
+Gaussian $x_i'=x_i+N(0,\sigma)$ with $\sigma$ as the step size.
+\textbf{Self-adaptive} mutation puts $\sigma$ in the chromosome,
+$\langle x_1,\ldots,x_n,\sigma\rangle$, and \emph{mutates $\sigma$ before
+$x$}: fitness is measured on $x$ only, so $\sigma'$ can only be judged
+through the $x'$ it produced, and that dependency requires this order.
+
+\paragraph{Crossover.} Arithmetic recombination, $z_i=\alpha x_i+(1-\alpha)y_i$
+with $\alpha\in[0,1]$ fixed (commonly $0.5$), age-dependent, or random.
+\emph{Single} arithmetic blends one gene, \emph{simple} arithmetic blends all
+genes after a cut point, \emph{whole} arithmetic blends all genes. Two
+consequences to remember: at $\alpha=0.5$ both children are identical, and
+arithmetic offspring can never leave the bounding box spanned by the parents.
+
+\textbf{Blend crossover} escapes that box. For $x_i<y_i$ set $d_i=y_i-x_i$
+and sample
+\[
+  z_i\sim U\bigl[\,x_i-\alpha d_i,\ y_i+\alpha d_i\,\bigr].
+\]
+Example: $x_i=0.3$, $y_i=0.7$, $\alpha=0.5$ gives $[0.1,0.9]$ against the
+arithmetic range $[0.3,0.7]$.
+
+Multi-parent recombination is permitted: diagonal crossover (``simple type
+1'') generalises one-point crossover to $p$ parents by taking segments
+diagonally with wrap-around; arithmetic blending extends to a weighted
+average of $p$ parents.
+
+\subsection{Permutation}
+
+For ordering and sequencing problems: TSP (a permutation of the cities, gene
+order = travel order), $N$-queens (a permutation removes the row and column
+constraints, leaving only diagonals), scheduling. \textbf{Every operator must
+return a valid permutation}; ordinary one-point crossover does not.
+
+\paragraph{Mutation.} \emph{Swap} two positions (you must move the displaced
+value too); \emph{insert} one gene next to another; \emph{scramble} a range;
+\emph{inversion}, which reverses a range and so preserves most adjacency
+information while changing order.
+
+\paragraph{Crossover.} Reference pair
+$P_1=\texttt{1\,2\,3\,4\,5\,6\,7\,8\,9}$,
+$P_2=\texttt{9\,3\,7\,8\,2\,6\,5\,1\,4}$, segment at positions 4--7.
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Order-1.} Copy $P_1$'s segment; fill the rest with $P_2$'s
+        values in $P_2$'s order, starting after the segment and wrapping,
+        skipping duplicates. Child $\texttt{3\,8\,2\,4\,5\,6\,7\,1\,9}$. One
+        parent gives values, the other gives relative order.
+  \item \textbf{PMX.} Copy $P_1$'s segment; for each value of $P_2$'s segment
+        not already present, follow the mapping chain (its position
+        $\to$ $P_1$'s value there $\to$ that value's position in $P_2$) until
+        a free slot appears; fill the rest positionally from $P_2$. Children
+        $\texttt{9\,3\,2\,4\,5\,6\,7\,1\,8}$ and
+        $\texttt{1\,7\,3\,8\,2\,6\,5\,4\,9}$.
+  \item \textbf{Cycle.} Follow position $\to$ $P_2$'s value $\to$ that
+        value's position in $P_1$ until the start recurs. Here the cycles are
+        $\{1,4,8,9\}$, $\{2,3,5,7\}$, $\{6\}$; exchange whole cycles, giving
+        $\texttt{1\,3\,7\,4\,2\,6\,5\,8\,9}$ and
+        $\texttt{9\,2\,3\,8\,5\,6\,7\,1\,4}$. Every gene keeps a position it
+        held in a parent.
+  \item \textbf{Edge recombination.} For routing, cost depends on edges, not
+        positions. Build a neighbour table from both parents (tours treated
+        as closed circuits), marking with $+$ any edge common to both. Then
+        construct the child: start anywhere, delete the chosen city from all
+        lists, and choose the next by (i) a common edge if available, (ii)
+        otherwise the candidate with the shortest remaining list, (iii) ties
+        at random, (iv) an empty list means jump to a random unused city.
+        Starting at 1 gives \texttt{1\,5\,6\,7\,8\,2\,3\,4\,9}. This is a
+        \emph{constructive} operator: it builds the solution element by
+        element rather than copying blocks.
+\end{itemize}
+Always finish by checking that every value occurs exactly once.
+
+\subsection{Tree}
+
+For objects that are structures rather than value lists: expressions, logical
+formulas, programs, finite-state machines. This is genetic programming. Two
+sets are declared: the \textbf{function set} (internal nodes: operators) and
+the \textbf{terminal set} (leaves: variables and constants). Reading a tree is
+operator precedence --- the root is applied last. Mutation replaces a randomly
+chosen subtree with a newly generated one; recombination exchanges subtrees
+between parents. Unlike every other representation here, tree chromosomes are
+variable in size and non-linear.
+
 \section{Quiz 1 Rapid Review}
 
 \paragraph{Scope boundary.}
-Prepare all of Part~1 in the Lecture~1 Part~1 deck, PDF pages 1--36:
+Prepare all of Part~1 in the Lecture~1 Part~1 deck, PDF pages 1--36 ---
 classification, complexity, EC foundations, the EA loop and components,
-8-queens, the simple GA, EA behaviour, and optimisation context. Historical
-questions support the patterns of classification, representation, encoding,
-fitness, and hand calculations only. Differential evolution, PSO, advanced
-crossover families, schema theory, niching, multi-objective optimisation, and
-machine learning are not part of this Quiz~1 pack.
+8-queens, the simple GA, EA behaviour, and optimisation context --- together
+with the Week~3 material: metaheuristics, the no-free-lunch picture,
+deterministic versus heuristic search, neighbourhoods, and the five
+representations with their mutation and crossover operators. The quiz will not
+cover the Week~4 lecture. Historical questions support question patterns only.
+Differential evolution, PSO, schema theory, niching, multi-objective
+optimisation, and machine learning remain outside this pack. Note the change
+from the previous revision: the permutation and real-valued crossover families
+are now \emph{in} scope, having been taught directly in Week~3.
 
 \subsection{Definitions and formulas to reproduce}
 {\small
@@ -468,7 +718,13 @@ machine learning are not part of this Quiz~1 pack.
   z&=\sum_{k=0}^{L-1}2^k b_k,&
   x&=a+\frac{z}{2^L-1}(b-a),\\
   \mathbb E[\text{flips}]&=NLp_m,&
-  \Pr(\text{no flips})&=(1-p_m)^{NL}.
+  \Pr(\text{no flips})&=(1-p_m)^{NL},\\
+  \Gamma(a)&=x+\tfrac{y-x}{2^L-1}\textstyle\sum_i a_i2^{L-i},&
+  z_i&=\alpha x_i+(1-\alpha)y_i,\\
+  d_i&=y_i-x_i,&
+  z_i&\sim U[x_i-\alpha d_i,\ y_i+\alpha d_i],\\
+  x_i'&=x_i+N(0,\sigma),&
+  V(c)&=\textstyle\sum_{(u,v)\in E}\mathbf 1[c_u=c_v].
 \end{align*}
 }
 \noindent
@@ -499,6 +755,17 @@ manipulated by the EA.
         $\binom N2$ as the maximum fitness.
   \item Distinguish an expected mutation count from the realised random
         number of flips.
+  \item Match the operator to the representation before calculating anything;
+        state the genotype space explicitly.
+  \item For binary-to-real decoding, divide by $2^L-1$, not $2^L$.
+  \item For arithmetic crossover, verify $z^{(1)}_i+z^{(2)}_i=x_i+y_i$, and
+        note that $\alpha=0.5$ yields two identical children.
+  \item For PMX and cycle crossover, show the mapping chain or cycle
+        decomposition, then check the child is a permutation.
+  \item For edge recombination, apply the rules in order --- common edge,
+        shortest list, random tie-break --- and say where a tie was broken
+        arbitrarily.
+  \item In self-adaptive mutation, mutate $\sigma$ before $x$.
 \end{enumerate}
 
 \subsection{Likely traps}
@@ -507,7 +774,12 @@ parent selection and survivor selection answer different questions; high
 fitness pressure can destroy diversity; convergence is not a proof of global
 optimality; a local optimum depends on the chosen neighbourhood; and no-free-
 lunch does not say that algorithm choice is irrelevant on a particular
-problem.
+problem. Further traps from Week~3: creep mutation causes premature
+convergence, while random resetting does not; arithmetic crossover cannot
+produce a value outside the parents' interval, so it cannot explore outward;
+crossover alone never changes population-wide allele frequencies; a binary
+mutation is uniform in application but biased in effect towards significant
+bits; and ``local optimum'' is meaningless without a stated neighbourhood.
 
 \subsection{Final recall checklist}
 Without looking, can you:
@@ -521,7 +793,11 @@ Without looking, can you:
   \item decode a binary string, calculate roulette probabilities, perform one
         crossover and mutation, and verify the resulting fitnesses; and
   \item explain exploration, exploitation, local versus global optimality,
-        domain bias, and the practical no-free-lunch message?
+        domain bias, and the practical no-free-lunch message;
+  \item name the five representations, give one problem and one legal
+        mutation/crossover pair for each; and
+  \item execute order-1, PMX, cycle and edge recombination on a given pair and
+        verify validity?
 \end{itemize}
 
 \section{Common Pitfalls}
@@ -544,6 +820,16 @@ Without looking, can you:
         parameters, operators, and implementation.
   \item \textbf{Ignoring fitness scaling.}  Roulette-wheel probabilities can
         become unstable with negative values or a single dominant value.
+  \item \textbf{Believing a small mutation rate is unbiased.}  In binary
+        coding the \emph{effect} of a flip depends on bit significance; Gray
+        coding is the standard remedy.
+  \item \textbf{Using creep mutation without noticing convergence.}  Small
+        integer steps accumulate into premature convergence.
+  \item \textbf{Expecting arithmetic crossover to explore.}  Its offspring are
+        confined to the parents' bounding box; blend crossover is the
+        operator that reaches outside it.
+  \item \textbf{Producing an invalid permutation.}  Check for duplicates and
+        omissions after every permutation operator, whatever the method.
 \end{enumerate}
 
 \section{Revision Checklist}
@@ -563,6 +849,13 @@ You should be able to:
   \item formulate $N$-queens as a permutation and derive a conflict-based
         fitness;
   \item choose mutation and crossover operators that preserve a permutation;
+  \item decode a bit string onto a bounded real interval and state what fixes
+        the resolution;
+  \item explain why $\sigma$ is mutated before $x$ in self-adaptive mutation;
+  \item formulate graph colouring as an integer chromosome with a violation
+        count objective;
+  \item read the no-free-lunch conclusion off the performance curves and state
+        what it does not claim;
   \item explain weak and pseudo-weak genes in the supplied $N$-queens paper;
   \item distinguish a good empirical result from a global-optimality or
         runtime guarantee.
