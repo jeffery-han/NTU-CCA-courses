@@ -1,0 +1,698 @@
+<!doctype html>
+<html lang="en" data-theme="system">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EE6407 Quiz 1 — Mock Paper B</title>
+<meta name="description" content="Answer-free interactive mock for EE6407 Quiz 1, mimicking the recalled past papers: 10 True/False, 3 application questions, 1 short answer. Sit it under exam conditions, then export the answer sheet for grading.">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)']],
+      displayMath: [['\\[', '\\]']],
+      processEscapes: true
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    startup: { typeset: true }
+  };
+</script>
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --surface-2: #eef1f5;
+  --text: #14181f;
+  --muted: #5b6472;
+  --border: #d8dee7;
+  --accent: #1f6feb;
+  --accent-soft: #e5efff;
+  --success: #17794b;
+  --success-soft: #e2f5ec;
+  --warning: #9a6200;
+  --warning-soft: #fdf1dc;
+  --danger: #b32130;
+  --danger-soft: #fdeaec;
+  --shadow: 0 1px 2px rgba(16, 24, 40, .05), 0 8px 24px rgba(16, 24, 40, .06);
+  --radius: 14px;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1117; --surface: #161b23; --surface-2: #1d232d;
+    --text: #e7ecf3; --muted: #99a3b3; --border: #2a323e;
+    --accent: #6ea8ff; --accent-soft: #17233a;
+    --success: #56d39b; --success-soft: #10281f;
+    --warning: #e5b567; --warning-soft: #2b2113;
+    --danger: #ff8189; --danger-soft: #2e1519;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 28px rgba(0, 0, 0, .35);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1117; --surface: #161b23; --surface-2: #1d232d;
+  --text: #e7ecf3; --muted: #99a3b3; --border: #2a323e;
+  --accent: #6ea8ff; --accent-soft: #17233a;
+  --success: #56d39b; --success-soft: #10281f;
+  --warning: #e5b567; --warning-soft: #2b2113;
+  --danger: #ff8189; --danger-soft: #2e1519;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 28px rgba(0, 0, 0, .35);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.62;
+  font-size: 16.5px;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 880px; margin: 0 auto; padding: 24px 20px 120px; }
+a { color: var(--accent); }
+code { font-family: var(--mono); font-size: .9em; background: var(--surface-2); padding: .08em .35em; border-radius: 5px; }
+pre {
+  font-family: var(--mono); font-size: .86em; background: var(--surface-2);
+  border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px;
+  overflow-x: auto; line-height: 1.55;
+}
+h1 { font-size: 1.7rem; line-height: 1.25; margin: 0 0 .5rem; }
+h2 { font-size: 1.28rem; margin: 2.4rem 0 .4rem; padding-top: .6rem; border-top: 2px solid var(--border); }
+h3 { font-size: 1.06rem; margin: 1.5rem 0 .3rem; }
+h4 { font-size: .96rem; margin: 1rem 0 .3rem; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.sub { color: var(--muted); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+select, .btn, input[type="text"], textarea {
+  font: inherit; font-size: .92rem;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border); border-radius: 9px;
+  padding: 7px 12px;
+}
+select, .btn { cursor: pointer; }
+.btn:hover { border-color: var(--accent); }
+.btn-danger { color: var(--danger); }
+.btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 600; }
+.btn-primary:hover { filter: brightness(1.08); }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px 18px;
+  margin: 14px 0;
+}
+.notice { background: var(--warning-soft); border: 1px solid color-mix(in srgb, var(--warning) 40%, var(--border)); border-radius: 12px; padding: 12px 15px; margin: 14px 0; }
+.notice.info { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 35%, var(--border)); }
+.notice h3 { margin-top: .2rem; }
+.notice p:last-child, .notice ul:last-child { margin-bottom: 0; }
+
+/* sticky status bar: timer + progress */
+.statusbar {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center;
+  background: color-mix(in srgb, var(--surface) 93%, transparent);
+  backdrop-filter: blur(9px);
+  border: 1px solid var(--border); border-radius: 12px;
+  padding: 9px 14px; margin: 14px 0 4px;
+  box-shadow: var(--shadow);
+  font-size: .9rem;
+}
+.statusbar .grow { flex: 1 1 auto; }
+#clock { font-family: var(--mono); font-size: 1.06rem; font-weight: 700; letter-spacing: .02em; }
+#clock.over { color: var(--danger); }
+.pill {
+  display: inline-block; background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: 999px; padding: 1px 10px; font-size: .82rem; color: var(--muted);
+}
+.pill strong { color: var(--text); }
+
+/* True/False items */
+.tf { border-top: 1px solid var(--border); padding: 13px 0 11px; display: flex; gap: 13px; align-items: flex-start; }
+.tf:first-of-type { border-top: 0; }
+.tf .num { font-family: var(--mono); font-weight: 700; color: var(--muted); min-width: 2.1em; padding-top: 2px; }
+.tf .body { flex: 1 1 auto; min-width: 0; }
+.tf .stem { margin: 0 0 8px; }
+.tf .opts { display: flex; gap: 8px; }
+.tf .opts button {
+  font: inherit; font-weight: 700; font-size: .88rem;
+  min-width: 54px; padding: 5px 0;
+  background: var(--surface); color: var(--muted);
+  border: 1px solid var(--border); border-radius: 9px; cursor: pointer;
+}
+.tf .opts button:hover { border-color: var(--accent); color: var(--text); }
+.tf .opts button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* free response */
+.field { margin: 12px 0; }
+.field label { display: block; font-size: .87rem; color: var(--muted); margin-bottom: 4px; font-weight: 600; }
+.field input[type="text"], .field textarea { width: 100%; font-family: var(--mono); font-size: .9rem; }
+.field textarea { min-height: 170px; resize: vertical; line-height: 1.6; font-family: inherit; font-size: .95rem; }
+.field .hint { font-size: .8rem; color: var(--muted); margin-top: 3px; }
+.parents { white-space: pre; }
+
+table.data { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: .9rem; }
+table.data th, table.data td { border: 1px solid var(--border); padding: 5px 9px; text-align: right; }
+table.data th:first-child, table.data td:first-child { text-align: left; }
+table.data th { background: var(--surface-2); }
+
+.marks { float: right; color: var(--muted); font-size: .85rem; font-weight: 600; }
+
+/* export */
+#export-out { width: 100%; min-height: 300px; font-family: var(--mono); font-size: .8rem; line-height: 1.5; white-space: pre; }
+#copy-status { font-size: .87rem; color: var(--success); font-weight: 600; }
+
+footer { margin-top: 46px; padding-top: 16px; border-top: 1px solid var(--border); font-size: .87rem; color: var(--muted); }
+#math-warning { display: none; }
+@media (max-width: 560px) {
+  .tf { flex-direction: column; gap: 6px; }
+  .statusbar { font-size: .84rem; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>EE6407 Quiz 1 — Mock Paper B</h1>
+<p class="sub">10 True/False + 3 application questions + 1 short answer &middot; 60 marks &middot; suggested 60 minutes &middot; closed book, no calculator</p>
+
+<div id="math-warning" class="notice">
+  <strong>Equations are not rendering.</strong> This page loads MathJax from
+  <code>../notes/vendor/mathjax/tex-mml-chtml.js</code>. Open the file with that relative path intact,
+  or serve the <code>EE-6407</code> folder over a local HTTP server.
+</div>
+
+<div class="statusbar">
+  <span id="clock">00:00</span>
+  <button class="btn" id="timer-toggle">Start</button>
+  <span class="pill">Section A <strong><span id="p-tf">0</span>/10</strong></span>
+  <span class="pill">Written <strong><span id="p-fr">0</span>/16</strong></span>
+  <span class="grow"></span>
+  <label class="sr-only" for="theme">Theme</label>
+  <select id="theme">
+    <option value="system">Auto</option>
+    <option value="light">Light</option>
+    <option value="dark">Dark</option>
+  </select>
+</div>
+
+<div class="notice info">
+  <h3 style="margin-bottom:.3rem">How to use this</h3>
+  <p style="margin:.3rem 0">
+    This page contains <strong>no answers</strong> — that is deliberate. Sit it under exam conditions,
+    then press <strong>Build answer sheet</strong> at the bottom and paste the exported block into
+    Claude Code with something like &ldquo;grade this&rdquo;. You get a mark out of 60 plus an
+    explanation of every mistake, which is worth far more than self-checking a key.
+  </p>
+  <p style="margin:.3rem 0">
+    Your work autosaves in this browser, so you can close the tab and come back.
+    The full key and marking rubric live in <code>quiz-1-mock-b.md</code> — read it
+    <em>after</em> you submit.
+  </p>
+  <p style="margin:.3rem 0 0" class="sub">
+    Unofficial practice paper written 2026-09-01 from student recollections of past papers
+    (<code>rednote-quiz1-intel.md</code>) and the course notes. Not a real paper.
+    Scope: Weeks 1&ndash;3 only. Shares no questions with Mock Paper A
+    (<a href="quiz-1-prediction.html">quiz-1-prediction.html</a>).
+  </p>
+</div>
+
+<h2>Section A &mdash; True / False <span class="marks">10 &times; 2 = 20 marks</span></h2>
+<p class="sub">Mark each statement True or False. There is no penalty for a wrong answer, so do not leave blanks &mdash; but an unanswered item is reported as blank rather than wrong when you submit.</p>
+
+<div class="card" id="tf-list"></div>
+
+<h2>Section B &mdash; Application questions</h2>
+
+<h3>B1. Permutation crossover <span class="marks">10 marks (5 + 5)</span></h3>
+<div class="card">
+  <p>Two parents, length 10, over the alphabet <code>A&hellip;J</code>:</p>
+<pre class="parents">position :  1  2  3  4  5  6  7  8  9 10
+P1       :  A  B  C  D  E  F  G  H  I  J
+P2       :  C  G  A  J  E  B  I  D  F  H</pre>
+
+  <p><strong>(a) Order-1 crossover</strong>, crossover segment = <strong>positions 4&ndash;7</strong>.
+  Produce both children.</p>
+  <p class="sub" style="font-size:.9rem">
+    Fill convention: copy the segment from one parent into the same positions of the child, then take
+    the <em>other</em> parent's values <em>in that parent's own order</em>, starting immediately after
+    the segment (position&nbsp;8) and wrapping around, skipping any value already present.
+  </p>
+
+  <div class="field">
+    <label for="b1a1">(a) Child 1 &mdash; segment taken from P1</label>
+    <input type="text" id="b1a1" data-fr="B1a-child1" placeholder="e.g.  X X X | D E F G | X X X" autocomplete="off" spellcheck="false">
+  </div>
+  <div class="field">
+    <label for="b1a2">(a) Child 2 &mdash; segment taken from P2</label>
+    <input type="text" id="b1a2" data-fr="B1a-child2" placeholder="ten letters, space separated" autocomplete="off" spellcheck="false">
+  </div>
+
+  <p style="margin-top:1.2rem"><strong>(b) Cycle crossover</strong> on the same parents.
+  List the cycles you find, then produce both offspring.</p>
+
+  <div class="field">
+    <label for="b1b0">(b) Cycles &mdash; give each as its set of positions</label>
+    <input type="text" id="b1b0" data-fr="B1b-cycles" placeholder="e.g.  {1,4} {2,5,6} {3} ..." autocomplete="off" spellcheck="false">
+    <div class="hint">Every position from 1 to 10 must appear in exactly one cycle.</div>
+  </div>
+  <div class="field">
+    <label for="b1b1">(b) Offspring 1</label>
+    <input type="text" id="b1b1" data-fr="B1b-offspring1" placeholder="ten letters, space separated" autocomplete="off" spellcheck="false">
+  </div>
+  <div class="field">
+    <label for="b1b2">(b) Offspring 2</label>
+    <input type="text" id="b1b2" data-fr="B1b-offspring2" placeholder="ten letters, space separated" autocomplete="off" spellcheck="false">
+  </div>
+</div>
+
+<h3>B2. Number-base decoding <span class="marks">10 marks</span></h3>
+<div class="card">
+  <p>An 8-digit <strong>quaternary</strong> (base-4) coding system represents real values on the
+  interval \([-5,\; 5]\). Find the real value encoded by</p>
+<pre>&lt; 3  0  2  1  3  1  0  2 &gt;</pre>
+  <p>Give the decoded value to <strong>3 decimal places</strong>, and state the formula you use.</p>
+
+  <div class="field">
+    <label for="b2f">Formula used</label>
+    <input type="text" id="b2f" data-fr="B2-formula" placeholder="write the decode formula" autocomplete="off" spellcheck="false">
+  </div>
+  <div class="field">
+    <label for="b2s">Weighted sum of the digits</label>
+    <input type="text" id="b2s" data-fr="B2-sum" placeholder="a single integer" autocomplete="off" spellcheck="false">
+  </div>
+  <div class="field">
+    <label for="b2d">Denominator used</label>
+    <input type="text" id="b2d" data-fr="B2-denominator" placeholder="a single integer" autocomplete="off" spellcheck="false">
+  </div>
+  <div class="field">
+    <label for="b2x">Decoded value (3 d.p.)</label>
+    <input type="text" id="b2x" data-fr="B2-value" placeholder="e.g.  0.000" autocomplete="off" spellcheck="false">
+  </div>
+  <div class="field">
+    <label for="b2w">Working (optional, but it earns method marks)</label>
+    <textarea id="b2w" data-fr="B2-working" style="min-height:110px" placeholder="show the digit weights and the arithmetic" spellcheck="false"></textarea>
+  </div>
+</div>
+
+<h3>B3. Fitness evaluation and ranking <span class="marks">10 marks</span></h3>
+<div class="card">
+  <p>A modified Ackley-type fitness, <strong>larger is better</strong>, on \(n = 3\) variables:</p>
+  \[
+  f(\mathbf{x}) \;=\; \exp\!\left(-\frac{1}{n}\sum_{i=1}^{n} x_i^2\right)
+  \;+\; \exp\!\left(-\frac{1}{n}\sum_{i=1}^{n} |x_i|\right).
+  \]
+  <p>Evaluate \(f\) for the four candidates to <strong>3 decimal places</strong>, then sort them into
+  <strong>ascending</strong> order of fitness.</p>
+  \[
+  A = (0,0,0),\qquad B = (2,0,0),\qquad C = (1,1,0),\qquad D = (1,1,1).
+  \]
+  <p class="sub" style="font-size:.9rem">Use this table &mdash; no calculator needed:</p>
+  <table class="data">
+    <tr><th>\(t\)</th><td>0</td><td>2/3</td><td>1</td><td>4/3</td></tr>
+    <tr><th>\(e^{-t}\)</th><td>1.000000</td><td>0.513417</td><td>0.367879</td><td>0.263597</td></tr>
+  </table>
+
+  <div class="field">
+    <label for="b3a">f(A)</label>
+    <input type="text" id="b3a" data-fr="B3-fA" placeholder="3 d.p." autocomplete="off" spellcheck="false">
+  </div>
+  <div class="field">
+    <label for="b3b">f(B)</label>
+    <input type="text" id="b3b" data-fr="B3-fB" placeholder="3 d.p." autocomplete="off" spellcheck="false">
+  </div>
+  <div class="field">
+    <label for="b3c">f(C)</label>
+    <input type="text" id="b3c" data-fr="B3-fC" placeholder="3 d.p." autocomplete="off" spellcheck="false">
+  </div>
+  <div class="field">
+    <label for="b3d">f(D)</label>
+    <input type="text" id="b3d" data-fr="B3-fD" placeholder="3 d.p." autocomplete="off" spellcheck="false">
+  </div>
+  <div class="field">
+    <label for="b3o">Ascending order of fitness</label>
+    <input type="text" id="b3o" data-fr="B3-order" placeholder="e.g.  A &lt; B &lt; C &lt; D" autocomplete="off" spellcheck="false">
+  </div>
+</div>
+
+<h2>Section C &mdash; Short answer <span class="marks">10 marks</span></h2>
+<div class="card">
+  <p>The choice of representation in an evolutionary algorithm is not a free choice.
+  Explain how the representation constrains which variation operators are available, and give
+  <strong>two</strong> concrete examples in which a mismatched representation produces invalid or
+  meaningless offspring. Suggest what the algorithm designer should do in each case.</p>
+  <div class="field">
+    <label for="c1">Your answer</label>
+    <textarea id="c1" data-fr="C1" placeholder="Aim for roughly 200–300 words. Marks come from specific mechanisms, not from listing representations."></textarea>
+    <div class="hint"><span id="c1-words">0</span> words</div>
+  </div>
+</div>
+
+<h2>Submit for grading</h2>
+<div class="card">
+  <p>Press the button, then copy everything in the box and paste it into Claude Code with
+  &ldquo;grade this&rdquo;. The block is self-contained &mdash; it names the paper, so grading works
+  even in a fresh conversation.</p>
+  <p style="display:flex; gap:10px; flex-wrap:wrap; align-items:center">
+    <button class="btn btn-primary" id="build">Build answer sheet</button>
+    <button class="btn" id="copy">Copy to clipboard</button>
+    <span id="copy-status"></span>
+  </p>
+  <textarea id="export-out" readonly placeholder="Your answer sheet will appear here." spellcheck="false"></textarea>
+  <p class="hint" style="margin-top:6px">Clicking inside the box selects everything, so &#8984;C / Ctrl-C works even if the clipboard button is blocked by your browser.</p>
+</div>
+
+<div class="card">
+  <p style="margin:0"><button class="btn btn-danger" id="reset">Clear all answers and reset the timer</button></p>
+</div>
+
+<footer>
+  <p><strong>Related files.</strong>
+    <a href="quiz-1-mock-b.md">quiz-1-mock-b.md</a> (answer key + marking rubric &mdash; open after submitting) &middot;
+    <a href="quiz-1-prediction.html">Mock Paper A</a> &middot;
+    <a href="rednote-quiz1-intel.md">past-paper intelligence</a> &middot;
+    <a href="../notes/quiz1-prep-learning.html">study companion</a> &middot;
+    <a href="../notes/beginner-notes.pdf">detailed notes</a> &middot;
+    <a href="../notes/notes.pdf">review notes</a>
+  </p>
+  <p>Unofficial practice material. Verify all quiz logistics on NTULearn.</p>
+</footer>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var STORE_KEY = 'ee6407-quiz1-mock-b-v1';
+  var THEME_KEY = 'ee6407-theme';
+
+  /* ---------- Section A items. Stems double as the short labels in the export. ---------- */
+  var TF = [
+    { q: 'For a problem in NP-complete, a proposed solution can be verified in polynomial time.',
+      tag: 'NP-complete: verify in poly time' },
+    { q: 'In &ldquo;class NP&rdquo;, the &ldquo;N&rdquo; abbreviates &ldquo;non-polynomial&rdquo;.',
+      tag: '"N" in NP = non-polynomial' },
+    { q: 'In a real-valued representation, whole arithmetic recombination with \\(\\alpha \\in [0,1]\\) can produce an offspring lying outside the hyper-box spanned by the two parents.',
+      tag: 'arithmetic crossover leaves parents\' box' },
+    { q: 'Parent selection tends to reduce population diversity, while mutation tends to increase it.',
+      tag: 'selection reduces / mutation increases diversity' },
+    { q: 'Given measured input&ndash;output pairs from a plant whose internal workings are unknown, using a GA to search for a model that reproduces them is a <em>modelling</em> problem in the black-box characterisation.',
+      tag: 'unknown plant from i/o pairs = modelling' },
+    { q: 'A binary expression tree in which every internal node is a two-argument operator, and which has 7 leaves, contains 6 internal nodes and 12 edges.',
+      tag: '7 leaves => 6 internal nodes, 12 edges' },
+    { q: 'An EA that uses recombination but no mutation can still, in principle, recover an allele value that has disappeared from every individual in the population.',
+      tag: 'recombination-only EA recovers lost allele' },
+    { q: 'For \\(n = 9\\), the permutation \\([1,3,5,7,9,2,4,6,8]\\) gives an N-queens configuration with no two queens attacking each other.',
+      tag: 'n=9 knight-move permutation is conflict-free' },
+    { q: 'Branch-and-bound and simulated annealing are both examples of metaheuristics.',
+      tag: 'branch-and-bound + SA both metaheuristics' },
+    { q: 'The No Free Lunch theorem implies that if algorithm A outperforms algorithm B on one class of problems, there must be another class of problems on which B outperforms A.',
+      tag: 'NFL: A beats B here => B beats A elsewhere' }
+  ];
+
+  var state = { tf: {}, fr: {}, elapsed: 0, running: false };
+
+  /* ---------- storage ---------- */
+  function load() {
+    try {
+      var raw = localStorage.getItem(STORE_KEY);
+      if (!raw) return;
+      var o = JSON.parse(raw);
+      if (o && typeof o === 'object') {
+        state.tf = o.tf || {};
+        state.fr = o.fr || {};
+        state.elapsed = typeof o.elapsed === 'number' ? o.elapsed : 0;
+      }
+    } catch (e) { /* private mode, blocked storage: run without persistence */ }
+  }
+  function save() {
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify({
+        tf: state.tf, fr: state.fr, elapsed: state.elapsed
+      }));
+    } catch (e) { /* ignore */ }
+  }
+
+  /* ---------- theme ---------- */
+  var themeSel = document.getElementById('theme');
+  try {
+    var savedTheme = localStorage.getItem(THEME_KEY);
+    if (savedTheme) { document.documentElement.setAttribute('data-theme', savedTheme); themeSel.value = savedTheme; }
+  } catch (e) { /* ignore */ }
+  themeSel.addEventListener('change', function () {
+    document.documentElement.setAttribute('data-theme', themeSel.value);
+    try { localStorage.setItem(THEME_KEY, themeSel.value); } catch (e) { /* ignore */ }
+  });
+
+  /* ---------- timer ---------- */
+  var clockEl = document.getElementById('clock');
+  var toggleEl = document.getElementById('timer-toggle');
+  var LIMIT = 60 * 60;
+
+  function fmt(s) {
+    var m = Math.floor(s / 60), r = s % 60;
+    return (m < 10 ? '0' : '') + m + ':' + (r < 10 ? '0' : '') + r;
+  }
+  function paintClock() {
+    clockEl.textContent = fmt(state.elapsed);
+    clockEl.classList.toggle('over', state.elapsed > LIMIT);
+    toggleEl.textContent = state.running ? 'Pause' : (state.elapsed > 0 ? 'Resume' : 'Start');
+  }
+  setInterval(function () {
+    if (!state.running) return;
+    state.elapsed += 1;
+    paintClock();
+    if (state.elapsed % 10 === 0) save();
+  }, 1000);
+  toggleEl.addEventListener('click', function () {
+    state.running = !state.running;
+    paintClock();
+    save();
+  });
+
+  /* ---------- progress counters ---------- */
+  var pTf = document.getElementById('p-tf');
+  var pFr = document.getElementById('p-fr');
+  function paintProgress() {
+    var n = 0, i;
+    for (i = 0; i < TF.length; i++) { if (state.tf[i] === 'T' || state.tf[i] === 'F') n++; }
+    pTf.textContent = n;
+    var fields = document.querySelectorAll('[data-fr]'), done = 0;
+    for (i = 0; i < fields.length; i++) {
+      if (String(fields[i].value || '').trim() !== '') done++;
+    }
+    pFr.textContent = done;
+  }
+
+  /* ---------- build Section A ---------- */
+  var list = document.getElementById('tf-list');
+  TF.forEach(function (item, i) {
+    var row = document.createElement('div');
+    row.className = 'tf';
+    row.innerHTML =
+      '<div class="num">' + (i + 1) + '.</div>' +
+      '<div class="body">' +
+        '<p class="stem">' + item.q + '</p>' +
+        '<div class="opts" role="group" aria-label="Item ' + (i + 1) + '">' +
+          '<button type="button" data-v="T" aria-pressed="false">True</button>' +
+          '<button type="button" data-v="F" aria-pressed="false">False</button>' +
+        '</div>' +
+      '</div>';
+    var btns = row.querySelectorAll('.opts button');
+    function paint() {
+      for (var k = 0; k < btns.length; k++) {
+        btns[k].setAttribute('aria-pressed', state.tf[i] === btns[k].getAttribute('data-v') ? 'true' : 'false');
+      }
+    }
+    for (var k = 0; k < btns.length; k++) {
+      btns[k].addEventListener('click', function () {
+        var v = this.getAttribute('data-v');
+        // clicking the selected answer again clears it
+        state.tf[i] = (state.tf[i] === v) ? null : v;
+        paint();
+        paintProgress();
+        save();
+      });
+    }
+    paint();
+    list.appendChild(row);
+  });
+
+  /* ---------- free-response fields ---------- */
+  var frFields = document.querySelectorAll('[data-fr]');
+  Array.prototype.forEach.call(frFields, function (el) {
+    var key = el.getAttribute('data-fr');
+    if (state.fr[key]) el.value = state.fr[key];
+    el.addEventListener('input', function () {
+      state.fr[key] = el.value;
+      paintProgress();
+      if (key === 'C1') paintWords();
+      save();
+    });
+  });
+
+  var c1 = document.getElementById('c1');
+  var c1w = document.getElementById('c1-words');
+  function paintWords() {
+    var t = String(c1.value || '').trim();
+    c1w.textContent = t === '' ? 0 : t.split(/\s+/).length;
+  }
+
+  /* ---------- export ---------- */
+  var FR_ORDER = [
+    ['B1a-child1',      'B1(a) order-1, child 1 (segment from P1)'],
+    ['B1a-child2',      'B1(a) order-1, child 2 (segment from P2)'],
+    ['B1b-cycles',      'B1(b) cycle crossover, cycles'],
+    ['B1b-offspring1',  'B1(b) offspring 1'],
+    ['B1b-offspring2',  'B1(b) offspring 2'],
+    ['B2-formula',      'B2 formula used'],
+    ['B2-sum',          'B2 weighted digit sum'],
+    ['B2-denominator',  'B2 denominator'],
+    ['B2-value',        'B2 decoded value (3 d.p.)'],
+    ['B2-working',      'B2 working'],
+    ['B3-fA',           'B3 f(A)'],
+    ['B3-fB',           'B3 f(B)'],
+    ['B3-fC',           'B3 f(C)'],
+    ['B3-fD',           'B3 f(D)'],
+    ['B3-order',        'B3 ascending order']
+  ];
+
+  function stripTags(s) {
+    var d = document.createElement('div');
+    d.innerHTML = s;
+    return (d.textContent || '').replace(/\s+/g, ' ').trim();
+  }
+
+  function buildSheet() {
+    var L = [];
+    var now = new Date();
+    var stamp = now.getFullYear() + '-' +
+      String(now.getMonth() + 1).padStart(2, '0') + '-' +
+      String(now.getDate()).padStart(2, '0') + ' ' +
+      String(now.getHours()).padStart(2, '0') + ':' +
+      String(now.getMinutes()).padStart(2, '0');
+
+    L.push('===== BEGIN EE6407 QUIZ 1 ANSWER SHEET =====');
+    L.push('Paper      : EE6407 Quiz 1 - Mock Paper B (quizzes/quiz-1-mock-b.html)');
+    L.push('Key file   : quizzes/quiz-1-mock-b.md');
+    L.push('Marks      : Section A 10x2=20, B1 10, B2 10, B3 10, C 10  -> total 60');
+    L.push('Submitted  : ' + stamp);
+    L.push('Time taken : ' + fmt(state.elapsed) + ' (mm:ss), suggested limit 60:00');
+    L.push('');
+    L.push('--- SECTION A  (True/False, 2 marks each) ---');
+    TF.forEach(function (item, i) {
+      var v = state.tf[i];
+      var mark = (v === 'T' || v === 'F') ? v : '-';
+      L.push('A' + String(i + 1).padStart(2, '0') + '  [' + mark + ']  ' + stripTags(item.tag) +
+             ((mark === '-') ? '   <-- LEFT BLANK' : ''));
+    });
+    L.push('');
+    L.push('--- SECTION B  (application) ---');
+    FR_ORDER.forEach(function (pair) {
+      var val = String(state.fr[pair[0]] || '').trim();
+      if (val === '') {
+        L.push(pair[1] + ': <blank>');
+      } else if (val.indexOf('\n') >= 0) {
+        L.push(pair[1] + ':');
+        val.split('\n').forEach(function (line) { L.push('    ' + line); });
+      } else {
+        L.push(pair[1] + ': ' + val);
+      }
+    });
+    L.push('');
+    L.push('--- SECTION C  (short answer, 10 marks) ---');
+    var c = String(state.fr['C1'] || '').trim();
+    if (c === '') {
+      L.push('<blank>');
+    } else {
+      c.split('\n').forEach(function (line) { L.push(line); });
+    }
+    L.push('');
+    L.push('===== END EE6407 QUIZ 1 ANSWER SHEET =====');
+    L.push('Please mark each part, give a total out of 60, and explain every mistake.');
+    return L.join('\n');
+  }
+
+  var out = document.getElementById('export-out');
+  var status = document.getElementById('copy-status');
+
+  document.getElementById('build').addEventListener('click', function () {
+    out.value = buildSheet();
+    status.textContent = '';
+    out.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // pause the clock: the paper is done
+    if (state.running) { state.running = false; paintClock(); save(); }
+  });
+
+  out.addEventListener('click', function () {
+    if (out.value) { out.focus(); out.select(); }
+  });
+
+  document.getElementById('copy').addEventListener('click', function () {
+    if (!out.value) out.value = buildSheet();
+    out.focus();
+    out.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    if (ok) {
+      status.textContent = 'Copied — now paste it into Claude Code.';
+    } else if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(out.value).then(function () {
+        status.textContent = 'Copied — now paste it into Claude Code.';
+      }, function () {
+        status.textContent = 'Copy blocked — the text is selected, press ⌘C / Ctrl-C.';
+      });
+    } else {
+      status.textContent = 'Copy blocked — the text is selected, press ⌘C / Ctrl-C.';
+    }
+  });
+
+  /* ---------- reset ---------- */
+  document.getElementById('reset').addEventListener('click', function () {
+    if (!window.confirm('Clear every answer and reset the timer for Mock Paper B?')) return;
+    try { localStorage.removeItem(STORE_KEY); } catch (e) { /* ignore */ }
+    location.reload();
+  });
+
+  /* ---------- go ---------- */
+  load();
+  Array.prototype.forEach.call(frFields, function (el) {
+    var key = el.getAttribute('data-fr');
+    if (state.fr[key]) el.value = state.fr[key];
+  });
+  // repaint Section A from restored state
+  var rows = list.querySelectorAll('.tf');
+  Array.prototype.forEach.call(rows, function (row, i) {
+    var btns = row.querySelectorAll('.opts button');
+    for (var k = 0; k < btns.length; k++) {
+      btns[k].setAttribute('aria-pressed', state.tf[i] === btns[k].getAttribute('data-v') ? 'true' : 'false');
+    }
+  });
+  paintClock();
+  paintProgress();
+  paintWords();
+
+  /* ---------- MathJax, vendored so the page works offline ---------- */
+  var warned = false;
+  function warn() {
+    if (warned) return;
+    warned = true;
+    if (!window.MathJax || !window.MathJax.typesetPromise) {
+      document.getElementById('math-warning').style.display = 'block';
+    }
+  }
+  var s = document.createElement('script');
+  s.src = '../notes/vendor/mathjax/tex-mml-chtml.js';
+  s.async = true;
+  s.onerror = warn;
+  document.head.appendChild(s);
+  setTimeout(warn, 3500);
+})();
+</script>
+</body>
+</html>
