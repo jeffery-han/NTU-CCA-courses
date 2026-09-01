@@ -1,0 +1,624 @@
+<!doctype html>
+<html lang="en" data-theme="system">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EE6204 Quiz 1 — Prediction &amp; Practice Paper</title>
+<meta name="description" content="Answer-free interactive mock for EE6204 Quiz 1, built to the current-run (Prof. Su Rong) shape: LP formulation + simplex on one problem, 16 marks, 30 minutes, handwritten. Sit it under exam conditions, then export the answer sheet for grading.">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)']],
+      displayMath: [['\\[', '\\]']],
+      processEscapes: true
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    startup: { typeset: true }
+  };
+</script>
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --surface-2: #eef1f5;
+  --text: #14181f;
+  --muted: #5b6472;
+  --border: #d8dee7;
+  --accent: #1f6feb;
+  --accent-soft: #e5efff;
+  --success: #17794b;
+  --success-soft: #e2f5ec;
+  --warning: #9a6200;
+  --warning-soft: #fdf1dc;
+  --danger: #b32130;
+  --danger-soft: #fdeaec;
+  --shadow: 0 1px 2px rgba(16, 24, 40, .05), 0 8px 24px rgba(16, 24, 40, .06);
+  --radius: 14px;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1117; --surface: #161b23; --surface-2: #1d232d;
+    --text: #e7ecf3; --muted: #99a3b3; --border: #2a323e;
+    --accent: #6ea8ff; --accent-soft: #17233a;
+    --success: #56d39b; --success-soft: #10281f;
+    --warning: #e5b567; --warning-soft: #2b2113;
+    --danger: #ff8189; --danger-soft: #2e1519;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 28px rgba(0, 0, 0, .35);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1117; --surface: #161b23; --surface-2: #1d232d;
+  --text: #e7ecf3; --muted: #99a3b3; --border: #2a323e;
+  --accent: #6ea8ff; --accent-soft: #17233a;
+  --success: #56d39b; --success-soft: #10281f;
+  --warning: #e5b567; --warning-soft: #2b2113;
+  --danger: #ff8189; --danger-soft: #2e1519;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 28px rgba(0, 0, 0, .35);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.62;
+  font-size: 16.5px;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 880px; margin: 0 auto; padding: 24px 20px 120px; }
+a { color: var(--accent); }
+code { font-family: var(--mono); font-size: .9em; background: var(--surface-2); padding: .08em .35em; border-radius: 5px; }
+pre {
+  font-family: var(--mono); font-size: .86em; background: var(--surface-2);
+  border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px;
+  overflow-x: auto; line-height: 1.55;
+}
+h1 { font-size: 1.7rem; line-height: 1.25; margin: 0 0 .5rem; }
+h2 { font-size: 1.28rem; margin: 2.4rem 0 .4rem; padding-top: .6rem; border-top: 2px solid var(--border); }
+h3 { font-size: 1.06rem; margin: 1.5rem 0 .3rem; }
+h4 { font-size: .96rem; margin: 1rem 0 .3rem; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.sub { color: var(--muted); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+select, .btn, input[type="text"], textarea {
+  font: inherit; font-size: .92rem;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border); border-radius: 9px;
+  padding: 7px 12px;
+}
+select, .btn { cursor: pointer; }
+.btn:hover { border-color: var(--accent); }
+.btn-danger { color: var(--danger); }
+.btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 600; }
+.btn-primary:hover { filter: brightness(1.08); }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px 18px;
+  margin: 14px 0;
+}
+.notice { background: var(--warning-soft); border: 1px solid color-mix(in srgb, var(--warning) 40%, var(--border)); border-radius: 12px; padding: 12px 15px; margin: 14px 0; }
+.notice.info { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 35%, var(--border)); }
+.notice h3 { margin-top: .2rem; }
+.notice p:last-child, .notice ul:last-child { margin-bottom: 0; }
+
+.statusbar {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center;
+  background: color-mix(in srgb, var(--surface) 93%, transparent);
+  backdrop-filter: blur(9px);
+  border: 1px solid var(--border); border-radius: 12px;
+  padding: 9px 14px; margin: 14px 0 4px;
+  box-shadow: var(--shadow);
+  font-size: .9rem;
+}
+.statusbar .grow { flex: 1 1 auto; }
+#clock { font-family: var(--mono); font-size: 1.06rem; font-weight: 700; letter-spacing: .02em; }
+#clock.over { color: var(--danger); }
+.pill {
+  display: inline-block; background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: 999px; padding: 1px 10px; font-size: .82rem; color: var(--muted);
+}
+.pill strong { color: var(--text); }
+
+.field { margin: 12px 0; }
+.field label { display: block; font-size: .87rem; color: var(--muted); margin-bottom: 4px; font-weight: 600; }
+.field input[type="text"], .field textarea { width: 100%; font-family: var(--mono); font-size: .9rem; }
+.field textarea { min-height: 150px; resize: vertical; line-height: 1.6; font-family: inherit; font-size: .95rem; }
+.field .hint { font-size: .8rem; color: var(--muted); margin-top: 3px; }
+
+.onpaper { display: flex; gap: 9px; align-items: flex-start; margin: 10px 0; font-size: .95rem; }
+.onpaper input { margin-top: 4px; flex: none; }
+
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 560px) { .grid2 { grid-template-columns: 1fr; } }
+
+table.data { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: .9rem; }
+table.data th, table.data td { border: 1px solid var(--border); padding: 5px 9px; text-align: right; }
+table.data th:first-child, table.data td:first-child { text-align: left; }
+table.data th { background: var(--surface-2); }
+
+.marks { float: right; color: var(--muted); font-size: .85rem; font-weight: 700; }
+
+details.extra { border: 1px solid var(--border); border-radius: 12px; margin: 14px 0; background: var(--surface); }
+details.extra > summary { cursor: pointer; padding: 12px 15px; font-weight: 700; list-style: none; }
+details.extra > summary::-webkit-details-marker { display: none; }
+details.extra > summary::before { content: "▸ "; color: var(--accent); }
+details.extra[open] > summary::before { content: "▾ "; }
+details.extra .inner { padding: 2px 16px 16px; border-top: 1px solid var(--border); }
+
+#export-out { width: 100%; min-height: 300px; font-family: var(--mono); font-size: .8rem; line-height: 1.5; white-space: pre; }
+#copy-status { font-size: .87rem; color: var(--success); font-weight: 600; }
+
+footer { margin-top: 46px; padding-top: 16px; border-top: 1px solid var(--border); font-size: .87rem; color: var(--muted); }
+#math-warning { display: none; }
+@media (max-width: 560px) { .statusbar { font-size: .84rem; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>EE6204 Quiz&nbsp;1 — Prediction &amp; Practice Paper</h1>
+<p class="sub">Q1 LP formulation + Q2 simplex, on one problem &middot; 16 marks &middot; 30 minutes &middot; handwritten, then photographed and uploaded &middot; own notes allowed (verify on NTULearn)</p>
+
+<div id="math-warning" class="notice">
+  <strong>Equations are not rendering.</strong> This page loads MathJax from
+  <code>../notes/vendor/mathjax/tex-mml-chtml.js</code>. Open the file with that relative path
+  intact, or serve the <code>EE-6204</code> folder over a local HTTP server.
+</div>
+
+<div class="notice">
+  <h3>Unofficial — this is a study aid, not a real paper</h3>
+  <p>Built 2026-09-02 from <a href="quiz-1-intel.md">quiz-1-intel.md</a> (小红书 recollections of
+  the Feb 2026 and Sep 2025 sittings) and the Week 1–2 lecture transcripts. It mirrors the
+  <em>current-run</em> shape set by <strong>Prof. Su Rong</strong>. Nothing here is an official
+  question or marking scheme. <strong>Confirm the quiz date, time, weighting and rules on
+  NTULearn</strong> — the recollection says Week 4, ≈16&nbsp;%, closed portal, own device.</p>
+</div>
+
+<div class="notice info">
+  <h3>How to use this page</h3>
+  <p>This page contains <strong>no answers</strong> — on purpose. Sit it closed-portal, on paper,
+  in 30&nbsp;minutes. Then either:</p>
+  <ul>
+    <li>read the full worked key and marking rubric in
+      <a href="quiz-1-prediction.md">quiz-1-prediction.md</a> (open it <em>after</em> you finish), or</li>
+    <li>press <strong>Build answer sheet</strong> below and paste the block into a fresh Claude
+      Code conversation for part-by-part grading and a per-mistake explanation.</li>
+  </ul>
+  <p>Q1 and Q2 are done on paper (that is how the real quiz is submitted). Use the boxes here only
+  for your <em>final</em> figures so the export can carry them; tick "answered on paper" for the
+  working.</p>
+</div>
+
+<div class="statusbar">
+  <span id="clock">00:00</span>
+  <button class="btn" id="timer-toggle">Start</button>
+  <span class="pill">Core <strong><span id="p-core">0</span>/6</strong></span>
+  <span class="pill">Time <strong>30:00</strong></span>
+  <span class="grow"></span>
+  <label class="sr-only" for="theme">Theme</label>
+  <select id="theme">
+    <option value="system">Auto</option>
+    <option value="light">Light</option>
+    <option value="dark">Dark</option>
+  </select>
+</div>
+
+<h2>The problem <span class="marks">Q1 + Q2 share it</span></h2>
+<div class="card">
+<p>A workshop assembles two loudspeaker models, <strong>Standard</strong> and <strong>Premium</strong>.
+Each Standard sold earns <strong>\$40</strong> profit, each Premium <strong>\$30</strong>. Every
+unit of either model needs <strong>1&nbsp;hour</strong> at the shared <strong>assembly</strong>
+bench; <strong>12</strong> assembly-hours are available this week. <strong>Testing</strong> takes
+<strong>2&nbsp;hours</strong> per Standard and <strong>1&nbsp;hour</strong> per Premium; the test
+rig has <strong>16</strong> hours available. All output is sold.</p>
+<p><strong>How many of each model should be built this week to maximise profit, and what is that
+profit?</strong></p>
+</div>
+
+<h2>Q1 — Formulation <span class="marks">5 marks</span></h2>
+<div class="card">
+<p>On paper: define the decision variables (with units), write the objective (state max/min), write
+each constraint, add non-negativity, then convert to <strong>standard form</strong> for the simplex
+method (one slack per <span class="nowrap">"\(\leq\)"</span> row; objective row as
+\(z - c^\mathsf{T}x = 0\)).</p>
+
+<div class="onpaper">
+  <input type="checkbox" id="q1-paper">
+  <label for="q1-paper">I have written the full formulation and standard form on paper.</label>
+</div>
+
+<div class="field">
+  <label for="q1-obj">Objective function you wrote (for the export)</label>
+  <input type="text" id="q1-obj" data-fr="q1-obj" placeholder="e.g.  max z = ... x1 + ... x2">
+</div>
+<div class="grid2">
+  <div class="field">
+    <label for="q1-c1">Constraint 1 (assembly)</label>
+    <input type="text" id="q1-c1" data-fr="q1-c1" placeholder="e.g.  ... x1 + ... x2 <= ...">
+  </div>
+  <div class="field">
+    <label for="q1-c2">Constraint 2 (testing)</label>
+    <input type="text" id="q1-c2" data-fr="q1-c2" placeholder="e.g.  ... x1 + ... x2 <= ...">
+  </div>
+</div>
+<p class="hint">Full marks need: variables defined with units; "maximise" stated; both resource
+constraints; non-negativity; and the standard-form conversion (slacks + \(z-c^\mathsf{T}x=0\) row).</p>
+</div>
+
+<h2>Q2 — Simplex method <span class="marks">11 marks</span></h2>
+<div class="card">
+<p>On paper: build the initial tableau (slack basis, objective row \(z-c^\mathsf{T}x=0\)), then
+pivot to optimality. Prof. Su Rong's rules (from the Week&nbsp;2 transcript):</p>
+<ul>
+  <li><strong>Entering:</strong> any column with a <em>negative</em> bottom-row entry ("most
+    negative is not really critical").</li>
+  <li><strong>Leaving:</strong> the row with the <em>minimum non-negative</em> ratio
+    \(b_i / a_{ij}\), over rows with \(a_{ij} > 0\) only.</li>
+  <li><strong>Stop</strong> when every bottom-row entry is \(\geq 0\).</li>
+  <li>A maximization with all "\(\leq\)" constraints needs <strong>slack variables only</strong> —
+    no surplus, no artificial, no Big-M.</li>
+</ul>
+
+<div class="onpaper">
+  <input type="checkbox" id="q2-paper">
+  <label for="q2-paper">I have written every tableau, the entering/leaving choice at each step, and
+  the pivot arithmetic on paper.</label>
+</div>
+
+<div class="grid2">
+  <div class="field">
+    <label for="q2-x1">Optimal \(x_1\) (Standard units)</label>
+    <input type="text" id="q2-x1" data-fr="q2-x1" placeholder="number">
+  </div>
+  <div class="field">
+    <label for="q2-x2">Optimal \(x_2\) (Premium units)</label>
+    <input type="text" id="q2-x2" data-fr="q2-x2" placeholder="number">
+  </div>
+  <div class="field">
+    <label for="q2-z">Optimal profit \(z^\ast\) (\$)</label>
+    <input type="text" id="q2-z" data-fr="q2-z" placeholder="number">
+  </div>
+  <div class="field">
+    <label for="q2-piv">Number of pivot iterations</label>
+    <input type="text" id="q2-piv" data-fr="q2-piv" placeholder="number">
+  </div>
+</div>
+<div class="field">
+  <label for="q2-bind">Slack values / which constraints are binding, and your graphical check</label>
+  <input type="text" id="q2-bind" data-fr="q2-bind" placeholder="e.g.  s1 = ?, s2 = ?, corner (?, ?)">
+</div>
+</div>
+
+<details class="extra">
+<summary>Section S — predicted unseen item: sensitivity &amp; duality (8 marks, not part of the 16)</summary>
+<div class="inner">
+<p>The Week&nbsp;2 transcript shows Prof. Su Rong perturbing a cost coefficient
+(\(c_1 \to c_1 + \theta\)) and an \(A\)-entry while saying <em>"everybody knows … in a quiz or in
+the final exam, how do you operate"</em>. This is the in-scope topic most likely to be the add-on.
+Work it on the <strong>same</strong> optimal tableau.</p>
+<ol>
+  <li><strong>Shadow prices (2).</strong> Read the marginal value of one more assembly-hour and one
+    more test-rig hour straight off the final bottom row.</li>
+  <li><strong>One more unit + dual (2).</strong> Predict the new \(z^\ast\) if assembly capacity
+    rises 12 → 13. Form the dual LP and check strong duality / complementary slackness.</li>
+  <li><strong>RHS ranging (3).</strong> Using \(B^{-1}(b + \Delta b) \geq 0\), find the range of
+    each right-hand side over which the current basis stays optimal.</li>
+  <li><strong>Cost ranging (1).</strong> Find the range of \(c_1\) that leaves the optimal basis
+    (and \(x^\ast\)) unchanged.</li>
+</ol>
+<div class="onpaper">
+  <input type="checkbox" id="s-paper">
+  <label for="s-paper">Attempted Section S on paper.</label>
+</div>
+<div class="grid2">
+  <div class="field">
+    <label for="s-shadow">Shadow prices (assembly, test rig)</label>
+    <input type="text" id="s-shadow" data-fr="s-shadow" placeholder="e.g.  $?, $?">
+  </div>
+  <div class="field">
+    <label for="s-b1">Range of \(b_1\) (assembly RHS)</label>
+    <input type="text" id="s-b1" data-fr="s-b1" placeholder="e.g.  [?, ?]">
+  </div>
+  <div class="field">
+    <label for="s-b2">Range of \(b_2\) (test-rig RHS)</label>
+    <input type="text" id="s-b2" data-fr="s-b2" placeholder="e.g.  [?, ?]">
+  </div>
+  <div class="field">
+    <label for="s-c1">Range of \(c_1\)</label>
+    <input type="text" id="s-c1" data-fr="s-c1" placeholder="e.g.  [?, ?]">
+  </div>
+</div>
+</div>
+</details>
+
+<details class="extra">
+<summary>Section L — legacy block: transportation + constrained NLP (previous lecturer, lower probability)</summary>
+<div class="inner">
+<p>These are the questions Prof. Su Rong <strong>removed</strong>. Through Sep&nbsp;2025 the quiz
+was Week 5, MCQ + fill-in-blank, Q1 = balanced transportation, Q2 = constrained NLP. Do these only
+after the core paper; the full statements and worked answers are in
+<a href="quiz-1-prediction.md">quiz-1-prediction.md</a> §L.</p>
+<ul>
+  <li><strong>L1 — Transportation.</strong> Supplies \((20,30,25)\), demands \((15,20,20,20)\),
+    the 3×4 cost table in the key. Balance, build an initial BFS by <strong>Vogel's Approximation
+    Method</strong>, then test optimality with \(u_i + v_j = c_{ij}\) potentials.</li>
+  <li><strong>L2 — Constrained NLP.</strong> Least-material <strong>closed</strong> box of volume
+    \(V = 32\). Minimise surface area subject to \(xyz = 32\) with a Lagrange multiplier, then a
+    second-order check for "minimum". (Watch whether the box has a lid — that was the recalled
+    trap.)</li>
+</ul>
+<div class="onpaper">
+  <input type="checkbox" id="l-paper">
+  <label for="l-paper">Attempted Section L on paper.</label>
+</div>
+</div>
+</details>
+
+<h2>Build your answer sheet</h2>
+<div class="card">
+<p>Press this when the 30 minutes are up. It produces one plain-text block — paper identity, the
+key-file path, mark allocation, elapsed time, your figures and which parts you did on paper. Paste
+it into a fresh Claude Code conversation and ask for grading against
+<code>EE-6204/quizzes/quiz-1-prediction.md</code>.</p>
+<p>
+  <button class="btn btn-primary" id="build">Build answer sheet</button>
+  <button class="btn" id="copy">Copy</button>
+  <button class="btn btn-danger" id="reset">Clear &amp; reset timer</button>
+  <span id="copy-status"></span>
+</p>
+<textarea id="export-out" readonly placeholder="The answer sheet appears here."></textarea>
+</div>
+
+<footer>
+  <p>EE6204 Systems Analysis &middot; companion to
+    <a href="../notes/quiz1-prep-learning.html">the Quiz 1 study page</a>,
+    <a href="../notes/beginner-notes.pdf">beginner notes</a> and
+    <a href="../notes/notes.pdf">review notes</a>.</p>
+  <p>Unofficial practice material. Verify all quiz logistics on NTULearn.</p>
+</footer>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var STORE_KEY = 'ee6204-quiz1-prediction-v1';
+  var THEME_KEY = 'ee6204-theme';
+  var LIMIT = 30 * 60;
+
+  var state = { fr: {}, chk: {}, elapsed: 0, running: false };
+
+  /* ---------- storage ---------- */
+  function load() {
+    try {
+      var raw = localStorage.getItem(STORE_KEY);
+      if (!raw) return;
+      var o = JSON.parse(raw);
+      if (o && typeof o === 'object') {
+        state.fr = o.fr || {};
+        state.chk = o.chk || {};
+        state.elapsed = typeof o.elapsed === 'number' ? o.elapsed : 0;
+      }
+    } catch (e) { /* private mode: run without persistence */ }
+  }
+  function save() {
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify({
+        fr: state.fr, chk: state.chk, elapsed: state.elapsed
+      }));
+    } catch (e) { /* ignore */ }
+  }
+
+  /* ---------- theme ---------- */
+  var themeSel = document.getElementById('theme');
+  try {
+    var savedTheme = localStorage.getItem(THEME_KEY);
+    if (savedTheme) { document.documentElement.setAttribute('data-theme', savedTheme); themeSel.value = savedTheme; }
+  } catch (e) { /* ignore */ }
+  themeSel.addEventListener('change', function () {
+    document.documentElement.setAttribute('data-theme', themeSel.value);
+    try { localStorage.setItem(THEME_KEY, themeSel.value); } catch (e) { /* ignore */ }
+  });
+
+  /* ---------- timer ---------- */
+  var clockEl = document.getElementById('clock');
+  var toggleEl = document.getElementById('timer-toggle');
+  function fmt(s) {
+    var m = Math.floor(s / 60), r = s % 60;
+    return (m < 10 ? '0' : '') + m + ':' + (r < 10 ? '0' : '') + r;
+  }
+  function paintClock() {
+    clockEl.textContent = fmt(state.elapsed);
+    clockEl.classList.toggle('over', state.elapsed > LIMIT);
+    toggleEl.textContent = state.running ? 'Pause' : (state.elapsed > 0 ? 'Resume' : 'Start');
+  }
+  setInterval(function () {
+    if (!state.running) return;
+    state.elapsed += 1;
+    paintClock();
+    if (state.elapsed % 10 === 0) save();
+  }, 1000);
+  toggleEl.addEventListener('click', function () {
+    state.running = !state.running;
+    paintClock();
+    save();
+  });
+
+  /* ---------- progress ---------- */
+  var pCore = document.getElementById('p-core');
+  var CORE_FR = ['q2-x1', 'q2-x2', 'q2-z', 'q2-piv', 'q2-bind'];
+  function paintProgress() {
+    var n = 0;
+    if (state.chk['q1-paper'] || String(state.fr['q1-obj'] || '').trim() !== '') n++;
+    for (var i = 0; i < CORE_FR.length; i++) {
+      if (String(state.fr[CORE_FR[i]] || '').trim() !== '') n++;
+    }
+    pCore.textContent = n;
+  }
+
+  /* ---------- field wiring ---------- */
+  var frFields = document.querySelectorAll('[data-fr]');
+  Array.prototype.forEach.call(frFields, function (el) {
+    var key = el.getAttribute('data-fr');
+    if (state.fr[key]) el.value = state.fr[key];
+    el.addEventListener('input', function () {
+      state.fr[key] = el.value;
+      paintProgress();
+      save();
+    });
+  });
+
+  var checks = document.querySelectorAll('input[type="checkbox"]');
+  Array.prototype.forEach.call(checks, function (el) {
+    if (state.chk[el.id]) el.checked = true;
+    el.addEventListener('change', function () {
+      state.chk[el.id] = el.checked;
+      paintProgress();
+      save();
+    });
+  });
+
+  /* ---------- export ---------- */
+  var FR_ORDER = [
+    ['Q1', 'q1-paper', [
+      ['q1-obj', 'Q1 objective function'],
+      ['q1-c1',  'Q1 constraint 1 (assembly)'],
+      ['q1-c2',  'Q1 constraint 2 (testing)']
+    ]],
+    ['Q2', 'q2-paper', [
+      ['q2-x1',   'Q2 optimal x1 (Standard)'],
+      ['q2-x2',   'Q2 optimal x2 (Premium)'],
+      ['q2-z',    'Q2 optimal profit z*'],
+      ['q2-piv',  'Q2 pivot iterations'],
+      ['q2-bind', 'Q2 slacks / binding constraints / graphical check']
+    ]],
+    ['Section S (sensitivity, +8, not in the 16)', 's-paper', [
+      ['s-shadow', 'S shadow prices (assembly, test rig)'],
+      ['s-b1',     'S range of b1'],
+      ['s-b2',     'S range of b2'],
+      ['s-c1',     'S range of c1']
+    ]],
+    ['Section L (legacy, transportation + NLP)', 'l-paper', []]
+  ];
+
+  function buildSheet() {
+    var L = [];
+    var now = new Date();
+    var stamp = now.getFullYear() + '-' +
+      String(now.getMonth() + 1).padStart(2, '0') + '-' +
+      String(now.getDate()).padStart(2, '0') + ' ' +
+      String(now.getHours()).padStart(2, '0') + ':' +
+      String(now.getMinutes()).padStart(2, '0');
+
+    L.push('===== BEGIN EE6204 QUIZ 1 ANSWER SHEET =====');
+    L.push('Course     : EE6204 Systems Analysis  (repo path EE-6204/)');
+    L.push('Paper      : Quiz 1 Prediction & Practice (EE-6204/quizzes/quiz-1-prediction.html)');
+    L.push('Key file   : EE-6204/quizzes/quiz-1-prediction.md  (worked key + marking rubric)');
+    L.push('Marks      : Q1 = 5, Q2 = 11  -> core total 16.  Section S +8, Section L separate.');
+    L.push('Submitted  : ' + stamp);
+    L.push('Time taken : ' + fmt(state.elapsed) + ' (mm:ss), suggested limit 30:00');
+    L.push('');
+    L.push('The problem: max z = 40 x1 + 30 x2  s.t.  x1 + x2 <= 12,  2 x1 + x2 <= 16,  x1,x2 >= 0.');
+    L.push('Q1 asks for the formulation + standard form; Q2 asks for the simplex solution.');
+    L.push('');
+
+    FR_ORDER.forEach(function (sec) {
+      L.push('--- ' + sec[0] + ' ---');
+      var onPaper = !!state.chk[sec[1]];
+      L.push('working on paper: ' + (onPaper ? 'YES (photo uploaded separately / described below)' : 'no'));
+      sec[2].forEach(function (pair) {
+        var val = String(state.fr[pair[0]] || '').trim();
+        L.push('  ' + pair[1] + ': ' + (val === '' ? '<blank>' : val));
+      });
+      L.push('');
+    });
+
+    L.push('===== END EE6204 QUIZ 1 ANSWER SHEET =====');
+    L.push('Please mark Q1 + Q2 out of 16 (Section S out of 8, Section L noted separately),');
+    L.push('separate arithmetic slips from inverted concepts, show any correct derivation I missed,');
+    L.push('and fold real gaps back into EE-6204/notes/.');
+    return L.join('\n');
+  }
+
+  var out = document.getElementById('export-out');
+  var status = document.getElementById('copy-status');
+
+  document.getElementById('build').addEventListener('click', function () {
+    out.value = buildSheet();
+    status.textContent = '';
+    out.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (state.running) { state.running = false; paintClock(); save(); }
+  });
+
+  out.addEventListener('click', function () {
+    if (out.value) { out.focus(); out.select(); }
+  });
+
+  document.getElementById('copy').addEventListener('click', function () {
+    if (!out.value) out.value = buildSheet();
+    out.focus();
+    out.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    if (ok) {
+      status.textContent = 'Copied — now paste it into Claude Code.';
+    } else if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(out.value).then(function () {
+        status.textContent = 'Copied — now paste it into Claude Code.';
+      }, function () {
+        status.textContent = 'Copy blocked — the text is selected, press ⌘C / Ctrl-C.';
+      });
+    } else {
+      status.textContent = 'Copy blocked — the text is selected, press ⌘C / Ctrl-C.';
+    }
+  });
+
+  document.getElementById('reset').addEventListener('click', function () {
+    if (!window.confirm('Clear every answer and reset the timer for the Quiz 1 prediction paper?')) return;
+    try { localStorage.removeItem(STORE_KEY); } catch (e) { /* ignore */ }
+    location.reload();
+  });
+
+  /* ---------- go ---------- */
+  load();
+  Array.prototype.forEach.call(frFields, function (el) {
+    var key = el.getAttribute('data-fr');
+    if (state.fr[key]) el.value = state.fr[key];
+  });
+  Array.prototype.forEach.call(checks, function (el) {
+    if (state.chk[el.id]) el.checked = true;
+  });
+  paintClock();
+  paintProgress();
+
+  /* ---------- MathJax, vendored so the page works offline ---------- */
+  var warned = false;
+  function warn() {
+    if (warned) return;
+    warned = true;
+    if (!window.MathJax || !window.MathJax.typesetPromise) {
+      document.getElementById('math-warning').style.display = 'block';
+    }
+  }
+  var s = document.createElement('script');
+  s.src = '../notes/vendor/mathjax/tex-mml-chtml.js';
+  s.async = true;
+  s.onerror = warn;
+  document.head.appendChild(s);
+  setTimeout(warn, 3500);
+})();
+</script>
+</body>
+</html>
