@@ -458,7 +458,7 @@ Colours are <code>{1, 2, 3}</code>, chromosome \(c \in \{1,2,3\}^6\) with \(c_k\
 <li>convergence ≠ global-optimality proof</li>
 <li>"local optimum" is undefined without a neighbourhood</li>
 <li>NFL does <strong>not</strong> say algorithm choice is irrelevant on a given problem</li>
-<li>creep converges prematurely, random resetting does not</li>
+<li>creep is bounded-step so it cannot escape a converged basin, random resetting is unbounded and always can — a comparative claim, not "creep causes premature convergence"</li>
 <li>arithmetic crossover cannot explore outside the parents' interval</li>
 <li>crossover never changes population-wide allele frequencies</li>
 <li>a binary mutation is uniform in application but biased in effect toward significant bits</li>
@@ -513,7 +513,7 @@ Colours are <code>{1, 2, 3}</code>, chromosome \(c \in \{1,2,3\}^6\) with \(c_k\
     { q: 'Whole arithmetic crossover with \u03b1 = 0.5 yields two identical offspring, and no arithmetic-crossover offspring can fall outside the box spanned by the two parents.',
       a: 'T', why: '\\(z^{(1)} = \\alpha x + (1-\\alpha)y\\), \\(z^{(2)} = (1-\\alpha)x + \\alpha y\\); at \\(\\alpha = 0.5\\) both equal \\((x+y)/2\\). Every arithmetic offspring is a convex combination of the parents \u21d2 inside their box. <strong>Blend crossover</strong> is the operator that can reach outside it.' },
     { q: 'Creep mutation on an integer genome can drive premature convergence, whereas random resetting does not have that tendency.',
-      a: 'T', why: 'Creep adds small \u00b1 steps; they accumulate, individuals drift together \u21d2 premature convergence. Random resetting draws a fresh value (the true analogue of a bit flip) and does not have this drift.' },
+      a: 'T', why: 'Creep is a <strong>bounded-step</strong> operator: once the population has converged near a value, creep only reaches the immediate neighbourhood, so it cannot carry the population across a fitness valley to a better basin \u2014 the intermediate steps are selected against. Random resetting is <strong>unbounded</strong>: each generation it can draw any value in the range however converged the population is, so it always keeps an escape route. The claim is <em>comparative</em> \u2014 creep does not itself <em>cause</em> convergence (selection does), it fails to counteract it; creep with a nonzero rate still resists premature convergence better than no mutation at all.' },
     { q: 'Recombination alone can restore an allele value that has been lost from the entire population.',
       a: 'F', why: 'Crossover only <em>redistributes</em> alleles already present. Starting from a 1:1 zero/one ratio, crossover leaves the population-wide ratio at 1:1 forever; a lost allele is unrecoverable without <strong>mutation</strong>.' }
   ];

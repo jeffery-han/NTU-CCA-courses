@@ -14,7 +14,9 @@ Feb-2026 papers), `notes/beginner-notes.tex`, and
   B uses order-1 + cycle / base-4 decode / fitness ranking / representation short answer.
 - **Format mimicked:** 10 True/False + 3 application questions + 1 short answer, closed-book,
   Weeks 1–3 scope only (up to numbered slide 60 of the representations deck = end of tree
-  representation, per `resources/week-04-transcript.txt`). No calculators — B3 supplies an
+  representation, per `resources/week-04-transcript.txt` — note that transcript is present locally
+  but **untracked by git**, so this citation resolves only in the learner's own working copy).
+  No calculators — B3 supplies an
   exponential table, as a real closed-book paper would.
 - **Marks:** Section A 10 × 2 = 20; B1 10; B2 10; B3 10; C 10. **Total 60.** Suggested time 60 min.
 

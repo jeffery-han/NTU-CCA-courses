@@ -85,7 +85,7 @@ words what evolutionary *creativity* means." Model answers to all three are in P
 | 6 | **F** | Flipping the MSB changes the decoded integer by `2^{L-1}`; the LSB by 1. The *application* of mutation is uniform but its *effect* is biased toward significant bits. **Gray coding** is the standard remedy (numerically adjacent values differ by one bit). |
 | 7 | **T** | Fitness is measured on `x` only, so a new `σ'` can only be judged through the `x'` it produced. Mutating `σ` first, then using it to mutate `x`, creates that dependency. |
 | 8 | **T** | `z^{(1)} = αx + (1−α)y`, `z^{(2)} = (1−α)x + αy`; at α = 0.5 both equal `(x+y)/2`. Every arithmetic offspring is a convex combination of the parents ⇒ inside their box. **Blend crossover** is the operator that can reach outside it. |
-| 9 | **T** | Creep adds small ± steps; they accumulate, individuals drift together ⇒ premature convergence. Random resetting draws a fresh value (the true analogue of a bit flip) and does not have this drift. |
+| 9 | **T** | Creep is a **bounded-step** operator: once the population has converged near a value, creep can only reach the immediate neighbourhood, so it cannot carry the population across a fitness valley to a better basin — the intermediate steps are selected against. Random resetting is **unbounded**: every generation it can draw any value in the range regardless of how converged the population is, so it always retains an escape route. Note the claim is *comparative* — creep does not itself *cause* convergence (selection does); it fails to counteract it. Creep with a nonzero rate still resists premature convergence better than no mutation at all. |
 | 10 | **F** | Crossover only *redistributes* alleles already present. Starting from a 1:1 zero/one ratio, crossover leaves the population-wide ratio at 1:1 forever; a lost allele is unrecoverable without **mutation**. |
 
 **Disputed item.** `notes.tex` states `P ⊆ NP`. Finding a feasible path in a graph is solvable by
@@ -254,7 +254,9 @@ GP tree:  L leaves ⇒ L−1 internal nodes ⇒ 2(L−1) edges
 ### Likely traps (from `notes.tex` §"Likely traps")
 NP ≠ non-polynomial · selection favours but never guarantees · parent vs survivor selection answer
 different questions · convergence ≠ global-optimality proof · "local optimum" is undefined without a
-neighbourhood · NFL does **not** say algorithm choice is irrelevant on a given problem · creep
-converges prematurely, random resetting does not · arithmetic crossover cannot explore outside the
+neighbourhood · NFL does **not** say algorithm choice is irrelevant on a given problem · creep is
+bounded-step so it cannot escape a converged basin while random resetting is unbounded and always
+can (comparative — creep does not *cause* premature convergence, selection does; creep still beats
+no mutation) · arithmetic crossover cannot explore outside the
 parents' interval · crossover never changes population-wide allele frequencies · a binary mutation
 is uniform in application but biased in effect toward significant bits.

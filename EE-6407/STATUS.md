@@ -68,6 +68,8 @@
 - The `quizzes/quiz-1-prediction.md` Part 3 predicts the "one unseen item" the lecturer adds each year, drawn from Weeks 1-3 topics absent from both circulated papers (edge recombination, Gray coding, self-adaptive σ order, arithmetic-vs-blend box, creep vs random resetting, roulette scaling, GP node/edge counting, binary→real decode).
 - Commercial textbook scans and generic or unrelated evolutionary-computing resources were excluded from the archive.
 
+- **`resources/week-04-transcript.txt` is present locally but untracked by git** (confirmed 2026-09-01 via `git ls-files --error-unmatch`), and is not yet entered in the source-coverage table above. It is the sole local source for the quiz **scope boundary**: the lecturer states that material from numbered slide 60 of the representations deck onwards — fitness scaling, selection schemes, population management — is not examined, which places the boundary at the end of tree representation. `quizzes/quiz-1-mock-b.md` cites it for that boundary, so the citation currently points at a file that is not in the repository. Either commit the transcript or restate the citation as local-only, and add its coverage row, in the next update.
+
 ## File-organization record
 
 - 2026-08-24: Added `resources/public-archive-2026-08-24/` with 123 source payload files plus a local provenance README. No existing EE-6407 files were moved or renamed.
