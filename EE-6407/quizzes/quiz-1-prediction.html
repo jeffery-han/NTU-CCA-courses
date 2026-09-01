@@ -1,0 +1,709 @@
+<!doctype html>
+<html lang="en" data-theme="system">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EE6407 Quiz 1 — Prediction &amp; Practice Paper</title>
+<meta name="description" content="Interactive, self-contained mock for EE6407 Quiz 1: 10 True/False with graded feedback, 3 application questions with step-by-step worked solutions, 1 short answer with model answers, and the 'one unseen item' prediction drills. Built from quiz-1-prediction.md.">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)']],
+      displayMath: [['\\[', '\\]']],
+      processEscapes: true
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    startup: { typeset: true }
+  };
+</script>
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --surface-2: #eef1f5;
+  --text: #14181f;
+  --muted: #5b6472;
+  --border: #d8dee7;
+  --accent: #1f6feb;
+  --accent-soft: #e5efff;
+  --success: #17794b;
+  --success-soft: #e2f5ec;
+  --warning: #9a6200;
+  --warning-soft: #fdf1dc;
+  --danger: #b32130;
+  --danger-soft: #fdeaec;
+  --shadow: 0 1px 2px rgba(16, 24, 40, .05), 0 8px 24px rgba(16, 24, 40, .06);
+  --radius: 14px;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1117; --surface: #161b23; --surface-2: #1d232d;
+    --text: #e7ecf3; --muted: #99a3b3; --border: #2a323e;
+    --accent: #6ea8ff; --accent-soft: #17233a;
+    --success: #56d39b; --success-soft: #10281f;
+    --warning: #e5b567; --warning-soft: #2b2113;
+    --danger: #ff8189; --danger-soft: #2e1519;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 28px rgba(0, 0, 0, .35);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1117; --surface: #161b23; --surface-2: #1d232d;
+  --text: #e7ecf3; --muted: #99a3b3; --border: #2a323e;
+  --accent: #6ea8ff; --accent-soft: #17233a;
+  --success: #56d39b; --success-soft: #10281f;
+  --warning: #e5b567; --warning-soft: #2b2113;
+  --danger: #ff8189; --danger-soft: #2e1519;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 28px rgba(0, 0, 0, .35);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.62;
+  font-size: 16.5px;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 860px; margin: 0 auto; padding: 28px 20px 96px; }
+a { color: var(--accent); }
+code { font-family: var(--mono); font-size: .9em; background: var(--surface-2); padding: .08em .35em; border-radius: 5px; }
+pre {
+  font-family: var(--mono); font-size: .86em; background: var(--surface-2);
+  border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px;
+  overflow-x: auto; line-height: 1.5;
+}
+h1 { font-size: 1.7rem; line-height: 1.25; margin: 0 0 .5rem; }
+h2 { font-size: 1.28rem; margin: 2.4rem 0 .4rem; padding-top: .6rem; border-top: 2px solid var(--border); }
+h3 { font-size: 1.06rem; margin: 1.5rem 0 .3rem; }
+h4 { font-size: .96rem; margin: 1rem 0 .3rem; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.sub { color: var(--muted); }
+
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+.toolbar {
+  display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+  margin: 18px 0 6px;
+}
+.toolbar label { font-size: .85rem; color: var(--muted); }
+select, .btn {
+  font: inherit; font-size: .9rem;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border); border-radius: 9px;
+  padding: 6px 12px; cursor: pointer;
+}
+.btn:hover { border-color: var(--accent); }
+.btn-danger { color: var(--danger); }
+.btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px 18px;
+  margin: 14px 0;
+}
+.notice { background: var(--warning-soft); border: 1px solid color-mix(in srgb, var(--warning) 40%, var(--border)); border-radius: 12px; padding: 12px 15px; margin: 14px 0; }
+.notice h3 { margin-top: .2rem; }
+.notice.info { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 35%, var(--border)); }
+
+.scorebar {
+  position: sticky; top: 0; z-index: 5;
+  display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: baseline;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--border); border-radius: 11px;
+  padding: 9px 14px; margin: 8px 0 18px;
+  font-size: .92rem;
+}
+.scorebar strong { font-size: 1.05rem; }
+
+/* True / False items */
+.tf { margin: 12px 0; }
+.tf .stem { display: flex; gap: 10px; }
+.tf .stem .n { font-weight: 700; color: var(--muted); flex: none; }
+.tf-actions { display: flex; gap: 8px; margin: 9px 0 0 26px; }
+.tf-actions button {
+  font: inherit; font-weight: 600;
+  padding: 5px 18px; border-radius: 9px;
+  border: 1px solid var(--border); background: var(--surface); color: var(--text);
+  cursor: pointer;
+}
+.tf-actions button:hover { border-color: var(--accent); }
+.tf-actions button[aria-pressed="true"] { background: var(--accent); color: #fff; border-color: var(--accent); }
+.tf .reveal {
+  margin: 9px 0 0 26px; padding: 10px 13px;
+  border-radius: 10px; border: 1px solid var(--border);
+  background: var(--surface-2); font-size: .95rem;
+}
+.tf .reveal .tag { font-weight: 700; }
+.tf.right .reveal { background: var(--success-soft); border-color: color-mix(in srgb, var(--success) 40%, var(--border)); }
+.tf.wrong .reveal { background: var(--danger-soft); border-color: color-mix(in srgb, var(--danger) 40%, var(--border)); }
+[hidden] { display: none !important; }
+
+/* progressive reveal blocks */
+details.step {
+  border: 1px solid var(--border); border-radius: 10px;
+  margin: 8px 0; background: var(--surface);
+}
+details.step > summary {
+  cursor: pointer; padding: 9px 13px; font-weight: 600;
+  list-style: none;
+}
+details.step > summary::-webkit-details-marker { display: none; }
+details.step > summary::before { content: "▸ "; color: var(--accent); }
+details.step[open] > summary::before { content: "▾ "; }
+details.step > summary:hover { color: var(--accent); }
+details.step .body { padding: 2px 15px 14px; border-top: 1px solid var(--border); }
+details.step .body > *:first-child { margin-top: .6rem; }
+
+table.data { border-collapse: collapse; width: 100%; font-size: .92rem; margin: 8px 0; }
+table.data th, table.data td { border: 1px solid var(--border); padding: 5px 9px; text-align: left; }
+table.data th { background: var(--surface-2); }
+table.data td.num, table.data th.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+ul.checklist { list-style: none; padding: 0; margin: 10px 0; }
+ul.checklist li {
+  border: 1px solid var(--border); border-radius: 10px;
+  padding: 11px 13px; margin: 8px 0; background: var(--surface);
+}
+ul.checklist li.done { background: var(--success-soft); border-color: color-mix(in srgb, var(--success) 35%, var(--border)); }
+ul.checklist label { display: flex; gap: 9px; font-weight: 600; cursor: pointer; }
+ul.checklist .drill { margin: 7px 0 0 24px; font-weight: 400; font-size: .93rem; color: var(--text); }
+
+.qref-row { display: grid; grid-template-columns: 210px 1fr auto; gap: 8px 12px; align-items: start; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: .93rem; }
+.qref-row:last-child { border-bottom: 0; }
+.qref-row .lhs { font-weight: 600; }
+.qref-row .rhs { font-family: var(--mono); font-size: .86em; }
+.qref-row .rhs.hidden-val { filter: blur(5px); user-select: none; }
+.qref-row button { font: inherit; font-size: .8rem; padding: 2px 9px; border-radius: 7px; border: 1px solid var(--border); background: var(--surface); cursor: pointer; }
+@media (max-width: 620px) { .qref-row { grid-template-columns: 1fr; } }
+
+#math-warning {
+  display: none;
+  background: var(--warning-soft); border: 1px solid color-mix(in srgb, var(--warning) 40%, var(--border));
+  border-radius: 10px; padding: 9px 13px; margin: 10px 0; font-size: .9rem;
+}
+#math-warning.show { display: block; }
+
+footer { margin-top: 40px; padding-top: 16px; border-top: 2px solid var(--border); font-size: .9rem; color: var(--muted); }
+footer a { display: inline-block; margin-right: 14px; }
+.toast { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); background: var(--text); color: var(--bg); padding: 8px 16px; border-radius: 9px; font-size: .88rem; opacity: 0; transition: opacity .2s; pointer-events: none; }
+.toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<p class="sub" style="margin-top:0">EE6407 · Evolutionary Computing Part 1 · Weeks 1–3</p>
+<h1>Quiz 1 — Prediction &amp; Practice Paper</h1>
+<p class="sub">Interactive version of <code>quiz-1-prediction.md</code>. Every number and reason here is transcribed from that file; nothing was re-derived for this page.</p>
+
+<div id="math-warning">Math rendering is offline. The page still works — formulas show as readable TeX until <code>../notes/vendor/mathjax/tex-mml-chtml.js</code> loads.</div>
+
+<div class="notice info">
+  <h3>How to use this page</h3>
+  <ul style="margin:.3rem 0">
+    <li><strong>Attempt Section A closed-book first.</strong> Pick T or F for every item; the one-line reason unlocks only after you answer, and your running score shows at the top.</li>
+    <li>Section B solutions are hidden behind step-by-step reveals — open one part at a time, after you have tried it on paper.</li>
+    <li>Section C shows model answers individually. Part 3 is a drill checklist for the item the lecturer adds fresh each year.</li>
+    <li>Answers, ticks and the theme are saved in this browser only. Nothing leaves the page.</li>
+  </ul>
+</div>
+
+<div class="notice">
+  <h3>Format assumed — verify on NTULearn</h3>
+  <p style="margin:.2rem 0">Observed in the 25-26 S1 sitting: Week 4, closed-book, written on the question paper — <strong>10 True/False + 3 application questions + 1 short answer</strong>. Scope is <strong>Weeks 1–3 only</strong>; the Week 4 lecture is not examined. This is student recollection, not an official paper.</p>
+</div>
+
+<div class="toolbar">
+  <label for="theme-select">Appearance</label>
+  <select id="theme-select">
+    <option value="system">System</option>
+    <option value="light">Light</option>
+    <option value="dark">Dark</option>
+  </select>
+  <button class="btn btn-danger" id="reset-progress">Reset saved answers</button>
+</div>
+
+
+<h2>Part 1 · Section A — True / False</h2>
+<p class="sub">10 marks, 1 each. On the real quiz only T/F is required; the reason is for your review.</p>
+
+<div class="scorebar" id="scorebar">
+  <span>Section A: <strong id="sc-answered">0</strong> / 10 answered</span>
+  <span>Correct: <strong id="sc-correct">0</strong></span>
+  <span class="sub" id="sc-msg">Attempt every item before revealing.</span>
+</div>
+
+<div id="tf-list">
+  <!-- items injected by JS from data -->
+</div>
+
+<div class="card" style="border-color: color-mix(in srgb, var(--warning) 45%, var(--border)); background: var(--warning-soft);">
+  <h3 style="margin-top:.2rem">Disputed item — seen in both circulated papers</h3>
+  <p style="margin:.3rem 0"><em>"Finding a feasible path between two points in a complicated map is a class NP problem."</em></p>
+  <p class="sub" style="margin:.3rem 0">This is <strong>not</strong> one of the ten scored items above — it is called out separately in the source because it is genuinely ambiguous. Be ready to argue it either way.</p>
+  <div class="tf-actions" style="margin-left:0">
+    <button type="button" data-disp="T" aria-pressed="false">Argue True</button>
+    <button type="button" data-disp="F" aria-pressed="false">Argue False</button>
+  </div>
+  <div class="reveal" id="disp-reveal" hidden>
+    <p style="margin:.2rem 0"><code>notes.tex</code> states \(P \subseteq NP\). Finding a feasible path in a graph is solvable by BFS/DFS in polynomial time, so it is in <strong>P</strong>, and therefore <em>also</em> in <strong>NP</strong> by containment.</p>
+    <ul style="margin:.3rem 0">
+      <li>Under the strict definition ("in NP") the statement is <strong>True</strong>.</li>
+      <li>Under the colloquial exam reading ("NP means hard / in NP but not in P") it is <strong>False</strong>.</li>
+    </ul>
+    <p style="margin:.2rem 0">Name the ambiguity in your answer — that is the point the item tests. The course slides use the strict containment definition, so if forced, answer <strong>True</strong> and justify by \(P \subseteq NP\).</p>
+  </div>
+</div>
+
+
+<h2>Part 1 · Section B — Application</h2>
+
+<h3>B1. Permutation crossover (10 marks)</h3>
+<p>For a permutation-coded GA the selected parents are</p>
+<pre>P1 = 1 2 3 [4 5 6 7] 8 9      (shaded = positions 4–7)
+P2 = 4 5 2 [1 8 7 6] 9 3</pre>
+<p>(i) Perform <strong>partially matched crossover (PMX)</strong> on the shaded substrings and write both offspring.
+(ii) Show the mapping you used and verify each offspring is a valid permutation.
+(iii) State one legal <strong>mutation</strong> operator for this representation and apply it once to offspring 1.</p>
+
+<details class="step"><summary>Set-up — the segment and the mapping</summary>
+<div class="body">
+<p>Segment (positions 4–7): <code>P1 = [4 5 6 7]</code>, <code>P2 = [1 8 7 6]</code>.</p>
+<p>Position-wise mapping: <code>4↔1</code>, <code>5↔8</code>, <code>6↔7</code>, <code>7↔6</code>.</p>
+</div></details>
+
+<details class="step"><summary>Offspring 1 — copy P1's segment, fill the rest from P2</summary>
+<div class="body">
+<p>Positions 1, 2, 3, 8, 9 take P2's values 4, 5, 2, 9, 3:</p>
+<ul>
+<li>pos 1: P2 = 4, already in segment → follow <code>4→1</code>; 1 is free → <strong>1</strong></li>
+<li>pos 2: P2 = 5, in segment → <code>5→8</code>; 8 is free → <strong>8</strong></li>
+<li>pos 3: P2 = 2, free → <strong>2</strong></li>
+<li>pos 8: P2 = 9, free → <strong>9</strong></li>
+<li>pos 9: P2 = 3, free → <strong>3</strong></li>
+</ul>
+<p><code>Offspring 1 = 1 8 2 | 4 5 6 7 | 9 3</code> → digits {1..9} once each ✓</p>
+</div></details>
+
+<details class="step"><summary>Offspring 2 — copy P2's segment, fill from P1</summary>
+<div class="body">
+<p>Positions 1, 2, 3, 8, 9 take P1's values 1, 2, 3, 8, 9, mapping reversed <code>1↔4</code>, <code>8↔5</code>, <code>7↔6</code>, <code>6↔7</code>:</p>
+<ul>
+<li>pos 1: P1 = 1, in segment → <code>1→4</code>; 4 free → <strong>4</strong></li>
+<li>pos 2: P1 = 2, free → <strong>2</strong></li>
+<li>pos 3: P1 = 3, free → <strong>3</strong></li>
+<li>pos 8: P1 = 8, in segment → <code>8→5</code>; 5 free → <strong>5</strong></li>
+<li>pos 9: P1 = 9, free → <strong>9</strong></li>
+</ul>
+<p><code>Offspring 2 = 4 2 3 | 1 8 7 6 | 5 9</code> → digits {1..9} once each ✓</p>
+</div></details>
+
+<details class="step"><summary>(iii) Mutation on offspring 1</summary>
+<div class="body">
+<p><strong>Swap mutation</strong> on offspring 1, swap positions 2 and 7:</p>
+<p><code>1 8 2 4 5 6 7 9 3</code> → <code>1 7 2 4 5 6 8 9 3</code> — still a permutation ✓</p>
+</div></details>
+
+
+<h3>B2. Binary encoding, decoding, selection, variation (10 marks)</h3>
+<p>A GA maximises \(f(x) = x^2\) for integer \(x \in [0, 31]\), using 5-bit chromosomes, MSB first.
+Population (size 4): <code>s1 = 11010</code>, <code>s2 = 00101</code>, <code>s3 = 10011</code>, <code>s4 = 01110</code>.</p>
+<p>(i) Decode each chromosome and give its fitness.
+(ii) Compute the roulette-wheel selection probability of each; verify they sum to 1.
+(iii) Cross <code>s1 × s3</code> with a one-point cut after bit 2. Decode both children and give their fitness.
+(iv) With per-bit mutation probability \(p_m = 0.01\), give the <strong>expected</strong> number of flipped bits in the 20-bit population and \(\Pr(\text{no bit flips at all})\). Explain why the expected value is not the number you will actually see.</p>
+
+<details class="step"><summary>(i) Decode and fitness</summary>
+<div class="body">
+<table class="data">
+<tr><th>chrom</th><th>bits</th><th class="num">x</th><th class="num">f = x²</th></tr>
+<tr><td>s1</td><td>11010</td><td class="num">26</td><td class="num">676</td></tr>
+<tr><td>s2</td><td>00101</td><td class="num">5</td><td class="num">25</td></tr>
+<tr><td>s3</td><td>10011</td><td class="num">19</td><td class="num">361</td></tr>
+<tr><td>s4</td><td>01110</td><td class="num">14</td><td class="num">196</td></tr>
+<tr><td><strong>Σ</strong></td><td></td><td class="num"></td><td class="num"><strong>1258</strong></td></tr>
+</table>
+</div></details>
+
+<details class="step"><summary>(ii) Roulette-wheel probabilities</summary>
+<div class="body">
+<p>\(p_i = f_i / 1258\):</p>
+<ul>
+<li><code>p1 = 676/1258 = 0.5374</code></li>
+<li><code>p2 = 25/1258 = 0.0199</code></li>
+<li><code>p3 = 361/1258 = 0.2870</code></li>
+<li><code>p4 = 196/1258 = 0.1558</code></li>
+</ul>
+<p>Sum <code>= 1.0001</code> (rounding) ✓</p>
+</div></details>
+
+<details class="step"><summary>(iii) One-point crossover s1 × s3, cut after bit 2</summary>
+<div class="body">
+<p><code>s1 = 11|010</code>, <code>s3 = 10|011</code>:</p>
+<ul>
+<li>child A = <code>11|011</code> = <code>11011</code> → <code>x = 27</code> → <code>f = 729</code></li>
+<li>child B = <code>10|010</code> = <code>10010</code> → <code>x = 18</code> → <code>f = 324</code></li>
+</ul>
+</div></details>
+
+<details class="step"><summary>(iv) Mutation: expected flips and Pr(no flips)</summary>
+<div class="body">
+<p>20 bits, \(p_m = 0.01\):</p>
+<ul>
+<li>\(E[\text{flips}] = 20 \times 0.01 = 0.2\)</li>
+<li>\(\Pr(\text{no flips}) = (1 - 0.01)^{20} = 0.99^{20} \approx 0.8179\)</li>
+</ul>
+<p><code>0.2</code> is an average over many generations. In any single generation the realised count is a non-negative integer drawn from <code>Binomial(20, 0.01)</code>; the most probable value is <strong>0</strong> (≈ 82 %), then 1 (≈ 17 %). You never literally see "0.2 bits" mutate.</p>
+</div></details>
+
+
+<h3>B3. Integer encoding — graph colouring (10 marks)</h3>
+<p>A map has 6 regions. Adjacent pairs (sharing a border) are
+<code>R1–R2, R1–R3, R2–R3, R2–R4, R3–R5, R4–R5, R4–R6, R5–R6</code>.
+Colours are <code>{1, 2, 3}</code>, chromosome \(c \in \{1,2,3\}^6\) with \(c_k\) the colour of region \(k\).</p>
+<p>(i) Write the constraint-violation function \(V(c)\) and a fitness \(f(c)\) to be maximised.
+(ii) Give a chromosome with \(V(c) = 0\), or explain why none exists.
+(iii) Would 2 colours suffice? Justify from the adjacency structure.
+(iv) State one legal mutation and one legal crossover for this representation.</p>
+
+<details class="step"><summary>(i) Violation and fitness</summary>
+<div class="body">
+<p>Edges: \(E = \{R_1R_2, R_1R_3, R_2R_3, R_2R_4, R_3R_5, R_4R_5, R_4R_6, R_5R_6\}\), \(|E| = 8\).</p>
+<p>\[ V(c) = \sum_{(u,v) \in E} \mathbf{1}[c_u = c_v] \]</p>
+<p>(number of edges whose endpoints share a colour).</p>
+<p>\[ f(c) = |E| - V(c) = 8 - V(c), \qquad \text{maximised}; \quad f = 8 \iff V = 0 \iff \text{proper colouring}. \]</p>
+<p>Unlike the N-queens permutation, this encoding <strong>cannot</strong> make the constraint unviolatable, so constraint handling is paid for in the objective.</p>
+</div></details>
+
+<details class="step"><summary>(ii) A valid chromosome</summary>
+<div class="body">
+<p><code>c = (1, 2, 3, 1, 2, 3)</code>:</p>
+<p><code>R1R2</code> 1≠2 ✓ · <code>R1R3</code> 1≠3 ✓ · <code>R2R3</code> 2≠3 ✓ · <code>R2R4</code> 2≠1 ✓ · <code>R3R5</code> 3≠2 ✓ · <code>R4R5</code> 1≠2 ✓ · <code>R4R6</code> 1≠3 ✓ · <code>R5R6</code> 2≠3 ✓ → <code>V = 0</code>. Valid.</p>
+</div></details>
+
+<details class="step"><summary>(iii) Would 2 colours suffice?</summary>
+<div class="body">
+<p><strong>No.</strong> <code>R1, R2, R3</code> are mutually adjacent (a triangle / \(K_3\)), which needs 3 distinct colours. 2 colours can only properly colour bipartite (odd-cycle-free) graphs.</p>
+</div></details>
+
+<details class="step"><summary>(iv) Operators</summary>
+<div class="body">
+<p>Mutation: <strong>random resetting</strong> (draw a fresh colour in <code>{1,2,3}</code>) or <strong>creep</strong> (±1 mod 3).</p>
+<p>Crossover: one-point / multi-point / uniform, as for binary strings.</p>
+</div></details>
+
+
+<h2>Part 1 · Section C — Short answer (10 marks)</h2>
+<p><strong>Predicted:</strong> "Discuss the implications of the No Free Lunch theorem of optimization on problem-solving."</p>
+<p class="sub">Alternates that have appeared are below. Write your own answer first, then reveal.</p>
+
+<details class="step"><summary>Model answer — No Free Lunch (predicted)</summary>
+<div class="body">
+<p>Plot an algorithm's performance over <em>all</em> possible objective functions. NFL (Wolpert &amp; Macready, 1997) says that, averaged uniformly over that set, <strong>every algorithm has the same mean performance</strong> — even random search. Adding domain knowledge (a tailored representation, repair rules, seeded solutions, specialised operators) <em>deforms</em> the performance curve: a higher peak on the targeted problem class bought with a lower value elsewhere; the enclosed area is unchanged.</p>
+<p>Implications for problem-solving:</p>
+<ol>
+<li>There is <strong>no universal optimiser</strong>; "best algorithm" is only meaningful relative to a problem class.</li>
+<li>Real engineering problems are a <strong>structured, non-uniform subset</strong> of all functions, so exploiting their structure (bias) is exactly the right move — NFL does <em>not</em> say algorithm choice is irrelevant here.</li>
+<li>The working question is <strong>which bias matches this problem</strong>, answered empirically on representative instances.</li>
+<li>Benchmark/leaderboard results transfer only to problems that share structure with the benchmark.</li>
+</ol>
+</div></details>
+
+<details class="step"><summary>Model answer — Fitness-proportionate selection over the search (alternate)</summary>
+<div class="body">
+<p>\(p_i = f_i / \sum_j f_j\).</p>
+<ul>
+<li><em>Early:</em> the initial population often contains a few chromosomes with far higher fitness than the rest. Their selection probability dominates, they flood the mating pool, diversity crashes ⇒ <strong>premature convergence</strong> to a local optimum.</li>
+<li><em>Late:</em> as the population converges, all fitness values become similar. Ratios \(f_i / \sum_j f_j\) approach uniform, so selection pressure <strong>vanishes</strong> and the search stops making directed progress (drifts randomly).</li>
+<li>It is also unusable with negative fitness and sensitive to additive scaling.</li>
+<li>Remedies: fitness scaling (sigma / linear / power), or switch to <strong>rank</strong> or <strong>tournament</strong> selection, which depend only on order and keep pressure roughly constant throughout the run.</li>
+</ul>
+</div></details>
+
+<details class="step"><summary>Model answer — Evolutionary "creativity" (alternate)</summary>
+<div class="body">
+<p>The ability of an EA to produce solutions the designer did not anticipate and did not build in. Because selection acts only on the fitness score and variation (mutation, recombination) is undirected, the algorithm explores regions of the search space that human intuition would skip. It can therefore exploit loopholes in the fitness function, combine partial structures from different lineages into novel wholes, or find unconventional designs (e.g. odd antenna geometries, unexpected circuit topologies). The flip side: the same undirected search will "creatively" exploit any mis-specification in the fitness function, so creativity is only as useful as the objective is honest.</p>
+</div></details>
+
+
+<h2>Part 3 · The "one unseen item" prediction</h2>
+<p>Every recalled sitting added one item <strong>not</strong> in the two circulated past papers: 25-26 S1 added the number-base decode; the Feb-2026 sitting added the grid three-colouring construction and "evolutionary creativity". Expect one fresh item drawn from Weeks 1–3 material the circulated papers never touched. Ranked by likelihood — tick each once you can do the 60-second drill from memory.</p>
+
+<ul class="checklist" id="pred-list"><!-- injected --></ul>
+
+
+<h2>Quick-reference formulas — reproduce from memory</h2>
+<p class="sub">Right-hand sides are blurred. Say it aloud, then click to check.</p>
+<div class="card" id="qref"><!-- injected --></div>
+<div class="toolbar"><button class="btn" id="qref-hide-all">Blur all again</button></div>
+
+
+<h2>Likely traps</h2>
+<div class="card">
+<p style="margin:.2rem 0">From <code>notes.tex</code> §"Likely traps":</p>
+<ul>
+<li>NP ≠ non-polynomial</li>
+<li>selection favours but never guarantees</li>
+<li>parent vs survivor selection answer different questions</li>
+<li>convergence ≠ global-optimality proof</li>
+<li>"local optimum" is undefined without a neighbourhood</li>
+<li>NFL does <strong>not</strong> say algorithm choice is irrelevant on a given problem</li>
+<li>creep converges prematurely, random resetting does not</li>
+<li>arithmetic crossover cannot explore outside the parents' interval</li>
+<li>crossover never changes population-wide allele frequencies</li>
+<li>a binary mutation is uniform in application but biased in effect toward significant bits</li>
+</ul>
+</div>
+
+
+<footer>
+<p>Source: <a href="quiz-1-prediction.md">quiz-1-prediction.md</a> · <a href="rednote-quiz1-intel.md">rednote-quiz1-intel.md</a></p>
+<p>Canonical prep: <a href="../notes/beginner-notes.pdf">beginner-notes.pdf</a> · <a href="../notes/notes.pdf">notes.pdf</a> · <a href="../notes/quiz1-prep-learning.html">quiz1-prep-learning.html</a> (teaching companion)</p>
+<p>Unofficial. NTULearn is authoritative on quiz date, time, venue and format.</p>
+</footer>
+
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  "use strict";
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var STORE_KEY = 'ee6407-quiz1-prediction-practice-v1';
+  var THEME_KEY = 'ee6407-theme';
+
+  var state = { tf: {}, disp: null, pred: {}, qref: {} };
+  try {
+    var raw = localStorage.getItem(STORE_KEY);
+    if (raw) { var p = JSON.parse(raw); if (p && typeof p === 'object') state = Object.assign(state, p); }
+  } catch (e) {}
+  function save() { try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {} }
+
+  function toast(msg) {
+    var t = $('#toast'); t.textContent = msg; t.classList.add('show');
+    setTimeout(function () { t.classList.remove('show'); }, 1600);
+  }
+
+  /* ---------------- Section A data (verbatim from quiz-1-prediction.md) ---------------- */
+  var TF = [
+    { q: 'The offspring pool in an EA generally has higher diversity than the parent population it was produced from.',
+      a: 'F', why: 'The offspring pool has already passed through parent selection and survivor selection; low-fitness variety is culled. Diversity is normally <em>highest at random initialisation</em> and decays.' },
+    { q: '"NP" stands for <em>nondeterministic polynomial time</em>, not <em>non-polynomial</em>.',
+      a: 'T', why: 'NP = problems whose "yes" certificates are checkable in polynomial time by a nondeterministic machine. \\(P \\subseteq NP\\). "Non-polynomial" is the classic wrong expansion.' },
+    { q: 'Branch-and-bound is one of the standard metaheuristic search methods.',
+      a: 'F', why: 'Branch-and-bound is an <strong>exact</strong> tree-search framework: run to completion it certifies the optimum. Metaheuristics (GA, ACO, PSO, SA) are stochastic and certify nothing.' },
+    { q: 'Fitness-proportionate (roulette-wheel) selection probabilities are unchanged if the same positive constant is added to every individual\u2019s fitness.',
+      a: 'F', why: '\\(p_i = f_i / \\sum f_j\\). Adding \\(c\\) to every \\(f_i\\) changes \\(p_i\\) to \\((f_i + c)/(\\sum f_j + nc)\\) — the ranking is preserved but the probabilities flatten toward uniform. Rank / tournament selection avoid this.' },
+    { q: 'Applying ordinary one-point crossover to two permutation chromosomes always produces two valid permutations.',
+      a: 'F', why: 'One-point crossover on permutations duplicates some symbols and drops others. Valid permutation operators: order-1, PMX, cycle, edge recombination; valid mutations: swap, insert, scramble, inversion.' },
+    { q: 'In a binary-coded GA, the effect of a single bit flip on the decoded value does not depend on which bit is flipped.',
+      a: 'F', why: 'Flipping the MSB changes the decoded integer by \\(2^{L-1}\\); the LSB by 1. The <em>application</em> of mutation is uniform but its <em>effect</em> is biased toward significant bits. <strong>Gray coding</strong> is the standard remedy (numerically adjacent values differ by one bit).' },
+    { q: 'In self-adaptive mutation of a real vector, the strategy parameter \u03c3 should be mutated <em>before</em> the object variables.',
+      a: 'T', why: 'Fitness is measured on \\(x\\) only, so a new \\(\\sigma\'\\) can only be judged through the \\(x\'\\) it produced. Mutating \\(\\sigma\\) first, then using it to mutate \\(x\\), creates that dependency.' },
+    { q: 'Whole arithmetic crossover with \u03b1 = 0.5 yields two identical offspring, and no arithmetic-crossover offspring can fall outside the box spanned by the two parents.',
+      a: 'T', why: '\\(z^{(1)} = \\alpha x + (1-\\alpha)y\\), \\(z^{(2)} = (1-\\alpha)x + \\alpha y\\); at \\(\\alpha = 0.5\\) both equal \\((x+y)/2\\). Every arithmetic offspring is a convex combination of the parents \u21d2 inside their box. <strong>Blend crossover</strong> is the operator that can reach outside it.' },
+    { q: 'Creep mutation on an integer genome can drive premature convergence, whereas random resetting does not have that tendency.',
+      a: 'T', why: 'Creep adds small \u00b1 steps; they accumulate, individuals drift together \u21d2 premature convergence. Random resetting draws a fresh value (the true analogue of a bit flip) and does not have this drift.' },
+    { q: 'Recombination alone can restore an allele value that has been lost from the entire population.',
+      a: 'F', why: 'Crossover only <em>redistributes</em> alleles already present. Starting from a 1:1 zero/one ratio, crossover leaves the population-wide ratio at 1:1 forever; a lost allele is unrecoverable without <strong>mutation</strong>.' }
+  ];
+
+  var PRED = [
+    { t: 'Edge recombination crossover',
+      d: 'The only permutation operator not yet examined (order-1, PMX, cycle all have). Drill: build the neighbour table from two 6-city tours, mark common edges with <code>+</code>, then construct the child by the rule order — common edge → shortest remaining list → random tie-break → jump to a random unused city on an empty list. Always end by checking every city appears once. See <code>../notes/notes.tex</code> §"Permutation".' },
+    { t: 'Roulette-wheel arithmetic with a scaling trap',
+      d: 'Give fitnesses including a 0 or a negative value, or ask what adding a constant does. Drill: <code>A,B,C</code> with fitness <code>3,1,2</code> → <code>p = 1/2, 1/6, 1/3</code>; now add 10 to each → <code>p = 13/36, 11/36, 12/36</code> — ranking kept, probabilities flattened.' },
+    { t: 'Gray coding',
+      d: 'Why plain binary mutation is biased and how Gray code fixes it (adjacent values differ in one bit). Possibly: convert a 4-bit binary value to Gray or back.' },
+    { t: 'Self-adaptive mutation order',
+      d: 'State and justify: mutate \\(\\sigma\\) before \\(x\\).' },
+    { t: 'Arithmetic vs blend crossover — the bounding box',
+      d: 'Show arithmetic offspring stay inside \\([x_i, y_i]\\); blend with \\(\\alpha = 0.5\\), \\(x_i = 0.3\\), \\(y_i = 0.7\\) samples from \\([0.1, 0.9]\\).' },
+    { t: 'Creep vs random resetting on integers',
+      d: 'Which converges prematurely and why.' },
+    { t: 'GP tree node/edge counting',
+      d: 'For an expression with \\(L\\) leaves built from binary operators: \\(L - 1\\) internal nodes, \\(2(L - 1)\\) edges. Reading order = operator precedence, root applied last.' },
+    { t: '<code>y = M(x)</code> classification with S, F, f',
+      d: 'Classify a described task as optimisation / modelling / simulation and identify search space, feasible set, objective.' },
+    { t: 'Binary → bounded real decode',
+      d: '\\(\\Gamma(a) = x + \\frac{y-x}{2^L - 1} \\sum a_i 2^{L-i}\\) — divide by \\(2^L - 1\\), <strong>not</strong> \\(2^L\\). (Trinary analogue uses \\(3^L - 1\\).)' }
+  ];
+
+  var QREF = [
+    ['classify', 'x unknown \u2192 optimisation ; M unknown \u2192 modelling ; y unknown \u2192 simulation'],
+    ['roulette', 'p_i = f_i / \u03a3_j f_j'],
+    ['N-queens', 'attack iff |q_i \u2212 q_j| = |i \u2212 j| ; max fitness = C(N,2)'],
+    ['binary\u2192int', 'z = \u03a3_{k=0}^{L-1} 2^k b_k'],
+    ['b\u2192real', '\u0393(a) = a_lo + (a_hi \u2212 a_lo)/(2^L \u2212 1) \u00b7 \u03a3_{i=1}^{L} a_i 2^{L\u2212i}'],
+    ['trinary\u2192real', 'same with base 3 and (3^L \u2212 1)'],
+    ['mutation', 'E[flips] = N\u00b7L\u00b7p_m ; Pr(no flip) = (1 \u2212 p_m)^{N\u00b7L} ; guide 1/\u03bc \u2272 p_m \u2272 1/L'],
+    ['arithmetic xover', 'z_i = \u03b1 x_i + (1\u2212\u03b1) y_i (\u03b1 = 0.5 \u21d2 identical children, stays in parent box)'],
+    ['blend xover', 'd_i = y_i \u2212 x_i , z_i ~ U[x_i \u2212 \u03b1 d_i , y_i + \u03b1 d_i]'],
+    ['graph colouring', 'V(c) = \u03a3_{(u,v)\u2208E} 1[c_u = c_v] , f = |E| \u2212 V'],
+    ['GP tree', 'L leaves \u21d2 L\u22121 internal nodes \u21d2 2(L\u22121) edges']
+  ];
+
+  /* ---------------- render Section A ---------------- */
+  var list = $('#tf-list');
+  TF.forEach(function (item, i) {
+    var id = 'tf' + i;
+    var div = document.createElement('div');
+    div.className = 'tf card';
+    div.id = id;
+    div.innerHTML =
+      '<div class="stem"><span class="n">' + (i + 1) + '.</span><span>' + item.q + '</span></div>' +
+      '<div class="tf-actions">' +
+        '<button type="button" data-v="T" aria-pressed="false">True</button>' +
+        '<button type="button" data-v="F" aria-pressed="false">False</button>' +
+      '</div>' +
+      '<div class="reveal" hidden><span class="tag"></span> <span class="txt">' + item.why + '</span></div>';
+    list.appendChild(div);
+
+    var btns = div.querySelectorAll('.tf-actions button');
+    var reveal = div.querySelector('.reveal');
+    var tag = div.querySelector('.tag');
+
+    function apply(v, fromLoad) {
+      btns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.v === v)); });
+      var correct = (v === item.a);
+      div.classList.toggle('right', correct);
+      div.classList.toggle('wrong', !correct);
+      tag.textContent = 'Answer: ' + item.a + (correct ? '  \u2014 you were right.' : '  \u2014 you put ' + v + '.');
+      reveal.hidden = false;
+      if (!fromLoad) { state.tf[id] = v; save(); }
+      updateScore();
+      if (window.MathJax && window.MathJax.typesetPromise) window.MathJax.typesetPromise([reveal]);
+    }
+    btns.forEach(function (b) { b.addEventListener('click', function () { apply(b.dataset.v, false); }); });
+    if (state.tf[id]) apply(state.tf[id], true);
+  });
+
+  function updateScore() {
+    var answered = 0, correct = 0;
+    TF.forEach(function (item, i) {
+      var v = state.tf['tf' + i];
+      if (v) { answered++; if (v === item.a) correct++; }
+    });
+    $('#sc-answered').textContent = answered;
+    $('#sc-correct').textContent = correct;
+    var msg = $('#sc-msg');
+    if (answered < 10) msg.textContent = (10 - answered) + ' left. Reasons unlock as you answer.';
+    else msg.textContent = 'All answered \u2014 ' + correct + '/10. Review every reason, not just the wrong ones.';
+  }
+  updateScore();
+
+  /* ---------------- disputed item ---------------- */
+  (function () {
+    var btns = document.querySelectorAll('[data-disp]');
+    var rev = $('#disp-reveal');
+    function apply(v, fromLoad) {
+      btns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.disp === v)); });
+      rev.hidden = false;
+      if (!fromLoad) { state.disp = v; save(); }
+      if (window.MathJax && window.MathJax.typesetPromise) window.MathJax.typesetPromise([rev]);
+    }
+    btns.forEach(function (b) { b.addEventListener('click', function () { apply(b.dataset.disp, false); }); });
+    if (state.disp) apply(state.disp, true);
+  })();
+
+  /* ---------------- Part 3 checklist ---------------- */
+  var pl = $('#pred-list');
+  PRED.forEach(function (item, i) {
+    var id = 'pred' + i;
+    var li = document.createElement('li');
+    li.innerHTML =
+      '<label><input type="checkbox"> <span>' + (i + 1) + '. ' + item.t + '</span></label>' +
+      '<div class="drill">' + item.d + '</div>';
+    pl.appendChild(li);
+    var cb = li.querySelector('input');
+    function apply(fromLoad) {
+      li.classList.toggle('done', cb.checked);
+      if (!fromLoad) { state.pred[id] = cb.checked; save(); }
+    }
+    cb.addEventListener('change', function () { apply(false); });
+    if (state.pred[id]) { cb.checked = true; apply(true); }
+  });
+
+  /* ---------------- quick-reference recall ---------------- */
+  var qr = $('#qref');
+  QREF.forEach(function (pair, i) {
+    var id = 'qref' + i;
+    var row = document.createElement('div');
+    row.className = 'qref-row';
+    row.innerHTML =
+      '<span class="lhs">' + pair[0] + '</span>' +
+      '<span class="rhs hidden-val">' + pair[1] + '</span>' +
+      '<button type="button">reveal</button>';
+    qr.appendChild(row);
+    var rhs = row.querySelector('.rhs');
+    var btn = row.querySelector('button');
+    function show(v, fromLoad) {
+      rhs.classList.toggle('hidden-val', !v);
+      btn.textContent = v ? 'hide' : 'reveal';
+      if (!fromLoad) { state.qref[id] = v; save(); }
+    }
+    btn.addEventListener('click', function () { show(rhs.classList.contains('hidden-val'), false); });
+    if (state.qref[id]) show(true, true);
+  });
+  $('#qref-hide-all').addEventListener('click', function () {
+    document.querySelectorAll('#qref .rhs').forEach(function (r) { r.classList.add('hidden-val'); });
+    document.querySelectorAll('#qref button').forEach(function (b) { b.textContent = 'reveal'; });
+    state.qref = {}; save();
+    toast('All hidden again.');
+  });
+
+  /* ---------------- theme ---------------- */
+  (function () {
+    var sel = $('#theme-select');
+    var saved = 'system';
+    try { saved = localStorage.getItem(THEME_KEY) || 'system'; } catch (e) {}
+    function apply(v) {
+      if (v === 'system') document.documentElement.removeAttribute('data-theme');
+      else document.documentElement.setAttribute('data-theme', v);
+    }
+    sel.value = saved; apply(saved);
+    sel.addEventListener('change', function () {
+      apply(sel.value);
+      try { localStorage.setItem(THEME_KEY, sel.value); } catch (e) {}
+    });
+  })();
+
+  /* ---------------- reset ---------------- */
+  $('#reset-progress').addEventListener('click', function () {
+    if (!window.confirm('Clear all saved answers and ticks for this page? This cannot be undone.')) return;
+    state = { tf: {}, disp: null, pred: {}, qref: {} };
+    try { localStorage.removeItem(STORE_KEY); } catch (e) {}
+    location.reload();
+  });
+})();
+</script>
+
+<script>
+  (function () {
+    var warned = false;
+    function warn() {
+      if (warned) return;
+      warned = true;
+      var el = document.getElementById('math-warning');
+      if (el && !(window.MathJax && window.MathJax.typesetPromise)) el.classList.add('show');
+    }
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = '../notes/vendor/mathjax/tex-mml-chtml.js';
+    s.onerror = warn;
+    document.head.appendChild(s);
+    setTimeout(warn, 3500);
+  })();
+</script>
+</body>
+</html>
