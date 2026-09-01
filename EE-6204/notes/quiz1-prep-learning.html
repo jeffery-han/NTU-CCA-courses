@@ -392,7 +392,8 @@ leave the feasible region. So the min-ratio row is exactly how far you can go.</
 <p>LP: <code>max z = 50 x1 + 40 x2</code>, s.t. <code>x1 + x2 &le; 9</code>,
 <code>2 x1 + x2 &le; 14</code>. Standard form adds slacks \(s_1, s_2\); the objective row is
 \(z - 50x_1 - 40x_2 = 0\). At each tableau, choose the entering variable and the leaving row,
-then apply the pivot. The tool checks your choice against the rules.</p>
+then apply the pivot. The tool checks your choice against the rules and follows the
+<em>most-negative</em> entering default so it can walk one fixed path.</p>
 <div id="walker-body"></div>
 </div>
 
@@ -786,8 +787,16 @@ writing the area.</div>
         var ev = Number(e.value), lv = Number(l.value);
         if (ev !== T.enter) {
           fb.className = 'fb no';
-          fb.innerHTML = 'The entering column must have a <strong>negative</strong> bottom-row entry. ' +
-            'Here that is <strong>' + COLS[T.enter] + '</strong> (' + fmt(T.z[T.enter]) + ').';
+          if (T.z[ev] < 0) {
+            fb.innerHTML = '<strong>' + COLS[ev] + '</strong> is a legal entering choice too &mdash; its ' +
+              'bottom-row entry ' + fmt(T.z[ev]) + ' is negative. This walker follows the ' +
+              '<em>most-negative</em> default so it can show one fixed path: pick <strong>' +
+              COLS[T.enter] + '</strong> (' + fmt(T.z[T.enter]) + ') to continue.';
+          } else {
+            fb.innerHTML = 'The entering column must have a <strong>negative</strong> bottom-row entry. ' +
+              COLS[ev] + ' is ' + fmt(T.z[ev]) + ' &ge; 0. Here the negative entry is <strong>' +
+              COLS[T.enter] + '</strong> (' + fmt(T.z[T.enter]) + ').';
+          }
           return;
         }
         if (lv !== T.leaveRow) {

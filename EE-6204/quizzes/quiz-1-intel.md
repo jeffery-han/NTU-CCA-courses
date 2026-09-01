@@ -15,13 +15,17 @@ venue, weighting, open/closed book) on NTULearn.**
 
 | Note title | Author | Posted | Likes | What it contains |
 |---|---|---|---:|---|
-| `以后选6204的同学有福了` | 小心地滑 | 2026-02-06 (edited) | 25 | **Most decisive.** Reconstruction of the **Feb 2026 sitting** — the first quiz set by the new Part-1 lecturer **Prof. Su Rong**. Gives explicit weighting and topic split (see below). Comments confirm the answer format is **handwritten on paper**. |
+| `以后选6204的同学有福了` (cover text: `我爱死Prof. Su Rong了 / 新老师开盲盒成功`) | 小心地滑 | 2026-02-06 (edited) | 25 | **Most decisive.** One post. Reconstruction of the **Feb 2026 sitting** — the first quiz set by the new Part-1 lecturer. Gives explicit weighting and topic split (see below). Comments confirm the answer format is **handwritten on paper**. |
 | `EE6204quiz1` | aun | 2025-09-13 | 16 | The **AY25-26 S1 (Sep 2025) sitting**, set by the *previous* lecturer. Format, timing, and a description of both questions. Comments add detail (VAM, "container with a lid"). |
-| `EE6204 quiz 01` | earthgull | 2025-02-20 | 18 | The **AY24-25 S2 (Feb 2025) sitting**, previous lecturer. Two big questions: transportation, and NLP with mixed constraint types + positive-definiteness check. |
+| `EE6204 quiz 01` | earthgull | 2025-02-20 | 18 | The **AY24-25 S2 (Feb 2025) sitting**, previous lecturer. Caption: two big questions — transportation, and NLP with mixed constraint types + positive-definiteness check. *(Its images are graphical-LP case diagrams watermarked 知乎 @王源 — third-party study material, not that quiz's questions.)* |
 | `NTU EEE 6407＆6204 quiz1回顾` | 今天可以去哪玩 | 2025-09-19 | 38 | Format recap for the Sep 2025 sitting: Week 5, fill-in-blank + MCQ, ~10 sub-items, Q1 balanced transportation, Q2 NLP with Lagrange + Hessian. |
 | `🇸🇬NTU EE6204 Quiz以及GPT答案` | 梵高先生不姓梵 | 2026-07-09 | 51 | **Quiz 2 content, not Quiz 1** — DTMC/CTMC Markov chains and queueing. Listed here only so it is not mistaken for Quiz 1 material. |
-| `我爱死Prof. Su Rong了` | 小心地滑 | 2026-02-06 | 25 | Confirms the current Part-1 lecturer is **Prof. Su Rong**, teaching this part for the first time. |
 | Web search (`NTU EE6204 quiz`) | — | 2026-09 | — | Course-review sites: "two open-book quizzes, not particularly difficult." Consistent with an own-device online sitting; nothing question-specific. |
+
+**Lecturer identification.** The current Part-1 lecturer is **Prof. Su Rong**. This comes from
+the cover-image text of the 小心地滑 post above (*"I love Prof. Su Rong! New teacher, opened the
+blind box successfully"*) together with `resources/week-01-transcript.txt`, where the lecturer
+introduces himself (*"my name is So"*). Neither alone is proof; the pairing is.
 
 ---
 
