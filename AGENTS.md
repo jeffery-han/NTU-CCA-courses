@@ -4,6 +4,16 @@
 
 This workspace supports learning for the NTU MSc Computer Control & Automation (CCA) programme.  Each directory named `EE-XXXX` represents one distinct course.  Maintain two living LaTeX notes for every course, using both the course materials placed in that directory and the learner's questions as sources: a detailed teaching note for a complete beginner who has not attended the course, and a concise review note for a learner already familiar with the material.
 
+## Version control and the local working copy
+
+The local folder (an iCloud-synced directory) is the working copy the learner actually studies from.  The GitHub repository `jeffery-han/NTU-CCA-courses` is only a backup.  Every change must land in the local folder and be pushed, so that the local folder is always the newest state.
+
+- Make edits **directly in the primary local checkout on the `main` branch**, then `git push origin main` when the change is complete.  Do not leave finished work on a feature or worktree branch that the learner would have to pull or merge back themselves.
+- Before starting work, bring the local `main` up to date: `git pull --ff-only origin main` (or `git fetch` then `git merge --ff-only`).  After finishing, commit and `git push origin main` so the remote backup matches the local folder.
+- This overrides the default "branch first / never push to `main`" guidance **for this repository only**, because the learner asked for it explicitly.  Still never force-push, never rewrite published history, and never run a non-fast-forward merge into `main`.
+- If a task is forced to run in a git worktree, finish by fast-forwarding `main` to the work (`git merge --ff-only`), pushing `main`, then removing the temporary worktree and its branch (local and remote).  Use a fast-forward (no merge commit) so unrelated staged changes in the primary checkout are never swept in.
+- Commit messages should name the course and what changed (e.g. `EE-6204: add Quiz 1 prediction paper`).  Keep source materials and generated artifacts unless the learner asks to remove them.
+
 ## Directory convention
 
 ```text
