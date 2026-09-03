@@ -356,10 +356,12 @@ enumeration instead of method scores zero.
 **Source erratum (Q1):** the gradient is annotated `∇f = [7; 5]`; for `f = 5x₁+7x₂` it is
 `[5; 7]`. Does not change the optimum. Do not attribute the handwriting.
 
-## Effect on the mock — deferred, but noted
+## Effect on the mock — resolved 2026-09-03
 
-The mock (`quiz-1-prediction.*`) is still handwritten free-response and still not rebuilt. If it
-is reshaped for MCQ, **Q1/Q2 above is the best source-grounded item now available**: a tableau
-with a three-way ratio-test tie and a degenerate optimal basis (`S₂=S₃=0`) — "identify the
-entering/leaving variable and say why the BFS is degenerate". Add one graphical
-integer-lattice recognition item too.
+A dedicated MCQ paper now exists: **`quiz-1-mcq-practice.html` + `.md`** (18 single-answer items,
+official format — graphical / simplex / sensitivity-for-simplex, 60 min, no calculator). It uses
+fresh LPs that don't collide with the notes, companion, or `quiz-1-prediction.*`.
+`quiz-1-prediction.*` stays as a free-response method drill (still useful, wrong shape). The
+degeneracy / three-way-tie idea from the Week 3 exercises lives in `beginner-notes.tex` §5, and
+the graphical / lattice ideas in §3 and §7 — the MCQ paper draws on those angles without reusing
+the exact numbers.
