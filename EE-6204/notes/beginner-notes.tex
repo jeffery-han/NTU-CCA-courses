@@ -1,9 +1,10 @@
 \documentclass[11pt,a4paper]{article}
 \usepackage[margin=25mm]{geometry}
 \usepackage{amsmath,amssymb,mathtools,enumitem}
-\usepackage{xurl}
+\usepackage{url}
 \usepackage[hidelinks]{hyperref}
 \renewcommand{\texttt}[1]{\nolinkurl{#1}}
+\makeatletter\g@addto@macro\UrlBreaks{\do\-\do\_\do\/\do\.}\makeatother % break long file paths (replaces xurl)
 \setlist[itemize]{nosep,leftmargin=*}
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\T}{\mathsf{T}}
