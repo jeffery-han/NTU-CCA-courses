@@ -178,19 +178,24 @@ simplex method — built up from nothing, the way the current-run quiz tests the
 </div>
 
 <div class="notice info">
-  <h3>What Quiz 1 actually is (current run, Prof. Su Rong)</h3>
+  <h3>What Quiz 1 actually is — <em>official</em> (Prof. Su Rong announcement, 2&nbsp;Sept&nbsp;2026)</h3>
   <ul>
-    <li><strong>End of the Week&nbsp;4 lecture</strong>, ≈16&nbsp;% of the course, <strong>30 minutes</strong>.</li>
-    <li>The problem is a <strong>PDF on NTULearn</strong>; you <strong>handwrite</strong> your
-      solution, photograph it, and upload it (10–15 min extra). Bring a laptop or iPad.</li>
-    <li>Two questions on <strong>one</strong> linear program: <strong>Q1 formulate it</strong>
-      (≈30&nbsp;% of marks), <strong>Q2 solve it by the simplex method</strong> (≈70&nbsp;%),
-      then verify graphically.</li>
-    <li>All of this is <strong>unofficial</strong> student recollection — confirm the logistics on
-      NTULearn. Details: <a href="../quizzes/quiz-1-intel.md">quiz-1-intel.md</a>.</li>
+    <li><strong>Friday 4 September 2026, 20:30–21:30, at LT1</strong>, in person.
+      <strong>60 minutes</strong> are given; ~30 is enough if you pick the right method — the rest is a glitch buffer.</li>
+    <li><strong>MCQ</strong> (multiple choice) on NTULearn, through <strong>Respondus LockDown Browser</strong>
+      (install and test it beforehand). Passcode shared at <strong>20:29</strong>.
+      <strong>One submission only</strong> — once you click submit you cannot re-enter; unsubmitted at 21:30 ⇒ only saved answers are marked. Reconnect resumes where you left off.</li>
+    <li>Scope is exactly three topics: <strong>(1) the graphical method, (2) the simplex method,
+      (3) sensitivity analysis for the simplex method</strong>. Nothing else — no transportation, assignment, NLP, or duality as its own topic.</li>
+    <li>Bring: one device for NTULearn, <strong>a pen, a ruler, and several sheets of draft paper</strong>.
+      "No other equipment is needed" — so <strong>no calculator</strong>; expect clean, hand-computable numbers, and a graphical item you draw to scale.</li>
+    <li>Full text: <a href="../quizzes/quiz-1-official-announcement.pdf">quiz-1-official-announcement.pdf</a>.
+      Weighting and single- vs multi-answer are not stated — check NTULearn.</li>
   </ul>
-  <p>When you can do the mock in <a href="../quizzes/quiz-1-prediction.html">quiz-1-prediction.html</a>
-  cold in 30 minutes, you are ready.</p>
+  <p class="pitfall" style="margin-bottom:0">Heads-up: the mock
+  <a href="../quizzes/quiz-1-prediction.html">quiz-1-prediction.html</a> and modules&nbsp;2/5's "answer on paper"
+  framing were built for the earlier free-response format. The <em>methods</em> below are exactly right;
+  ignore any "handwrite / photograph / upload" wording — this quiz is MCQ.</p>
 </div>
 
 <div class="toc">
@@ -565,33 +570,30 @@ writing the area.</div>
 <!-- ==================== MODULE 10 ==================== -->
 <h2 id="m10">10 &middot; Quiz-day plan</h2>
 <div class="card">
-<h4>Before</h4>
+<h4>The night before</h4>
 <ul>
-  <li>Confirm on NTULearn: exact time, the portal link, whether your own notes / a calculator are
-    allowed, and the upload deadline.</li>
-  <li>Have paper, two pens, a charged device, and a phone camera ready. Do one full run of
-    <a href="../quizzes/quiz-1-prediction.html">the mock</a> the night before.</li>
+  <li><strong>Install and launch Respondus LockDown Browser</strong> once, from NTU's link, and sign in — don't discover a setup problem at 20:29.</li>
+  <li>Charge your device (few outlets at LT1); have a pen, a ruler, and several sheets of draft paper.</li>
+  <li>Re-run the pivot walker (module&nbsp;5) and the graphical lab (module&nbsp;3) until the arithmetic is automatic — <strong>no calculator</strong> in the room.</li>
 </ul>
-<h4>In the 30 minutes</h4>
+<h4>At LT1</h4>
+<ul>
+  <li>Arrive early. The <strong>passcode is given at 20:29</strong>; the browser locks until 21:30 once you start.</li>
+  <li>You have <strong>60 minutes</strong> for an MCQ set that should take ~30 — so there is time to check. Don't rush into wrong picks.</li>
+  <li>If you disconnect, reconnect — you resume where you were. <strong>Only click submit when you are completely done</strong>; there is no way back in.</li>
+</ul>
+<h4>Working the MCQs</h4>
 <ol>
-  <li><strong>Q1 (aim 6–7 min).</strong> Variables with units → objective + "maximise" →
-    one row per limit → \(x \ge 0\) → standard form (slacks, \(z - c^\mathsf{T}x = 0\) row).</li>
-  <li><strong>Q2 (aim 16–18 min).</strong> Initial tableau → pivot: pick a negative bottom-row
-    entry, ratio test for the leaving row, do the row operations → re-scan → repeat → stop at all
-    \(\ge 0\). Two pivots is normal.</li>
-  <li><strong>Check (aim 3–4 min).</strong> Plug \(x^\ast\) into the constraints; evaluate the
-    corner graphically; state slack values / binding constraints. If a sensitivity part appears,
-    read shadow prices straight off the final bottom row.</li>
-  <li><strong>Upload (10–15 min).</strong> Photograph every page, right way up, legible. Check the
-    upload actually went through before you close the tab.</li>
+  <li><strong>Formulation / standard-form items.</strong> Read units → objective sense → one row per limit → \(x\ge0\); for standard form add a slack per \(\le\) row and write the objective row as \(z - c^\mathsf{T}x = 0\). Count variables vs constraints if it asks which form to graph.</li>
+  <li><strong>Graphical items.</strong> Use the ruler. Draw the lines from their intercepts, shade with a test point, read the corner; slide the value line along the gradient \((c_1,c_2)\) for the optimum. Watch for unbounded / infeasible / multiple-optima pictures.</li>
+  <li><strong>Simplex-tableau items.</strong> Entering = a negative bottom-row entry; leaving = smallest \(b_i/a_{ij}\) over \(a_{ij}>0\) rows only; optimal when the whole bottom row is \(\ge 0\). A ratio-test tie ⇒ the next basis is degenerate.</li>
+  <li><strong>Sensitivity items.</strong> Shadow price of constraint \(i\) = the final bottom-row entry under slack \(s_i\). RHS range: keep \(B^{-1}(b+\Delta b)\ge 0\). Cost-coefficient range: keep the bottom-row signs. These read straight off the given final tableau.</li>
 </ol>
 <h4>If you get stuck</h4>
 <ul>
-  <li>Simplex not terminating / cycling: re-check each ratio test used \(a_{ij} &gt; 0\) rows only.</li>
-  <li>Answer looks wrong: solve it graphically — two constraints, four corners, done in two
-    minutes, and it catches most arithmetic slips.</li>
-  <li>Running out of time: a correct formulation + one correct pivot + a graphical answer still
-    scores most of the marks.</li>
+  <li>Two answers look plausible: solve the small LP graphically on your draft paper — four corners, two minutes — and see which number it matches.</li>
+  <li>Simplex option "never terminates": that's the unbounded case (no \(a_{ij}>0\) in the entering column).</li>
+  <li>Time left over: re-check every ratio test and every sign in the bottom row — that's where the wrong option is designed to catch you.</li>
 </ul>
 </div>
 
@@ -637,8 +639,10 @@ writing the area.</div>
     <a href="../quizzes/quiz-1-prediction.md">.md</a>.</p>
   <p>Built from <code>notes/beginner-notes.tex</code>, <code>notes/notes.tex</code>, the Week 1–3
   transcripts, <code>resources/EE6204_Exercises-part1.pdf</code>, and
-  <a href="../quizzes/quiz-1-intel.md">quiz-1-intel.md</a>. Quiz format and scope
-  are unofficial student recollection — verify on NTULearn.</p>
+  <a href="../quizzes/quiz-1-intel.md">quiz-1-intel.md</a>. Quiz format, scope, and logistics
+  are from Prof. Su Rong's official announcement
+  (<a href="../quizzes/quiz-1-official-announcement.pdf">quiz-1-official-announcement.pdf</a>, 2&nbsp;Sept&nbsp;2026);
+  weighting and single- vs multi-answer are still to be checked on NTULearn.</p>
 </footer>
 
 </div>

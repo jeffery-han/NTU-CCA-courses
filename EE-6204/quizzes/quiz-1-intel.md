@@ -1,13 +1,49 @@
-# EE6204 Quiz 1 — past-paper intelligence
+# EE6204 Quiz 1 — intelligence
+
+---
+
+# ★ OFFICIAL — Prof. Su Rong's announcement (2026-09-02), supersedes everything below
+
+Source: `quizzes/quiz-1-official-announcement.pdf` — the NTULearn announcement e-mail from
+**Prof EEE Su Rong (rsu@ntu.edu.sg)**, sent **Wed 2 Sept 2026, 1:45 PM SGT**, subject
+"Information about Quiz 1 (Sept. 4, 20:30 - 21:30, LT1)". This is the primary source. Where the
+unofficial sections below disagree, this section wins.
+
+| Item | Official statement |
+|---|---|
+| **Date / time** | **Friday 4 September 2026, 20:30–21:30** (browser locks until 21:30 once started) |
+| **Venue** | **LT1**, in person |
+| **Format** | **MCQ** (multiple choice). No free-response, no formulation write-up, no photo upload. |
+| **Scope** | exactly three topics: **(1) graphical method; (2) simplex method; (3) sensitivity analysis for the simplex method**. Nothing else — no transportation, assignment, NLP, or duality-as-its-own-topic. |
+| **Duration** | **60 minutes given**; "ideally 30 min is sufficient if you choose the right methods" — the extra 30 is a buffer for technical glitches. |
+| **Platform** | NTULearn quiz portal via **Respondus LockDown Browser** (mandatory; set it up beforehand). |
+| **Passcode** | shared at **20:29** on the day. |
+| **Disconnect** | reconnect and resume from the last saved point. |
+| **Submission** | **one submission only** — after you click submit you cannot re-enter. No submit by 21:30 ⇒ auto-disconnected, only saved answers are marked. |
+| **Bring** | one device for NTULearn, **a pen, a ruler, and several sheets of draft paper**. *"No other equipment is needed."* |
+
+### What the official text settles (previously open in this file)
+
+- **Calculator: NO.** "No other equipment is needed" beyond device + pen + ruler + draft paper.
+  Expect clean, hand-computable numbers. Practice the ratio test and shadow-price reads without a calculator.
+- **Duration: 60 min** allotted (target 30). The Week-2/3 transcript "30 min" and the WeChat "60 min" were each half the story.
+- **Format: MCQ**, officially — the free-response Feb-2026 shape is not this quiz.
+- **A ruler is required** ⇒ at least one item needs an actual graph drawn/read to scale (graphical method).
+- **Sensitivity is examinable**, officially, and specifically **"for the simplex method"** — i.e. read ranges/shadow prices off the final tableau, not a standalone theory topic.
+- **Not stated, still verify / assume conservatively:** exact **weighting** (still 16 vs 20 vs 32+8 — unknown); **single- vs multi-answer** MCQ; **number of questions**; open/closed book (LockDown Browser blocks other tabs/apps, so treat as **closed-book**).
+
+---
+
+# Unofficial background (past-paper recollection — for method practice only)
 
 Gathered 2026-09-02 by searching 小红书 (RedNote) for `EE6204`, `6204 quiz1`, and
 `EE6204 quiz1回顾` in a logged-in session (`type=51` notes search), plus a general web
 search and the local `resources/public-archive-2026-08-24/`.
 
-**Everything in this file is unofficial student recollection.** It is not an official paper
+**Everything from here down is unofficial student recollection.** It is not an official paper
 and not a marking scheme. Treat every recalled question and every "answer" as a study
-hypothesis to re-derive, not as ground truth. **Verify all quiz logistics (date, time,
-venue, weighting, open/closed book) on NTULearn.**
+hypothesis to re-derive, not as ground truth. The official section above is the authority for
+format, scope, and logistics; the value of what follows is now only **method revision**.
 
 ---
 
