@@ -1,6 +1,8 @@
 \documentclass[11pt,a4paper]{article}
 \usepackage[margin=25mm]{geometry}
 \usepackage{amsmath,amssymb,mathtools}
+\usepackage{graphicx}
+\graphicspath{{../resources/}}
 \usepackage{url}
 \usepackage[hidelinks]{hyperref}
 \renewcommand{\texttt}[1]{\nolinkurl{#1}}
@@ -249,5 +251,31 @@ For a small RHS perturbation of an active constraint, the associated optimal Lag
  \item Can I run the transportation optimality test and explain the loop update, and apply the Hungarian reductions?
  \item Can I distinguish a stationary point from a certified local/global optimum and write the KKT system with a consistent inequality sign convention?
 \end{itemize}
+
+\appendix
+\section{Week~3 exercise class --- source scans}
+\label{app:exercises}
+Handwritten worked solutions from the Week~3 exercise lecture (\texttt{resources/EE6204\_Exercises-part1.pdf}), for reference. The LPs are typeset and re-derived in \S2.3 and \S4.3. Q1's gradient annotation reads $[7;5]$ but should be $[5;7]$; the Q3 tree and the Q4--Q5 answers are completed in \S4.3 because the scan stops short.
+
+\begin{figure}[p]\centering
+ \fbox{\includegraphics[page=1,width=0.72\linewidth]{EE6204_Exercises-part1.pdf}}
+ \caption{Q1 graphical: $\max\ 5x_1+7x_2$ s.t.\ $4x_1+5x_2\leq20$, $2x_1+6x_2\leq24$, $6x_1+4x_2\leq16$ $\Rightarrow$ $(0,4)$, $f=28$ (degenerate --- all three lines through the optimum).}
+\end{figure}
+\begin{figure}[p]\centering
+ \fbox{\includegraphics[page=2,width=0.72\linewidth]{EE6204_Exercises-part1.pdf}}
+ \caption{Q2 simplex on the same LP: three-way ratio-test tie, degenerate optimal tableau, $z=28$.}
+\end{figure}
+\begin{figure}[p]\centering
+ \fbox{\includegraphics[page=3,width=0.72\linewidth]{EE6204_Exercises-part1.pdf}}
+ \caption{Q3 branch and bound: $\max\ 7x_1+5x_2$ s.t.\ $4x_1+6x_2\leq18$, $2x_1+6x_2\leq9$, $6x_1+3x_2\leq27$, integer $\Rightarrow$ $(4,0)$, $z=28$.}
+\end{figure}
+\begin{figure}[p]\centering
+ \fbox{\includegraphics[page=4,width=0.72\linewidth]{EE6204_Exercises-part1.pdf}}
+ \caption{Q4 graphical: $\max\ 200x+550y$ s.t.\ $100x+250y\leq5000$, $x+y\leq50$ $\Rightarrow$ $(0,20)$, value $11000$.}
+\end{figure}
+\begin{figure}[p]\centering
+ \fbox{\includegraphics[page=5,width=0.72\linewidth]{EE6204_Exercises-part1.pdf}}
+ \caption{Q5: the same LP as Q4, by the simplex method.}
+\end{figure}
 
 \end{document}

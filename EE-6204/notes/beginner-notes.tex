@@ -1,6 +1,8 @@
 \documentclass[11pt,a4paper]{article}
 \usepackage[margin=25mm]{geometry}
 \usepackage{amsmath,amssymb,mathtools,enumitem}
+\usepackage{graphicx}
+\graphicspath{{../resources/}}
 \usepackage{url}
 \usepackage[hidelinks]{hyperref}
 \renewcommand{\texttt}[1]{\nolinkurl{#1}}
@@ -224,4 +226,40 @@ An inactive inequality has $g_j(x)>0$ and therefore $\mu_j=0$; an active inequal
 \item Can I distinguish a stationary point, local optimum, and convex global optimum?
 \item Can I write all four KKT components using one consistent inequality convention?
 \end{itemize}
+
+\appendix
+\section{Original worked solutions: the Week~3 exercise class}
+\label{app:exercises}
+The five problems below were worked by hand by the lecturer in the Week~3 exercise lecture; the scans are \texttt{resources/EE6204\_Exercises-part1.pdf}. They are reproduced here only as a visual reference --- each linear program is typeset and re-derived in the graphical-method, simplex, and integer-programming sections above. Two caveats carried into those sections: Q1's gradient is annotated $\nabla f=[7;5]$ but should be $[5;7]$ (the optimum is unaffected), and the Q3 branch-and-bound tree stops at an unlabelled node, so its lower branches and the Q4--Q5 answers are completed in the notes rather than taken from the scan.
+
+\begin{figure}[p]
+  \centering
+  \fbox{\includegraphics[page=1,width=0.78\linewidth]{EE6204_Exercises-part1.pdf}}
+  \caption{Q1 --- graphical solution of $\max\ 5x_1+7x_2$ subject to $4x_1+5x_2\leq20$, $2x_1+6x_2\leq24$, $6x_1+4x_2\leq16$. Optimum $(x_1,x_2)=(0,4)$, $f=28$; all three constraint lines pass through the optimum (a degenerate vertex).}
+\end{figure}
+
+\begin{figure}[p]
+  \centering
+  \fbox{\includegraphics[page=2,width=0.78\linewidth]{EE6204_Exercises-part1.pdf}}
+  \caption{Q2 --- the same LP by the simplex method. Entering $x_2$ gives a three-way ratio-test tie ($20/5=24/6=16/4$); the optimal tableau is degenerate, with two slacks at zero. Same optimum, $z=28$.}
+\end{figure}
+
+\begin{figure}[p]
+  \centering
+  \fbox{\includegraphics[page=3,width=0.78\linewidth]{EE6204_Exercises-part1.pdf}}
+  \caption{Q3 --- branch and bound for $\max\ 7x_1+5x_2$ subject to $4x_1+6x_2\leq18$, $2x_1+6x_2\leq9$, $6x_1+3x_2\leq27$, $x_1,x_2$ integer. Relaxation optimum $(4.5,0)$; the integer optimum is $(4,0)$, $z=28$ (tree completed in the integer-programming section).}
+\end{figure}
+
+\begin{figure}[p]
+  \centering
+  \fbox{\includegraphics[page=4,width=0.78\linewidth]{EE6204_Exercises-part1.pdf}}
+  \caption{Q4 --- statement of $\max\ 200x+550y$ subject to $100x+250y\leq5000$, $x+y\leq50$ (graphical). Optimum $(0,20)$, value $11000$, derived in the worked-graphical-solution section.}
+\end{figure}
+
+\begin{figure}[p]
+  \centering
+  \fbox{\includegraphics[page=5,width=0.78\linewidth]{EE6204_Exercises-part1.pdf}}
+  \caption{Q5 --- statement of the same LP as Q4, to be solved by the simplex method.}
+\end{figure}
+
 \end{document}

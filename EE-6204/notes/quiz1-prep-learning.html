@@ -146,6 +146,9 @@ details.step .body { padding: 2px 15px 14px; border-top: 1px solid var(--border)
 
 footer { margin-top: 46px; padding-top: 16px; border-top: 1px solid var(--border); font-size: .87rem; color: var(--muted); }
 #math-warning { display: none; }
+.pdfref object { width: 100%; height: 78vh; border: 1px solid var(--border); border-radius: 10px; background: var(--surface-2); }
+.pdfref figcaption { font-size: .85rem; color: var(--muted); margin-top: 6px; }
+.pdfref .fallback { margin: 0; padding: 14px; font-size: .9rem; }
 </style>
 </head>
 <body>
@@ -203,6 +206,7 @@ simplex method — built up from nothing, the way the current-run quiz tests the
     <li><a href="#m8">Legacy topics: transportation &amp; NLP</a></li>
     <li><a href="#m9">Recall trainer</a></li>
     <li><a href="#m10">Quiz-day plan</a></li>
+    <li><a href="#ref-ex">Reference: the Week&nbsp;3 exercise class</a></li>
   </ol>
 </div>
 
@@ -591,14 +595,49 @@ writing the area.</div>
 </ul>
 </div>
 
+<!-- ==================== REFERENCE ==================== -->
+<h2 id="ref-ex">Reference &middot; the Week&nbsp;3 exercise class</h2>
+<div class="notice info">
+  <p>Five problems the lecturer worked by hand in the Week&nbsp;3 exercise lecture. The same LPs
+  are typeset and re-derived in <a href="beginner-notes.pdf">beginner-notes.pdf</a> (worked
+  graphical solution, the ratio-test/degeneracy box, and the new integer-programming section);
+  these scans are here only so you can see the original working and the marking style.</p>
+  <ul>
+    <li><strong>Q1 &mdash; graphical.</strong> \(\max\ 5x_1+7x_2\) s.t. \(4x_1+5x_2\le20,\ 2x_1+6x_2\le24,\ 6x_1+4x_2\le16\)
+      \(\Rightarrow\) \((0,4)\), \(f=28\). Degenerate: all three lines pass through the optimum.
+      <em>(Source note: the gradient is written \([7;5]\) but should be \([5;7]\); the answer is unaffected.)</em></li>
+    <li><strong>Q2 &mdash; simplex</strong> on the same LP. Entering \(x_2\) gives a three-way ratio-test tie
+      \((20/5=24/6=16/4)\); the optimal tableau is degenerate (two slacks at zero), \(z=28\).</li>
+    <li><strong>Q3 &mdash; branch and bound.</strong> \(\max\ 7x_1+5x_2\) s.t. \(4x_1+6x_2\le18,\ 2x_1+6x_2\le9,\ 6x_1+3x_2\le27\), integer
+      \(\Rightarrow\) integer optimum \((4,0)\), \(z=28\) (relaxation \((4.5,0)\)).
+      <strong>Branch and bound is final-exam material, not Quiz&nbsp;1</strong> &mdash; for the quiz, do integer problems by the graphical lattice method.</li>
+    <li><strong>Q4 &mdash; graphical.</strong> \(\max\ 200x+550y\) s.t. \(100x+250y\le5000,\ x+y\le50\)
+      \(\Rightarrow\) \((0,20)\), value \(11000\).</li>
+    <li><strong>Q5 &mdash; simplex</strong> on the same LP as Q4.</li>
+  </ul>
+  <p class="fallback" style="padding:0">The Q3&ndash;Q5 tree/answers are finished in the notes because the scan stops short.</p>
+</div>
+<figure class="pdfref">
+  <object data="../resources/EE6204_Exercises-part1.pdf" type="application/pdf">
+    <p class="fallback">Your browser will not show the embedded PDF here.
+      <a href="../resources/EE6204_Exercises-part1.pdf">Open EE6204_Exercises-part1.pdf</a>
+      (5 pages) in a new tab instead.</p>
+  </object>
+  <figcaption>Scroll within the frame for all five pages, or
+    <a href="../resources/EE6204_Exercises-part1.pdf">open the PDF directly</a>.
+    Source: <code>resources/EE6204_Exercises-part1.pdf</code>, from the Week&nbsp;3 exercise lecture
+    (<a href="../resources/week-03-transcript.txt">transcript</a>).</figcaption>
+</figure>
+
 <footer>
   <p>EE6204 Systems Analysis · companion to
     <a href="beginner-notes.pdf">beginner-notes.pdf</a>,
     <a href="notes.pdf">notes.pdf</a>, and the mock
     <a href="../quizzes/quiz-1-prediction.html">quiz-1-prediction.html</a> /
     <a href="../quizzes/quiz-1-prediction.md">.md</a>.</p>
-  <p>Built from <code>notes/beginner-notes.tex</code>, <code>notes/notes.tex</code>, the Week 1–2
-  transcripts, and <a href="../quizzes/quiz-1-intel.md">quiz-1-intel.md</a>. Quiz format and scope
+  <p>Built from <code>notes/beginner-notes.tex</code>, <code>notes/notes.tex</code>, the Week 1–3
+  transcripts, <code>resources/EE6204_Exercises-part1.pdf</code>, and
+  <a href="../quizzes/quiz-1-intel.md">quiz-1-intel.md</a>. Quiz format and scope
   are unofficial student recollection — verify on NTULearn.</p>
 </footer>
 
