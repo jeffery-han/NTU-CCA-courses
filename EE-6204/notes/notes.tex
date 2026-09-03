@@ -14,13 +14,13 @@
 
 \title{EE6204 Systems Analysis\\\large Linear and Nonlinear Programming Notes}
 \author{Course-note revision}
-\date{Updated: 24 August 2026}
+\date{Updated: 3 September 2026}
 
 \begin{document}
 \maketitle
 
-\noindent\textbf{Sources.} \texttt{resources/lecture-01-04-linear-and-nonlinear-programming.pdf} (Lectures 1--4) and\\
-\texttt{resources/introduction-to-linear-programming.pdf}. These notes explain and consolidate the methods; they do not reproduce every numerical tableau or worked calculation in the slides.
+\noindent\textbf{Sources.} \texttt{resources/lecture-01-04-linear-and-nonlinear-programming.pdf} (Lectures 1--4),
+\texttt{resources/introduction-to-linear-programming.pdf}, and the Week~3 exercise class (\texttt{resources/week-03-transcript.txt} + handwritten solutions \texttt{resources/EE6204\_Exercises-part1.pdf}). These notes explain and consolidate the methods; they do not reproduce every numerical tableau or worked calculation in the slides.
 
 \tableofcontents
 \newpage
@@ -91,7 +91,7 @@ Simplex moves from one BFS to an adjacent BFS while preserving feasibility and i
  \item Pivot: scale the pivot row to make its pivot one, then use row operations to make the other entries in its column zero.
  \item Exchange the entering and leaving variables in the basis, and repeat.
 \end{enumerate}
-The sign convention in a tableau must be kept consistent; never mix a minimization reduced-cost test with a maximization one. The ratio test is what prevents a step from leaving the feasible region.
+The sign convention in a tableau must be kept consistent; never mix a minimization reduced-cost test with a maximization one. The ratio test is what prevents a step from leaving the feasible region. A tie in the ratio test means the next BFS is degenerate (some basic variable becomes zero); either tied row is a valid pivot.
 
 \paragraph{Two-phase method.} When artificial variables are needed, Phase I minimizes their total (or equivalently performs the source's auxiliary-row procedure) to seek a BFS with all artificials zero. A positive minimum means the original LP is infeasible. Remove artificial columns and the Phase-I row once they have left the basis, then optimize the original objective in Phase II. This avoids treating $M$ as a numerical finite constant.
 \source{\texttt{resources/lecture-01-04-linear-and-nonlinear-programming.pdf}, slides 41--59.}
@@ -114,7 +114,9 @@ At optimal primal $x^\star$ and dual $w^\star$, complementary slackness gives a 
  x_j^\star\big(c_j-(A^\T w^\star)_j\big)&=0 &&\text{for every primal variable}.
 \end{align*}
 Thus, a strictly slack primal constraint has zero shadow price; a positive primal activity makes its dual constraint tight. In the LP setting, dual multipliers quantify the marginal value of relaxing/tightening resource right-hand sides, subject to the stated allowable range.
-\source{\texttt{resources/lecture-01-04-linear-and-nonlinear-programming.pdf}, slides 60--69.}
+
+\paragraph{Dual as a dimensionality tool.} The dual has one variable per primal constraint. A problem with more than two variables but only two constraints has a two-variable dual that can be solved graphically; recover the primal optimum by complementary slackness. Count variables against constraints and graph whichever form has two variables.
+\source{\texttt{resources/lecture-01-04-linear-and-nonlinear-programming.pdf}, slides 60--69; \texttt{resources/week-03-transcript.txt} (lecturer-stated quiz technique).}
 
 \subsection{LP sensitivity analysis}
 Sensitivity analysis asks whether a known optimum remains feasible and optimal after changing data $A$, $b$, or $c$, rather than resolving blindly.
@@ -157,7 +159,16 @@ The Hungarian method for a minimization cost matrix is:
  \item Otherwise, subtract the smallest uncovered value from every uncovered entry and add it to every doubly covered entry; leave singly covered entries unchanged. Repeat the covering test.
 \end{enumerate}
 Row/column reductions preserve relative assignment costs because every complete assignment uses exactly one item from each row and column.
-\source{\texttt{resources/lecture-01-04-linear-and-nonlinear-programming.pdf}, slides 81--90.}
+\source{\texttt{resources/lecture-01-04-linear-and-nonlinear-programming.pdf}, slides 81--90. In the Week~3 transcript the lecturer states the Hungarian/assignment method is tested in \emph{neither} Quiz~1 nor the final exam.}
+
+\subsection{Integer linear programming}
+If variables must be integers, dropping that requirement gives the \emph{LP relaxation}, whose optimal value bounds the integer optimum (from above, for a maximization). Rounding the relaxed solution is not valid --- it may be infeasible or suboptimal.
+\begin{itemize}
+ \item \textbf{Two variables:} solve graphically, then slide the objective line to its last contact with an integer lattice point inside the relaxed region. Show the value line and contact point; do not enumerate lattice points for marks.
+ \item \textbf{Branch and bound:} solve the relaxation; if $x_k=f$ is fractional, branch into $x_k\leq\lfloor f\rfloor$ and $x_k\geq\lceil f\rceil$ and recurse. Prune a node that is infeasible, bounded no better than the incumbent integer solution, or itself integer (then update the incumbent).
+\end{itemize}
+Example: $\max 7x_1+5x_2$ s.t. $4x_1+6x_2\leq18$, $2x_1+6x_2\leq9$, $6x_1+3x_2\leq27$, $x\geq0$ integer. Relaxation $(4.5,0)$, value $31.5$; branching $x_1\leq4$ then $x_2\leq0$ gives the integer optimum $(4,0)$, value $28$ (the $x_1\geq5$ branch is infeasible, the $x_2\geq1$ branch is bounded at $15.5$).
+\source{\texttt{resources/EE6204\_Exercises-part1.pdf}, Q3 (tree completed for these notes); \texttt{resources/week-03-transcript.txt}. Not in the lecture deck. Quiz~1: expect the graphical lattice method only; branch and bound is final-exam material.}
 
 \section{Nonlinear programming (NLP)}
 \subsection{One-dimensional search and Newton's method}
@@ -231,7 +242,8 @@ For a small RHS perturbation of an active constraint, the associated optimal Lag
  \item Can I formulate variables, objective, constraints, domains, and units without reversing $\leq$/$\geq$?
  \item Can I turn every LP constraint into equality form and identify slack, surplus, artificial, basic, and nonbasic variables?
  \item Can I execute one simplex pivot, state the ratio-test restriction, and diagnose unboundedness/infeasibility?
- \item Can I build the symmetric dual and use complementary slackness to infer zeros/tight constraints?
+ \item Can I build the symmetric dual and use complementary slackness to infer zeros/tight constraints, including dualising a $>2$-variable / 2-constraint LP to solve it graphically?
+ \item Can I solve a two-variable integer LP on the graph and take one branch-and-bound step?
  \item Can I test whether an old LP basis remains feasible/optimal after changing $b$, $c$, or $A$?
  \item Can I run the transportation optimality test and explain the loop update, and apply the Hungarian reductions?
  \item Can I distinguish a stationary point from a certified local/global optimum and write the KKT system with a consistent inequality sign convention?

@@ -10,10 +10,10 @@
 \newcommand{\source}[1]{\par\smallskip\noindent\textit{Source: #1.}\par\smallskip}
 \title{EE6204 Systems Analysis\\\large Beginner Notes: Linear and Nonlinear Programming}
 \author{Living course note}
-\date{Updated: 24 August 2026}
+\date{Updated: 3 September 2026}
 \begin{document}
 \maketitle
-\noindent\textbf{Scope and sources.} This self-contained note develops the supplied Linear Programming and Nonlinear Programming material from \texttt{resources/lecture-01-04-linear-and-nonlinear-programming.pdf} (PDF pp.~1--142), with introductory support from \texttt{resources/introduction-to-linear-programming.pdf} and Week~1 teaching emphasis from \texttt{resources/week-01-transcript.txt}. Newly archived public examinations and student solutions are not used here until their calculations are independently reviewed.
+\noindent\textbf{Scope and sources.} This self-contained note develops the supplied Linear Programming and Nonlinear Programming material from \texttt{resources/lecture-01-04-linear-and-nonlinear-programming.pdf} (PDF pp.~1--142), with introductory support from \texttt{resources/introduction-to-linear-programming.pdf} and teaching emphasis from the Week~1--3 lecture transcripts. The Week~3 exercise class (\texttt{resources/week-03-transcript.txt}) and its handwritten worked solutions (\texttt{resources/EE6204\_Exercises-part1.pdf}) supply the graphical and integer-programming worked examples and the examiner's marking expectations. Newly archived public examinations and student solutions are not used here until their calculations are independently reviewed.
 \tableofcontents
 
 \section{Optimisation: choosing the best feasible action}
@@ -66,6 +66,22 @@ Recognise three special outcomes:
 \end{itemize}
 Graphing gives valuable intuition but does not scale to many variables, where the feasible set is a high-dimensional polyhedron.
 
+\subsection{Worked graphical solution}
+Consider
+\[
+\begin{aligned}
+ \max\quad&200x+550y\\
+ \text{s.t.}\quad&100x+250y\leq5000,\\
+ &x+y\leq50,\qquad x,y\geq0.
+\end{aligned}
+\]
+Draw each boundary line from two intercepts: $100x+250y=5000$ passes through $(50,0)$ and $(0,20)$; $x+y=50$ passes through $(50,0)$ and $(0,50)$. The origin satisfies both ``$\leq$'' inequalities, so the feasible region is the triangle with corners $(0,0)$, $(50,0)$, and $(0,20)$ (the two lines meet at $(50,0)$, so $x+y\leq50$ never binds elsewhere). Evaluate the objective at each corner:
+\[
+ (0,0)\!:0,\qquad (50,0)\!:10000,\qquad (0,20)\!:11000.
+\]
+The optimum is $(x,y)=(0,20)$ with value $11000$. Equivalently, the gradient $(200,550)$ points up and to the right; sliding the level line $200x+550y=z$ that way, its last contact with the triangle is the vertex $(0,20)$. In an examination answer, draw and label every constraint line, shade the region, draw one value line with its gradient arrow, and mark the last-contact vertex explicitly --- the marker counts the constraint lines and looks for the value line and contact point.
+\source{\texttt{resources/EE6204\_Exercises-part1.pdf}, Q4 (problem statement only; the solution here is worked for these notes); marking expectations from \texttt{resources/week-03-transcript.txt}.}
+
 \section{Preparing an LP for systematic solution}
 Simplex methods use equality constraints and nonnegative variables. The following conversions preserve the feasible choices when the new variables are included:
 \begin{align*}
@@ -87,6 +103,13 @@ In a tableau, one pivot performs a controlled exchange:
 \end{enumerate}
 Never memorise ``most positive'' or ``most negative'' without checking how the objective row was defined. The invariant is clearer: the entering variable must improve the objective, and the leaving variable must be the first basic variable that would otherwise become negative.
 
+\paragraph{Ratio-test ties and degeneracy.} When the minimum ratio is attained in several rows at once, any of them may be the pivot row; the others then produce basic variables equal to zero. A basic feasible solution with one or more basic variables at zero is \emph{degenerate} --- geometrically, a corner where more constraint boundaries meet than the two needed to pin a point in the plane. For example,
+\[
+ \max\ 5x_1+7x_2\quad\text{s.t.}\quad 4x_1+5x_2\leq20,\ \ 2x_1+6x_2\leq24,\ \ 6x_1+4x_2\leq16,\ \ x_1,x_2\geq0
+\]
+has all three constraint lines through $(0,4)$: $5(4)=20$, $6(4)=24$, $4(4)=16$. Entering $x_2$, the ratio test gives $20/5=24/6=16/4=4$ --- a three-way tie. Whichever row is pivoted, the optimal tableau has $x_2=4$, objective $28$, and the other two slacks stuck at zero. Recognising a degenerate tableau (a ratio-test tie, or a zero in the basic-variable column at optimality) is a common short-answer target.
+\source{\texttt{resources/EE6204\_Exercises-part1.pdf}, Q1--Q2; \texttt{resources/week-03-transcript.txt}. The PDF's gradient annotation $\nabla f=[7;5]$ is transposed; for $f=5x_1+7x_2$ it is $[5;7]$, which does not change the answer.}
+
 Equality and $\geq$ rows may lack an obvious starting basis. An artificial variable supplies a temporary identity column. In the two-phase method, Phase~I minimises the sum of artificial variables. A positive Phase~I optimum proves that the original constraints are infeasible; otherwise remove the artificials and optimise the true objective in Phase~II.
 \source{\texttt{resources/lecture-01-04-linear-and-nonlinear-programming.pdf}, PDF pp.~16--59.}
 
@@ -99,6 +122,9 @@ For the pair
 \]
 the dual variable $w_i$ measures the marginal value of the corresponding primal requirement, within an allowable perturbation range. Weak duality says every feasible dual value bounds every feasible primal value. At finite optima, strong duality makes the two values equal.
 
+\paragraph{Using the dual to make a problem graphable.} The dual has exactly one variable per primal constraint and one constraint per primal variable. So a primal with many variables but only two constraints has a dual with only two variables, which can be solved graphically. If a problem is posed with more than two variables and the examiner still asks for a graphical solution, form the dual, solve the two-variable dual on paper, and recover the primal optimum from complementary slackness: a primal variable is zero wherever its dual constraint is slack, and a primal constraint is tight wherever its dual variable is positive. Count variables against constraints first, then graph whichever of the primal or dual has two variables.
+\source{\texttt{resources/week-03-transcript.txt} (lecturer's stated quiz technique: ``if I request you to use a graphic way \dots\ you have to use the duality theory to transform this into the dual problem, [which] will have a fewer number of variables'').}
+
 Complementary slackness explains which quantities can be positive:
 \[
  w_i\big((Ax)_i-b_i\big)=0,
@@ -109,6 +135,34 @@ A slack resource constraint therefore has zero shadow price; a positive activity
 
 If an optimal basis $B$ is kept after $b$ changes to $b+\Delta b$, its new basic solution is $B^{-1}(b+\Delta b)$. The old basis remains feasible exactly while this vector is nonnegative. Objective-coefficient changes instead require the reduced costs to retain their optimal signs. Outside an allowable range, re-optimise rather than extrapolating.
 \source{\texttt{resources/lecture-01-04-linear-and-nonlinear-programming.pdf}, PDF pp.~60--90.}
+
+\section{Integer linear programming}
+If some variables must take whole-number values (numbers of products, vehicles, or people), the model is an \emph{integer linear program} (ILP). Dropping the integrality requirement gives the \emph{LP relaxation}. For a maximisation, the relaxation's optimal value is an upper bound on the ILP's optimal value, but rounding a fractional relaxed solution can be infeasible or far from optimal, so rounding is not a valid method.
+
+\subsection{Small problems: the integer lattice on the graph}
+With two integer variables, solve graphically. Draw the feasible region of the relaxation, then consider only its lattice points (integer coordinates). Slide the objective level line in the improving direction until its last contact with a feasible lattice point; that point is the ILP optimum. Show the value line and the contact construction, exactly as in the continuous graphical method --- listing every lattice point and picking the best by inspection is treated as showing no method.
+
+\subsection{Larger problems: branch and bound}
+Branch and bound searches without full enumeration. Solve the LP relaxation. If its optimum is already integer, stop. Otherwise choose a variable $x_k$ with fractional value $f$ and split into two subproblems: add $x_k\leq\lfloor f\rfloor$ to one and $x_k\geq\lceil f\rceil$ to the other. Solve each relaxation and recurse. Prune a branch when it is infeasible, when its relaxation value is no better than the best integer solution found so far (the \emph{incumbent}), or when it produces an integer solution (then update the incumbent).
+
+\paragraph{Worked example.}
+\[
+\begin{aligned}
+ \max\quad&7x_1+5x_2\\
+ \text{s.t.}\quad&4x_1+6x_2\leq18,\ \ 2x_1+6x_2\leq9,\ \ 6x_1+3x_2\leq27,\ \ x_1,x_2\geq0\ \text{integer}.
+\end{aligned}
+\]
+The LP relaxation optimum is $(x_1,x_2)=(4.5,\,0)$ with value $31.5$. Branch on $x_1$:
+\begin{itemize}
+\item $x_1\geq5$: infeasible ($6x_1\leq27$ forces $x_1\leq4.5$). Prune.
+\item $x_1\leq4$: relaxation optimum $(4,\,\tfrac16)$, value $\tfrac{173}{6}\approx28.83$. Branch on $x_2$:
+ \begin{itemize}
+ \item $x_2\leq0$: optimum $(4,0)$, value $28$, integer. Set incumbent $=28$.
+ \item $x_2\geq1$: relaxation optimum $(1.5,\,1)$, value $15.5<28$. Prune.
+ \end{itemize}
+\end{itemize}
+The optimal integer solution is $(x_1,x_2)=(4,0)$ with value $28$.
+\source{\texttt{resources/EE6204\_Exercises-part1.pdf}, Q3 (the source branch-and-bound tree is left unfinished; the branches above are completed for these notes); \texttt{resources/week-03-transcript.txt}. Branch and bound is \emph{not} in \texttt{resources/lecture-01-04-linear-and-nonlinear-programming.pdf}; the lecturer introduced it verbally as ``the end of the LP.'' For Quiz~1, expect the graphical integer-lattice method rather than a full branch-and-bound tree; branch and bound itself is final-exam material.}
 
 \section{Structured LPs: transportation and assignment}
 In a transportation model, $x_{ij}$ is the amount shipped from source $i$ to destination $j$:
@@ -149,7 +203,7 @@ For the course convention
 use $L=f-\lambda^\T h-\mu^\T g$. The Karush--Kuhn--Tucker conditions are
 \begin{align*}
  \nabla_xL&=0 &&\text{(stationarity)},\\
- h_i(x)&=0,quad g_j(x)\geq0 &&\text{(primal feasibility)},\\
+ h_i(x)&=0,\quad g_j(x)\geq0 &&\text{(primal feasibility)},\\
  \mu_j&\geq0 &&\text{(dual feasibility)},\\
  \mu_jg_j(x)&=0 &&\text{(complementary slackness)}.
 \end{align*}
@@ -164,6 +218,8 @@ An inactive inequality has $g_j(x)>0$ and therefore $\mu_j=0$; an active inequal
 \item Can I add slack or surplus variables and explain their physical meaning?
 \item Can I explain the entering/leaving logic of one simplex pivot and the purpose of Phase~I?
 \item Can I form a primal--dual pair and use complementary slackness without reversing signs?
+\item Can I dualise a $>2$-variable, 2-constraint LP so it can be solved graphically?
+\item Can I solve a two-variable integer LP on the graph, and outline one branch-and-bound step?
 \item Can I distinguish a stationary point, local optimum, and convex global optimum?
 \item Can I write all four KKT components using one consistent inequality convention?
 \end{itemize}
