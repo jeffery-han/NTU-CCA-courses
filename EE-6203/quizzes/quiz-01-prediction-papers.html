@@ -1,0 +1,687 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Four predicted NTU EE6203 Quiz 1 papers in the recalled format: one short-answer question, two parts, 30 minutes, closed book. Self-marked against a mark scheme.">
+  <title>EE6203 Quiz 1 Prediction Papers</title>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+    };
+    window.mathReady = false;
+    // If the bundled renderer cannot be reached (page moved, or opened somewhere that
+    // blocks relative subresources), fall back to the CDN once before warning.
+    window.mathFallback = function () {
+      if (window.mathTried) { document.getElementById('math-warning')?.removeAttribute('hidden'); return; }
+      window.mathTried = true;
+      var s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js';
+      s.async = true;
+      s.onload = function () { window.mathReady = true; document.getElementById('math-warning')?.setAttribute('hidden',''); };
+      s.onerror = function () { document.getElementById('math-warning')?.removeAttribute('hidden'); };
+      document.head.appendChild(s);
+    };
+    window.addEventListener('load', () => {
+      window.setTimeout(() => {
+        const warning = document.getElementById('math-warning');
+        if (warning && !window.mathReady) warning.hidden = false;
+      }, 3500);
+    });
+  </script>
+  <script async src="vendor/mathjax/tex-mml-chtml.js"
+    onload="window.mathReady=true;document.getElementById('math-warning')?.setAttribute('hidden','')"
+    onerror="window.mathFallback()"></script>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f7f8fb; --surface: #ffffff; --surface-2: #eef3fb;
+      --text: #18202c; --muted: #5f6b7a; --border: #d8dee9;
+      --accent: #245ec7; --accent-soft: #e8f0ff;
+      --success: #176b45; --success-soft: #e5f6ed;
+      --warning: #8a5700; --warning-soft: #fff3d8;
+      --danger: #a33232; --danger-soft: #fdeaea;
+      --shadow: 0 12px 32px rgba(28,39,58,.08); --radius: 14px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #10141b; --surface: #171d26; --surface-2: #202a38;
+        --text: #edf2f8; --muted: #aab4c2; --border: #344052;
+        --accent: #8bb5ff; --accent-soft: #1e3558;
+        --success: #82d4ad; --success-soft: #17392d;
+        --warning: #ffd079; --warning-soft: #4a3514;
+        --danger: #ffaaaa; --danger-soft: #4a2528;
+        --shadow: 0 14px 34px rgba(0,0,0,.24);
+      }
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text);
+      font: 16px/1.62 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    .wrap { max-width: 62rem; margin: 0 auto; padding: 1.5rem 1.25rem 5rem; }
+    h1 { font-size: 1.75rem; margin: 0 0 .35rem; letter-spacing: -.01em; }
+    h2 { font-size: 1.25rem; margin: 0; }
+    h3 { font-size: 1.02rem; margin: 1.1rem 0 .3rem; }
+    .lede { color: var(--muted); margin: 0 0 1.25rem; }
+    .card { background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.15rem 1.25rem; margin: 1rem 0; box-shadow: var(--shadow); }
+    .banner { background: var(--accent-soft); border-color: var(--accent); }
+    .warn { background: var(--warning-soft); border-color: var(--warning); color: var(--warning); }
+    .rules { margin: .5rem 0 0; padding-left: 1.15rem; }
+    .rules li { margin: .28rem 0; }
+    .scoreboard { position: sticky; top: 0; z-index: 20; background: var(--surface);
+      border: 1px solid var(--border); border-radius: var(--radius); padding: .8rem 1.05rem;
+      box-shadow: var(--shadow); margin-bottom: 1.25rem; }
+    .score-head { display: flex; flex-wrap: wrap; gap: .6rem 1rem; align-items: baseline; justify-content: space-between; }
+    .score-total { font-size: 1.3rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+    .jump { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .55rem; }
+    .jump a { font-size: .85rem; text-decoration: none; color: var(--accent);
+      border: 1px solid var(--border); border-radius: 99px; padding: .15rem .6rem; }
+    .jump a:hover { border-color: var(--accent); background: var(--accent-soft); }
+    .paper { margin-top: 2.2rem; scroll-margin-top: 8rem; }
+    .paper-head { display: flex; flex-wrap: wrap; gap: .5rem 1rem; align-items: baseline;
+      border-bottom: 2px solid var(--border); padding-bottom: .5rem; }
+    .chips { display: flex; flex-wrap: wrap; gap: .35rem; }
+    .chip { font-size: .76rem; font-weight: 700; letter-spacing: .03em; text-transform: uppercase;
+      color: var(--muted); border: 1px solid var(--border); border-radius: 99px; padding: .1rem .55rem; }
+    .chip.hot { color: var(--danger); border-color: var(--danger); }
+    .timer { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin: .7rem 0 0; }
+    .clock { font-variant-numeric: tabular-nums; font-weight: 800; font-size: 1.15rem; min-width: 4.6rem; }
+    .clock.low { color: var(--warning); }
+    .clock.out { color: var(--danger); }
+    .stem { border: 1px solid var(--border); border-radius: 11px; padding: 1rem 1.1rem; margin: .9rem 0;
+      background: var(--surface); }
+    .part { border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 11px;
+      padding: .95rem 1.1rem; margin: .9rem 0; background: var(--surface); }
+    .part-tag { font-size: .78rem; font-weight: 700; letter-spacing: .04em; color: var(--muted); text-transform: uppercase; }
+    .model { margin-top: .8rem; padding: .85rem 1rem; border-radius: 9px;
+      background: var(--surface-2); border: 1px dashed var(--accent); }
+    .model[hidden] { display: none; }
+    .scheme { margin: .6rem 0 0; padding: 0; list-style: none; }
+    .scheme li { display: flex; gap: .55rem; align-items: flex-start; padding: .22rem 0; }
+    .scheme input { margin-top: .38rem; flex: none; }
+    .scheme .mk { color: var(--muted); font-size: .85rem; white-space: nowrap; }
+    .trap { margin-top: .7rem; padding: .6rem .8rem; border-radius: 8px;
+      background: var(--danger-soft); border: 1px solid var(--danger); font-size: .95rem; }
+    .checkline { margin-top: .7rem; padding: .6rem .8rem; border-radius: 8px;
+      background: var(--success-soft); border: 1px solid var(--success); font-size: .95rem; }
+    .paper-score { display: flex; flex-wrap: wrap; gap: .6rem 1rem; align-items: center;
+      margin-top: .8rem; font-weight: 700; }
+    .bar-track { flex: 1 1 12rem; height: .5rem; background: var(--surface-2); border-radius: 99px; overflow: hidden; }
+    .bar-fill { height: 100%; width: 0; background: var(--accent); transition: width .25s ease; }
+    .bar-fill.weak { background: var(--danger); } .bar-fill.mid { background: var(--warning); }
+    .bar-fill.strong { background: var(--success); }
+    button { font: inherit; border: 1px solid var(--border); background: var(--surface-2); color: var(--text);
+      border-radius: 8px; padding: .42rem .85rem; cursor: pointer; }
+    button:hover:not(:disabled) { border-color: var(--accent); }
+    button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+    @media (prefers-color-scheme: dark) { button.primary { color: #10141b; } }
+    details { border: 1px solid var(--border); border-radius: 10px; padding: .55rem .85rem; margin: .7rem 0;
+      background: var(--surface); }
+    details[open] { background: var(--surface-2); }
+    summary { cursor: pointer; font-weight: 600; }
+    table { border-collapse: collapse; width: 100%; margin: .6rem 0; font-size: .95rem; }
+    th, td { border: 1px solid var(--border); padding: .35rem .55rem; text-align: left; }
+    th { background: var(--surface-2); }
+    .scroller { overflow-x: auto; }
+    mjx-container, mjx-container[jax="CHTML"] { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+    mjx-container[display="true"] { padding-bottom: .2rem; }
+    /* A long inline formula scrolls inside its own block, so the page body never scrolls sideways. */
+    .stem, .part, .model, .checkline, .trap, .scheme li > span, .stem p, .model p, .part > p, details > p {
+      min-width: 0; overflow-x: auto; overflow-y: hidden; }
+    figure { margin: .8rem 0; }
+    figcaption { color: var(--muted); font-size: .85rem; margin-top: .3rem; }
+    footer { margin-top: 3rem; color: var(--muted); font-size: .85rem; border-top: 1px solid var(--border); padding-top: 1rem; }
+    @media print {
+      .scoreboard, .timer, .model, .jump, button, .noprint { display: none !important; }
+      body { background: #fff; } .card, .paper, .part { box-shadow: none; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>EE6203 Quiz 1 &mdash; prediction papers</h1>
+  <p class="lede">Four complete papers built to the recalled Quiz 1 shape: <strong>one question, two parts, 30 minutes, closed book</strong>.
+  Part (a) is always a direct <span>\(z\)</span>-transform of a piecewise sampled input <em>from the definition only</em>; part (b) is always the open-loop
+  sampler / ZOH / plant output plus a final-value ruling.</p>
+
+  <div id="math-warning" class="card warn" hidden>
+    Equations are not rendering. Keep this file in the <code>quizzes</code> folder next to its
+    <code>vendor/mathjax/</code> renderer, and reload.
+  </div>
+
+  <div class="card banner">
+    <h2>How to use this</h2>
+    <ul class="rules">
+      <li><strong>Sit one paper at a time, closed book, on paper.</strong> Start the timer, write full working, and do not open a model answer until the clock stops.</li>
+      <li>The formula sheet below is the only thing you may look at during a paper &mdash; it matches what the quiz supplies (necessary transform pairs; calculator allowed).</li>
+      <li><strong>Part (a) has a hard restriction:</strong> no transform table, no shift theorem. You must build the answer out of the defining sum and sum the geometric series yourself.</li>
+      <li>Mark yourself against the scheme afterwards by ticking each earned checkpoint. Method marks only count if you actually <em>wrote</em> the reason.</li>
+      <li>Target: <strong>16/20 or better with no conceptual error</strong>. Below that, the diagnosis at the bottom tells you what to reread.</li>
+    </ul>
+    <p style="margin:.7rem 0 0;color:var(--muted);font-size:.9rem">Predicted from two unofficial recalls plus the Week 3 scope announcement. This is a rehearsal of the question <em>shape</em>, not a leaked paper &mdash; the numbers here are mine.</p>
+  </div>
+
+  <div class="scoreboard" id="scoreboard">
+    <div class="score-head">
+      <div><strong>Total</strong> <span class="score-total" id="grand">0 / 80</span></div>
+      <div><button id="reset">Reset all marks</button></div>
+    </div>
+    <div class="jump">
+      <a href="#sheet">Formula sheet</a>
+      <a href="#p1">Paper 1</a><a href="#p2">Paper 2</a><a href="#p3">Paper 3</a><a href="#p4">Paper 4</a>
+      <a href="#twists">Twist bank</a><a href="#diagnosis">Diagnosis</a>
+    </div>
+  </div>
+
+  <section class="card" id="sheet">
+    <h2>Supplied sheet (open during a paper)</h2>
+    <p style="margin:.4rem 0 0">Definition, used for every part (a):</p>
+    \[ X(z)=\sum_{k=0}^{\infty}x(kT)\,z^{-k},\qquad x(kT)=x(t)\big|_{t=kT}. \]
+    <p style="margin:.6rem 0 0">Finite and infinite geometric sums, which you are expected to derive rather than quote:</p>
+    \[ \sum_{m=0}^{N-1}r^{m}=\frac{1-r^{N}}{1-r},\qquad
+       \sum_{m=0}^{\infty}r^{m}=\frac{1}{1-r}\ \ \text{for }|r|<1. \]
+    <div class="scroller">
+    <table>
+      <tr><th>\(f(t),\ t\ge 0\)</th><th>\(F(s)\)</th><th>\(F(z)\)</th></tr>
+      <tr><td>unit step \(1\)</td><td>\(1/s\)</td><td>\(\dfrac{1}{1-z^{-1}}\)</td></tr>
+      <tr><td>\(t\)</td><td>\(1/s^{2}\)</td><td>\(\dfrac{Tz^{-1}}{(1-z^{-1})^{2}}\)</td></tr>
+      <tr><td>\(e^{-at}\)</td><td>\(\dfrac{1}{s+a}\)</td><td>\(\dfrac{1}{1-e^{-aT}z^{-1}}\)</td></tr>
+      <tr><td>\(e^{+at}\)</td><td>\(\dfrac{1}{s-a}\)</td><td>\(\dfrac{1}{1-e^{aT}z^{-1}}\)</td></tr>
+    </table>
+    </div>
+    <p style="margin:.5rem 0 0">Zero-order hold in cascade with a continuous plant, when a sampler precedes the hold:</p>
+    \[ G(z)=\mathcal{Z}\!\left\{\frac{1-e^{-Ts}}{s}H(s)\right\}=(1-z^{-1})\,\mathcal{Z}\!\left\{\frac{H(s)}{s}\right\}. \]
+    <p style="margin:.5rem 0 0">Final value, <em>valid only if</em> every pole of \((1-z^{-1})Y(z)\) lies strictly inside the unit circle:</p>
+    \[ \lim_{k\to\infty}y(kT)=\lim_{z\to 1}\,(1-z^{-1})Y(z). \]
+    <p style="margin:.5rem 0 0;color:var(--muted);font-size:.9rem">Constants: \(e^{-1}=0.3679\), \(e^{-2}=0.1353\), \(e^{-3}=0.0498\), \(e^{1}=2.7183\).</p>
+  </section>
+
+  <section class="card">
+    <h2>The system, identical in all four papers</h2>
+    <figure>
+      <svg viewBox="0 0 720 120" width="100%" role="img" aria-label="Open loop chain: input x of t, sampler of period T, zero order hold, plant H of s, output y of t with an output sampler"
+           style="max-width:100%;height:auto">
+        <g fill="none" stroke="currentColor" stroke-width="1.6">
+          <line x1="8" y1="55" x2="70" y2="55"/>
+          <line x1="70" y1="55" x2="100" y2="55" stroke-dasharray="0"/>
+          <line x1="88" y1="55" x2="112" y2="34"/>
+          <circle cx="70" cy="55" r="3.2" fill="currentColor"/>
+          <circle cx="114" cy="55" r="3.2" fill="currentColor"/>
+          <line x1="118" y1="55" x2="170" y2="55"/>
+          <rect x="170" y="30" width="130" height="50" rx="6"/>
+          <line x1="300" y1="55" x2="360" y2="55"/>
+          <rect x="360" y="30" width="120" height="50" rx="6"/>
+          <line x1="480" y1="55" x2="560" y2="55"/>
+          <circle cx="560" cy="55" r="3.2" fill="currentColor"/>
+          <line x1="578" y1="55" x2="602" y2="34"/>
+          <circle cx="604" cy="55" r="3.2" fill="currentColor"/>
+          <line x1="608" y1="55" x2="700" y2="55"/>
+          <path d="M694 51 l8 4 -8 4 z" fill="currentColor"/>
+        </g>
+        <g fill="currentColor" font-size="13" font-family="-apple-system,Segoe UI,Roboto,sans-serif">
+          <text x="8" y="45">x(t)</text>
+          <text x="76" y="92" font-size="12">T</text>
+          <text x="124" y="45" font-size="12">x*(t)</text>
+          <text x="184" y="52">zero-order</text><text x="184" y="70">hold</text>
+          <text x="392" y="60">H(s)</text>
+          <text x="500" y="45">y(t)</text>
+          <text x="566" y="92" font-size="12">T</text>
+          <text x="640" y="45" font-size="12">y*(t) &rarr; Y(z)</text>
+        </g>
+      </svg>
+      <figcaption>Open loop. The input sampler sits <em>before</em> the hold, so the hold and plant collapse into one pulse transfer function and \(Y(z)=G(z)X(z)\). The output sampler only says where \(y\) is observed.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ============================ PAPER 1 ============================ -->
+  <section class="paper" id="p1" data-paper="1">
+    <div class="paper-head">
+      <h2>Paper 1 &mdash; two-level input, first-order plant</h2>
+      <div class="chips"><span class="chip">20 marks</span><span class="chip">30 min</span><span class="chip">closest to the recall</span></div>
+    </div>
+    <div class="timer noprint">
+      <button data-timer="1" data-act="start" class="primary">Start 30:00</button>
+      <button data-timer="1" data-act="reset">Reset</button>
+      <span class="clock" id="clock1">30:00</span>
+    </div>
+
+    <div class="stem">
+      <p style="margin:0 0 .4rem"><strong>Given.</strong> Sampling period \(T=0.5\ \mathrm{s}\); plant \(H(s)=\dfrac{2}{s+2}\); the input is the piecewise signal</p>
+      \[ x(t)=\begin{cases} 0, & t<0,\\ 2, & 0\le t<2T,\\ 1, & t\ge 2T. \end{cases} \]
+    </div>
+
+    <div class="part" data-part="1a">
+      <div class="part-tag">Part (a) &mdash; 8 marks</div>
+      <p>Obtain \(X(z)\) in closed rational form and state its region of convergence.
+      <strong>Work only from the defining sum:</strong> you may not quote a transform-table pair and you may not invoke the shift (delay) property.</p>
+      <button class="reveal noprint" data-target="m1a">Show model answer &amp; mark scheme</button>
+      <div class="model" id="m1a" hidden>
+        <h3>Step 1 &mdash; turn the piecewise rule into samples</h3>
+        <p>Everything hinges on which branch each sampling instant falls in. \(2T=1.0\ \mathrm{s}\), so:</p>
+        <div class="scroller"><table>
+          <tr><th>\(k\)</th><td>0</td><td>1</td><td>2</td><td>3</td><td>\(\ge 2\)</td></tr>
+          <tr><th>\(kT\)</th><td>0</td><td>0.5</td><td>1.0</td><td>1.5</td><td>\(\ge 1.0\)</td></tr>
+          <tr><th>\(x(kT)\)</th><td>2</td><td>2</td><td>1</td><td>1</td><td>1</td></tr>
+        </table></div>
+        <p>The interval \(0\le t<2T\) is closed on the left and open on the right, so \(t=1.0\) belongs to the <em>second</em> branch: \(x[2]=1\), not 2.</p>
+        <h3>Step 2 &mdash; substitute into the definition</h3>
+        \[ X(z)=\sum_{k=0}^{\infty}x(kT)z^{-k}=2+2z^{-1}+\sum_{k=2}^{\infty}z^{-k}. \]
+        <h3>Step 3 &mdash; sum the tail from first principles</h3>
+        <p>Relabel the summation index with \(m=k-2\). This is renaming a dummy index inside the sum, not the shift theorem:</p>
+        \[ \sum_{k=2}^{\infty}z^{-k}=\sum_{m=0}^{\infty}z^{-(m+2)}=z^{-2}\sum_{m=0}^{\infty}\left(z^{-1}\right)^{m}. \]
+        <p>Build the geometric sum rather than quoting it. With \(S_N=\sum_{m=0}^{N-1}r^m\), the difference \(S_N-rS_N=1-r^N\) gives \(S_N=\dfrac{1-r^N}{1-r}\), and \(r^N\to0\) iff \(|r|<1\), so \(S_\infty=\dfrac{1}{1-r}\). Here \(r=z^{-1}\), which needs \(|z^{-1}|<1\), i.e. \(|z|>1\).</p>
+        <h3>Step 4 &mdash; assemble</h3>
+        \[ X(z)=2+2z^{-1}+\frac{z^{-2}}{1-z^{-1}}
+             =\frac{(2+2z^{-1})(1-z^{-1})+z^{-2}}{1-z^{-1}}
+             =\frac{2-z^{-2}}{1-z^{-1}}=\frac{2z^{2}-1}{z(z-1)},\quad |z|>1. \]
+        <div class="checkline"><strong>Check by re-expanding:</strong> \((2-z^{-2})(1+z^{-1}+z^{-2}+\cdots)=2+2z^{-1}+z^{-2}+z^{-3}+\cdots\) &mdash; the samples come back out. Always spend 20 seconds on this.</div>
+        <ul class="scheme">
+          <li><input type="checkbox" data-marks="2"><span>Sample table with the boundary at \(t=2T\) assigned to the second branch <span class="mk">2</span></span></li>
+          <li><input type="checkbox" data-marks="2"><span>Defining sum written out and split into the finite head plus the infinite tail <span class="mk">2</span></span></li>
+          <li><input type="checkbox" data-marks="2"><span>Index relabelled and the geometric series <em>derived</em>, not quoted <span class="mk">2</span></span></li>
+          <li><input type="checkbox" data-marks="1"><span>Correct single rational closed form <span class="mk">1</span></span></li>
+          <li><input type="checkbox" data-marks="1"><span>ROC \(|z|>1\) stated <span class="mk">1</span></span></li>
+        </ul>
+        <div class="trap"><strong>Trap:</strong> writing \(x[2]=2\) because "2 appears up to \(2T\)". One misread boundary costs the whole of part (a) and then poisons part (b).</div>
+      </div>
+    </div>
+
+    <div class="part" data-part="1b">
+      <div class="part-tag">Part (b) &mdash; 12 marks</div>
+      <p>Obtain \(Y(z)\) for the sampled output. Then decide whether the final-value theorem may be used to find \(\lim_{k\to\infty}y(kT)\), justifying the decision; if it may, evaluate it.</p>
+      <button class="reveal noprint" data-target="m1b">Show model answer &amp; mark scheme</button>
+      <div class="model" id="m1b" hidden>
+        <h3>Step 1 &mdash; say why \(Y(z)=G(z)X(z)\) is legal</h3>
+        <p>The sampler is <em>upstream</em> of the hold, so the driving signal of the continuous part is already starred. Hence \([G X^{*}]^{*}=G^{*}X^{*}\), the hold-plus-plant has a genuine pulse transfer function, and \(Y(z)=G(z)X(z)\). State this in one line; it is a method mark.</p>
+        <h3>Step 2 &mdash; reduce ZOH + plant</h3>
+        \[ \frac{H(s)}{s}=\frac{2}{s(s+2)}=\frac{1}{s}-\frac{1}{s+2}\ \Longrightarrow\ 1-e^{-2t}. \]
+        <p>With \(a=e^{-2T}=e^{-1}=0.3679\),</p>
+        \[ G(z)=(1-z^{-1})\left[\frac{1}{1-z^{-1}}-\frac{1}{1-az^{-1}}\right]
+             =\frac{(1-a)z^{-1}}{1-az^{-1}}=\frac{0.6321\,z^{-1}}{1-0.3679\,z^{-1}}. \]
+        <h3>Step 3 &mdash; output</h3>
+        \[ Y(z)=G(z)X(z)=\frac{0.6321\,z^{-1}\left(2-z^{-2}\right)}{\left(1-0.3679\,z^{-1}\right)\left(1-z^{-1}\right)}. \]
+        <h3>Step 4 &mdash; rule on the final-value theorem</h3>
+        \[ (1-z^{-1})Y(z)=\frac{0.6321\,z^{-1}\left(2-z^{-2}\right)}{1-0.3679\,z^{-1}}. \]
+        <p>Its poles are \(z=0.3679\) and \(z=0\), both strictly inside the unit circle. The theorem therefore <strong>applies</strong>, and</p>
+        \[ \lim_{k\to\infty}y(kT)=\lim_{z\to1}(1-z^{-1})Y(z)=\frac{0.6321(2-1)}{1-0.3679}=\frac{0.6321}{0.6321}=1. \]
+        <div class="checkline"><strong>Independent check:</strong> the input settles at 1 and the plant's DC gain is \(H(0)=2/2=1\), so the output must settle at \(1\times1=1\). Two routes, same number.</div>
+        <ul class="scheme">
+          <li><input type="checkbox" data-marks="2"><span>Stated why the sampler position makes \(Y(z)=G(z)X(z)\) valid <span class="mk">2</span></span></li>
+          <li><input type="checkbox" data-marks="2"><span>Used \(G(z)=(1-z^{-1})\mathcal{Z}\{H(s)/s\}\), not \(s\mapsto z\) <span class="mk">2</span></span></li>
+          <li><input type="checkbox" data-marks="2"><span>Partial fraction of \(H(s)/s\) and correct inverse Laplace <span class="mk">2</span></span></li>
+          <li><input type="checkbox" data-marks="2"><span>\(G(z)=(1-a)z^{-1}/(1-az^{-1})\) with \(a=e^{-1}\) evaluated <span class="mk">2</span></span></li>
+          <li><input type="checkbox" data-marks="1"><span>\(Y(z)\) assembled correctly <span class="mk">1</span></span></li>
+          <li><input type="checkbox" data-marks="2"><span>Formed \((1-z^{-1})Y(z)\) and tested <em>its</em> poles before concluding <span class="mk">2</span></span></li>
+          <li><input type="checkbox" data-marks="1"><span>\(y(\infty)=1\) <span class="mk">1</span></span></li>
+        </ul>
+        <div class="trap"><strong>Trap:</strong> substituting \(z=1\) first and calling the number "the final value". The number only means something after the pole test passes.</div>
+      </div>
+    </div>
+    <div class="paper-score"><span id="s1">0 / 20</span><span class="bar-track"><span class="bar-fill" id="f1"></span></span></div>
+  </section>
+
+  <!-- ============================ PAPER 2 ============================ -->
+  <section class="paper" id="p2" data-paper="2">
+    <div class="paper-head">
+      <h2>Paper 2 &mdash; plant with an integrator</h2>
+      <div class="chips"><span class="chip">20 marks</span><span class="chip">30 min</span><span class="chip hot">final value fails</span></div>
+    </div>
+    <div class="timer noprint">
+      <button data-timer="2" data-act="start" class="primary">Start 30:00</button>
+      <button data-timer="2" data-act="reset">Reset</button>
+      <span class="clock" id="clock2">30:00</span>
+    </div>
+
+    <div class="stem">
+      <p style="margin:0 0 .4rem"><strong>Given.</strong> \(T=1\ \mathrm{s}\); plant \(H(s)=\dfrac{1}{s(s+1)}\); input</p>
+      \[ x(t)=\begin{cases} 0, & t<0,\\ 3, & 0\le t&lt;T,\\ 1, & t\ge T. \end{cases} \]
+    </div>
+
+    <div class="part" data-part="2a">
+      <div class="part-tag">Part (a) &mdash; 8 marks</div>
+      <p>From the definition alone (no table, no shift property), find \(X(z)\) as a single rational function of \(z^{-1}\), and give the region of convergence.</p>
+      <button class="reveal noprint" data-target="m2a">Show model answer &amp; mark scheme</button>
+      <div class="model" id="m2a" hidden>
+        <p>Samples: \(x[0]=3\) (the instant \(t=0\) is in the first branch), and \(x[k]=1\) for all \(k\ge1\) since \(kT\ge T\).</p>
+        \[ X(z)=3+\sum_{k=1}^{\infty}z^{-k}=3+z^{-1}\sum_{m=0}^{\infty}\left(z^{-1}\right)^{m}
+             =3+\frac{z^{-1}}{1-z^{-1}},\qquad |z|>1, \]
+        <p>with the geometric sum obtained as in Paper 1 from \(S_N-rS_N=1-r^N\). Combining,</p>
+        \[ X(z)=\frac{3(1-z^{-1})+z^{-1}}{1-z^{-1}}=\frac{3-2z^{-1}}{1-z^{-1}}=\frac{3z-2}{z-1},\qquad |z|>1. \]
+        <div class="checkline"><strong>Check:</strong> \((3-2z^{-1})(1+z^{-1}+z^{-2}+\cdots)=3+z^{-1}+z^{-2}+\cdots\). Correct: one sample of height 3, then all ones.</div>
+        <ul class="scheme">
+          <li><input type="checkbox" data-marks="2"><span>Correct samples, with \(t=0\) in the first branch and every \(k\ge1\) in the second <span class="mk">2</span></span></li>
+          <li><input type="checkbox" data-marks="2"><span>Defining sum split into head plus tail <span class="mk">2</span></span></li>
+          <li><input type="checkbox" data-marks="2"><span>Geometric series derived, \(z^{-1}\) factored out of the tail correctly <span class="mk">2</span></span></li>
+          <li><input type="checkbox" data-marks="1"><span>Single rational closed form <span class="mk">1</span></span></li>
+          <li><input type="checkbox" data-marks="1"><span>ROC \(|z|>1\) <span class="mk">1</span></span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="part" data-part="2b">
+      <div class="part-tag">Part (b) &mdash; 12 marks</div>
+      <p>Find \(G(z)\) for the hold-plus-plant and hence \(Y(z)\). State, with justification, whether the final-value theorem may be used on \(y(kT)\), and if it may, evaluate the limit.</p>
+      <button class="reveal noprint" data-target="m2b">Show model answer &amp; mark scheme</button>
+      <div class="model" id="m2b" hidden>
+        <h3>Step 1 &mdash; reduce the hold and plant</h3>
+        \[ \frac{H(s)}{s}=\frac{1}{s^{2}(s+1)}=-\frac{1}{s}+\frac{1}{s^{2}}+\frac{1}{s+1}\ \Longrightarrow\ -1+t+e^{-t}. \]
+        <p>With \(T=1\) and \(b=e^{-1}=0.3679\),</p>
+        \[ G(z)=(1-z^{-1})\left[\frac{-1}{1-z^{-1}}+\frac{z^{-1}}{(1-z^{-1})^{2}}+\frac{1}{1-bz^{-1}}\right]
+             =\frac{b\,z^{-1}+(1-2b)z^{-2}}{(1-z^{-1})(1-b z^{-1})} \]
+        \[ =\frac{0.3679\,z^{-1}+0.2642\,z^{-2}}{(1-z^{-1})(1-0.3679\,z^{-1})}. \]
+        <div class="checkline"><strong>Check the first samples:</strong> the ZOH step response of \(H\) is \(t-1+e^{-t}\); at \(t=T\) that is \(0.3679\), which is exactly the coefficient the series expansion of \(G(z)/(1-z^{-1})\) gives at \(k=1\). At \(t=2\) it gives \(1.1353\), matching too.</div>
+        <h3>Step 2 &mdash; output</h3>
+        \[ Y(z)=\frac{\left(0.3679\,z^{-1}+0.2642\,z^{-2}\right)\left(3-2z^{-1}\right)}{(1-z^{-1})^{2}\left(1-0.3679\,z^{-1}\right)}. \]
+        <h3>Step 3 &mdash; the ruling</h3>
+        \[ (1-z^{-1})Y(z)=\frac{\left(0.3679\,z^{-1}+0.2642\,z^{-2}\right)\left(3-2z^{-1}\right)}{(1-z^{-1})\left(1-0.3679\,z^{-1}\right)}. \]
+        <p>One factor \((1-z^{-1})\) survives, so \((1-z^{-1})Y(z)\) still has a pole at \(z=1\), which is <em>on</em> the unit circle, not strictly inside. The final-value theorem <strong>may not be used</strong>, and \(y(kT)\) has no finite limit.</p>
+        <p>Physically: the plant contains an integrator, and after the first sample the held input is a constant 1, so the output ramps away without bound.</p>
+        <div class="trap"><strong>Trap:</strong> "there is a \((1-z^{-1})\) in front, so the pole at \(z=1\) is cancelled." Count them. \(Y(z)\) has a <em>double</em> pole at \(z=1\) &mdash; one from the input's constant tail, one from the plant's integrator &mdash; and the theorem cancels only one.</div>
+        <ul class="scheme">
+          <li><input type="checkbox" data-marks="2"><span>Correct three-term partial fraction of \(1/(s^{2}(s+1))\) <span class="mk">2</span></span></li>
+          <li><input type="checkbox" data-marks="2"><span>Used the ramp pair \(Tz^{-1}/(1-z^{-1})^{2}\) with \(T\) in the numerator <span class="mk">2</span></span></li>
+          <li><input type="checkbox" data-marks="2"><span>\(G(z)\) simplified, integrator pole at \(z=1\) still visible <span class="mk">2</span></span></li>
+          <li><input type="checkbox" data-marks="2"><span>\(Y(z)=G(z)X(z)\) formed, with the double pole at \(z=1\) exposed <span class="mk">2</span></span></li>
+          <li><input type="checkbox" data-marks="3"><span>Ruled the theorem invalid <em>because</em> a pole remains at \(z=1\) after multiplying by \((1-z^{-1})\) <span class="mk">3</span></span></li>
+          <li><input type="checkbox" data-marks="1"><span>Physical reason given: integrator driven by a non-zero steady input <span class="mk">1</span></span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="paper-score"><span id="s2">0 / 20</span><span class="bar-track"><span class="bar-fill" id="f2"></span></span></div>
+  </section>
+
+  <!-- ============================ PAPER 3 ============================ -->
+  <section class="paper" id="p3" data-paper="3">
+    <div class="paper-head">
+      <h2>Paper 3 &mdash; decaying input, unstable plant</h2>
+      <div class="chips"><span class="chip">20 marks</span><span class="chip">30 min</span><span class="chip hot">final value fails</span></div>
+    </div>
+    <div class="timer noprint">
+      <button data-timer="3" data-act="start" class="primary">Start 30:00</button>
+      <button data-timer="3" data-act="reset">Reset</button>
+      <span class="clock" id="clock3">30:00</span>
+    </div>
+
+    <div class="stem">
+      <p style="margin:0 0 .4rem"><strong>Given.</strong> \(T=1\ \mathrm{s}\); plant \(H(s)=\dfrac{1}{s-1}\); input</p>
+      \[ x(t)=\begin{cases} 0, & t<0,\\ 1, & 0\le t<2T,\\ e^{-(t-2T)}, & t\ge 2T. \end{cases} \]
+    </div>
+
+    <div class="part" data-part="3a">
+      <div class="part-tag">Part (a) &mdash; 8 marks</div>
+      <p>Working only from \(X(z)=\sum_{k\ge0}x(kT)z^{-k}\) &mdash; no table, no shift property &mdash; obtain \(X(z)\) in closed form and state the ROC.</p>
+      <button class="reveal noprint" data-target="m3a">Show model answer &amp; mark scheme</button>
+      <div class="model" id="m3a" hidden>
+        <p>Samples: \(x[0]=1\), \(x[1]=1\), and for \(k\ge2\), \(x[k]=e^{-(kT-2T)}=e^{-(k-2)}\). Note \(x[2]=e^{0}=1\): the signal is continuous at \(t=2T\).</p>
+        \[ X(z)=1+z^{-1}+\sum_{k=2}^{\infty}e^{-(k-2)}z^{-k}. \]
+        <p>Relabel \(m=k-2\) inside the sum:</p>
+        \[ \sum_{k=2}^{\infty}e^{-(k-2)}z^{-k}=\sum_{m=0}^{\infty}e^{-m}z^{-(m+2)}
+             =z^{-2}\sum_{m=0}^{\infty}\left(e^{-1}z^{-1}\right)^{m}=\frac{z^{-2}}{1-e^{-1}z^{-1}}, \]
+        <p>valid when \(|e^{-1}z^{-1}|<1\), i.e. \(|z|>e^{-1}=0.3679\). This is the ROC of the whole transform, since the first two terms converge everywhere except \(z=0\). Hence</p>
+        \[ X(z)=1+z^{-1}+\frac{z^{-2}}{1-e^{-1}z^{-1}}
+             =\frac{1+(1-e^{-1})z^{-1}+(1-e^{-1})z^{-2}}{1-e^{-1}z^{-1}}
+             =\frac{1+0.6321z^{-1}+0.6321z^{-2}}{1-0.3679z^{-1}}. \]
+        <div class="checkline"><strong>Check:</strong> expanding gives \(1,\ 1,\ 1,\ 0.3679,\ 0.1353,\dots\) &mdash; two ones, then \(e^{0},e^{-1},e^{-2}\). Exactly the sampled signal.</div>
+        <ul class="scheme">
+          <li><input type="checkbox" data-marks="2"><span>Samples correct, including \(x[2]=1\) at the junction <span class="mk">2</span></span></li>
+          <li><input type="checkbox" data-marks="2"><span>Tail relabelled and written as a geometric series in \(e^{-1}z^{-1}\) <span class="mk">2</span></span></li>
+          <li><input type="checkbox" data-marks="2"><span>Series summed from first principles with the convergence condition <span class="mk">2</span></span></li>
+          <li><input type="checkbox" data-marks="1"><span>Closed rational form <span class="mk">1</span></span></li>
+          <li><input type="checkbox" data-marks="1"><span>ROC \(|z|>e^{-1}\) <span class="mk">1</span></span></li>
+        </ul>
+        <div class="trap"><strong>Trap:</strong> writing the tail as \(e^{-kT}\) instead of \(e^{-(k-2)T}\). The exponential restarts at the junction, so the exponent is measured from \(2T\).</div>
+      </div>
+    </div>
+
+    <div class="part" data-part="3b">
+      <div class="part-tag">Part (b) &mdash; 12 marks</div>
+      <p>Find \(Y(z)\). The input decays to zero; does it follow that \(y(kT)\to 0\)? Decide whether the final-value theorem may be applied and justify the answer.</p>
+      <button class="reveal noprint" data-target="m3b">Show model answer &amp; mark scheme</button>
+      <div class="model" id="m3b" hidden>
+        <h3>Step 1 &mdash; hold plus plant</h3>
+        \[ \frac{H(s)}{s}=\frac{1}{s(s-1)}=-\frac{1}{s}+\frac{1}{s-1}\ \Longrightarrow\ -1+e^{t}. \]
+        <p>With \(c=e^{T}=e=2.7183\),</p>
+        \[ G(z)=(1-z^{-1})\left[\frac{-1}{1-z^{-1}}+\frac{1}{1-cz^{-1}}\right]
+             =\frac{(c-1)z^{-1}}{1-cz^{-1}}=\frac{1.7183\,z^{-1}}{1-2.7183\,z^{-1}}. \]
+        <p>Same algebraic shape as the stable case, but the pole is now at \(z=e^{+T}\), outside the unit circle.</p>
+        <h3>Step 2 &mdash; output</h3>
+        \[ Y(z)=\frac{1.7183\,z^{-1}\left(1+0.6321z^{-1}+0.6321z^{-2}\right)}{\left(1-2.7183\,z^{-1}\right)\left(1-0.3679\,z^{-1}\right)}. \]
+        <h3>Step 3 &mdash; the ruling</h3>
+        <p>\((1-z^{-1})Y(z)\) has poles at \(z=2.7183\) and \(z=0.3679\). The first lies outside the unit circle, so the final-value theorem <strong>may not be used</strong>. A decaying input does not rescue an unstable plant: \(y(kT)\) diverges.</p>
+        <div class="trap"><strong>Trap, and the reason this paper exists:</strong> here \(Y(z)\) has no pole at \(z=1\), so \(\lim_{z\to1}(1-z^{-1})Y(z)=0\) computes cleanly and would "prove" \(y(\infty)=0\). It is wrong. The theorem's precondition is about <em>all</em> poles of \((1-z^{-1})Y(z)\), not about whether the limit happens to exist.</div>
+        <div class="checkline"><strong>Independent check by recurrence:</strong> \(G(z)\) gives \(y[k]=c\,y[k-1]+(c-1)x[k-1]\) with \(y[0]=0\). Then \(y[1]=1.72\), \(y[2]=6.39\), \(y[3]=19.1\) &mdash; growing by roughly a factor \(e\) per step.</div>
+        <ul class="scheme">
+          <li><input type="checkbox" data-marks="2"><span>\(H(s)/s\) split and inverted to \(-1+e^{t}\) <span class="mk">2</span></span></li>
+          <li><input type="checkbox" data-marks="2"><span>Recognised the pair maps to a pole at \(z=e^{+aT}\), not \(e^{-aT}\) <span class="mk">2</span></span></li>
+          <li><input type="checkbox" data-marks="2"><span>\(G(z)=(c-1)z^{-1}/(1-cz^{-1})\) with \(c=e\) <span class="mk">2</span></span></li>
+          <li><input type="checkbox" data-marks="2"><span>\(Y(z)=G(z)X(z)\) assembled <span class="mk">2</span></span></li>
+          <li><input type="checkbox" data-marks="3"><span>Ruled the theorem invalid on the pole at \(z=e>1\), <em>not</em> on the value of the limit <span class="mk">3</span></span></li>
+          <li><input type="checkbox" data-marks="1"><span>Said explicitly that the clean \(z\to1\) limit here is a false positive <span class="mk">1</span></span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="paper-score"><span id="s3">0 / 20</span><span class="bar-track"><span class="bar-fill" id="f3"></span></span></div>
+  </section>
+
+  <!-- ============================ PAPER 4 ============================ -->
+  <section class="paper" id="p4" data-paper="4">
+    <div class="paper-head">
+      <h2>Paper 4 &mdash; finite-duration input, second-order plant</h2>
+      <div class="chips"><span class="chip">20 marks</span><span class="chip">30 min</span><span class="chip">final value valid, limit 0</span></div>
+    </div>
+    <div class="timer noprint">
+      <button data-timer="4" data-act="start" class="primary">Start 30:00</button>
+      <button data-timer="4" data-act="reset">Reset</button>
+      <span class="clock" id="clock4">30:00</span>
+    </div>
+
+    <div class="stem">
+      <p style="margin:0 0 .4rem"><strong>Given.</strong> \(T=1\ \mathrm{s}\); plant \(H(s)=\dfrac{2}{(s+1)(s+2)}\); input</p>
+      \[ x(t)=\begin{cases} 0, & t<0,\\ 4, & 0\le t&lt;T,\\ 2, & T\le t<3T,\\ 0, & t\ge 3T. \end{cases} \]
+    </div>
+
+    <div class="part" data-part="4a">
+      <div class="part-tag">Part (a) &mdash; 8 marks</div>
+      <p>From the definition only, find \(X(z)\). State where the series converges and explain why no convergence <em>condition on \(|z|\)</em> beyond \(z\neq0\) is needed here.</p>
+      <button class="reveal noprint" data-target="m4a">Show model answer &amp; mark scheme</button>
+      <div class="model" id="m4a" hidden>
+        <p>Sample instants \(t=0,1,2,3,\dots\) against the branches: \(t=0\to4\); \(t=T\) belongs to the third branch (closed on the left) \(\to2\); \(t=2T\to2\); \(t=3T\to0\), and zero thereafter.</p>
+        \[ X(z)=\sum_{k=0}^{\infty}x(kT)z^{-k}=4+2z^{-1}+2z^{-2}. \]
+        <p>The sum terminates after three terms, so it is a polynomial in \(z^{-1}\): there is nothing to converge. It is finite for every \(z\neq0\), and no geometric-series condition arises. That is the whole point of the second sentence in the question.</p>
+        <ul class="scheme">
+          <li><input type="checkbox" data-marks="3"><span>All four branch boundaries read correctly (\(x[1]=2\), \(x[3]=0\)) <span class="mk">3</span></span></li>
+          <li><input type="checkbox" data-marks="2"><span>Defining sum written and evaluated term by term <span class="mk">2</span></span></li>
+          <li><input type="checkbox" data-marks="1"><span>Correct polynomial \(4+2z^{-1}+2z^{-2}\) <span class="mk">1</span></span></li>
+          <li><input type="checkbox" data-marks="2"><span>Explained that a finite sequence gives a polynomial, convergent for all \(z\neq0\) <span class="mk">2</span></span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="part" data-part="4b">
+      <div class="part-tag">Part (b) &mdash; 12 marks</div>
+      <p>Obtain \(G(z)\) and \(Y(z)\). Determine whether the final-value theorem may be used for \(y(kT)\); if it may, evaluate the limit and verify it by a physical argument.</p>
+      <button class="reveal noprint" data-target="m4b">Show model answer &amp; mark scheme</button>
+      <div class="model" id="m4b" hidden>
+        <h3>Step 1 &mdash; hold plus plant</h3>
+        \[ \frac{H(s)}{s}=\frac{2}{s(s+1)(s+2)}=\frac{1}{s}-\frac{2}{s+1}+\frac{1}{s+2}\ \Longrightarrow\ 1-2e^{-t}+e^{-2t}. \]
+        <p>With \(p=e^{-T}=0.3679\) and \(q=e^{-2T}=0.1353\),</p>
+        \[ G(z)=(1-z^{-1})\left[\frac{1}{1-z^{-1}}-\frac{2}{1-pz^{-1}}+\frac{1}{1-qz^{-1}}\right]
+             =\frac{(1-2p+q)z^{-1}+(p-2q+pq)z^{-2}}{1-(p+q)z^{-1}+pq\,z^{-2}} \]
+        \[ =\frac{0.3996\,z^{-1}+0.1470\,z^{-2}}{1-0.5032\,z^{-1}+0.0498\,z^{-2}}. \]
+        <div class="checkline"><strong>Two checks worth doing:</strong> (i) \(G(1)=\dfrac{0.3996+0.1470}{1-0.5032+0.0498}=1.000=H(0)=2/2\), the DC gains agree; (ii) the coefficient \(0.3996\) is the ZOH step response \(1-2e^{-t}+e^{-2t}\) evaluated at \(t=T\).</div>
+        <h3>Step 2 &mdash; output</h3>
+        \[ Y(z)=\frac{\left(0.3996\,z^{-1}+0.1470\,z^{-2}\right)\left(4+2z^{-1}+2z^{-2}\right)}{1-0.5032\,z^{-1}+0.0498\,z^{-2}}. \]
+        <h3>Step 3 &mdash; the ruling</h3>
+        <p>\((1-z^{-1})Y(z)\) has poles only at \(z=p=0.3679\) and \(z=q=0.1353\) (the input contributes none, being a polynomial), both strictly inside the unit circle. The theorem <strong>applies</strong>:</p>
+        \[ \lim_{k\to\infty}y(kT)=\lim_{z\to1}(1-z^{-1})Y(z)=0\cdot G(1)X(1)=0. \]
+        <div class="checkline"><strong>Physical check:</strong> the input is switched off after \(3T\) and the plant is stable with poles at \(s=-1,-2\), so the output must decay to zero. The theorem agrees.</div>
+        <div class="trap"><strong>Trap:</strong> claiming the theorem is inapplicable "because the answer is zero" or "because the input stops". Zero is a perfectly good final value; validity is decided by the poles, and nothing else.</div>
+        <ul class="scheme">
+          <li><input type="checkbox" data-marks="3"><span>Correct three-term partial fraction, including the \(-2\) on the \(s+1\) term <span class="mk">3</span></span></li>
+          <li><input type="checkbox" data-marks="3"><span>\(G(z)\) reduced to one second-order rational function <span class="mk">3</span></span></li>
+          <li><input type="checkbox" data-marks="2"><span>\(Y(z)=G(z)X(z)\) with the polynomial input <span class="mk">2</span></span></li>
+          <li><input type="checkbox" data-marks="2"><span>Pole test done on \((1-z^{-1})Y(z)\), theorem ruled valid <span class="mk">2</span></span></li>
+          <li><input type="checkbox" data-marks="2"><span>Limit 0, confirmed by the stable-plant / finite-input argument <span class="mk">2</span></span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="paper-score"><span id="s4">0 / 20</span><span class="bar-track"><span class="bar-fill" id="f4"></span></span></div>
+  </section>
+
+  <!-- ============================ TWISTS ============================ -->
+  <section class="card" id="twists">
+    <h2>Twist bank &mdash; 60 seconds each, out loud</h2>
+    <p class="lede" style="margin:.2rem 0 .8rem">If a paper felt comfortable, these are where the same question gets marked down. Answer before opening.</p>
+
+    <details><summary>1. The ZOH is deleted, so the sampler feeds \(H(s)\) directly. What changes in part (b)?</summary>
+      <p>The hold conversion disappears: \(G(z)=\mathcal{Z}\{H(s)\}\), not \((1-z^{-1})\mathcal{Z}\{H(s)/s\}\). For Paper 1 that gives \(G(z)=\dfrac{2}{1-e^{-1}z^{-1}}\). Note there is no longer a guaranteed \(z^{-1}\) factor, so the output can respond in the same sample. The plant is now driven by impulses rather than by a held staircase, so the numerical output differs &mdash; do not carry the old answer across.</p></details>
+
+    <details><summary>2. The input sampler is removed; \(x(t)\) enters \(H(s)\) continuously and only the output is sampled. Can you still write \(Y(z)=G(z)X(z)\)?</summary>
+      <p>No. The sampled output is \(\left[H(s)X(s)\right]^{*}\), which in general does not factor into \(H^{*}(s)X^{*}(s)\). There is no input-independent pulse transfer function \(Y(z)/X(z)\) for that topology. You can still compute \(Y(z)=\mathcal{Z}\{H(s)X(s)\}\) for the specific given \(x\). Output sampling never repairs a missing input sampler.</p></details>
+
+    <details><summary>3. In Paper 1, \(T\) changes from 0.5 s to 1 s. Does \(y(\infty)\) change?</summary>
+      <p>No. \(a=e^{-2T}\) changes to \(e^{-2}=0.1353\), so \(G(z)\) and the transient change, but \(G(1)=\dfrac{1-a}{1-a}=1\) for every \(T>0\). The final value stays 1, fixed by the plant DC gain and the input's settling level. Sampling faster or slower does not change where a stable loop ends up.</p></details>
+
+    <details><summary>4. In Paper 2, the input is instead a single pulse: \(x(t)=3\) on \(0\le t&lt;T\) and 0 afterwards. Is the final-value theorem valid now?</summary>
+      <p>Yes, and this is the instructive case. \(X(z)=3\), a polynomial with no pole at \(z=1\), so \((1-z^{-1})Y(z)=\dfrac{3\left(bz^{-1}+(1-2b)z^{-2}\right)}{1-bz^{-1}}\) &mdash; the plant's integrator pole is exactly cancelled by the theorem's own factor, leaving only \(z=b=0.3679\) inside the circle. The limit is \(\dfrac{3(1-b)}{1-b}=3\). Physically: the hold delivers a rectangle of area \(3T=3\) into an integrator whose downstream DC gain is 1, so the output parks at 3 forever. Same plant as Paper 2, opposite ruling &mdash; the input decides.</p></details>
+
+    <details><summary>5. In Paper 3, the plant is \(1/(s+1)\) instead of \(1/(s-1)\). What is the ruling and the limit?</summary>
+      <p>The pole moves from \(z=e^{+T}=2.718\) to \(z=e^{-T}=0.368\), inside the unit circle. \(X(z)\)'s poles are also inside. The theorem is valid and, since the input decays to zero and the plant is stable, \(y(\infty)=0\).</p></details>
+
+    <details><summary>6. Suppose the sampled input tail is \(x[k]=(-1)^{k}\). What does the final-value theorem say?</summary>
+      <p>\(X(z)\) has a pole at \(z=-1\), on the unit circle. Multiplying by \((1-z^{-1})\) cancels nothing there, so the theorem is invalid: the samples alternate forever and have no limit. Only a <em>simple</em> pole at \(z=+1\) is permitted, and only because the theorem's own factor removes it. Every other unit-circle pole is fatal.</p></details>
+
+    <details><summary>7. You are asked for \(y(2T)\) rather than the final value. Fastest route?</summary>
+      <p>Do not do partial fractions. Long-divide \(Y(z)\) into a power series in \(z^{-1}\) and read the coefficient of \(z^{-2}\); or convert \(Y(z)=G(z)X(z)\) into the recurrence \(y[k]=\dots\) and iterate two steps from rest. Both are two-minute jobs and both double as checks on your closed form.</p></details>
+  </section>
+
+  <!-- ============================ DIAGNOSIS ============================ -->
+  <section class="card" id="diagnosis">
+    <h2>Reading your score</h2>
+    <div class="scroller"><table>
+      <tr><th>Where you lost marks</th><th>What it means</th><th>What to redo</th></tr>
+      <tr><td>Sample table / branch boundaries in part (a)</td><td>Half-open interval convention not automatic yet</td><td>Rebuild all four sample tables cold; the rule is \([\,\text{left},\ \text{right})\)</td></tr>
+      <tr><td>Geometric series quoted rather than derived</td><td>Exactly the restriction the quiz imposes; a table-free derivation is the marked skill</td><td>Write \(S_N-rS_N=1-r^{N}\) three times until it is muscle memory, and always finish with the \(|r|<1\) line</td></tr>
+      <tr><td>ROC omitted</td><td>Cheap marks lost</td><td>Add "converges for \(|z|>\dots\)" to every transform you ever write</td></tr>
+      <tr><td>\(G(z)\) via \(s\mapsto z\) or a missing \((1-z^{-1})\)</td><td>The hold conversion is not internalised</td><td>Notes &sect;3, ZOH-plus-plant; redo Papers 1, 2 and 4 part (b) only</td></tr>
+      <tr><td>Wrong ruling on the final-value theorem</td><td>The single highest-value concept in this quiz</td><td>Papers 2 and 3 plus twists 4, 5 and 6 &mdash; the rule is: form \((1-z^{-1})Y(z)\), then require <em>every</em> pole strictly inside the unit circle</td></tr>
+      <tr><td>Right ruling, no stated reason</td><td>Method marks forfeited</td><td>Practise writing the one-sentence justification before computing the limit</td></tr>
+    </table></div>
+    <p style="margin:.7rem 0 0"><strong>Benchmark.</strong> 16&ndash;20 on a paper with correct rulings on all four: ready. 12&ndash;15: the algebra is fine but the justifications are thin. Below 12: go back to the module before re-sitting.</p>
+  </section>
+
+  <footer>
+    <p>NTU EE6203, Chapters 1&ndash;3. Predicted format only, from two unofficial recalls and the Week 3 scope announcement; all numbers, systems and mark schemes are constructed here and every key was derived twice by independent routes. Companion files: <code>../notes/quiz1-prep-learning.html</code>, <code>quiz-01-evaluation-set.html</code>.</p>
+  </footer>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var KEY = 'ee6203-quiz1-prediction-papers-v1';
+  var TOTALS = { 1: 20, 2: 20, 3: 20, 4: 20 };
+
+  function load() {
+    try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; }
+  }
+  function save(state) {
+    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* storage unavailable */ }
+  }
+  var state = load();
+
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('.scheme input[type="checkbox"]'));
+  boxes.forEach(function (box, i) {
+    box.id = box.id || ('mk-' + i);
+    if (state.marks && state.marks[box.id]) box.checked = true;
+    box.addEventListener('change', function () {
+      state.marks = state.marks || {};
+      state.marks[box.id] = box.checked;
+      save(state);
+      render();
+    });
+  });
+
+  function render() {
+    var grand = 0, grandMax = 0;
+    Object.keys(TOTALS).forEach(function (n) {
+      var section = document.querySelector('[data-paper="' + n + '"]');
+      var got = 0, max = 0;
+      section.querySelectorAll('.scheme input[type="checkbox"]').forEach(function (b) {
+        var m = parseFloat(b.getAttribute('data-marks')) || 0;
+        max += m;
+        if (b.checked) got += m;
+      });
+      grand += got; grandMax += max;
+      var label = document.getElementById('s' + n);
+      var fill = document.getElementById('f' + n);
+      if (label) label.textContent = got + ' / ' + max;
+      if (fill) {
+        var pct = max ? (got / max) * 100 : 0;
+        fill.style.width = pct + '%';
+        fill.className = 'bar-fill ' + (pct >= 80 ? 'strong' : pct >= 60 ? 'mid' : 'weak');
+      }
+    });
+    var g = document.getElementById('grand');
+    if (g) g.textContent = grand + ' / ' + grandMax;
+  }
+
+  document.querySelectorAll('.reveal').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var panel = document.getElementById(btn.getAttribute('data-target'));
+      if (!panel) return;
+      var showing = !panel.hidden;
+      panel.hidden = showing;
+      btn.textContent = showing ? 'Show model answer & mark scheme' : 'Hide model answer';
+    });
+  });
+
+  document.getElementById('reset').addEventListener('click', function () {
+    if (!window.confirm('Clear every self-marked checkbox for this prediction set?')) return;
+    boxes.forEach(function (b) { b.checked = false; });
+    state.marks = {};
+    save(state);
+    render();
+  });
+
+  // 30-minute countdown, one per paper.
+  var timers = {};
+  function fmt(sec) {
+    var m = Math.floor(Math.abs(sec) / 60), s = Math.abs(sec) % 60;
+    return (sec < 0 ? '-' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+  }
+  function paint(n) {
+    var t = timers[n];
+    var el = document.getElementById('clock' + n);
+    if (!el) return;
+    el.textContent = fmt(t.left);
+    el.className = 'clock' + (t.left <= 0 ? ' out' : t.left <= 300 ? ' low' : '');
+  }
+  document.querySelectorAll('[data-timer]').forEach(function (btn) {
+    var n = btn.getAttribute('data-timer');
+    timers[n] = timers[n] || { left: 1800, id: null };
+    btn.addEventListener('click', function () {
+      var t = timers[n];
+      if (btn.getAttribute('data-act') === 'reset') {
+        window.clearInterval(t.id); t.id = null; t.left = 1800;
+        paint(n);
+        var start = document.querySelector('[data-timer="' + n + '"][data-act="start"]');
+        if (start) start.textContent = 'Start 30:00';
+        return;
+      }
+      if (t.id) {
+        window.clearInterval(t.id); t.id = null; btn.textContent = 'Resume';
+        return;
+      }
+      btn.textContent = 'Pause';
+      t.id = window.setInterval(function () { t.left -= 1; paint(n); }, 1000);
+    });
+    paint(n);
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

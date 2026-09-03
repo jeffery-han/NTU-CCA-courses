@@ -1,0 +1,691 @@
+\documentclass[10pt]{article}
+\usepackage[a4paper,margin=19mm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{booktabs,array,longtable}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+
+\newcommand{\Z}{\mathcal{Z}}
+\newcommand{\e}{\mathrm{e}}
+\newcommand{\unitstep}{\mathbf{1}}
+\newcommand{\src}[1]{{\small\color{gray}[PDF pp.~#1]}}
+\newcommand{\itemhead}[2]{\par\medskip\noindent\textbf{#1}\quad\src{#2}\par\nopagebreak}
+\newcommand{\verify}[1]{\par\smallskip\noindent{\color{blue!55!black}\textbf{Check.}} #1\par}
+\newcommand{\wrong}[1]{\par\smallskip\noindent{\color{red!55!black}\textbf{If you missed it.}} #1\par}
+\setlist{nosep,leftmargin=*}
+\setlength{\parskip}{0.35em}
+\setlength{\parindent}{0pt}
+
+\title{EE6203 Quiz 1 --- Evaluation Set\\\large Worked Solutions and Score Interpretation}
+\author{Companion to \texttt{quizzes/quiz-01-evaluation-set.html}}
+\date{31 August 2026}
+
+\begin{document}
+\maketitle
+
+\section*{Before you open this}
+\addcontentsline{toc}{section}{Before you open this}
+
+This document contains the answers. It is separate from the question file for a
+reason: the evaluation set is a \emph{measurement}, and a measurement taken with
+the answer key in view measures nothing. Sit all 44 questions closed-book first,
+with a calculator and Table 2--1 available, then come here.
+
+Scope is Chapters 1--3 only, matching the Week~3 announcement that Quiz~1 is a
+30-minute closed-book assessment excluding the Chapter~4 material. Every item is
+new; none is reused from the drills, knowledge checks, worked archetypes or mock
+quizzes in \texttt{notes/quiz1-prep-learning} or \texttt{notes/quiz1-prep-reviewing}.
+
+Each numeric answer below was derived twice by independent routes --- a transform
+argument and a direct time-domain or physical argument --- and the two agree. Where
+the second route is quick enough to use under exam pressure, it is given as a
+\textbf{Check}, because that is the habit worth carrying into the quiz.
+
+\section*{How to read your topic scores}
+\addcontentsline{toc}{section}{How to read your topic scores}
+
+The per-topic bars matter more than the total. Treat a topic below 60\,\% as a gap,
+60--79\,\% as shaky, and 80\,\%+ as sound. Then fix gaps in dependency order, not in
+alphabetical order --- later topics are built out of earlier ones, and repairing
+\textbf{H} while \textbf{C} is broken wastes the effort.
+
+\begin{center}
+\begin{tabular}{@{}cl>{\raggedright\arraybackslash}p{62mm}@{}}
+\toprule
+Tier & Topics & Why it comes first \\
+\midrule
+1 & B, C & The transform definition and the shift/translation theorems. Everything
+        downstream is algebra on top of these. A gap here shows up as wrong answers
+        in D, E, F and H that look like different mistakes but are not. \\
+2 & D, E, F & Reading a transform back: legality of the final value, inverse methods,
+        recurrences. These are the most heavily examined single-topic items. \\
+3 & G, I & Impulse sampling, the starred transform, and the star-factorisation rule
+        \(\left[GX^{*}\right]^{*}=G^{*}X^{*}\). This one rule governs every
+        block-diagram question. \\
+4 & H, J & ZOH-plus-plant conversion and the closed-loop configurations. Highest mark
+        density in past questions, but only reachable once tiers 1--3 hold. \\
+--- & A & Vocabulary. Cheap marks; revise by reading, not by drilling. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Minimum viable path.} If time is short, the shortest route to a safe pass is
+C2 (advance with initial conditions) \(\to\) D3/D4 (final-value legality) \(\to\)
+E3 (repeated-pole inversion) \(\to\) H4 and H1 (the \((1-z^{-1})\Z\{G(s)/s\}\)
+conversion) \(\to\) G2 (star factorisation) \(\to\) J1/J2 (which denominator).
+Those seven skills, done reliably, cover the structure of every recalled past
+question. Everything else in this set is either supporting arithmetic or vocabulary.
+
+\paragraph{What you may safely defer.} A wrong answer on A2, B3 or G3 costs almost
+nothing to repair and does not block anything else. Deferring E1 (method choice) is
+also acceptable if D and E are otherwise strong, since the wrong method still
+reaches the right answer, just slower.
+
+\section*{Answer summary}
+\addcontentsline{toc}{section}{Answer summary}
+
+Mark yourself against this table first, then read only the items you missed.
+Multiple-choice answers are quoted by content, because the question file shuffles
+the option order.
+
+\begin{longtable}{@{}llp{95mm}@{}}
+\toprule
+Item & Topic & Answer \\
+\midrule
+\endhead
+A1 & A & Digital (discrete in time \emph{and} amplitude) \\
+A2 & A & The discrete and continuous descriptions must be reconciled in one domain \\
+A3 & A & \(26\) sample instants \\
+\midrule
+B1 & B & \(2+2z^{-1}+2z^{-2}-z^{-3}\) \\
+B2 & B & \(z=\e^{-1}\approx 0.3679\) \\
+B3 & B & \(T^{2}z^{-1}(1+z^{-1})/(1-z^{-1})^{3}\) \\
+B4 & B & \(x[4]=0.5\) \\
+\midrule
+C1 & C & \(z^{-2}/(1-0.4z^{-1})\) \\
+C2 & C & \(z^{2}X(z)-3z^{2}+z\) \\
+C3 & C & Every \(z^{-1}\) scaled by \(\e^{-aT}\), so \(z^{-2}\) carries \(\e^{-2aT}\) \\
+C4 & C & \(z=1.2\) \\
+\midrule
+D1 & D & \(x[0]=0\) \\
+D2 & D & \(x[1]=2\) \\
+D3 & D & Theorem applies; \(x[\infty]=0.5/1.9=0.263\) \\
+D4 & D & Theorem does not apply; the remaining pole \(1.2\) is outside, so \(x[k]\) diverges \\
+D5 & D & Two poles at \(z=1\) (double), so the theorem fails \\
+\midrule
+E1 & E & Direct division (long division) \\
+E2 & E & \(x[2]=0.4375\) \\
+E3 & E & \(x[k]=k(0.8)^{k-1}\) \\
+E4 & E & \(x[3]=1.92\) \\
+E5 & E & \(x[k]=\sin(0.5k)\) \\
+\midrule
+F1 & F & \(y[3]=2.56\) \\
+F2 & F & \(Y(z)=z/[(z-0.5)(z-0.6)]\) \\
+F3 & F & \(y[2]=1.1\) \\
+F4 & F & \(y[k]=10\left[(0.6)^{k}-(0.5)^{k}\right]\) \\
+\midrule
+G1 & G & Impulse strength \(\e^{-1}\approx 0.3679\) \\
+G2 & G & \(\left[G(s)X^{*}(s)\right]^{*}=G^{*}(s)X^{*}(s)\) \\
+G3 & G & \(\omega_{s}=2\pi/T\approx 314.16\) rad/s \\
+G4 & G & \(X(z)=1/(1-z^{-1})\) \\
+\midrule
+H1 & H & \(0.8647z^{-1}/(1-0.1353z^{-1})\) \\
+H2 & H & \(G(1)=1\) \\
+H3 & H & \(y[1]=1-\e^{-2}\approx 0.8647\) \\
+H4 & H & \(X(z)=(1-z^{-1})\Z\{G(s)/s\}\) \\
+H5 & H & \(g[1]\approx 0.2838\) \\
+\midrule
+I1 & I & \(0.1917\) \\
+I2 & I & \(G(z)H(z)\neq\Z\{G(s)H(s)\}\); the intermediate sampler decides \\
+I3 & I & No --- \(R\) cannot be separated from the dynamics \\
+I4 & I & Causality of \(g(t)\) \\
+\midrule
+J1 & J & \(C(z)=G(z)R(z)/\left[1+GH(z)\right]\) \\
+J2 & J & \(C(z)=G(z)R(z)/\left[1+G(z)H(z)\right]\) \\
+J3 & J & \(G_{1}R(z)\) does not factor, so no input-independent ratio exists \\
+J4 & J & \(K_{P}=1.8\) \\
+J5 & J & \(G_{D}(z)=K_{P}+K_{I}/(1-z^{-1})+K_{D}(1-z^{-1})\) \\
+J6 & J & \(m[0]=6.2\) \\
+\bottomrule
+\end{longtable}
+
+\newpage
+\section{Worked solutions}
+
+\subsection{A --- Signals and the digital-control architecture}
+
+\itemhead{A1.}{13--16}
+A signal is \emph{sampled-data} when time is discrete but amplitude is still
+continuous, and \emph{digital} when both are discrete. A 12-bit converter has
+\(2^{12}\) representable levels, so the amplitude is quantised: the ADC output is
+digital.
+\wrong{You are treating ``sampled'' and ``digital'' as synonyms. The distinction is
+the one Chapter~1 spends three slides on, and it is the reason quantisation is
+ignored for the rest of the course --- with enough bits the digital signal is
+\emph{modelled} as sampled-data, but that is an approximation, not an identity.}
+
+\itemhead{A2.}{10, 16}
+Figure 1.2 shows the loop crossing a boundary twice: the ADC turns the continuous
+error \(e(t)\) into the sequence \(e[k]\), and the DAC-plus-ZOH turns the computed
+\(u[k]\) back into a continuous \(u(t)\) that drives the plant. The controller is
+therefore discrete while the plant remains continuous, and the two descriptions
+cannot be multiplied together as they stand.
+
+Reconciling them is precisely the work of the next two chapters: Chapter~2 builds the
+discrete description (the \(z\) transform), and Chapter~3 converts the continuous
+plant, together with its hold, into a pulse transfer function in the same variable.
+Only then does a single algebra cover the whole loop.
+\wrong{The clock synchronises the conversions; it does not abolish the boundary. And
+nothing here asks for the plant to be redesigned --- the plant is whatever physics
+gives you. If this framing is new, it is worth fixing early: every topology question
+in I and J is an instance of it.}
+
+\itemhead{A3.}{14--16}
+\(0.1/0.004=25\) sampling intervals, hence \(k=0,1,\dots,25\), which is
+\(\mathbf{26}\) sample instants.
+\wrong{Answering 25 is the same off-by-one that corrupts piecewise-input transforms:
+counting intervals instead of instants. On a half-open interval \(0\le t< nT\)
+there are \(n\) samples; on a closed interval \(0\le t\le nT\) there are \(n+1\).}
+
+\subsection{B --- Z-transform definition and elementary functions}
+
+\itemhead{B1.}{24--25}
+Tabulate before summing:
+\[
+\begin{array}{c|cccccc}
+k & 0 & 1 & 2 & 3 & 4 & \ge 5\\\hline
+x[k] & 2 & 2 & 2 & -1 & 0 & 0
+\end{array}
+\]
+The interval \(0\le t<3T\) is half-open, so it holds \(k=0,1,2\); the sample at
+\(k=3\) already belongs to the next piece. Substituting into
+\(X(z)=\sum_{k\ge0}x[k]z^{-k}\),
+\[
+X(z)=2+2z^{-1}+2z^{-2}-z^{-3}.
+\]
+No table entry and no shift theorem is used; the coefficients \emph{are} the samples.
+
+\itemhead{B2.}{32, entry 4}
+Entry 4 reads \(\e^{-akT}\leftrightarrow 1/(1-\e^{-aT}z^{-1})\). With \(a=2\) and
+\(T=0.5\), \(aT=1\), so the single pole is at \(z=\e^{-1}=0.3679\).
+\verify{The sequence is \(x[k]=\e^{-2(0.5k)}=(\e^{-1})^{k}\), a geometric sequence
+of ratio \(\e^{-1}\); a geometric sequence of ratio \(r\) has its pole at \(z=r\).}
+\wrong{Answering \(-2\) or \(\e^{-2}\) confuses \(a\) with \(aT\). The pole depends
+on the sampling period; the same continuous plant gives a different discrete pole
+at a different \(T\).}
+
+\itemhead{B3.}{32, entry 6}
+\(\Z\{t^{2}\}\) sampled at period \(T\) is
+\(T^{2}z^{-1}(1+z^{-1})/(1-z^{-1})^{3}\). The \((1+z^{-1})\) numerator factor is the
+part most often lost. The entry \(Tz^{-1}/(1-z^{-1})^{2}\) is the ramp \(kT\).
+\verify{Expand the first two coefficients: \(T^{2}z^{-1}(1+z^{-1})(1+3z^{-1}+\cdots)
+= T^{2}z^{-1}+4T^{2}z^{-2}+\cdots\), matching \((kT)^{2}\) at \(k=1,2\):
+\(T^{2}\) and \(4T^{2}\).}
+
+\itemhead{B4.}{33, entry 20}
+The pair is \(k\,a^{k-1}\leftrightarrow z^{-1}/(1-az^{-1})^{2}\). With \(a=0.5\) and
+\(k=4\),
+\[
+x[4]=4\,(0.5)^{3}=0.5 .
+\]
+\wrong{Reading the pair as \(k a^{k}\) gives \(4(0.5)^{4}=0.25\). The \(k-1\) exponent
+is what makes the sequence start at \(x[1]=1\) rather than \(x[1]=a\); checking the
+first sample against the transform's leading coefficient catches this instantly.}
+
+\subsection{C --- Properties and the translation theorems}
+
+\itemhead{C1.}{35}
+The shifting theorem gives \(\Z\{x[k-n]\unitstep[k-n]\}=z^{-n}X(z)\), so with
+\(X(z)=1/(1-0.4z^{-1})\),
+\[
+\Z\{x[k-2]\unitstep[k-2]\}=\frac{z^{-2}}{1-0.4z^{-1}} .
+\]
+A delay changes \emph{where} the sequence starts; it does not move the pole.
+\wrong{The variant \(0.16/(1-0.4z^{-1})\) applies the complex-translation theorem
+instead, i.e.\ it scales the amplitude as \(a^{k}\) would. Keep the two apart:
+\(z^{-n}\) shifts in time, \(X(z/a)\) scales in amplitude.}
+
+\itemhead{C2.}{35--36}
+For the one-sided transform,
+\[
+\Z\{x[k+n]\}=z^{n}\Bigl[X(z)-\sum_{j=0}^{n-1}x[j]z^{-j}\Bigr].
+\]
+With \(n=2\), \(x[0]=3\), \(x[1]=-1\):
+\[
+z^{2}\bigl[X(z)-3-(-1)z^{-1}\bigr]=z^{2}X(z)-3z^{2}+z .
+\]
+\wrong{The sign of the last term is the whole question. An advance \emph{removes}
+the samples the sequence has already produced, so each removed sample enters with a
+minus sign --- and a negative sample therefore enters with a plus. Every forced
+recurrence in topic F depends on getting this right.}
+
+\itemhead{C3.}{39--40; 33, entry 16}
+The complex-translation theorem states \(\Z\{\e^{-akT}x[k]\}=X(\e^{aT}z)\), which in
+terms of \(z^{-1}\) means: replace every \(z^{-1}\) by \(\e^{-aT}z^{-1}\). Applying
+that to the sine pair,
+\[
+\frac{\e^{-aT}z^{-1}\sin\omega T}
+     {1-2\e^{-aT}z^{-1}\cos\omega T+\e^{-2aT}z^{-2}},
+\]
+where the \(z^{-2}\) term picks up \(\e^{-2aT}\) because it carries two factors of
+\(z^{-1}\). This is entry 16 of Table 2--1.
+\wrong{Scaling only the numerator is a half-application. The rule is mechanical ---
+substitute, do not patch --- and the \(\e^{-2aT}\) on the \(z^{-2}\) term is the
+marker that it was done properly.}
+
+\itemhead{C4.}{34, 39}
+\(\Z\{a^{k}x[k]\}=X(z/a)\). A pole of the new transform occurs where the argument
+equals an old pole: \(z/2=0.6\), hence \(z=1.2\).
+\wrong{Dividing instead of multiplying gives 0.3. Note what happened physically:
+multiplying a sequence by \(2^{k}\) pushed a stable pole outside the unit circle.
+That is the same mechanism that makes \(|a|\ge1\) forcing terms diverge in topic D.}
+
+\subsection{D --- Initial- and final-value theorems}
+
+\itemhead{D1--D2.}{42, 51--53}
+The initial-value theorem is \(x[0]=\lim_{z\to\infty}X(z)\). Every numerator term of
+\[
+X(z)=\frac{2z^{-1}+3z^{-2}}{1-0.5z^{-1}+0.06z^{-2}}
+\]
+carries a negative power of \(z\), so the numerator vanishes as \(z\to\infty\) while
+the denominator tends to 1. Hence \(x[0]=0\).
+
+For \(x[1]\), multiply out and match coefficients of \(z^{-1}\):
+\[
+x[1]-0.5\,x[0]=2 \quad\Longrightarrow\quad x[1]=2 .
+\]
+\verify{Continue the recursion, matching each coefficient in turn:
+\[
+x[k]=\text{(numerator)}_{k}+0.5\,x[k-1]-0.06\,x[k-2]
+\;\Longrightarrow\;
+0,\;2,\;4,\;1.88,\;0.70,\;0.2372,\dots
+\]
+The sequence decays, as the poles at \(0.2\) and \(0.3\) require.}
+\wrong{Reading the leading numerator coefficient as \(x[0]\) gives 2, which is
+actually \(x[1]\). The initial-value theorem is about the \(z^{0}\) coefficient, and
+this numerator has none.}
+
+\itemhead{D3.}{44--46}
+The theorem (p.~44) requires all poles of \(X(z)\) inside the unit circle,
+\emph{with the possible exception of a simple pole at \(z=1\)}. Form
+\[
+(1-z^{-1})X(z)=\frac{0.5z^{-1}}{1+0.9z^{-1}} ,
+\]
+whose only pole is \(z=-0.9\). Since \(|-0.9|<1\), the theorem applies and
+\[
+x[\infty]=\lim_{z\to1}\frac{0.5z^{-1}}{1+0.9z^{-1}}=\frac{0.5}{1.9}=0.263 .
+\]
+\wrong{Rejecting the theorem because \(-0.9\) is negative confuses sign with
+magnitude. A negative pole gives an \emph{alternating} transient, and an alternating
+transient still decays provided its magnitude is below one. Only \(|{\cdot}|=1\)
+(sustained alternation, as at \(z=-1\)) or \(>1\) destroys the limit.}
+
+\itemhead{D4.}{44--46}
+Removing the step pole,
+\[
+(1-z^{-1})X(z)=\frac{z-1}{z}\cdot\frac{z}{(z-1)(z-1.2)}=\frac{1}{z-1.2},
+\]
+which has its pole at \(z=1.2\), outside the unit circle. The theorem therefore does
+not apply, and indeed \(x[k]\) contains a \((1.2)^{k}\) mode and diverges. The value
+\(-5\) obtained by substitution is arithmetically correct and physically meaningless.
+\wrong{This is the pitfall the Remarks slide (p.~46) warns about in exactly these
+words: the theorem ``can yield misleading results'' for unbounded or oscillatory
+sequences. The discipline is fixed --- cancel the permitted pole at \(z=1\) first,
+classify what survives, and only then take the limit. Never take the limit first.}
+
+\itemhead{D5.}{32 entry 5; 44}
+\(X(z)=Tz^{-1}/(1-z^{-1})^{2}\) has a \emph{double} pole at \(z=1\). The theorem
+permits at most a simple one, so it does not apply --- correctly, since \(x[k]=kT\)
+grows without bound.
+\wrong{If you answered 1, you read \((1-z^{-1})^{2}\) as a single factor. The
+exponent is the pole multiplicity, and multiplicity is exactly what separates the
+step (allowed) from the ramp (not allowed).}
+
+\subsection{E --- Inverse z-transform methods}
+
+\itemhead{E1.}{49--53}
+Long division produces \(x[0],x[1],x[2],\dots\) directly, one coefficient per step,
+and never yields a general term. Partial-fraction expansion of \(X(z)/z\) yields the
+closed form but costs a factorisation and a residue calculation. With only four
+samples wanted and no closed form required, long division is faster.
+\wrong{Choosing partial fractions here is not \emph{wrong}, only slow --- and in a
+30-minute closed-book quiz, slow is a mark. Match the method to what is asked for:
+``find \(x[k]\)'' means PFE, ``find the first few samples'' means long division.}
+
+\itemhead{E2.}{60--62}
+Write \(u=z^{-1}\) and expand
+\(1/[(1-0.5u)(1-0.25u)]=A/(1-0.5u)+B/(1-0.25u)\).
+Evaluating at \(u=2\) gives \(A=2\); at \(u=4\) gives \(B=-1\). Hence
+\(x[k]=2(0.5)^{k}-(0.25)^{k}\), and
+\[
+x[2]=2(0.25)-0.0625=0.4375 .
+\]
+\verify{Long division of \(1/(1-0.75z^{-1}+0.125z^{-2})\) gives \(1,\;0.75,\;0.4375,\;
+0.234375\), matching the closed form term by term. Two independent routes agreeing is
+the standard for anything you will write down under time pressure.}
+
+\itemhead{E3--E4.}{33 entry 20; 61}
+Convert to the table's variable before matching:
+\[
+X(z)=\frac{z}{(z-0.8)^{2}}
+=\frac{z^{-1}}{(1-0.8z^{-1})^{2}}
+\;\longleftrightarrow\; x[k]=k\,(0.8)^{k-1}.
+\]
+Then \(x[3]=3(0.8)^{2}=1.92\).
+\verify{Long division of \(z^{-1}/(1-1.6z^{-1}+0.64z^{-2})\) gives \(0,\;1,\;1.6,\;
+1.92,\;2.048\). Note the sequence \emph{rises} before decaying --- the \(k\) factor
+beats the \(0.8^{k}\) decay until \(k\approx4.5\), which is what a repeated pole
+inside the unit circle looks like.}
+\wrong{The two index-shifted variants \(k(0.8)^{k}\) and \((k+1)(0.8)^{k}\) both give
+the wrong \(x[1]\): the true value is 1, they give 0.8 and 1.6. Testing a candidate
+closed form at \(k=0\) and \(k=1\) costs five seconds and settles the question.}
+
+\itemhead{E5.}{33 entry 14; 63--64}
+Entry 14 is
+\(\sin\omega kT \leftrightarrow z^{-1}\sin\omega T/(1-2z^{-1}\cos\omega T+z^{-2})\).
+Comparing, \(\omega T=0.5\), so \(x[k]=\sin(0.5k)\).
+\wrong{A cosine would show \(1-z^{-1}\cos\omega T\) in the numerator; a damped sine
+would carry \(\e^{-aT}\) factors (entry 16, as in C3). Recognising the shape of the
+denominator \(1-2z^{-1}\cos\omega T+z^{-2}\) --- unit leading and trailing
+coefficients, poles on the unit circle --- is faster than any expansion.}
+
+\subsection{F --- Difference equations solved by z transform}
+
+\itemhead{F1.}{67--69}
+Transform the homogeneous equation with its initial condition:
+\[
+zY(z)-zy[0]-0.8Y(z)=0
+\;\Longrightarrow\;
+Y(z)=\frac{5z}{z-0.8},
+\qquad y[k]=5(0.8)^{k}.
+\]
+Hence \(y[3]=5(0.512)=2.56\).
+\verify{Iterate the rule directly: \(5,\;4,\;3.2,\;2.56\).}
+\wrong{If a \(1/(1-z^{-1})\) factor appeared in your working, you added a forcing
+term that is not there. An unforced recurrence has no step pole and therefore no
+constant steady-state component; it decays to zero.}
+
+\itemhead{F2--F4.}{35--36, 60, 67--69}
+For a two-step advance,
+\(\Z\{y[k+2]\}=z^{2}Y(z)-z^{2}y[0]-zy[1]\). With \(y[0]=0\), \(y[1]=1\):
+\[
+z^{2}Y-z-1.1zY+0.3Y=0
+\;\Longrightarrow\;
+Y(z)=\frac{z}{z^{2}-1.1z+0.3}=\frac{z}{(z-0.5)(z-0.6)} .
+\]
+The factorisation checks out because \(0.5+0.6=1.1\) and \(0.5\times0.6=0.3\).
+
+Directly from the rule, \(y[2]=1.1y[1]-0.3y[0]=1.1\).
+
+For the closed form, expand \(Y(z)/z\):
+\[
+\frac{Y(z)}{z}=\frac{1}{(z-0.5)(z-0.6)}
+=\frac{-10}{z-0.5}+\frac{10}{z-0.6},
+\qquad
+y[k]=10\left[(0.6)^{k}-(0.5)^{k}\right].
+\]
+\verify{Test the closed form at three points: \(y[0]=10(1-1)=0\) \checkmark,
+\(y[1]=10(0.1)=1\) \checkmark, \(y[2]=10(0.36-0.25)=1.1\) \checkmark --- matching the
+initial conditions and the sample generated from the recurrence. The full opening is
+\(0,\;1,\;1.1,\;0.91,\;0.671,\;0.4651\), decaying as both poles are inside the unit
+circle.}
+\wrong{A numerator of 1 or \(z^{2}\) in F2 means the initial-condition terms were
+mishandled --- go back to C2, which is the same rule in isolation. In F4, the
+three-point test rejects every wrong option in under a minute, so there is no excuse
+for guessing on a closed form.}
+
+\subsection{G --- Impulse sampling and the starred transform}
+
+\itemhead{G1.}{75--79}
+The impulse-sampled signal is
+\(x^{*}(t)=\sum_{k\ge0}x(kT)\delta(t-kT)\). With \(T=0.5\), the impulse at
+\(t=1.0\) is the one with \(k=2\), and its \emph{strength} (area) is
+\(x(1.0)=\e^{-1}=0.3679\).
+\wrong{An ideal impulse has zero width and infinite height, so there is no amplitude
+to read; the coefficient multiplying \(\delta(t-kT)\) is an area. This is not
+pedantry --- it is why the ZOH must be modelled separately as
+\((1-\e^{-Ts})/s\) rather than being absorbed into the sampler.}
+
+\itemhead{G2.}{103--106}
+The one general identity is
+\[
+\bigl[G(s)X^{*}(s)\bigr]^{*}=G^{*}(s)X^{*}(s).
+\]
+A factor that is \emph{already} an impulse train can be pulled out of the star,
+because sampling an already-sampled signal changes nothing. An unsampled product
+\(G(s)H(s)\) or \(G(s)X(s)\) cannot be split: there is no sampler between the
+factors to break the convolution.
+\wrong{This single rule decides topics I and J almost entirely. If it is not
+automatic, do nothing else until it is: it is why J1 has \(GH(z)\) in the denominator
+while J2 has \(G(z)H(z)\), and why I3 has no pulse transfer function at all.}
+
+\itemhead{G3.}{77--78, 103--104}
+\(X^{*}(s)\) is periodic along the imaginary axis with
+\(\omega_{s}=2\pi/T\). For \(T=0.02\) s, \(\omega_{s}=2\pi/0.02=314.16\) rad/s.
+\wrong{Answering 50 gives \(f_{s}=1/T\) in hertz. The factor \(2\pi\) is the whole
+question, and the same factor reappears wherever \(\omega\) and \(f\) are exchanged.}
+
+\itemhead{G4.}{78, 103--104}
+Impulse-sampling a unit step gives
+\(X^{*}(s)=\sum_{k\ge0}\e^{-kTs}=1/(1-\e^{-Ts})\) as a geometric series.
+The definition \(z=\e^{Ts}\) turns \(\e^{-Ts}\) into \(z^{-1}\), so
+\[
+X(z)=\frac{1}{1-z^{-1}} ,
+\]
+which is Table 2--1 entry 3, as it must be.
+\wrong{This is the bridge between the two descriptions: \(X^{*}(s)\) and \(X(z)\)
+are the same object in different variables, which is why a single sampled block may
+be written either way. It is also why \(z=\e^{Ts}\) may \emph{not} be substituted
+into an ordinary continuous plant \(G_{p}(s)\) --- the substitution applies to
+starred quantities, not to unsampled ones.}
+
+\subsection{H --- Data holds and ZOH-plus-plant discretisation}
+
+\itemhead{H1--H3.}{111--115}
+Equation (3--49) gives the ZOH-plus-plant conversion. With
+\(G_{p}(s)=4/(s+4)\) and \(T=0.5\),
+\begin{align*}
+G(z)&=(1-z^{-1})\,\Z\!\left\{\frac{4}{s(s+4)}\right\}
+     =(1-z^{-1})\,\Z\!\left\{\frac{1}{s}-\frac{1}{s+4}\right\}\\
+    &=(1-z^{-1})\left[\frac{1}{1-z^{-1}}-\frac{1}{1-\e^{-2}z^{-1}}\right]
+     =1-\frac{1-z^{-1}}{1-\e^{-2}z^{-1}}
+     =\frac{(1-\e^{-2})z^{-1}}{1-\e^{-2}z^{-1}} .
+\end{align*}
+With \(\e^{-2}=0.1353\), \(G(z)=0.8647z^{-1}/(1-0.1353z^{-1})\).
+
+The DC gain is \(G(1)=0.8647/(1-0.1353)=1\), matching \(G_{p}(0)=1\).
+
+For a sampled unit step, \(Y(z)=G(z)/(1-z^{-1})\), whose \(z^{-1}\) coefficient is
+\(0.8647\); so \(y[0]=0\) and \(y[1]=0.8647\).
+\verify{The ZOH holds the command constant over one period, so \(y(T)\) is just the
+continuous step response of the plant at \(t=T\): \(1-\e^{-4(0.5)}=1-\e^{-2}=0.8647\).
+The transform and the physics agree, and the agreement costs one line to check.}
+\wrong{Losing the \(z^{-1}\) is the most common error and the most consequential:
+a ZOH driving a strictly proper plant \emph{always} produces a one-sample delay,
+because the output cannot respond before the first hold interval has elapsed. If
+your \(G(z)\) has a nonzero \(g[0]\), something is wrong before you go any further.}
+
+\itemhead{H4.}{113--114}
+Equation (3--49) reads
+\[
+X(s)=\frac{1-\e^{-Ts}}{s}G(s)
+\quad\Longrightarrow\quad
+X(z)=(1-z^{-1})\,\Z\!\left\{\frac{G(s)}{s}\right\}.
+\]
+Only the numerator factor \(1-\e^{-Ts}\) becomes \(1-z^{-1}\) (it is a one-sample
+delay, and \(\e^{-Ts}\leftrightarrow z^{-1}\)). The \(1/s\) belongs to the hold's own
+integration and must stay \emph{inside} the transform alongside \(G(s)\).
+\wrong{The variant \((1-z^{-1})\Z\{G(s)\}\) drops that \(1/s\) and silently
+discretises the wrong plant. The variant keeping \(1-\e^{-Ts}\) outside leaves an
+\(s\)-domain factor multiplying a \(z\)-domain expression, which is not a
+well-formed object at all --- a useful sanity filter in itself.}
+
+\itemhead{H5.}{113--115}
+With \(G_{p}(s)=1/[s(s+2)]\) and \(T=1\),
+\[
+\frac{G_{p}(s)}{s}=\frac{1}{s^{2}(s+2)}
+=-\frac{0.25}{s}+\frac{0.5}{s^{2}}+\frac{0.25}{s+2},
+\]
+(coefficients from \(1=As(s+2)+B(s+2)+Cs^{2}\) at \(s=0\), \(s=-2\), and matching
+\(s^{2}\)). Therefore
+\[
+G(z)=(1-z^{-1})\left[\frac{-0.25}{1-z^{-1}}
++\frac{0.5z^{-1}}{(1-z^{-1})^{2}}
++\frac{0.25}{1-\e^{-2}z^{-1}}\right].
+\]
+Collecting the \(z^{-1}\) coefficient: the first term contributes 0, the second
+\(0.5\), and the third \(0.25(\e^{-2}-1)=-0.2162\). Hence \(g[1]=0.2838\).
+\verify{Independently, \(g[k]=s_{r}(kT)-s_{r}((k-1)T)\) where
+\(s_{r}(t)=-0.25+0.5t+0.25\e^{-2t}\) is the plant's continuous step response. Then
+\(s_{r}(0)=0\) and \(s_{r}(1)=0.2838\), so \(g[0]=0\) and \(g[1]=0.2838\). The two
+routes agree, and \(g[0]=0\) confirms the expected one-sample delay.}
+
+\subsection{I --- Pulse transfer functions, samplers and cascades}
+
+\itemhead{I1--I2.}{117--121}
+Without an intermediate sampler the blocks must be combined \emph{before} sampling:
+\[
+GH(s)=\frac{1}{(s+1)(s+3)}
+\;\Longrightarrow\;
+gh(t)=\tfrac12\left(\e^{-t}-\e^{-3t}\right).
+\]
+Sampling at \(T=0.5\) gives \(gh(0)=0\) and
+\(gh(0.5)=\tfrac12(0.6065-0.2231)=0.1917\).
+
+With an intermediate sampler, each block gets its own pulse transfer function and
+the sequences convolve: \(g[k]=\e^{-0.5k}\), \(h[k]=\e^{-1.5k}\), so the product's
+coefficients are \(1,\;0.8297,\;0.5530,\dots\)
+
+The two disagree at \emph{every} coefficient, most starkly at \(k=0\), where one is 0
+and the other is 1. They are different systems, and no choice of \(T\) reconciles
+them.
+\wrong{The \(k=0\) comparison is the fastest possible proof and worth remembering as
+a stock argument: \(GH(z)\) is strictly proper (two poles, no zeros, so \(g h[0]=0\)),
+while \(G(z)H(z)\) is a product of two transforms each starting at 1. If a
+block-diagram answer ever hinges on which form applies, this settles it in one line.}
+
+\itemhead{I3.}{107--110, 126}
+The signal reaching the first sampler is \(F(s)R(s)\), so the sampled quantity is
+\(\left[F(s)R(s)\right]^{*}\). By G2, a star may be factored only when one factor is
+already starred, and neither is here. Consequently \(R\) cannot be separated from the
+dynamics and no input-independent ratio \(C(z)/R(z)\) exists.
+
+Contrast the repaired configuration: with a sampler placed \emph{before} \(F(s)\),
+\(\left[F(s)X^{*}(s)\right]^{*}=F^{*}(s)X^{*}(s)\), and \(Y(z)=F(z)X(z)\) does exist.
+\wrong{Sampling the output does not repair a missing input sampler --- it only says
+where the continuous output is observed. Also note what is \emph{not} being claimed:
+the response to a specified \(R(s)\) remains perfectly computable. Only the
+input-independent ratio fails to exist.}
+
+\itemhead{I4.}{95--100}
+The plant impulse response satisfies \(g(t)=0\) for \(t<0\), so
+\(g\bigl((k-h)T\bigr)=0\) whenever \(h>k\) and those terms drop out of the sum. This
+is causality, and nothing else: an unstable but causal plant has the same summation
+limits, and a hold changes what \(g\) is, not where the sum stops.
+
+\subsection{J --- Closed-loop configurations, digital controller and PID}
+
+\itemhead{J1.}{122--125}
+Case 1 of Table 3--1. Derive it rather than recalling it:
+\[
+E(s)=R(s)-H(s)C(s),\qquad C(s)=G(s)E^{*}(s).
+\]
+Substituting, \(E(s)=R(s)-H(s)G(s)E^{*}(s)\). Starring both sides and using
+\(\left[HGE^{*}\right]^{*}=\left[HG\right]^{*}E^{*}\):
+\[
+E^{*}=R^{*}-\left[GH\right]^{*}E^{*}
+\;\Longrightarrow\;
+E(z)=\frac{R(z)}{1+GH(z)},
+\qquad
+C(z)=\frac{G(z)R(z)}{1+GH(z)} .
+\]
+There is no sampler between \(G\) and \(H\), so the loop term stays welded together
+as \(GH(z)=\Z\{G(s)H(s)\}\). The forward path \emph{is} driven by \(E^{*}\), which is
+why the numerator does separate.
+
+\itemhead{J2.}{124--125}
+Case 2. Now \(H\) is driven by the sampled output, so \(E=R-HC^{*}\) and
+\(\left[HC^{*}\right]^{*}=H^{*}C^{*}\):
+\[
+E^{*}=R^{*}-H^{*}G^{*}E^{*}
+\;\Longrightarrow\;
+C(z)=\frac{G(z)R(z)}{1+G(z)H(z)} .
+\]
+\wrong{J1 and J2 have identical numerators and differ only in whether the denominator
+reads \(GH(z)\) or \(G(z)H(z)\). One sampler decides it. Before writing any
+closed-loop formula, circle every sampler on the diagram and ask, for each product,
+whether a sampler separates the two blocks; if not, they stay inside one \(\Z\{\cdot\}\).}
+
+\itemhead{J3.}{125--126}
+Case 4 has no sampler after the summing junction, so \(G_{1}\) is driven by the
+continuous error. Writing \(e=R-HC\) and sampling the signal that actually reaches
+the sampler, \(\left[G_{1}e\right]^{*}\), gives
+\[
+\left[G_{1}e\right]^{*}=\left[G_{1}R\right]^{*}-\left[G_{1}G_{2}H\right]^{*}\left[G_{1}e\right]^{*},
+\qquad
+C(z)=\frac{G_{2}(z)\,G_{1}R(z)}{1+G_{1}G_{2}H(z)} .
+\]
+The term \(G_{1}R(z)=\Z\{G_{1}(s)R(s)\}\) does not factor into \(G_{1}(z)R(z)\),
+because \(R\) passes through \(G_{1}\) before any sampler. A pulse transfer function
+is by definition an input-independent ratio, so this system has none --- the point
+the lecture makes explicitly on p.~126.
+\wrong{Note precisely what fails. The system is not unstable, not unanalysable, and
+not lacking an output: for any \emph{specified} \(R(s)\) the response is computable
+by the same technique. What does not exist is the ratio.}
+
+\itemhead{J4, J6.}{134--135}
+With \(K=2\), \(T=0.1\), \(T_{i}=0.5\), \(T_{d}=0.2\):
+\[
+K_{I}=\frac{KT}{T_{i}}=0.4,\qquad
+K_{D}=\frac{KT_{d}}{T}=4,\qquad
+K_{P}=K-\frac{KT}{2T_{i}}=K-\frac{K_{I}}{2}=2-0.2=1.8 .
+\]
+For a unit discrete impulse at the error input, read the \(k=0\) coefficient off each
+term of \(G_{D}(z)\):
+\[
+m[0]=K_{P}+K_{I}+K_{D}=1.8+0.4+4=6.2,
+\qquad
+m[1]=K_{I}-K_{D}=-3.6 .
+\]
+\wrong{Answering \(K_{P}=2\) means the \(-K_{I}/2\) correction was missed. It is not
+cosmetic: the trapezoidal rule averages \(e[k-1]\) and \(e[k]\), and half of the
+current sample's contribution is already counted inside the integral term, so the
+proportional gain must be reduced to compensate. The slide states \(K_{P}<K\)
+explicitly, which is a free check on your arithmetic. The large \(|m[1]|\) is the
+derivative kick, and it is why \(K_{D}\) is the term that makes PID noise-sensitive.}
+
+\itemhead{J5.}{135}
+\[
+G_{D}(z)=\frac{M(z)}{E(z)}=K_{P}+\frac{K_{I}}{1-z^{-1}}+K_{D}\left(1-z^{-1}\right).
+\]
+Integration accumulates, giving a pole at \(z=1\); differentiation differences,
+giving a zero at \(z=1\). Swapping the two --- \(K_{I}(1-z^{-1})\) with
+\(K_{D}/(1-z^{-1})\) --- inverts both roles at once.
+\wrong{A form with \(T\) still visible has double-counted the sampling period:
+\(T\) is already absorbed into \(K_{I}=KT/T_{i}\) and \(K_{D}=KT_{d}/T\). Reading the
+gain definitions and the transfer function as one package prevents this.}
+
+\section*{After marking}
+\addcontentsline{toc}{section}{After marking}
+
+Write your ten topic percentages down before doing anything else, then act on them
+in the tier order given at the front. Two habits are worth carrying into the quiz
+regardless of the scores, because they appear in the \textbf{Check} lines above more
+often than any single formula:
+
+\begin{enumerate}[label=\arabic*.]
+\item \textbf{Generate a sample.} Any closed form, inverse transform or recurrence
+solution can be tested at \(k=0\) and \(k=1\) against the original time-domain rule
+in well under a minute. Every wrong option in B4, E3, F4 and D2 dies to this test.
+\item \textbf{Check a gain or a limit physically.} A ZOH-plus-plant conversion must
+reproduce the plant's DC gain; a stable sampled loop must settle where the continuous
+one would. H2 and H3 are that check applied deliberately, and it catches a lost
+\((1-z^{-1})\) factor faster than re-deriving the algebra.
+\end{enumerate}
+
+Where a score is low and you are unsure whether the cause is the concept or the
+arithmetic, re-attempt only the items you missed --- the question file keeps the
+option order fixed, so a second pass measures the same thing.
+
+\end{document}

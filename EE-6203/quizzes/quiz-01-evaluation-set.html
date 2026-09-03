@@ -1,0 +1,697 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Held-out topic-tagged diagnostic for NTU EE6203 Quiz 1 (Chapters 1-3). Self-marking, with per-topic scoring that points at the exact gap.">
+  <title>EE6203 Quiz 1 Evaluation Set</title>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+    };
+    window.mathReady = false;
+    // If the bundled renderer cannot be reached (page moved, or opened somewhere that
+    // blocks relative subresources), fall back to the CDN once before warning.
+    window.mathFallback = function () {
+      if (window.mathTried) { document.getElementById('math-warning')?.removeAttribute('hidden'); return; }
+      window.mathTried = true;
+      var s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js';
+      s.async = true;
+      s.onload = function () { window.mathReady = true; document.getElementById('math-warning')?.setAttribute('hidden',''); };
+      s.onerror = function () { document.getElementById('math-warning')?.removeAttribute('hidden'); };
+      document.head.appendChild(s);
+    };
+    window.addEventListener('load', () => {
+      window.setTimeout(() => {
+        const warning = document.getElementById('math-warning');
+        if (warning && !window.mathReady) warning.hidden = false;
+      }, 3500);
+    });
+  </script>
+  <script async src="vendor/mathjax/tex-mml-chtml.js"
+    onload="window.mathReady=true;document.getElementById('math-warning')?.setAttribute('hidden','')"
+    onerror="window.mathFallback()"></script>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f7f8fb; --surface: #ffffff; --surface-2: #eef3fb;
+      --text: #18202c; --muted: #5f6b7a; --border: #d8dee9;
+      --accent: #245ec7; --accent-soft: #e8f0ff;
+      --success: #176b45; --success-soft: #e5f6ed;
+      --warning: #8a5700; --warning-soft: #fff3d8;
+      --danger: #a33232; --danger-soft: #fdeaea;
+      --shadow: 0 12px 32px rgba(28,39,58,.08); --radius: 14px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #10141b; --surface: #171d26; --surface-2: #202a38;
+        --text: #edf2f8; --muted: #aab4c2; --border: #344052;
+        --accent: #8bb5ff; --accent-soft: #1e3558;
+        --success: #82d4ad; --success-soft: #17392d;
+        --warning: #ffd079; --warning-soft: #4a3514;
+        --danger: #ffaaaa; --danger-soft: #4a2528;
+        --shadow: 0 14px 34px rgba(0,0,0,.24);
+      }
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text);
+      font: 16px/1.62 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    .wrap { max-width: 60rem; margin: 0 auto; padding: 1.5rem 1.25rem 5rem; }
+    h1 { font-size: 1.75rem; margin: 0 0 .35rem; letter-spacing: -.01em; }
+    h2 { font-size: 1.2rem; margin: 0; }
+    .lede { color: var(--muted); margin: 0 0 1.25rem; }
+    .card { background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.15rem 1.25rem; margin: 1rem 0; box-shadow: var(--shadow); }
+    .banner { background: var(--accent-soft); border-color: var(--accent); }
+    .warn { background: var(--warning-soft); border-color: var(--warning); color: var(--warning); }
+    .rules { margin: .5rem 0 0; padding-left: 1.15rem; }
+    .rules li { margin: .25rem 0; }
+    .scoreboard { position: sticky; top: 0; z-index: 20; background: var(--surface);
+      border: 1px solid var(--border); border-radius: var(--radius); padding: .9rem 1.1rem;
+      box-shadow: var(--shadow); margin-bottom: 1.25rem; }
+    .score-head { display: flex; flex-wrap: wrap; gap: .75rem; align-items: baseline; justify-content: space-between; }
+    .score-total { font-size: 1.35rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+    .bars { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: .4rem .9rem; margin-top: .8rem; }
+    .bar-row { display: grid; grid-template-columns: 1.4rem 1fr auto; gap: .5rem; align-items: center; font-size: .85rem; }
+    .bar-id { font-weight: 700; color: var(--muted); }
+    .bar-track { height: .55rem; background: var(--surface-2); border-radius: 99px; overflow: hidden; }
+    .bar-fill { height: 100%; width: 0; background: var(--accent); transition: width .25s ease; }
+    .bar-fill.weak { background: var(--danger); }
+    .bar-fill.mid { background: var(--warning); }
+    .bar-fill.strong { background: var(--success); }
+    .bar-num { font-variant-numeric: tabular-nums; color: var(--muted); min-width: 3.2rem; text-align: right; }
+    .topic { margin-top: 2rem; scroll-margin-top: 13rem; }
+    .topic-head { display: flex; flex-wrap: wrap; gap: .5rem 1rem; align-items: baseline;
+      border-bottom: 2px solid var(--border); padding-bottom: .5rem; margin-bottom: .25rem; }
+    .topic-pages { color: var(--muted); font-size: .85rem; }
+    .q { scroll-margin-top: 13rem; border: 1px solid var(--border); border-radius: 11px; padding: 1rem 1.1rem; margin: .9rem 0; background: var(--surface); }
+    .q.correct { border-color: var(--success); background: var(--success-soft); }
+    .q.incorrect { border-color: var(--danger); background: var(--danger-soft); }
+    .q-tag { font-size: .78rem; font-weight: 700; letter-spacing: .04em; color: var(--muted); text-transform: uppercase; }
+    .q-prompt { margin: .35rem 0 .8rem; }
+    .choices { display: grid; gap: .45rem; margin: .8rem 0; }
+    .choice { display: flex; gap: .55rem; align-items: flex-start; cursor: pointer; padding: .3rem .4rem; border-radius: 7px; }
+    .choice:hover { background: var(--surface-2); }
+    .choices { min-width: 0; }
+    .choice { min-width: 0; }
+    .choice > span { min-width: 0; overflow-x: auto; overflow-y: hidden; }
+    .q, .q-prompt { min-width: 0; }
+    .q-prompt { overflow-x: auto; overflow-y: hidden; }
+    /* Long formulas scroll inside their own box so the page body never does. */
+    mjx-container { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+    mjx-container[display="true"] { padding-bottom: .2rem; }
+    .numline { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin: .7rem 0; }
+    input[type="text"] { border: 1px solid var(--border); border-radius: 8px; padding: .5rem .6rem;
+      background: var(--surface); color: var(--text); width: 11rem; font-size: 1rem; }
+    .unit { color: var(--muted); font-size: .9rem; }
+    .actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .7rem; }
+    button { font: inherit; border: 1px solid var(--border); background: var(--surface-2); color: var(--text);
+      border-radius: 8px; padding: .42rem .85rem; cursor: pointer; }
+    button:hover:not(:disabled) { border-color: var(--accent); }
+    button:disabled { opacity: .5; cursor: default; }
+    button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+    @media (prefers-color-scheme: dark) { button.primary { color: #10141b; } }
+    .fb { margin-top: .75rem; padding: .7rem .85rem; border-radius: 8px; background: var(--surface-2); font-size: .95rem; }
+    .fb[hidden], .key[hidden] { display: none; }
+    .fb .verdict { font-weight: 700; }
+    .fb.good .verdict { color: var(--success); }
+    .fb.bad .verdict { color: var(--danger); }
+    .fb .src { display: block; margin-top: .4rem; color: var(--muted); font-size: .85rem; }
+    .key { margin-top: .6rem; padding: .65rem .85rem; border-radius: 8px;
+      background: var(--accent-soft); border: 1px dashed var(--accent); font-size: .95rem; }
+    .toolbar { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1rem 0 0; }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+    footer { margin-top: 3rem; color: var(--muted); font-size: .85rem; border-top: 1px solid var(--border); padding-top: 1rem; }
+    @media print {
+      .scoreboard, .actions, .toolbar, .fb, .key, #math-warning, .noprint { display: none !important; }
+      body { background: #fff; } .card, .q { box-shadow: none; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <h1>EE6203 Quiz 1 &mdash; Evaluation Set</h1>
+  <p class="lede">A held-out diagnostic for Chapters 1&ndash;3. Forty-four fresh questions, none reused from the prep pack&rsquo;s drills, knowledge checks, archetypes or mocks.</p>
+
+  <div class="card warn" id="math-warning" hidden>
+    Equations are not rendering. This page loads MathJax from <code>vendor/mathjax/tex-mml-chtml.js</code>; open it from inside the <code>EE-6203</code> folder so that relative path resolves.
+  </div>
+
+  <div class="card banner">
+    <h2>How to use this</h2>
+    <ul class="rules">
+      <li><strong>This is a measurement, not practice.</strong> Sit it closed-book, calculator allowed, transform table allowed &mdash; the same conditions as the quiz. Guessing inflates the score and hides the gap.</li>
+      <li><strong>Untimed.</strong> Budget roughly 90 minutes. Per-topic scores mean nothing if you rush.</li>
+      <li><strong>Full worked solutions are deliberately not in this file.</strong> They are in <code>quiz-01-evaluation-set-solutions.pdf</code>. Marking here tells you <em>which</em> answers were wrong and names the likely mistake; the derivation is in the PDF.</li>
+      <li><strong>Read the bars, not the total.</strong> A topic under 60&nbsp;% is where the remaining study hours belong. Every question carries the lecture pages that cover it.</li>
+      <li>Numeric answers are marked with a tolerance. Enter a plain decimal number.</li>
+    </ul>
+  </div>
+
+  <div class="scoreboard" role="region" aria-label="Score summary">
+    <div class="score-head">
+      <div><strong>Score</strong> <span class="score-total" id="total">0 / 44</span></div>
+      <div id="answered" class="unit">0 answered</div>
+    </div>
+    <div class="bars" id="bars"></div>
+    <div class="toolbar">
+      <button type="button" id="reveal-all">Reveal all answer keys</button>
+      <button type="button" id="reset">Reset attempt</button>
+    </div>
+  </div>
+
+  <main id="content"></main>
+
+  <footer>
+    <p>Sources: <code>resources/lecture-notes-weeks-01-04.pdf</code> pp.&nbsp;8&ndash;138 (Chapters 1&ndash;3), with the three weekly transcripts confirming scope. Chapter 4 material is excluded, per the Week 3 announcement. Every numeric key was derived twice by independent methods.</p>
+    <p>Progress is stored in this browser only, under <code>ee6203-quiz1-evaluation-set-v1</code>.</p>
+  </footer>
+</div>
+<script>
+(function () {
+  "use strict";
+
+  const TOPICS = [
+    { id: 'A', name: 'Signals and the digital-control architecture', pages: 'pp. 8-20' },
+    { id: 'B', name: 'Z-transform definition and elementary functions', pages: 'pp. 24-33' },
+    { id: 'C', name: 'Properties and the translation theorems', pages: 'pp. 34-41' },
+    { id: 'D', name: 'Initial- and final-value theorems', pages: 'pp. 42-48' },
+    { id: 'E', name: 'Inverse z-transform methods', pages: 'pp. 49-66' },
+    { id: 'F', name: 'Difference equations solved by z transform', pages: 'pp. 67-70' },
+    { id: 'G', name: 'Impulse sampling and the starred transform', pages: 'pp. 73-79, 103-106' },
+    { id: 'H', name: 'Data holds and ZOH-plus-plant discretisation', pages: 'pp. 80-93, 111-115' },
+    { id: 'I', name: 'Pulse transfer functions, samplers and cascades', pages: 'pp. 94-110, 117-121' },
+    { id: 'J', name: 'Closed-loop configurations, digital controller and PID', pages: 'pp. 116, 122-138' }
+  ];
+
+  // c = multiple choice, n = numeric.  key = the answer shown only on demand.
+  const c = (id, topic, prompt, choices, answer, diagnosis, src, key) =>
+    ({ id, topic, type: 'choice', prompt, choices, answer, diagnosis, src, key });
+  const n = (id, topic, prompt, answer, tol, diagnosis, src, key, unit) =>
+    ({ id, topic, type: 'number', prompt, answer, tol, diagnosis, src, key, unit: unit || '' });
+
+  const BANK = [
+
+  c('A1','A','A thermocouple voltage is read through a 12-bit ADC every 10 ms. In the Chapter 1 vocabulary, the signal at the <em>output of the ADC</em> is:',
+    ['a continuous-time analogue signal',
+     'a sampled-data signal (discrete in time, continuous in amplitude)',
+     'a digital signal (discrete in both time and amplitude)',
+     'an ideal impulse train'], 2,
+    'Discrete time alone gives a sampled-data signal. A finite word length quantises amplitude as well, and that is what makes it digital.',
+    'pp. 13-16', 'Digital signal.'),
+
+  c('A2','A','Chapter 1 describes the loop of Figure 1.2 as running in two time domains at once: the controller is discrete, the plant is continuous. Which consequence follows &mdash; and is the reason Chapters 2 and 3 exist?',
+    ['The two descriptions must be brought into a single domain before the loop can be analysed, which is what the \\(z\\) transform and the pulse transfer function do',
+     'The plant must be redesigned so that it too operates in discrete time',
+     'Ordinary Laplace methods still suffice, because the plant itself is unchanged',
+     'The shared clock removes the difference, so one continuous model covers the whole loop'], 0,
+    'The ADC and the DAC-plus-ZOH sit on the boundary between the two domains; neither removes it. Chapter 2 supplies the discrete description, and Chapter 3 converts the continuous plant into a pulse transfer function so that one algebra covers the whole loop. The clock synchronises the conversions, it does not abolish them.',
+    'pp. 10, 16', 'The two descriptions must be reconciled in one domain.'),
+
+  n('A3','A','A loop samples every \\(T = 4\\) ms. Counting \\(k = 0, 1, 2, \\dots\\), how many sample instants fall in the interval \\(0 \\le t \\le 0.1\\) s, including both endpoints?',
+    26, 0,
+    'There are \\(0.1/0.004 = 25\\) intervals and therefore 26 instants. Answering 25 drops the \\(k=0\\) sample: the classic off-by-one that also spoils piecewise-input transforms.',
+    'pp. 14-16', '26 samples.'),
+
+  c('B1','B','A signal is zero for \\(t<0\\), equal to 2 on \\(0 \\le t < 3T\\), equal to \\(-1\\) on \\(3T \\le t < 4T\\), and zero for \\(t \\ge 4T\\). Working straight from the defining sum, \\(X(z)\\) is:',
+    ['\\(2 + 2z^{-1} + 2z^{-2} - z^{-3}\\)',
+     '\\(2 + 2z^{-1} + 2z^{-2} + 2z^{-3} - z^{-4}\\)',
+     '\\(2 + 2z^{-1} - z^{-2}\\)',
+     '\\(2z^{-1} + 2z^{-2} + 2z^{-3} - z^{-4}\\)'], 0,
+    'Tabulate \\(k\\), \\(kT\\) and \\(x(kT)\\) before summing. The half-open interval \\(0 \\le t < 3T\\) contains \\(k = 0,1,2\\) only; \\(k=3\\) already belongs to the next piece. The variant with no constant term starts the sequence at \\(k=1\\).',
+    'pp. 24-25', '\\(2 + 2z^{-1} + 2z^{-2} - z^{-3}\\)'),
+
+  n('B2','B','\\(x(t)=e^{-2t}1(t)\\) is sampled with \\(T = 0.5\\) s. Using Table 2-1 entry 4, the single pole of \\(X(z)\\) lies at \\(z=\\)',
+    0.3679, 0.005,
+    'Entry 4 gives \\(1/(1-e^{-aT}z^{-1})\\), so the pole sits at \\(e^{-aT}=e^{-1}=0.368\\). Answering \\(-2\\) or \\(e^{-2}\\) means \\(a\\) and \\(aT\\) were confused.',
+    'p. 32, entry 4', '\\(z = e^{-1} \\approx 0.3679\\)'),
+
+  c('B3','B','Sampled with period \\(T\\), which line of Table 2-1 is \\(\\mathcal{Z}\\{t^{2}\\}\\)?',
+    ['\\(\\dfrac{T^{2}z^{-1}(1+z^{-1})}{(1-z^{-1})^{3}}\\)',
+     '\\(\\dfrac{T^{2}z^{-1}}{(1-z^{-1})^{3}}\\)',
+     '\\(\\dfrac{2T^{2}z^{-1}}{(1-z^{-1})^{2}}\\)',
+     '\\(\\dfrac{Tz^{-1}}{(1-z^{-1})^{2}}\\)'], 0,
+    'The \\((1+z^{-1})\\) numerator factor is the part most often dropped. The entry \\(Tz^{-1}/(1-z^{-1})^{2}\\) is the ramp \\(kT\\), not \\((kT)^{2}\\). The table is supplied in the quiz, so the marks here are for reading it precisely.',
+    'p. 32, entry 6', '\\(T^{2}z^{-1}(1+z^{-1})/(1-z^{-1})^{3}\\)'),
+
+  n('B4','B','Table 2-1 entry 20 reads \\(k\\,a^{k-1} \\leftrightarrow \\dfrac{z^{-1}}{(1-az^{-1})^{2}}\\). For \\(a=0.5\\), what is \\(x[4]\\)?',
+    0.5, 0.001,
+    'The exponent is \\(k-1\\), so \\(x[4]=4(0.5)^{3}=0.5\\). Reading the pair as \\(ka^{k}\\) gives 0.25 and is the standard slip on the repeated-pole entries.',
+    'p. 33, entry 20', '\\(x[4] = 4(0.5)^{3} = 0.5\\)'),
+
+  c('C1','C','\\(x[k]=(0.4)^{k}\\) for \\(k \\ge 0\\). By the shifting theorem, \\(\\mathcal{Z}\\{x[k-2]\\,1(k-2)\\}\\) is:',
+    ['\\(\\dfrac{z^{-2}}{1-0.4z^{-1}}\\)',
+     '\\(\\dfrac{z^{2}}{1-0.4z^{-1}}\\)',
+     '\\(\\dfrac{0.16}{1-0.4z^{-1}}\\)',
+     '\\(\\dfrac{1}{1-0.4z^{-3}}\\)'], 0,
+    'A delay of \\(n\\) samples multiplies by \\(z^{-n}\\); it does not touch the pole. The choice with numerator 0.16 applies the complex-translation (scaling) theorem by mistake; the one carrying \\(z^{2}\\) advances instead of delaying.',
+    'p. 35', '\\(z^{-2}/(1-0.4z^{-1})\\)'),
+
+  c('C2','C','For a one-sided transform with \\(x[0]=3\\) and \\(x[1]=-1\\), \\(\\mathcal{Z}\\{x[k+2]\\}\\) equals:',
+    ['\\(z^{2}X(z) - 3z^{2} + z\\)',
+     '\\(z^{2}X(z) - 3z^{2} - z\\)',
+     '\\(z^{2}X(z) - 3z - 1\\)',
+     '\\(z^{2}X(z) - 3\\)'], 0,
+    'The rule is \\(z^{2}\\left[X(z)-x[0]-x[1]z^{-1}\\right]\\). Substituting \\(x[1]=-1\\) turns the last term into \\(+z\\). Losing that sign is the usual cause of a wrong forced response later.',
+    'pp. 35-36', '\\(z^{2}X(z) - 3z^{2} + z\\)'),
+
+  c('C3','C','Given \\(\\mathcal{Z}\\{\\sin \\omega kT\\}=\\dfrac{z^{-1}\\sin\\omega T}{1-2z^{-1}\\cos\\omega T+z^{-2}}\\), the complex-translation theorem gives \\(\\mathcal{Z}\\{e^{-akT}\\sin\\omega kT\\}\\) as:',
+    ['\\(\\dfrac{e^{-aT}z^{-1}\\sin\\omega T}{1-2e^{-aT}z^{-1}\\cos\\omega T+e^{-2aT}z^{-2}}\\)',
+     '\\(\\dfrac{e^{-aT}z^{-1}\\sin\\omega T}{1-2z^{-1}\\cos\\omega T+z^{-2}}\\)',
+     '\\(\\dfrac{z^{-1}\\sin\\omega T}{1-2e^{-aT}z^{-1}\\cos\\omega T+e^{-2aT}z^{-2}}\\)',
+     '\\(e^{-aT}\\dfrac{z^{-1}\\sin\\omega T}{1-2z^{-1}\\cos\\omega T+e^{-2aT}z^{-2}}\\)'], 0,
+    'The theorem replaces \\(z^{-1}\\) by \\(e^{-aT}z^{-1}\\) <em>everywhere</em>, so \\(z^{-2}\\) picks up \\(e^{-2aT}\\). Patching only the numerator, or only the denominator, is a half-application.',
+    'pp. 39-40; p. 33, entry 16', 'Every \\(z^{-1}\\) is scaled, numerator and denominator alike.'),
+
+  n('C4','C','\\(\\mathcal{Z}\\{a^{k}x[k]\\}=X(z/a)\\). If \\(X(z)\\) has a pole at \\(z=0.6\\), where is the corresponding pole of \\(\\mathcal{Z}\\{2^{k}x[k]\\}\\)?',
+    1.2, 0.001,
+    'Poles satisfy \\(z/a = 0.6\\), giving \\(z = 1.2\\). Dividing instead of multiplying gives 0.3. Note that the scaling has pushed the pole outside the unit circle.',
+    'pp. 34, 39', '\\(z = 1.2\\)'),
+
+  n('D1','D','\\(X(z)=\\dfrac{2z^{-1}+3z^{-2}}{1-0.5z^{-1}+0.06z^{-2}}\\). By the initial-value theorem, \\(x[0]=\\)',
+    0, 0.001,
+    'Let \\(z \\to \\infty\\): every numerator term carries a negative power of \\(z\\), so the limit is 0. Reading the leading numerator coefficient as \\(x[0]\\) gives 2, which is actually \\(x[1]\\).',
+    'p. 42', '\\(x[0] = 0\\)'),
+
+  n('D2','D','For the same \\(X(z)\\), what is \\(x[1]\\)?',
+    2, 0.001,
+    'One step of long division: \\(x[1]-0.5x[0]=2\\) with \\(x[0]=0\\), so \\(x[1]=2\\). The full opening is \\(0,\\,2,\\,4,\\,1.88,\\dots\\)',
+    'pp. 51-53', '\\(x[1] = 2\\)'),
+
+  c('D3','D','For \\(X(z)=\\dfrac{0.5z^{-1}}{(1-z^{-1})(1+0.9z^{-1})}\\), which statement is correct?',
+    ['The theorem applies, and \\(x[\\infty]=0.263\\)',
+     'The theorem fails, because the remaining pole \\(z=-0.9\\) is negative',
+     'The theorem applies, and \\(x[\\infty]=0.5\\)',
+     'The theorem fails, because \\(X(z)\\) has a pole at \\(z=1\\)'], 0,
+    'Remove the simple pole at \\(z=1\\) first; the survivor is \\(z=-0.9\\), and \\(|-0.9|<1\\), so the alternating part decays. The condition is on magnitude, not sign, and a <em>simple</em> pole at \\(z=1\\) is exactly what the theorem permits.',
+    'pp. 44-46', 'Applies; \\(x[\\infty]=0.5/1.9=0.263\\).'),
+
+  c('D4','D','For \\(X(z)=\\dfrac{z}{(z-1)(z-1.2)}\\) a student evaluates \\(\\lim_{z\\to1}(1-z^{-1})X(z) = -5\\) and reports \\(x[\\infty]=-5\\). The correct verdict is:',
+    ['The answer is right; the negative value simply means the sequence settles below zero',
+     'The theorem does not apply: after the pole at \\(z=1\\) is removed the remaining pole \\(z=1.2\\) lies outside the unit circle, and \\(x[k]\\) diverges',
+     'The theorem does not apply, because \\(X(z)\\) has no pole at \\(z=1\\)',
+     'The theorem applies but the sign is wrong; \\(x[\\infty]=+5\\)'], 1,
+    'A finite number obtained by substituting \\(z=1\\) is not evidence that a limit exists. This is the pitfall stated in the Remarks slide: classify the remaining poles before quoting a final value.',
+    'pp. 44-46', 'The theorem does not apply; the sequence diverges.'),
+
+  n('D5','D','A sampled unit ramp \\(x(kT)=kT\\) with \\(T=0.2\\) has \\(X(z)=\\dfrac{Tz^{-1}}{(1-z^{-1})^{2}}\\). How many poles does \\(X(z)\\) have at \\(z=1\\)?',
+    2, 0,
+    'Two. The theorem permits at most a <em>simple</em> pole at \\(z=1\\), so it does not apply here, which agrees with \\(kT\\) growing without bound.',
+    'p. 32 entry 5; p. 44', 'Two (a double pole).'),
+
+  c('E1','E','You need only \\(x[0]\\) through \\(x[3]\\) of a fifth-order rational \\(X(z)\\), and no closed form. The quickest of the methods taught is:',
+    ['partial-fraction expansion of \\(X(z)/z\\)',
+     'direct division (long division)',
+     'the inversion integral',
+     'the complex-translation theorem'], 1,
+    'Long division produces the leading samples immediately but never a general term; partial fractions is the choice only when a closed form is wanted. Picking the wrong one here costs time you do not have in 30 minutes.',
+    'pp. 49-53', 'Direct division.'),
+
+  n('E2','E','\\(X(z)=\\dfrac{1}{(1-0.5z^{-1})(1-0.25z^{-1})}\\). Find \\(x[2]\\).',
+    0.4375, 0.001,
+    'Partial fractions give \\(x[k]=2(0.5)^{k}-(0.25)^{k}\\), so \\(x[2]=0.5-0.0625=0.4375\\). Long division gives the same opening \\(1,\\,0.75,\\,0.4375\\) &mdash; use it as the check.',
+    'pp. 60-62', '\\(x[2] = 0.4375\\)'),
+
+  c('E3','E','The causal inverse transform of \\(X(z)=\\dfrac{z}{(z-0.8)^{2}}\\) is:',
+    ['\\(k(0.8)^{k-1}\\)', '\\((0.8)^{k}\\)', '\\(k(0.8)^{k}\\)', '\\((k+1)(0.8)^{k}\\)'], 0,
+    'Rewrite it as \\(z^{-1}/(1-0.8z^{-1})^{2}\\) and match entry 20, \\(ka^{k-1}\\). The variants \\(k(0.8)^{k}\\) and \\((k+1)(0.8)^{k}\\) are index-shifted; both give the wrong value at \\(k=1\\), which is the fastest way to reject them.',
+    'p. 33 entry 20; p. 61', '\\(x[k] = k(0.8)^{k-1}\\)'),
+
+  n('E4','E','For that same \\(X(z)=\\dfrac{z}{(z-0.8)^{2}}\\), what is \\(x[3]\\)?',
+    1.92, 0.005,
+    '\\(3(0.8)^{2}=1.92\\). Long division of \\(z^{-1}/(1-1.6z^{-1}+0.64z^{-2})\\) gives \\(0,\\,1,\\,1.6,\\,1.92\\), confirming both the pair and the exponent.',
+    'p. 61', '\\(x[3] = 1.92\\)'),
+
+  c('E5','E','\\(X(z)=\\dfrac{z^{-1}\\sin 0.5}{1-2z^{-1}\\cos 0.5+z^{-2}}\\) is the transform of:',
+    ['\\(\\sin(0.5k)\\)', '\\(\\cos(0.5k)\\)', '\\(e^{-0.5k}\\sin k\\)', '\\((0.5)^{k}\\sin k\\)'], 0,
+    'Entry 14 with \\(\\omega T = 0.5\\). A cosine would show \\(1-z^{-1}\\cos\\omega T\\) on top; a damped sine would carry \\(e^{-aT}\\) factors in the denominator. Recognising the shape beats re-deriving it.',
+    'p. 33 entry 14; pp. 63-64', '\\(x[k] = \\sin(0.5k)\\)'),
+
+  n('F1','F','Solve \\(y[k+1]-0.8y[k]=0\\) with \\(y[0]=5\\). What is \\(y[3]\\)?',
+    2.56, 0.005,
+    'Transforming gives \\((z-0.8)Y(z)=5z\\), hence \\(y[k]=5(0.8)^{k}\\) and \\(y[3]=2.56\\). With no forcing term there is no step pole, so nothing here should produce a \\(1/(1-z^{-1})\\) factor.',
+    'pp. 67-69', '\\(y[3] = 5(0.8)^{3} = 2.56\\)'),
+
+  c('F2','F','For \\(y[k+2]-1.1y[k+1]+0.3y[k]=0\\) with \\(y[0]=0\\) and \\(y[1]=1\\), the transform is:',
+    ['\\(Y(z)=\\dfrac{z}{(z-0.5)(z-0.6)}\\)',
+     '\\(Y(z)=\\dfrac{1}{(z-0.5)(z-0.6)}\\)',
+     '\\(Y(z)=\\dfrac{z^{2}}{(z-0.5)(z-0.6)}\\)',
+     '\\(Y(z)=\\dfrac{z}{(z-0.5)(z+0.6)}\\)'], 0,
+    '\\(\\mathcal{Z}\\{y[k+2]\\}=z^{2}Y-z^{2}y[0]-zy[1]\\). With \\(y[0]=0\\) only \\(-zy[1]\\) survives, so \\(+z\\) appears on the right and the numerator is \\(z\\), not 1 or \\(z^{2}\\).',
+    'pp. 35-36, 67-69', '\\(Y(z)=z/[(z-0.5)(z-0.6)]\\)'),
+
+  n('F3','F','For that same recurrence and initial conditions, what is \\(y[2]\\)?',
+    1.1, 0.001,
+    'Straight from the time-domain rule: \\(y[2]=1.1y[1]-0.3y[0]=1.1\\). Generating one sample this way is the cheapest possible check on any transform result.',
+    'pp. 67-69', '\\(y[2] = 1.1\\)'),
+
+  c('F4','F','The closed-form solution of that recurrence is:',
+    ['\\(y[k]=10\\left[(0.6)^{k}-(0.5)^{k}\\right]\\)',
+     '\\(y[k]=10\\left[(0.5)^{k}-(0.6)^{k}\\right]\\)',
+     '\\(y[k]=(0.6)^{k}-(0.5)^{k}\\)',
+     '\\(y[k]=10\\left[(0.6)^{k-1}-(0.5)^{k-1}\\right]\\)'], 0,
+    'Expand \\(Y(z)/z\\) into \\(-10/(z-0.5)+10/(z-0.6)\\). Then test at \\(k=0,1,2\\): the answer must return \\(0,\\,1,\\,1.1\\). The sign-swapped, unscaled and index-shifted variants each fail one of those three values.',
+    'pp. 60, 67-69', '\\(y[k]=10[(0.6)^{k}-(0.5)^{k}]\\)'),
+
+  n('G1','G','\\(x(t)=e^{-t}1(t)\\) is impulse-sampled with \\(T=0.5\\) s. What is the strength (area) of the impulse at \\(t=1.0\\) s?',
+    0.3679, 0.005,
+    'The impulse at \\(t=kT\\) carries area \\(x(kT)\\); here \\(k=2\\) and \\(x(1)=e^{-1}=0.368\\). An ideal impulse has no finite height, so nothing can be read off as a pulse amplitude.',
+    'pp. 75-79', '\\(e^{-1} \\approx 0.3679\\)'),
+
+  c('G2','G','Which relation holds in general?',
+    ['\\(\\left[G(s)X^{*}(s)\\right]^{*} = G^{*}(s)X^{*}(s)\\)',
+     '\\(\\left[G(s)X(s)\\right]^{*} = G^{*}(s)X^{*}(s)\\)',
+     '\\(\\left[G(s)H(s)\\right]^{*} = G^{*}(s)H^{*}(s)\\)',
+     '\\(\\left[G(s)+X^{*}(s)\\right]^{*} = G^{*}(s)X^{*}(s)\\)'], 0,
+    'A factor that is <em>already</em> starred can be taken outside the star; an unsampled product cannot be split. This single rule decides almost every block-diagram question in Chapter 3.',
+    'pp. 103-106', '\\([G X^{*}]^{*} = G^{*}X^{*}\\)'),
+
+  n('G3','G','\\(X^{*}(s)\\) is periodic along the imaginary axis with period \\(\\omega_{s}\\). For \\(T=0.02\\) s, give \\(\\omega_{s}\\) in rad/s.',
+    314.16, 1,
+    '\\(\\omega_{s}=2\\pi/T=314.16\\) rad/s. Answering 50 gives the sampling frequency in hertz; the factor \\(2\\pi\\) is what the question is testing.',
+    'pp. 77-78, 103-104', '\\(\\omega_s = 2\\pi/0.02 \\approx 314.16\\) rad/s', 'rad/s'),
+
+  c('G4','G','Impulse-sampling a unit step with period \\(T\\) gives \\(X^{*}(s)=\\sum_{k\\ge0}e^{-kTs}=\\dfrac{1}{1-e^{-Ts}}\\). Substituting \\(z=e^{Ts}\\) yields \\(X(z)=\\)',
+    ['\\(\\dfrac{1}{1-z^{-1}}\\)', '\\(\\dfrac{1}{1-z}\\)', '\\(\\dfrac{z}{z+1}\\)', '\\(\\dfrac{1}{1+z^{-1}}\\)'], 0,
+    'Under \\(z=e^{Ts}\\), \\(e^{-Ts}\\) becomes \\(z^{-1}\\). This substitution is precisely what defines \\(X(z)\\) from \\(X^{*}(s)\\), and it is why one sampled block may be written in either domain.',
+    'pp. 78, 103-104', '\\(1/(1-z^{-1})\\)'),
+
+  c('H1','H','A ZOH drives \\(G_{p}(s)=\\dfrac{4}{s+4}\\) with \\(T=0.5\\) s. The combined pulse transfer function is:',
+    ['\\(\\dfrac{0.8647z^{-1}}{1-0.1353z^{-1}}\\)',
+     '\\(\\dfrac{0.8647}{1-0.1353z^{-1}}\\)',
+     '\\(\\dfrac{4z^{-1}}{1-0.1353z^{-1}}\\)',
+     '\\(\\dfrac{0.1353z^{-1}}{1-0.8647z^{-1}}\\)'], 0,
+    '\\(G(z)=(1-z^{-1})\\mathcal{Z}\\{4/[s(s+4)]\\}\\); with \\(e^{-4(0.5)}=0.1353\\) the numerator gain is \\(1-0.1353=0.8647\\). Dropping the \\(z^{-1}\\) removes the one-sample delay that a ZOH with a strictly proper plant always has. The variant carrying 0.1353 in the numerator swaps the pole and the gain.',
+    'pp. 111-115', '\\(0.8647z^{-1}/(1-0.1353z^{-1})\\)'),
+
+  n('H2','H','For that \\(G(z)\\), evaluate the DC gain \\(G(1)\\).',
+    1, 0.01,
+    '\\(0.8647/(1-0.1353)=1\\), matching \\(G_{p}(0)=1\\). This is the cheapest independent check on a ZOH conversion: if the DC gains disagree, the \\((1-z^{-1})\\) factor or the partial fractions went wrong.',
+    'pp. 111-115', '\\(G(1) = 1\\)'),
+
+  n('H3','H','That ZOH-plus-plant is driven by a sampled unit step. What is \\(y[1]\\)?',
+    0.865, 0.01,
+    '\\(y[1]=0.8647\\), which is exactly the continuous step response \\(1-e^{-4T}\\) evaluated at \\(t=T\\) &mdash; a physical check that needs no z-algebra. Note \\(y[0]=0\\) because of the one-sample delay.',
+    'pp. 111-115', '\\(y[1] = 1-e^{-2} \\approx 0.8647\\)'),
+
+  c('H4','H','Equation (3-49) states that for \\(X(s)=\\dfrac{1-e^{-Ts}}{s}G(s)\\),',
+    ['\\(X(z)=(1-z^{-1})\\,\\mathcal{Z}\\!\\left\\{\\dfrac{G(s)}{s}\\right\\}\\)',
+     '\\(X(z)=(1-z^{-1})\\,\\mathcal{Z}\\{G(s)\\}\\)',
+     '\\(X(z)=(1-e^{-Ts})\\,\\mathcal{Z}\\!\\left\\{\\dfrac{G(s)}{s}\\right\\}\\)',
+     '\\(X(z)=(1-z)\\,\\mathcal{Z}\\!\\left\\{\\dfrac{G(s)}{s}\\right\\}\\)'], 0,
+    'Only the \\(1-e^{-Ts}\\) becomes \\(1-z^{-1}\\); the \\(1/s\\) from the hold stays <em>inside</em> the transform with \\(G(s)\\). The variant \\(\\mathcal{Z}\\{G(s)\\}\\) loses that \\(1/s\\), and the one that keeps \\(1-e^{-Ts}\\) leaves an s-domain factor sitting outside a z-domain expression.',
+    'pp. 113-114', '\\((1-z^{-1})\\mathcal{Z}\\{G(s)/s\\}\\)'),
+
+  n('H5','H','A ZOH drives \\(G_{p}(s)=\\dfrac{1}{s(s+2)}\\) with \\(T=1\\) s. What is \\(g[1]\\), the coefficient of \\(z^{-1}\\) in \\(G(z)\\)?',
+    0.2838, 0.005,
+    'Expand \\(1/[s^{2}(s+2)] = -0.25/s + 0.5/s^{2} + 0.25/(s+2)\\), then apply \\((1-z^{-1})\\). Equivalently \\(g[1]=s_{r}(T)-s_{r}(0)\\) where \\(s_{r}\\) is the plant step response; both routes give 0.2838, and both give \\(g[0]=0\\).',
+    'pp. 113-115', '\\(g[1] \\approx 0.2838\\)'),
+
+  n('I1','I','\\(G(s)=\\dfrac{1}{s+1}\\), \\(H(s)=\\dfrac{1}{s+3}\\), \\(T=0.5\\) s. Find the coefficient of \\(z^{-1}\\) in \\(GH(z)=\\mathcal{Z}\\{G(s)H(s)\\}\\).',
+    0.1917, 0.005,
+    'Combine <em>first</em>: the continuous impulse response of \\(G(s)H(s)\\) is \\(0.5(e^{-t}-e^{-3t})\\); sampling it at \\(t=T=0.5\\) gives 0.1917. Multiplying \\(G(z)\\) by \\(H(z)\\) instead gives 0.8297, a different system.',
+    'pp. 117-121', '0.1917'),
+
+  c('I2','I','For those same two blocks, \\(G(z)H(z)\\) has \\(z^{0}\\) coefficient 1 and \\(z^{-1}\\) coefficient 0.8297, whereas \\(GH(z)\\) starts at 0. This shows that:',
+    ['\\(G(z)H(z) \\ne \\mathcal{Z}\\{G(s)H(s)\\}\\) in general, so whether a sampler sits between the blocks changes the answer',
+     'one of the two calculations must contain an arithmetic error',
+     'the two agree once a common scale factor is removed',
+     '\\(T=0.5\\) was a poor choice, and a smaller \\(T\\) would make them agree'], 0,
+    'With an intermediate sampler each block gets its own pulse transfer function; without one the product must be combined in \\(s\\) before sampling. No sampling period makes them agree &mdash; they are different systems, and the \\(k=0\\) values alone prove it.',
+    'pp. 117-121', 'They are different systems; the sampler decides which applies.'),
+
+  c('I3','I','A continuous reference passes through \\(F(s)\\) and is sampled only afterwards, then drives \\(G(s)\\); the output is sampled. Does an input-independent \\(C(z)/R(z)\\) exist?',
+    ['Yes: \\(C(z)/R(z)=F(z)G(z)\\)',
+     'No: the sampled signal is \\([F(s)R(s)]^{*}\\), which cannot in general be written as \\(F^{*}(s)R^{*}(s)\\)',
+     'Yes, provided \\(F(s)\\) is first order',
+     'No, because the output sampler is missing'], 1,
+    '\\(R\\) enters <em>before</em> the first sampler, so it is welded to the dynamics and cannot be factored out. The output is still computable for a specified \\(R(s)\\); it is only the ratio that fails to exist. Sampling the output never repairs a missing input sampler.',
+    'pp. 107-110, 126', 'No &mdash; \\(R\\) cannot be separated.'),
+
+  c('I4','I','The convolution summation is written \\(y(kT)=\\sum_{h=0}^{k} g\\big((k-h)T\\big)\\,x(hT)\\). What makes the upper limit \\(k\\) rather than \\(\\infty\\)?',
+    ['causality: \\(g(t)=0\\) for \\(t<0\\), so every term with \\(h>k\\) vanishes',
+     'stability of the plant',
+     'the presence of a zero-order hold',
+     'the finite sampling frequency'], 0,
+    'It is causality of the continuous impulse response and nothing else. The hold and the sampling rate affect what \\(g\\) is, not where the sum terminates.',
+    'pp. 95-100', 'Causality of \\(g(t)\\).'),
+
+  c('J1','J','Table 3-1, first configuration: a sampler follows the summing junction and feeds \\(G(s)\\); the output is sampled; \\(H(s)\\) feeds back from the <em>continuous</em> output with no sampler in the feedback path. Then',
+    ['\\(C(z)=\\dfrac{G(z)R(z)}{1+GH(z)}\\)',
+     '\\(C(z)=\\dfrac{G(z)R(z)}{1+G(z)H(z)}\\)',
+     '\\(C(z)=\\dfrac{GR(z)}{1+GH(z)}\\)',
+     '\\(C(z)=\\dfrac{G(z)R(z)}{1+G(z)H(z)R(z)}\\)'], 0,
+    'There is no sampler between \\(G\\) and \\(H\\), so the loop term must be combined before sampling: \\(GH(z)=\\mathcal{Z}\\{G(s)H(s)\\}\\). The forward path is driven by \\(E^{*}\\), which is why the numerator does separate into \\(G(z)R(z)\\).',
+    'pp. 122-125', '\\(G(z)R(z)/[1+GH(z)]\\)'),
+
+  c('J2','J','Same loop, but a sampler is now placed between \\(G(s)\\) and \\(H(s)\\), so \\(H\\) is driven by the sampled output. Then',
+    ['\\(C(z)=\\dfrac{G(z)R(z)}{1+G(z)H(z)}\\)',
+     '\\(C(z)=\\dfrac{G(z)R(z)}{1+GH(z)}\\)',
+     '\\(C(z)=\\dfrac{GR(z)}{1+G(z)H(z)}\\)',
+     '\\(C(z)=\\dfrac{H(z)R(z)}{1+G(z)H(z)}\\)'], 0,
+    'The extra sampler breaks \\(GH\\) into a genuine product. Whether the denominator reads \\(GH(z)\\) or \\(G(z)H(z)\\) is decided entirely by that one switch &mdash; compare with the previous question, where the numerator is identical.',
+    'pp. 124-125', '\\(G(z)R(z)/[1+G(z)H(z)]\\)'),
+
+  c('J3','J','In Case 4 of Table 3-1 the error is <em>not</em> sampled: \\(G_{1}(s)\\) is continuous and the sampler sits between \\(G_{1}\\) and \\(G_{2}\\), giving \\(C(z)=\\dfrac{G_{2}(z)\\,G_{1}R(z)}{1+G_{1}G_{2}H(z)}\\). Why does this system have no pulse transfer function?',
+    ['because \\(G_{1}R(z)=\\mathcal{Z}\\{G_{1}(s)R(s)\\}\\) does not factor into \\(G_{1}(z)R(z)\\), so \\(R\\) cannot be separated from the dynamics',
+     'because the loop is unstable',
+     'because there is no zero-order hold',
+     'because \\(G_{1}\\) and \\(G_{2}\\) are in cascade'], 0,
+    'A pulse transfer function is by definition an <em>input-independent</em> ratio. Here the reference is filtered before the first sampler, so no such ratio exists &mdash; although the response to any specified \\(R(s)\\) is still perfectly computable.',
+    'pp. 125-126', '\\(R\\) cannot be separated from the dynamics.'),
+
+  n('J4','J','A digital PID has \\(K=2\\), \\(T=0.1\\) s, \\(T_{i}=0.5\\) s and \\(T_{d}=0.2\\) s. Compute \\(K_{P}\\).',
+    1.8, 0.01,
+    '\\(K_{P}=K-\\dfrac{KT}{2T_{i}}=K-\\dfrac{K_{I}}{2}=2-0.2=1.8\\). The trapezoidal integral approximation makes \\(K_{P}\\) strictly less than \\(K\\); answering 2 means that correction was missed. For reference \\(K_{I}=0.4\\) and \\(K_{D}=4\\).',
+    'pp. 134-135', '\\(K_{P} = 1.8\\)'),
+
+  c('J5','J','The digital PID pulse transfer function derived in the lectures is:',
+    ['\\(G_{D}(z)=K_{P}+\\dfrac{K_{I}}{1-z^{-1}}+K_{D}\\left(1-z^{-1}\\right)\\)',
+     '\\(G_{D}(z)=K_{P}+K_{I}\\left(1-z^{-1}\\right)+\\dfrac{K_{D}}{1-z^{-1}}\\)',
+     '\\(G_{D}(z)=K_{P}+\\dfrac{K_{I}}{1+z^{-1}}+K_{D}\\left(1-z^{-1}\\right)\\)',
+     '\\(G_{D}(z)=K_{P}+\\dfrac{K_{I}T}{1-z^{-1}}+\\dfrac{K_{D}\\left(1-z^{-1}\\right)}{T}\\)'], 0,
+    'Integration accumulates, giving a pole at \\(z=1\\); differentiation differences, giving a zero at \\(z=1\\). The variant with \\(K_{I}(1-z^{-1})\\) swaps them. The sampling period is already absorbed into \\(K_{I}\\) and \\(K_{D}\\), so it must not reappear explicitly.',
+    'p. 135', '\\(K_{P}+K_{I}/(1-z^{-1})+K_{D}(1-z^{-1})\\)'),
+
+  n('J6','J','Using the gains from the PID question above, the error is a unit discrete impulse (\\(e[0]=1\\), \\(e[k]=0\\) otherwise). What is \\(m[0]\\)?',
+    6.2, 0.01,
+    'Read the \\(k=0\\) coefficient off each of the three terms: \\(K_{P}+K_{I}+K_{D}=1.8+0.4+4=6.2\\). The next sample is \\(m[1]=K_{I}-K_{D}=-3.6\\), which is the derivative kick that makes PID noise-sensitive.',
+    'p. 135', '\\(m[0] = 6.2\\)')
+
+  ];
+
+  const STORAGE_KEY = 'ee6203-quiz1-evaluation-set-v1';
+  const blank = () => ({ version: 1, answers: {}, revealed: [], retiredA2: true });
+
+  function load() {
+    try {
+      const raw = window.localStorage.getItem(STORAGE_KEY);
+      if (!raw) return blank();
+      const parsed = JSON.parse(raw);
+      if (!parsed || parsed.version !== 1) return blank();
+      parsed.answers = parsed.answers || {};
+      parsed.revealed = Array.isArray(parsed.revealed) ? parsed.revealed : [];
+      // A2 was rewritten on 2026-08-31 (the old item tested recall of an
+      // explicitly open-ended slide list). Drop any answer stored against the
+      // retired version so it is not restored onto the new question.
+      if (!parsed.retiredA2) {
+        delete parsed.answers.A2;
+        parsed.revealed = parsed.revealed.filter(id => id !== 'A2');
+        parsed.retiredA2 = true;
+      }
+      return parsed;
+    } catch (err) { return blank(); }
+  }
+  function save() {
+    try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (err) { /* private mode */ }
+  }
+  let state = load();
+  save();   // persist the retired-item migration immediately, not just on first answer
+
+  const byId = id => BANK.find(q => q.id === id);
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+  function typeset(node) {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      window.MathJax.typesetPromise([node]).catch(() => {});
+    }
+  }
+
+  // Deterministic per-question display order, so the key is not always the first
+  // option and the order is identical every time the page is opened.
+  function order(q) {
+    let h = 2166136261 >>> 0;                       // FNV-1a over the question id
+    for (const ch of q.id) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619) >>> 0; }
+    const rnd = () => { h ^= h << 13; h >>>= 0; h ^= h >>> 17; h ^= h << 5; h >>>= 0; return h; };
+    const idx = q.choices.map((_, i) => i);
+    for (let i = idx.length - 1; i > 0; i--) {      // Fisher-Yates
+      const j = rnd() % (i + 1);
+      const tmp = idx[i]; idx[i] = idx[j]; idx[j] = tmp;
+    }
+    return idx;
+  }
+
+  function renderQuestion(q) {
+    let body;
+    if (q.type === 'choice') {
+      body = '<div class="choices">' + order(q).map(i =>
+        `<label class="choice"><input type="radio" name="${q.id}" value="${i}"><span>${q.choices[i]}</span></label>`
+      ).join('') + '</div>';
+    } else {
+      body = `<div class="numline"><input type="text" inputmode="decimal" autocomplete="off"
+        aria-label="Numeric answer for question ${q.id}" data-input="${q.id}">
+        <span class="unit">${q.unit ? esc(q.unit) : 'numeric answer'}</span></div>`;
+    }
+    return `<article class="q" data-q="${q.id}">
+      <div class="q-tag">${q.id} &middot; ${q.type === 'number' ? 'numeric' : 'multiple choice'}</div>
+      <div class="q-prompt">${q.prompt}</div>
+      ${body}
+      <div class="actions">
+        <button type="button" class="primary" data-check="${q.id}">Check</button>
+        <button type="button" data-reveal="${q.id}">Reveal answer key</button>
+      </div>
+      <div class="fb" data-fb="${q.id}" hidden></div>
+      <div class="key" data-key="${q.id}" hidden></div>
+    </article>`;
+  }
+
+  function build() {
+    const content = document.getElementById('content');
+    content.innerHTML = TOPICS.map(t => {
+      const qs = BANK.filter(q => q.topic === t.id);
+      return `<section class="topic" id="topic-${t.id}">
+        <div class="topic-head">
+          <h2>${t.id}. ${esc(t.name)}</h2>
+          <span class="topic-pages">${esc(t.pages)} &middot; ${qs.length} questions</span>
+        </div>
+        ${qs.map(renderQuestion).join('')}
+      </section>`;
+    }).join('');
+
+    document.getElementById('bars').innerHTML = TOPICS.map(t => {
+      const total = BANK.filter(q => q.topic === t.id).length;
+      return `<div class="bar-row">
+        <span class="bar-id">${t.id}</span>
+        <span class="bar-track"><span class="bar-fill" data-bar="${t.id}"></span></span>
+        <span class="bar-num" data-barnum="${t.id}">0/${total}</span>
+      </div>`;
+    }).join('');
+
+    typeset(content);
+  }
+
+  function restore() {
+    Object.keys(state.answers).forEach(id => {
+      const q = byId(id); if (!q) return;
+      const article = document.querySelector(`[data-q="${id}"]`);
+      if (!article) return;
+      const rec = state.answers[id];
+      if (q.type === 'choice') {
+        const input = article.querySelector(`input[value="${rec.value}"]`);
+        if (input) input.checked = true;
+      } else {
+        const input = article.querySelector('[data-input]');
+        if (input) input.value = rec.value;
+      }
+      paint(article, q, rec.correct);
+    });
+    state.revealed.forEach(id => reveal(id, false));
+  }
+
+  function paint(article, q, correct) {
+    article.classList.toggle('correct', correct);
+    article.classList.toggle('incorrect', !correct);
+    const fb = article.querySelector('[data-fb]');
+    fb.hidden = false;
+    fb.className = 'fb ' + (correct ? 'good' : 'bad');
+    fb.innerHTML = `<span class="verdict">${correct ? 'Correct.' : 'Not correct.'}</span> ${q.diagnosis}
+      <span class="src">Lecture source: ${esc(q.src)} &middot; full derivation in the solutions PDF, item ${q.id}.</span>`;
+    typeset(fb);
+  }
+
+  function check(id) {
+    const q = byId(id);
+    const article = document.querySelector(`[data-q="${id}"]`);
+    let value, correct;
+    if (q.type === 'choice') {
+      const picked = article.querySelector('input[type="radio"]:checked');
+      if (!picked) { flash(article, 'Choose an option first.'); return; }
+      value = Number(picked.value);
+      correct = value === q.answer;
+    } else {
+      const raw = (article.querySelector('[data-input]').value || '').trim().replace(/,/g, '');
+      if (raw === '') { flash(article, 'Enter a number first.'); return; }
+      const parsed = Number(raw);
+      if (!Number.isFinite(parsed)) { flash(article, 'That is not a number I can read. Use a plain decimal.'); return; }
+      value = raw;
+      correct = Math.abs(parsed - q.answer) <= q.tol + 1e-12;
+    }
+    state.answers[id] = { value, correct };
+    save();
+    paint(article, q, correct);
+    updateScores();
+  }
+
+  function flash(article, message) {
+    const fb = article.querySelector('[data-fb]');
+    fb.hidden = false; fb.className = 'fb'; fb.textContent = message;
+  }
+
+  function reveal(id, persist) {
+    const q = byId(id);
+    const box = document.querySelector(`[data-key="${id}"]`);
+    if (!box) return;
+    box.hidden = false;
+    box.innerHTML = `<strong>Answer key ${q.id}:</strong> ${q.key}`;
+    typeset(box);
+    if (persist !== false && !state.revealed.includes(id)) { state.revealed.push(id); save(); }
+  }
+
+  function updateScores() {
+    let correct = 0, answered = 0;
+    TOPICS.forEach(t => {
+      const qs = BANK.filter(q => q.topic === t.id);
+      const got = qs.filter(q => state.answers[q.id] && state.answers[q.id].correct).length;
+      const done = qs.filter(q => state.answers[q.id]).length;
+      correct += got; answered += done;
+      const fill = document.querySelector(`[data-bar="${t.id}"]`);
+      const num = document.querySelector(`[data-barnum="${t.id}"]`);
+      const pct = qs.length ? Math.round((got / qs.length) * 100) : 0;
+      fill.style.width = pct + '%';
+      fill.className = 'bar-fill ' + (done === 0 ? '' : pct >= 80 ? 'strong' : pct >= 60 ? 'mid' : 'weak');
+      num.textContent = `${got}/${qs.length}` +
+        (done > 0 && done < qs.length ? ` (${done} done)` : '');
+    });
+    document.getElementById('total').textContent = `${correct} / ${BANK.length}`;
+    document.getElementById('answered').textContent =
+      answered === BANK.length ? 'all answered' : `${answered} answered`;
+  }
+
+  document.addEventListener('click', event => {
+    const checkBtn = event.target.closest('[data-check]');
+    if (checkBtn) { check(checkBtn.dataset.check); return; }
+    const revealBtn = event.target.closest('[data-reveal]');
+    if (revealBtn) { reveal(revealBtn.dataset.reveal, true); return; }
+  });
+
+  document.getElementById('reveal-all').addEventListener('click', () => {
+    BANK.forEach(q => reveal(q.id, true));
+  });
+
+  document.getElementById('reset').addEventListener('click', () => {
+    if (!window.confirm('Clear every answer and revealed key for this evaluation set? Your other EE6203 progress is untouched.')) return;
+    try { window.localStorage.removeItem(STORAGE_KEY); } catch (err) { /* ignore */ }
+    state = blank();
+    build(); restore(); updateScores();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  build();
+  restore();
+  updateScores();
+})();
+</script>
+</body>
+</html>
