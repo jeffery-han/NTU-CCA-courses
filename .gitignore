@@ -6,8 +6,3 @@
 !/CLAUDE.md
 !/EE-*/
 !/ntu-eee-course-reviews-rednote.md
-
-# Track project slash-commands but nothing else under .claude/
-!/.claude/
-/.claude/*
-!/.claude/commands/
