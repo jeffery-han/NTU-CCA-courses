@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "course": "EE-6204",
+  "generated": "2026-09-04",
+  "note": "Sources backing assessment/question-bank.json. Every item in that bank is provenance=generated: fresh LPs and numbers, grounded in the methods below. No historical or adapted items are used because no exact-code EE-6204 Quiz 1 paper exists locally (see quizzes/quiz-1-intel.md).",
+  "sources": [
+    {
+      "id": "official-scope",
+      "path": "quizzes/quiz-1-official-announcement.pdf",
+      "kind": "announcement",
+      "authority": "official-current",
+      "locator_hint": "Prof. Su Rong NTULearn e-mail, sent 2026-09-02, read 2026-09-03",
+      "scope": "Quiz 1 = Fri 4 Sept 2026, 20:30-21:30, LT1, MCQ. Examinable topics, and only these three: (1) graphical method, (2) simplex method, (3) sensitivity analysis for the simplex method. 60 min given (~30 expected). No calculator (bring pen + ruler + draft paper + device)."
+    },
+    {
+      "id": "lecture-lpnlp",
+      "path": "resources/lecture-01-04-linear-and-nonlinear-programming.pdf",
+      "kind": "lecture-slides",
+      "authority": "official-current",
+      "locator_hint": "pp. 1-90 (LP block): formulation, geometry, standard form, simplex, duality, sensitivity",
+      "scope": "The method definitions the generated items exercise: LP standard form and slack variables, the simplex entering/leaving/ratio rules, the z - c^T x objective-row convention, the optimality test, shadow prices and RHS / objective-coefficient ranging read from the final tableau."
+    },
+    {
+      "id": "week-02-transcript",
+      "path": "resources/week-02-transcript.txt",
+      "kind": "lecture-transcript",
+      "authority": "official-current",
+      "locator_hint": "full transcript",
+      "scope": "Source of the z - c^T x = 0 bottom-row convention (optimal when every bottom-row entry >= 0; any negative entry may enter, most-negative is the default) and Prof. Su Rong's remark that cost / RHS perturbation 'is how you operate in a quiz or the final exam'."
+    },
+    {
+      "id": "week-03-transcript",
+      "path": "resources/week-03-transcript.txt",
+      "kind": "lecture-transcript",
+      "authority": "official-current",
+      "locator_hint": "full transcript (Week 3 exercise class, Prof. Su Rong)",
+      "scope": "Quiz 1 scope restated in-lecture ('I will cover graphic method ... simplex method ... sensitivity analysis'); graphical treatment of degenerate vertices (all constraint lines through the optimum); minimum-ratio ties. Branch-and-bound and the dualise-to-graph trick are named here as NOT in the official three-item list and are excluded from this bank."
+    },
+    {
+      "id": "exercises-part1",
+      "path": "resources/EE6204_Exercises-part1.pdf",
+      "kind": "worked-exercises",
+      "authority": "historical-official",
+      "locator_hint": "5 handwritten pages, Week 3 exercise class",
+      "scope": "Worked graphical + simplex examples at the depth the quiz targets. Q1/Q2 show a degenerate optimal vertex; used here only as a difficulty / style reference, not transcribed."
+    }
+  ]
+}
