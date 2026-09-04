@@ -13,7 +13,7 @@
 \newcommand{\source}[1]{\par\smallskip\noindent\textit{Source: #1.}\par\smallskip}
 \title{EE6204 Systems Analysis\\\large Beginner Notes: Linear and Nonlinear Programming}
 \author{Living course note}
-\date{Updated: 3 September 2026}
+\date{Updated: 4 September 2026}
 \begin{document}
 \maketitle
 \noindent\textbf{Scope and sources.} This self-contained note develops the supplied Linear Programming and Nonlinear Programming material from \texttt{resources/lecture-01-04-linear-and-nonlinear-programming.pdf} (PDF pp.~1--142), with introductory support from \texttt{resources/introduction-to-linear-programming.pdf} and teaching emphasis from the Week~1--3 lecture transcripts. The Week~3 exercise class (\texttt{resources/week-03-transcript.txt}) and its handwritten worked solutions (\texttt{resources/EE6204\_Exercises-part1.pdf}) supply the graphical and integer-programming worked examples and the examiner's marking expectations. Newly archived public examinations and student solutions are not used here until their calculations are independently reviewed.
@@ -67,6 +67,12 @@ Recognise three special outcomes:
 \item \textbf{Unbounded:} one can improve the objective forever along a feasible direction.
 \item \textbf{Multiple optima:} the objective line is parallel to an optimal feasible edge, so every point on that edge has the same best value.
 \end{itemize}
+\textbf{An unbounded feasible region does not mean an unbounded objective.} These are two separate questions. A ``$\geq$''-constrained minimisation, for instance
+\[
+ \min\ 2x_1+3x_2\quad\text{s.t.}\quad x_1+x_2\geq4,\ \ x_1+3x_2\geq6,\ \ x_1,x_2\geq0,
+\]
+has a feasible region that extends to infinity up and to the right, yet the objective is bounded below and the minimum is finite. The region's corners are $(0,4)$, $(3,1)$, $(6,0)$ with objective values $12$, $9$, $12$, so the optimum is $(3,1)$, $z=9$ --- the intersection of the two requirement lines (subtract them: $2x_2=2$). The objective is unbounded only if you can move to infinity \emph{along a feasible direction while the objective keeps improving}; here every feasible direction that decreases $2x_1+3x_2$ eventually leaves the region. Test the improving direction, not the size of the region. For a minimisation with all ``$\geq$'' resource constraints the region is typically unbounded and the answer is still one of its corners.
+
 Graphing gives valuable intuition but does not scale to many variables, where the feasible set is a high-dimensional polyhedron.
 
 \subsection{Worked graphical solution}
@@ -112,6 +118,14 @@ Never memorise ``most positive'' or ``most negative'' without checking how the o
 \]
 has all three constraint lines through $(0,4)$: $5(4)=20$, $6(4)=24$, $4(4)=16$. Entering $x_2$, the ratio test gives $20/5=24/6=16/4=4$ --- a three-way tie. Whichever row is pivoted, the optimal tableau has $x_2=4$, objective $28$, and the other two slacks stuck at zero. Note that $(0,4)$ is still optimal even though moving along the line $2x_1+6x_2=24$ would raise the objective ($5x_1+7x_2=28+\tfrac83x_1$): that direction immediately violates $4x_1+5x_2\leq20$, so it is not a feasible edge. At a degenerate corner an improving \emph{direction} can exist while no improving \emph{feasible edge} does --- which is exactly why the tie is worth spotting. Recognising a degenerate tableau (a ratio-test tie, or a zero in the basic-variable column at optimality) is a common short-answer target.
 \source{\texttt{resources/EE6204\_Exercises-part1.pdf}, Q1--Q2; \texttt{resources/week-03-transcript.txt}. The PDF's gradient annotation $\nabla f=[7;5]$ is transposed; for $f=5x_1+7x_2$ it is $[5;7]$, which does not change the answer.}
+
+\paragraph{Reading special cases off a tableau.} Once you can identify which columns are basic (their column is a unit vector; the variable equals that row's RHS) and which are nonbasic (set to zero), three diagnoses come straight from the tableau. Keep them apart --- they are easy to confuse:
+\begin{itemize}
+\item \textbf{Degeneracy:} a \emph{basic} variable equals zero (a zero in the RHS column of a basic row). The corner is over-determined; the next pivot may not move. Spotted also as a tie in the ratio test.
+\item \textbf{Alternative optima:} the tableau is already optimal (no negative reduced cost, using the $z-c^\T x$ convention) \emph{and} a \emph{nonbasic} variable has reduced cost exactly zero. Pivoting it in changes the vertex but not $z$, so a whole optimal edge exists. The zero is on a \emph{nonbasic} column --- a zero under a \emph{basic} column is normal and means nothing.
+\item \textbf{Unboundedness:} a nonbasic variable has a negative reduced cost (it should enter) but every entry in its column is $\leq0$, so the ratio test has no eligible row. The objective rises without limit.
+\end{itemize}
+The trap is swapping the first two: degeneracy is a \emph{basic} variable at zero (a value); alternative optima is a \emph{nonbasic} variable with zero \emph{reduced cost} (a $z$-row entry). Different columns, different rows, different meaning.
 
 Equality and $\geq$ rows may lack an obvious starting basis. An artificial variable supplies a temporary identity column. In the two-phase method, Phase~I minimises the sum of artificial variables. A positive Phase~I optimum proves that the original constraints are infeasible; otherwise remove the artificials and optimise the true objective in Phase~II.
 \source{\texttt{resources/lecture-01-04-linear-and-nonlinear-programming.pdf}, PDF pp.~16--59.}

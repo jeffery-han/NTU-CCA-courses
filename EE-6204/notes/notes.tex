@@ -17,7 +17,7 @@
 
 \title{EE6204 Systems Analysis\\\large Linear and Nonlinear Programming Notes}
 \author{Course-note revision}
-\date{Updated: 3 September 2026}
+\date{Updated: 4 September 2026}
 
 \begin{document}
 \maketitle
@@ -62,6 +62,7 @@ For two variables, draw every constraint boundary, use a test point to retain th
  \item \textbf{Unbounded:} an improving feasible ray lets $z$ increase (or decrease) without limit.
  \item \textbf{Multiple optima:} an objective level line is parallel to a binding feasible edge, so every point on an optimal edge has the same value.
 \end{itemize}
+\textbf{Unbounded region $\neq$ unbounded objective.} A ``$\geq$''-constrained minimisation has a feasible region that runs to infinity, but the objective is usually bounded below and the optimum is a corner. E.g.\ $\min 2x_1+3x_2$ s.t.\ $x_1+x_2\geq4$, $x_1+3x_2\geq6$, $x\geq0$: corners $(0,4),(3,1),(6,0)$ give $12,9,12$, so $(3,1)$, $z=9$. Declare ``unbounded'' only if an improving move stays feasible all the way to infinity.
 
 \paragraph{Example: product mix.} If $x$ suits and $y$ gowns use cotton, silk, and wool, a model is
 \[
@@ -95,6 +96,14 @@ Simplex moves from one BFS to an adjacent BFS while preserving feasibility and i
  \item Exchange the entering and leaving variables in the basis, and repeat.
 \end{enumerate}
 The sign convention in a tableau must be kept consistent; never mix a minimization reduced-cost test with a maximization one. The ratio test is what prevents a step from leaving the feasible region. A tie in the ratio test means the next BFS is degenerate (some basic variable becomes zero); either tied row is a valid pivot.
+
+\paragraph{Special cases read off a tableau.} First fix basic (unit column, value $=$ its row's RHS) vs.\ nonbasic (value $0$). Then:
+\begin{itemize}
+ \item \textbf{Degenerate:} a \emph{basic} variable $=0$ (zero in a basic row's RHS).
+ \item \textbf{Alternative optima:} tableau optimal \emph{and} a \emph{nonbasic} variable has reduced cost $0$ --- pivot it in to get another optimal vertex / a whole optimal edge. (A zero under a basic column is meaningless.)
+ \item \textbf{Unbounded:} a nonbasic variable has negative reduced cost but no positive entry in its column (no ratio-test row).
+\end{itemize}
+Do not swap the first two: degeneracy is a \emph{basic variable value} at $0$; alternative optima is a \emph{nonbasic reduced cost} at $0$.
 
 \paragraph{Two-phase method.} When artificial variables are needed, Phase I minimizes their total (or equivalently performs the source's auxiliary-row procedure) to seek a BFS with all artificials zero. A positive minimum means the original LP is infeasible. Remove artificial columns and the Phase-I row once they have left the basis, then optimize the original objective in Phase II. This avoids treating $M$ as a numerical finite constant.
 \source{\texttt{resources/lecture-01-04-linear-and-nonlinear-programming.pdf}, slides 41--59.}

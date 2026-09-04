@@ -1,5 +1,49 @@
 {
   "schema_version": 1,
   "course": "EE-6204",
-  "entries": []
+  "entries": [
+    {
+      "date": "2026-09-04",
+      "bank_id": "ee-6204-quiz1-mock2",
+      "attempt": "ee-6204-quiz1-mock2-attempt.json",
+      "raw_score": "15/27",
+      "attempted_score": "15/19",
+      "elapsed": "12m08s of ~45-60 min",
+      "topic": "graphical-method",
+      "items": ["A6"],
+      "kind": "inverted-concept",
+      "summary": "Called a graphical minimisation 'unbounded' because the feasible region is unbounded. An unbounded '>='-constrained region can still have a finite optimum at a corner; unboundedness is about an improving feasible direction to infinity, not region size. Correct: (3,1), z=9.",
+      "fix": "beginner-notes.tex section 3 (new 'unbounded region != unbounded objective' block with this worked min); notes.tex graphical-solution subsection (compact caution)."
+    },
+    {
+      "date": "2026-09-04",
+      "bank_id": "ee-6204-quiz1-mock2",
+      "attempt": "ee-6204-quiz1-mock2-attempt.json",
+      "topic": "simplex-method",
+      "items": ["B9"],
+      "kind": "inverted-concept",
+      "summary": "Swapped degeneracy and alternative optima. Degeneracy = a BASIC variable equal to 0. Alternative optima = a NON-BASIC variable with reduced cost 0 in an optimal tableau. B9 showed the latter; learner answered 'degenerate'.",
+      "fix": "beginner-notes.tex section 5 (new 'Reading special cases off a tableau' block: degenerate / alternative optima / unbounded signatures); notes.tex simplex subsection (compact list)."
+    },
+    {
+      "date": "2026-09-04",
+      "bank_id": "ee-6204-quiz1-mock2",
+      "attempt": "ee-6204-quiz1-mock2-attempt.json",
+      "topic": "sensitivity-for-simplex",
+      "items": ["C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8"],
+      "kind": "not-attempted",
+      "summary": "Entire Section C (8 marks, ~30% of the paper, explicitly in Quiz 1 scope) left blank; C1 flagged then abandoned. Submitted after 12 minutes. No evidence yet on whether the gap is time or knowledge. Sensitivity analysis is untested for this learner.",
+      "fix": "No note change. Learner must re-sit Section C under time, cold, then grade C1-C8."
+    },
+    {
+      "date": "2026-09-04",
+      "bank_id": "ee-6204-quiz1-mock2",
+      "attempt": "ee-6204-quiz1-mock2-attempt.json",
+      "topic": "simplex-method",
+      "items": ["B4", "B5"],
+      "kind": "speed-slip",
+      "summary": "B4: picked the pivot element in the s1 row after correctly answering B3 that s2 leaves (self-inconsistent within the same pivot). B5: read the current BFS as the known final answer (3,3,z=33) instead of off the given mid-run tableau (x1=5, x2=0, z=30). Both consistent with rushing, not a missing rule (B8, harder tableau reading, was correct). Rubric in answer-key.md classifies B5 as a slip.",
+      "fix": "No note change. 'Slow down and read the tableau you are given.'"
+    }
+  ]
 }
