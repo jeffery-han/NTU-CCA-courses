@@ -70,7 +70,7 @@ pre {
   overflow-x: auto; line-height: 1.5;
 }
 h1 { font-size: 1.72rem; line-height: 1.24; margin: 0 0 .4rem; }
-h2 { font-size: 1.3rem; margin: 2.6rem 0 .5rem; padding-top: .7rem; border-top: 2px solid var(--border); }
+h2 { font-size: 1.3rem; margin: 2.6rem 0 .5rem; padding-top: .7rem; border-top: 2px solid var(--border); scroll-margin-top: 105px; }
 h3 { font-size: 1.08rem; margin: 1.6rem 0 .3rem; }
 h4 { font-size: .9rem; margin: 1rem 0 .3rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
 .sub { color: var(--muted); }
@@ -149,6 +149,48 @@ footer { margin-top: 46px; padding-top: 16px; border-top: 1px solid var(--border
 .pdfref object { width: 100%; height: 78vh; border: 1px solid var(--border); border-radius: 10px; background: var(--surface-2); }
 .pdfref figcaption { font-size: .85rem; color: var(--muted); margin-top: 6px; }
 .pdfref .fallback { margin: 0; padding: 14px; font-size: .9rem; }
+
+/* compact teaching visuals */
+.concept-flow, .simplex-route { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; align-items: stretch; margin: 14px 0; }
+.concept-node { position: relative; background: var(--surface-2); border-radius: 10px; padding: 12px 14px; min-height: 84px; }
+.concept-node:not(:last-child)::after { content: "→"; position: absolute; right: -19px; top: 50%; transform: translateY(-50%); color: var(--accent); font-size: 1.3rem; font-weight: 700; }
+.concept-node strong { display: block; margin-bottom: 3px; }
+.concept-node small { display: block; color: var(--muted); line-height: 1.4; }
+.plot-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 10px 12px 12px; margin: 14px 0; }
+.plot-wrap svg { display: block; width: 100%; height: auto; max-height: 430px; }
+.plot-wrap .axis { stroke: var(--text); stroke-width: 1.4; }
+.plot-wrap .grid { stroke: var(--border); stroke-width: 1; }
+.plot-wrap .constraint { fill: none; stroke: var(--accent); stroke-width: 2.2; }
+.plot-wrap .constraint.second { stroke: var(--warning); }
+.plot-wrap .feasible { fill: var(--success-soft); stroke: var(--success); stroke-width: 2; }
+.plot-wrap .objective { stroke: var(--danger); stroke-width: 2.5; stroke-dasharray: 8 5; }
+.plot-wrap .point { fill: var(--surface); stroke: var(--text); stroke-width: 2; }
+.plot-wrap text { fill: var(--text); font-size: 12px; }
+.plot-wrap .muted-label { fill: var(--muted); font-size: 11px; }
+.plot-controls { display: grid; grid-template-columns: auto minmax(160px, 1fr); gap: 7px 14px; align-items: center; }
+.plot-controls input { width: 100%; }
+.plot-controls output { color: var(--danger); font-weight: 700; }
+.plot-status { grid-column: 1 / -1; margin: 0; color: var(--muted); }
+.resource-example { margin: 14px 0; }
+.resource-row { display: grid; grid-template-columns: minmax(130px, 1fr) 2fr; gap: 10px; align-items: center; margin: 9px 0; }
+.resource-bar { display: flex; min-height: 34px; border-radius: 8px; overflow: hidden; background: var(--surface-2); }
+.resource-bar span { display: grid; place-items: center; padding: 5px 8px; font-size: .82rem; text-align: center; }
+.resource-used, .range-valid { background: var(--accent-soft); color: var(--text); }
+.resource-extra { background: var(--success-soft); color: var(--text); }
+.range-example { margin: 18px 0 10px; }
+.range-row { display: grid; grid-template-columns: 170px 1fr; gap: 12px; align-items: center; margin: 18px 0 30px; }
+.range-track { position: relative; height: 9px; border-radius: 999px; background: var(--surface-2); }
+.range-valid { position: absolute; top: 0; bottom: 0; border-radius: 999px; background: var(--accent); opacity: .4; }
+.range-mark { position: absolute; top: -5px; width: 2px; height: 19px; background: var(--text); }
+.range-mark::after { content: attr(data-label); position: absolute; top: 20px; left: 50%; transform: translateX(-50%); white-space: nowrap; color: var(--muted); font-size: .75rem; }
+.range-mark.current { width: 4px; background: var(--danger); }
+@media (max-width: 620px) {
+  .concept-flow, .simplex-route { grid-template-columns: 1fr; gap: 22px; }
+  .concept-node:not(:last-child)::after { content: "↓"; right: 50%; top: auto; bottom: -23px; transform: translateX(50%); }
+  .plot-controls, .resource-row, .range-row { grid-template-columns: 1fr; }
+  .plot-wrap text, .plot-wrap .muted-label { font-size: 16px; }
+  .range-row { gap: 7px; margin-bottom: 34px; }
+}
 </style>
 </head>
 <body>
@@ -195,10 +237,9 @@ simplex method — built up from nothing, the way the current-run quiz tests the
   <p style="margin-bottom:.4rem"><strong>Practice with
   <a href="../quizzes/quiz-1-mcq-practice.html">quiz-1-mcq-practice.html</a></strong> — 18 MCQs in
   the official shape, then check <a href="../quizzes/quiz-1-mcq-practice.md">its key</a>.</p>
-  <p class="pitfall" style="margin-bottom:0">Heads-up: the older
-  <a href="../quizzes/quiz-1-prediction.html">quiz-1-prediction.html</a> and modules&nbsp;2/5's
-  "answer on paper" affordances were built for the earlier free-response format. The <em>methods</em>
-  are still exactly right; ignore any "handwrite / photograph / upload" wording — this quiz is MCQ.</p>
+  <p class="pitfall" style="margin-bottom:0">The older
+  <a href="../quizzes/quiz-1-prediction.html">quiz-1-prediction.html</a> is a useful method drill,
+  but its free-response shape is not the official format. Use the MCQ practice page above for a timed rehearsal.</p>
 </div>
 
 <div class="toc">
@@ -210,7 +251,7 @@ simplex method — built up from nothing, the way the current-run quiz tests the
     <li><a href="#m4">Standard form: slack, surplus, artificial</a> — lab</li>
     <li><a href="#m5">The simplex method</a> — guided pivot walker</li>
     <li><a href="#m6">Two-phase and Big-M</a></li>
-    <li><a href="#m7">Duality &amp; sensitivity</a> — the likely add-on</li>
+    <li><a href="#m7">Duality intuition &amp; sensitivity</a> — official scope</li>
     <li><a href="#m8">Legacy topics: transportation &amp; NLP</a></li>
     <li><a href="#m9">Recall trainer</a></li>
     <li><a href="#m10">Quiz-day plan</a></li>
@@ -233,6 +274,22 @@ against a goal, without breaking any limit. Three pieces:</p>
 
 <p>A general linear program (LP), written for maximisation:</p>
 \[ \max\ z = c^\mathsf{T}x \qquad\text{subject to}\qquad Ax \le b,\qquad x \ge 0. \]
+<p>Here \(x\) is the column of chosen quantities, \(c\) lists their per-unit profits, \(A\)
+lists resource use per unit, and \(b\) lists capacities. The transpose symbol \(\mathsf T\)
+turns \(c\) into a row, so \(c^\mathsf Tx=\sum_j c_jx_j\) is just total profit.
+Each row of \(Ax\le b\) is one resource limit.</p>
+
+<div class="card">
+<h3 style="margin-top:0">One choice, traced through all three pieces</h3>
+<p>Let \(x_1=5\) Standard units and \(x_2=4\) Premium units. The choice is feasible because it
+uses \(5+4=9\le12\) assembly-hours and \(2(5)+4=14\le16\) testing-hours. Its profit is
+\(z=40(5)+30(4)=\$320\). Optimisation asks whether another feasible choice earns more.</p>
+<div class="concept-flow" role="img" aria-label="Decision variables determine resource use; feasible choices are then ranked by profit.">
+  <div class="concept-node"><strong>Choose</strong>\(x=(5,4)\)<small>decision variables: units per week</small></div>
+  <div class="concept-node"><strong>Check limits</strong>\(9\le12,\ 14\le16\)<small>both constraints pass, so the point is feasible</small></div>
+  <div class="concept-node"><strong>Score</strong>\(z=\$320\)<small>the objective ranks this feasible point</small></div>
+</div>
+</div>
 
 <p><strong>Linear</strong> means every variable appears to the first power with a constant
 coefficient. \(x_1 x_2\), \(x_1^2\), \(\sqrt{x_1}\), \(x_1/x_2\) would make it nonlinear.</p>
@@ -242,7 +299,8 @@ constraint. A number that violates any capacity, demand, or non-negativity condi
 <em>not a solution</em>, however good its objective value looks.</div>
 
 <div class="key"><strong>Why LP is special.</strong> Linear constraints make the feasible set a
-convex polyhedron, and a bounded LP always has an optimum <em>at a corner</em> (extreme point).
+convex polyhedron. For a feasible LP in the non-negative-variable form above, if its optimal
+value is finite, an optimum is attained <em>at a corner</em> (extreme point).
 That single fact is what both the graphical method and the simplex method exploit.</div>
 
 <p class="sub">Source: <code>notes/beginner-notes.tex</code> §1–2, <code>notes/notes.tex</code> §1–2.</p>
@@ -266,8 +324,9 @@ That single fact is what both the graphical method and the simplex method exploi
 <div class="pitfall"><strong>Sign trap.</strong> "at most / no more than / cannot exceed / available"
 → \(\le\). "at least / minimum / must meet / required" → \(\ge\). "exactly" → \(=\).</div>
 
-<div class="pitfall"><strong>The "no reason to produce" trap.</strong> A pure cost-minimisation
-with only \(\le\) limits has the trivial optimum \(x = 0\). A real min-cost model needs a demand
+<div class="pitfall"><strong>The "no reason to produce" trap.</strong> A cost-minimisation with
+non-negative unit costs, \(x\ge0\), and only non-negative \(\le\) capacity limits has the trivial
+optimum \(x=0\). A min-cost production model needs a demand
 \(\ge\) row (or an equality) forcing output.</div>
 
 <h3>Lab 2 — classify the constraint</h3>
@@ -278,6 +337,12 @@ with only \(\le\) limits has the trivial optimum \(x = 0\). A real min-cost mode
 <div class="card">
 <p>"Each Standard earns \$40, each Premium \$30. Every unit needs 1 assembly-hour; 12 available.
 Testing: 2 h per Standard, 1 h per Premium; 16 available. Maximise profit."</p>
+<table class="data" aria-label="The word problem arranged as a coefficient table">
+<tr><th style="text-align:left">Quantity</th><th>Standard \(x_1\)</th><th>Premium \(x_2\)</th><th>Limit</th></tr>
+<tr><td>profit ($/unit)</td><td>40</td><td>30</td><td>maximise</td></tr>
+<tr><td>assembly (h/unit)</td><td>1</td><td>1</td><td>12 h</td></tr>
+<tr><td>testing (h/unit)</td><td>2</td><td>1</td><td>16 h</td></tr>
+</table>
 <pre>x1 = Standard units/week,  x2 = Premium units/week   (x1, x2 &ge; 0)
 
 maximise   z = 40 x1 + 30 x2
@@ -313,6 +378,50 @@ this to check the simplex result.</p>
   <li><strong>Multiple optima</strong> — the objective line is parallel to a binding edge, so
     every point on that edge is optimal.</li>
 </ul></div>
+
+<details class="step"><summary>Small examples of the three special outcomes</summary><div class="body">
+<table class="data">
+<tr><th>Outcome</th><th style="text-align:left">Example with \(x_1,x_2\ge0\)</th><th style="text-align:left">Reason</th></tr>
+<tr><td>Infeasible</td><td>\(x_1+x_2\le1,\ x_1+x_2\ge3\)</td><td style="text-align:left">the total cannot satisfy both</td></tr>
+<tr><td>Unbounded value</td><td>\(\max x_1+x_2\), no other limits</td><td style="text-align:left">increase either variable forever</td></tr>
+<tr><td>Multiple optima</td><td>\(\max x_1+x_2,\ x_1+x_2\le4\)</td><td style="text-align:left">every point from \((0,4)\) to \((4,0)\) scores 4</td></tr>
+</table>
+<p><strong>Do not confuse an unbounded region with an unbounded objective.</strong> On the same
+unbounded region \(x_1,x_2\ge0\), maximising \(-x_1-x_2\) has the finite optimum \(0\) at the origin.</p>
+</div></details>
+
+<h3>Visual lab — slide the objective line</h3>
+<div class="plot-wrap">
+<svg viewBox="0 0 420 330" role="img" aria-labelledby="graph-title graph-desc">
+  <title id="graph-title">Feasible region for the Standard and Premium product example</title>
+  <desc id="graph-desc">The green polygon has corners (0,0), (8,0), (4,8), and (0,12). The blue and amber lines are resource boundaries. The movable red dashed objective line reaches its final feasible contact at (4,8) when profit is 400.</desc>
+  <line class="grid" x1="50" y1="220" x2="375" y2="220"/><line class="grid" x1="50" y1="160" x2="375" y2="160"/>
+  <line class="grid" x1="50" y1="100" x2="375" y2="100"/><line class="grid" x1="50" y1="40" x2="375" y2="40"/>
+  <line class="axis" x1="50" y1="280" x2="382" y2="280"/><line class="axis" x1="50" y1="288" x2="50" y2="24"/>
+  <text x="382" y="299">x₁</text><text x="31" y="25">x₂</text>
+  <text class="muted-label" x="44" y="297">0</text><text class="muted-label" x="145" y="297">4</text>
+  <text class="muted-label" x="245" y="297">8</text><text class="muted-label" x="342" y="297">12</text>
+  <text class="muted-label" x="31" y="224">4</text><text class="muted-label" x="31" y="164">8</text>
+  <text class="muted-label" x="24" y="104">12</text><text class="muted-label" x="24" y="44">16</text>
+  <polygon class="feasible" points="50,280 250,280 150,160 50,100"/>
+  <line class="constraint" x1="50" y1="100" x2="350" y2="280"/>
+  <line class="constraint second" x1="50" y1="40" x2="250" y2="280"/>
+  <text x="255" y="247">x₁+x₂=12</text><text x="58" y="57">2x₁+x₂=16</text>
+  <line class="objective" id="objective-line" x1="50" y1="120" x2="250" y2="280"/>
+  <circle class="point" cx="50" cy="280" r="4"/><circle class="point" cx="250" cy="280" r="4"/>
+  <circle class="point" cx="150" cy="160" r="5"/><circle class="point" cx="50" cy="100" r="4"/>
+  <text x="258" y="275">(8,0)</text><text x="157" y="153">(4,8)</text><text x="57" y="95">(0,12)</text>
+  <text class="muted-label" x="62" y="266">feasible region</text>
+</svg>
+<div class="plot-controls">
+  <label for="objective-z">Objective level \(40x_1+30x_2=z\): <output id="objective-z-out" for="objective-z">320</output></label>
+  <input id="objective-z" type="range" min="40" max="480" step="20" value="320">
+  <p class="plot-status" id="objective-z-status" aria-live="polite">The line still cuts the feasible region; slide it upward/right until its last contact.</p>
+</div>
+</div>
+<div class="key"><strong>What stays fixed?</strong> The slope is always \(-40/30=-4/3\). Moving
+the slider changes only \(z\), so the red lines are parallel. At \(z=400\) the last feasible
+contact is \((4,8)\); any higher parallel line misses the green region.</div>
 
 <h3>Lab 3 — corner evaluation</h3>
 <div class="card">
@@ -365,14 +474,42 @@ artificial, no Big-M. The slacks themselves form the starting basis. Expect this
 
 <h3>Lab 4 — convert the constraint</h3>
 <div id="lab4"></div>
+<details class="step"><summary>Two other conversions, with numbers</summary><div class="body">
+<p><strong>Negative RHS:</strong> \(-x_1-x_2\le-4\) becomes \(x_1+x_2\ge4\) after multiplying
+the entire row by \(-1\). The inequality flips; now subtract a surplus variable.</p>
+<p><strong>Free variable:</strong> if \(x_k\) may be negative, write \(x_k=x_k^+-x_k^-\).
+For \(x_k=-3\), one representation is \(x_k^+=0,\ x_k^-=3\). Both new variables are non-negative
+even though their difference need not be.</p>
+</div></details>
 
-<p class="sub">Source: <code>notes/beginner-notes.tex</code> §5; <code>notes/notes.tex</code> §2.2.</p>
+<h3>Visual meaning — the new variable fills the gap</h3>
+<div class="card resource-example">
+  <p>At \(x=(2,3)\), the row \(3x_1+x_2\le12\) uses \(9\) of \(12\), so \(s=3\).
+  The row \(x_1+2x_2\ge6\) achieves \(8\), so its surplus is \(e=2\).</p>
+  <div class="resource-row"><strong>Capacity: \(9+s=12\)</strong><div class="resource-bar" role="img" aria-label="Nine units used and three units slack out of twelve"><span class="resource-used" style="width:75%">9 used</span><span style="width:25%">3 slack</span></div></div>
+  <div class="resource-row"><strong>Requirement: \(6+e=8\)</strong><div class="resource-bar" role="img" aria-label="Six units required and two units surplus out of eight achieved"><span class="resource-used" style="width:75%">6 required</span><span class="resource-extra" style="width:25%">2 surplus</span></div></div>
+  <p class="sub">Slack measures what is <em>left before a ceiling</em>; surplus measures how far you
+  are <em>past a floor</em>. Both are non-negative distances, which explains their opposite signs.</p>
+</div>
+
+<p class="sub">Source: <code>notes/beginner-notes.tex</code> §4; <code>notes/notes.tex</code> §2.2.
+The numerical gap examples are supplementary illustrations.</p>
 
 <!-- ==================== MODULE 5 ==================== -->
 <h2 id="m5">5 &middot; The simplex method</h2>
 
-<p>Simplex walks from corner to adjacent corner, each step keeping feasibility and improving
-\(z\), until no improvement is possible. One step = one <strong>pivot</strong>.</p>
+<p>Simplex walks from corner to adjacent corner, each step keeping feasibility and not decreasing
+\(z\), until no improvement is possible. One step = one <strong>pivot</strong>. A degenerate pivot
+can change the basis without moving the point or changing \(z\).</p>
+
+<div class="simplex-route" role="img" aria-label="Simplex route from the origin to (7,0) and then to the optimal corner (5,4).">
+  <div class="concept-node"><strong>Start: \((0,0)\)</strong>basis \(s_1,s_2\)<small>\(z=0\)</small></div>
+  <div class="concept-node"><strong>Pivot 1: \((7,0)\)</strong>\(x_1\) enters, \(s_2\) leaves<small>\(z=350\)</small></div>
+  <div class="concept-node"><strong>Pivot 2: \((5,4)\)</strong>\(x_2\) enters, \(s_1\) leaves<small>\(z=410\), optimal</small></div>
+</div>
+<p class="sub">This route belongs to the walker LP below. A tableau pivot is the algebraic version
+of moving along a feasible edge. The entering variable chooses the direction; the leaving row says
+which boundary you hit first.</p>
 
 <h3>Prof. Su Rong's rules (Week 2 transcript)</h3>
 <table class="data">
@@ -385,12 +522,15 @@ artificial, no Big-M. The slacks themselves form the starting basis. Expect this
 
 <div class="notice">
   <h4>Reconciling with <code>notes/notes.tex</code> §"The simplex method"</h4>
-  <p>The review note phrases the same rule as "choose the <em>most negative reduced cost</em> to
-  enter; optimal when no reduced cost is negative", and calls it the <em>minimisation</em>
-  convention. Prof.&nbsp;Su Rong writes the identical bottom row as \(z - c^\mathsf{T}x\) and calls
-  it <em>maximisation</em>. <strong>They are the same row and the same stopping test</strong> —
-  a negative entry means "improvable", all \(\ge 0\) means "done". Only the label differs. Write
-  whichever your working is consistent with, and always run the ratio test.</p>
+  <p>The review note uses a <em>minimisation reduced-cost</em> convention. This page instead uses
+  the maximisation equation \(z+\sum_j(z_j-c_j)x_j=z_0\), where
+  \(z_j=c_B^\mathsf{T}B^{-1}A_j\). In this equation a negative coefficient makes increasing
+  \(x_j\) increase \(z\). A \(c_j-z_j\) row has the <em>opposite signs</em>.
+  Do not swap max/min labels and assume the numerical row is unchanged: derive the improving
+  sign from the displayed objective equation, then apply the ratio test.</p>
+  <p class="sub">Notation: \(B\) contains the basic-variable columns of \(A\); \(c_B\) contains
+  their profit coefficients; \(A_j\) is column \(j\) of \(A\); \(z_0\) is the current objective
+  value. You can use the row equation directly without computing these matrices in every pivot.</p>
 </div>
 
 <h3>Why the ratio test?</h3>
@@ -398,6 +538,9 @@ artificial, no Big-M. The slacks themselves form the starting basis. Expect this
 \(-a_{ij}\,x_j\). The first basic variable to hit zero is the one with the smallest
 \(b_i / a_{ij}\) (over \(a_{ij} > 0\)). Push past that and a basic variable goes negative — you
 leave the feasible region. So the min-ratio row is exactly how far you can go.</p>
+<p>For the walker’s first move, \(s_1=9-x_1\) and \(s_2=14-2x_1\), with \(x_2=0\).
+The first slack reaches zero at \(x_1=9\); the second at \(x_1=7\). Stop at \(7\):
+going to \(8\) would make \(s_2=-2\), meaning the second resource is overused.</p>
 
 <h3>Guided pivot walker</h3>
 <div class="card walker" id="walker">
@@ -413,8 +556,14 @@ then apply the pivot. The tool checks your choice against the rules and follows 
 <div class="body">
 <p><strong>Tableau 0</strong> basis \(s_1=9, s_2=14\), \(z=0\). Bottom row \((-50,-40,0,0\mid 0)\).
 Enter \(x_1\); ratios \(9/1=9\), \(14/2=7\) → \(s_2\) leaves.</p>
+<p>Pivot element \(=2\). Make it \(1\) with \(R_2\leftarrow R_2/2\), then clear the rest of the
+\(x_1\) column using the updated row: \(R_1\leftarrow R_1-R_2\) and \(R_z\leftarrow R_z+50R_2\).
+The basic column is now an identity column, so its RHS reads the value of \(x_1\).</p>
 <p><strong>Tableau 1</strong> \(x_1=7,\ z=350\). Bottom row \((0,-15,0,25\mid 350)\).
 Enter \(x_2\); ratios \(2/0.5=4\), \(7/0.5=14\) → \(s_1\) leaves.</p>
+<p>Pivot element \(=0.5\). Use \(R_1\leftarrow R_1/0.5\), then eliminate \(x_2\) from the other
+row and the objective row. This is ordinary Gauss&ndash;Jordan elimination; the ratio test, not the row
+arithmetic, is what protects feasibility.</p>
 <p><strong>Tableau 2</strong> bottom row \((0,0,30,10\mid 410)\) — all \(\ge 0\), optimal.
 \(x_1^\ast = 5,\ x_2^\ast = 4,\ z^\ast = 410\). Graphical check: corners \((7,0)\to350\),
 \((0,9)\to360\), \((5,4)\to410\). ✓ Shadow prices read off the final row: \(30\) and \(10\).</p>
@@ -425,7 +574,7 @@ is a \(c_j - z_j\) row, not \(z - c^\mathsf{T}x\)); taking the <em>largest</em> 
 a zero or negative pivot-column entry in the ratio test; stopping one pivot early because you
 forgot to re-scan the bottom row.</div>
 
-<p class="sub">Source: <code>notes/beginner-notes.tex</code> §6; <code>notes/notes.tex</code> §2.3;
+<p class="sub">Source: <code>notes/beginner-notes.tex</code> §5; <code>notes/notes.tex</code> §2.3;
 Week&nbsp;2 transcript.</p>
 
 <!-- ==================== MODULE 6 ==================== -->
@@ -434,21 +583,37 @@ Week&nbsp;2 transcript.</p>
 <p>You only need this if the LP has an \(=\) or \(\ge\) constraint. The mock does not, but a
 formulation with a "must meet demand" clause would.</p>
 
+<div class="card">
+<h3 style="margin-top:0">Tiny example: why an artificial variable is needed</h3>
+<p>Convert \(x_1+x_2\ge4\) into \(x_1+x_2-e_1+a_1=4\). If the original variables start at zero,
+the surplus column alone would require \(-e_1=4\), or \(e_1=-4\), which is forbidden. The
+artificial column has \(+1\), so \(a_1=4\) gives a legal temporary starting basis.</p>
+<div class="concept-flow" role="img" aria-label="A greater-than constraint gets a surplus variable and then an artificial starting variable, which Phase one drives to zero.">
+  <div class="concept-node"><strong>Original floor</strong>\(x_1+x_2\ge4\)<small>must meet at least four units</small></div>
+  <div class="concept-node"><strong>Temporary equality</strong>\(x_1+x_2-e_1+a_1=4\)<small>\(a_1=4\) starts the basis</small></div>
+  <div class="concept-node"><strong>Phase I goal</strong>\(\min w=a_1\)<small>reach \(a_1=0\), then remove it</small></div>
+</div>
+<p>For this one-row example, \(x_1=4,\ x_2=e_1=a_1=0\) makes the artificial zero and satisfies
+the original floor. In a larger model, Phase I must achieve this while satisfying <em>all</em> rows.</p>
+</div>
+
 <h3>Two-phase method</h3>
 <ol>
   <li><strong>Phase I:</strong> temporarily replace the objective with "minimise the sum of the
     artificial variables". Run simplex. If the minimum is \(&gt; 0\), the original LP is
     <strong>infeasible</strong> — stop.</li>
-  <li>If the minimum is \(0\), every artificial has left the basis (or is a degenerate zero).
-    Drop the artificial columns and the Phase&nbsp;I row.</li>
+  <li>If the minimum is \(0\), every artificial has value zero. If one is still basic, pivot it
+    out using a non-artificial nonzero coefficient; if no such coefficient exists, its zero
+    row is redundant. Then drop the artificial columns and the Phase&nbsp;I row.</li>
   <li><strong>Phase II:</strong> restore the real objective and continue simplex from the
     feasible basis you just found.</li>
 </ol>
 
 <h3>Big-M method</h3>
 <p>Add \(+M a_i\) to a <em>minimisation</em> objective (or \(-M a_i\) to a
-<em>maximisation</em>), with \(M\) a symbolic "very large" number. The penalty forces every
-\(a_i\) to zero at optimality. Prof.&nbsp;Su Rong's phrasing: the penalty must make the objective
+<em>maximisation</em>), with \(M\) a symbolic "very large" number. If the original LP is feasible,
+the penalty drives every \(a_i\) to zero at optimality. For example, a max objective becomes
+\(z=3x_1+2x_2-Ma_1\): keeping \(a_1=4\) costs \(4M\). The penalty must make the objective
 <em>worse</em>, so its sign is opposite to what you are optimising.</p>
 
 <div class="pitfall"><strong>Sign of the penalty.</strong> Maximising → subtract \(Ma_i\).
@@ -458,16 +623,16 @@ positive.</div>
 <div class="key">Two-phase avoids treating \(M\) as a finite number, which is why the notes and
 transcript prefer it. Either is acceptable if done consistently.</div>
 
-<p class="sub">Source: <code>notes/beginner-notes.tex</code> §6 last paragraph;
+<p class="sub">Source: <code>notes/beginner-notes.tex</code> §5 last paragraph;
 <code>notes/notes.tex</code> §2.2–2.3.</p>
 
 <!-- ==================== MODULE 7 ==================== -->
-<h2 id="m7">7 &middot; Duality &amp; sensitivity — the likely add-on</h2>
+<h2 id="m7">7 &middot; Duality intuition &amp; sensitivity — official scope</h2>
 
-<div class="notice info"><p>In the Week&nbsp;2 sensitivity worked example the lecturer says, while
-perturbing a cost coefficient and an \(A\)-entry, <em>"everybody knows actually in a quiz or in
-the final exam, how do you operate."</em> This is the in-scope topic most likely to be an extra
-part. It is nearly free once you have the final tableau.</p></div>
+<div class="notice info"><p><strong>Sensitivity analysis for the simplex method is explicitly in
+the official Quiz&nbsp;1 scope.</strong> Duality is included here because shadow prices are dual
+variables and that viewpoint explains the numbers; dual construction is not a separate quiz topic.
+Start from the final tableau, identify what changed, then test the corresponding condition.</p></div>
 
 <h3>The primal–dual pair</h3>
 \[ \min\ c^\mathsf{T}x,\ \ Ax \ge b,\ x \ge 0 \qquad\longleftrightarrow\qquad
@@ -487,7 +652,7 @@ zero.</p>
 <tr><th style="text-align:left">Want</th><th style="text-align:left">Do</th></tr>
 <tr><td style="text-align:left">Shadow price of constraint \(i\)</td><td style="text-align:left">read the final bottom-row entry under \(s_i\)</td></tr>
 <tr><td style="text-align:left">RHS range keeping the basis</td><td style="text-align:left">require \(B^{-1}(b + \Delta b) \ge 0\)</td></tr>
-<tr><td style="text-align:left">Cost-coefficient range (basic \(x_k\))</td><td style="text-align:left">add \(\delta \times\) (the \(x_k\) row) to the bottom row; keep every entry \(\ge 0\)</td></tr>
+<tr><td style="text-align:left">Cost-coefficient range (basic \(x_k\))</td><td style="text-align:left">subtract \(\delta\) in column \(x_k\), then add \(\delta\) times its basic row; keep nonbasic entries \(\ge0\)</td></tr>
 </table>
 
 <h3>Worked on the walker LP (<code>max 50x1 + 40x2</code>, opt \((5,4)\), \(z=410\))</h3>
@@ -510,7 +675,19 @@ row \((0,1,2,-1\mid 4)\), so \(B^{-1} = \begin{bmatrix}2 &amp; -1\\ -1 &amp; 1\e
 <p>The mock's Section&nbsp;S runs the same four steps on <code>max 40x1 + 30x2</code>.</p>
 </div>
 
-<p class="sub">Source: <code>notes/beginner-notes.tex</code> §7; <code>notes/notes.tex</code> §3;
+<h3>Visual check — the old basis is valid only inside the range</h3>
+<div class="card range-example">
+  <p>Each shaded segment is the interval in which the same basis remains feasible and optimal,
+  with <em>only the named coefficient changing</em>. The red mark is the current value.
+  Endpoints are included; beyond one, re-optimise.</p>
+  <div class="range-row"><strong>RHS \(b_1\in[7,14]\)</strong><div class="range-track" role="img" aria-label="Allowable range for b one is seven through fourteen, with current value nine"><span class="range-valid" style="left:18.18%;width:63.64%"></span><span class="range-mark" style="left:18.18%" data-label="7"></span><span class="range-mark current" style="left:36.36%" data-label="9 now"></span><span class="range-mark" style="left:81.82%" data-label="14"></span></div></div>
+  <div class="range-row"><strong>Profit \(c_1\in[40,80]\)</strong><div class="range-track" role="img" aria-label="Allowable range for c one is forty through eighty, with current value fifty"><span class="range-valid" style="left:16.67%;width:66.66%"></span><span class="range-mark" style="left:16.67%" data-label="40"></span><span class="range-mark current" style="left:33.33%" data-label="50 now"></span><span class="range-mark" style="left:83.33%" data-label="80"></span></div></div>
+  <p><strong>Example:</strong> raising \(b_1\) from \(9\) to \(10\) keeps the basis:
+  \((x_1,x_2)=(4,6)\), \(z=440=410+30(1)\). Raising it to \(15\) would predict
+  \(x_1=-1\), so the old formula is no longer feasible; do not extrapolate the shadow price.</p>
+</div>
+
+<p class="sub">Source: <code>notes/beginner-notes.tex</code> §6; <code>notes/notes.tex</code> §3;
 Week&nbsp;2 transcript.</p>
 
 <!-- ==================== MODULE 8 ==================== -->
@@ -647,6 +824,9 @@ writing the area.</div>
   are from Prof. Su Rong's official announcement
   (<a href="../quizzes/quiz-1-official-announcement.pdf">quiz-1-official-announcement.pdf</a>, 2&nbsp;Sept&nbsp;2026);
   weighting and single- vs multi-answer are still to be checked on NTULearn.</p>
+  <p>The added diagrams, conversion mini-examples, and sensitivity perturbation checks are
+  supplementary teaching illustrations derived from the models on this page, not additional
+  official quiz questions. Expanded 4&nbsp;Sept&nbsp;2026.</p>
 </footer>
 
 </div>
@@ -689,8 +869,8 @@ writing the area.</div>
       why: '"exactly" pins the value — an equality constraint.' },
     { stem: '"Production of A cannot exceed twice the production of B."', opts: ['A &minus; 2B &le; 0', 'A &minus; 2B &ge; 0', '2A &minus; B &le; 0'], correct: 0,
       why: '"A cannot exceed 2B" is A &le; 2B, i.e. A &minus; 2B &le; 0.' },
-    { stem: 'A pure cost-minimisation with only "&le; capacity" rows and no demand row. Optimal output?', opts: ['produce nothing', 'produce at capacity', 'cannot tell'], correct: 0,
-      why: 'With nothing forcing output, x = 0 has the least cost. A real model needs a demand &ge; row.' }
+    { stem: 'A cost-minimisation with non-negative unit costs, only "&le; non-negative capacity" rows, and no demand row. One optimal output?', opts: ['produce nothing', 'produce at capacity', 'cannot tell'], correct: 0,
+      why: 'With x &ge; 0, non-negative costs, and nothing forcing output, x = 0 is feasible and has the least cost, zero. A production requirement needs a demand &ge; row.' }
   ];
   var LAB4 = [
     { stem: 'Convert <code>3 x1 + x2 &le; 12</code> to standard form.', opts: ['+ s, s &ge; 0', '&minus; e, e &ge; 0', '+ a, a &ge; 0'], correct: 0,
@@ -934,6 +1114,34 @@ writing the area.</div>
   buildMC('lab2', LAB2, 'l2_');
   buildMC('lab4', LAB4, 'l4_');
   paintProgress();
+  // Dynamic labs add height above later anchors; align the requested section after they exist.
+  requestAnimationFrame(function () {
+    var target = document.getElementById(location.hash.slice(1));
+    if (target) target.scrollIntoView();
+  });
+
+  /* Module 3: this slider range keeps both objective intercepts inside the axes. */
+  (function () {
+    var slider = document.getElementById('objective-z');
+    var line = document.getElementById('objective-line');
+    function drawObjective() {
+      var z = Number(slider.value);
+      var xIntercept = z / 40, yIntercept = z / 30;
+      line.setAttribute('x1', 50); line.setAttribute('y1', 280 - 15 * yIntercept);
+      line.setAttribute('x2', 50 + 25 * xIntercept); line.setAttribute('y2', 280);
+      document.getElementById('objective-z-out').value = z;
+      document.getElementById('objective-z-status').textContent = z < 400
+        ? 'This line is below the best attainable value; keep sliding upward/right.'
+        : z === 400
+          ? 'Last contact: (4, 8). This is the maximum feasible profit.'
+          : 'This line misses the feasible region, so that profit is unattainable.';
+      console.assert(Math.abs(40 * xIntercept - z) < 1e-9 &&
+        Math.abs(30 * yIntercept - z) < 1e-9 && xIntercept <= 13 && yIntercept <= 17,
+        'Objective-line endpoints must satisfy the equation and stay inside the axes.');
+    }
+    slider.addEventListener('input', drawObjective);
+    drawObjective();
+  })();
 
   /* MathJax, vendored */
   var warned = false;
