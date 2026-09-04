@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="en" data-theme="system">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EE6204 Week 3 Exercise Class — Interactive Mock</title>
+<meta name="description" content="Interactive mock test built from the five hand-worked problems in resources/EE6204_Exercises-part1.pdf: graphical method, simplex (degeneracy), and integer programming. Work each on paper, enter your final figures, then reveal the full worked solution.">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']], processEscapes: true },
+    options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] },
+    startup: { typeset: true }
+  };
+</script>
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: #f6f7f9; --surface: #ffffff; --surface-2: #eef1f5;
+  --text: #14181f; --muted: #5b6472; --border: #d8dee7;
+  --accent: #1f6feb; --accent-soft: #e5efff;
+  --success: #17794b; --success-soft: #e2f5ec;
+  --warning: #9a6200; --warning-soft: #fdf1dc;
+  --danger: #b32130; --danger-soft: #fdeaec;
+  --shadow: 0 1px 2px rgba(16,24,40,.05), 0 8px 24px rgba(16,24,40,.06);
+  --radius: 14px;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#0e1117; --surface:#161b23; --surface-2:#1d232d;
+    --text:#e7ecf3; --muted:#99a3b3; --border:#2a323e;
+    --accent:#6ea8ff; --accent-soft:#17233a;
+    --success:#56d39b; --success-soft:#10281f;
+    --warning:#e5b567; --warning-soft:#2b2113;
+    --danger:#ff8189; --danger-soft:#2e1519;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"] {
+  --bg:#0e1117; --surface:#161b23; --surface-2:#1d232d;
+  --text:#e7ecf3; --muted:#99a3b3; --border:#2a323e;
+  --accent:#6ea8ff; --accent-soft:#17233a;
+  --success:#56d39b; --success-soft:#10281f;
+  --warning:#e5b567; --warning-soft:#2b2113;
+  --danger:#ff8189; --danger-soft:#2e1519;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px rgba(0,0,0,.35);
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+.wrap { max-width: 860px; margin: 0 auto; padding: 24px 18px 96px; }
+header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 14px; margin-bottom: 4px; }
+h1 { font-size: 1.5rem; margin: 0; }
+h2 { font-size: 1.15rem; margin: 0 0 2px; }
+.sub { color: var(--muted); margin: 6px 0 22px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 20px 20px 18px; margin: 18px 0; }
+.tag { display: inline-block; font-size: .72rem; font-weight: 600; letter-spacing: .02em;
+  text-transform: uppercase; padding: 2px 8px; border-radius: 999px;
+  background: var(--accent-soft); color: var(--accent); }
+.tag.warn { background: var(--warning-soft); color: var(--warning); }
+.prob { background: var(--surface-2); border-radius: 10px; padding: 12px 16px; margin: 12px 0; }
+label { display: block; font-size: .85rem; color: var(--muted); margin: 10px 0 3px; }
+input[type=text] { width: 100%; max-width: 260px; padding: 7px 10px; font: inherit;
+  background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; }
+.row { display: flex; flex-wrap: wrap; gap: 16px; }
+.row > div { flex: 0 1 auto; }
+.chk { display: flex; align-items: center; gap: 6px; margin: 6px 0; font-size: .9rem; color: var(--text); }
+.chk input { width: auto; }
+.result { margin-top: 12px; padding: 10px 14px; border-radius: 10px; font-size: .92rem; display: none; }
+.result.ok { background: var(--success-soft); color: var(--success); display: block; }
+.result.bad { background: var(--danger-soft); color: var(--danger); display: block; }
+.sol { margin-top: 12px; border-top: 1px dashed var(--border); padding-top: 12px; display: none; }
+.sol.show { display: block; }
+.sol h3 { font-size: .95rem; margin: 12px 0 4px; }
+.bar { position: sticky; top: 0; z-index: 5; background: var(--bg); padding: 10px 0;
+  display: flex; flex-wrap: wrap; gap: 10px; align-items: center; border-bottom: 1px solid var(--border); }
+button, select { font: inherit; padding: 8px 14px; border-radius: 9px; border: 1px solid var(--border);
+  background: var(--surface); color: var(--text); cursor: pointer; }
+button.primary { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 600; }
+button.primary:hover { filter: brightness(1.05); }
+#timer { font-variant-numeric: tabular-nums; font-weight: 600; margin-left: auto; }
+.score { font-weight: 700; }
+details.key { margin-top: 18px; }
+details.key summary { cursor: pointer; font-weight: 600; }
+object, iframe.pdf { width: 100%; height: 78vh; border: 1px solid var(--border); border-radius: 10px; margin-top: 10px; }
+.muted { color: var(--muted); font-size: .88rem; }
+code { font-family: var(--mono); background: var(--surface-2); padding: 1px 4px; border-radius: 4px; }
+.mj-note { background: var(--warning-soft); color: var(--warning); border-radius: 8px; padding: 8px 12px; font-size: .85rem; margin: 10px 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="bar">
+  <button class="primary" id="check">Check all answers</button>
+  <button id="reveal">Reveal solutions</button>
+  <button id="reset">Reset</button>
+  <select id="theme" aria-label="Theme">
+    <option value="system">System theme</option>
+    <option value="light">Light</option>
+    <option value="dark">Dark</option>
+  </select>
+  <span id="timer">00:00</span>
+</div>
+
+<header>
+  <h1>EE6204 — Week 3 Exercise Class</h1>
+  <span class="tag">Interactive mock</span>
+</header>
+<p class="sub">
+  The five problems the lecturer worked by hand in the Week&nbsp;3 exercise lecture
+  (<code>resources/EE6204_Exercises-part1.pdf</code>). Do each one on paper — graph paper and a ruler for the graphical
+  parts — then type your <strong>final figures</strong> below and press <em>Check all answers</em>. Full worked
+  solutions unlock afterwards. Autosaves in this browser.
+</p>
+<p class="muted">
+  Quiz&nbsp;1 scope tonight is graphical method + simplex + sensitivity only. <strong>Q1, Q2, Q4, Q5 are in scope.
+  Q3 (branch and bound) is final-exam material</strong> — skip it if you are short on time.
+</p>
+<div class="mj-note" id="mjNote" hidden>
+  Equations not rendering? This page loads MathJax from <code>vendor/mathjax/tex-mml-chtml.js</code>.
+  Open the file from inside the <code>notes/</code> folder so that path resolves.
+</div>
+
+<!-- Q1 -->
+<div class="card" id="q1">
+  <div class="tag">Q1 · Graphical method · in scope</div>
+  <h2>Solve graphically</h2>
+  <div class="prob">
+    \[\max\; f = 5x_1 + 7x_2\qquad
+    \text{s.t.}\quad
+    \begin{aligned}[t]
+      &4x_1 + 5x_2 \le 20\\
+      &2x_1 + 6x_2 \le 24\\
+      &6x_1 + 4x_2 \le 16\\
+      &x_1,\,x_2 \ge 0
+    \end{aligned}\]
+  </div>
+  <div class="row">
+    <div><label>Optimal \(x_1\)</label><input type="text" data-q="1" data-f="x1"></div>
+    <div><label>Optimal \(x_2\)</label><input type="text" data-q="1" data-f="x2"></div>
+    <div><label>Optimal value \(f^*\)</label><input type="text" data-q="1" data-f="f"></div>
+  </div>
+  <div class="row">
+    <div><label>Gradient \(\nabla f\) = ( _ , _ ) — first component</label><input type="text" data-q="1" data-f="g1"></div>
+    <div><label>… second component</label><input type="text" data-q="1" data-f="g2"></div>
+  </div>
+  <label class="chk"><input type="checkbox" data-q="1" data-f="deg"> The optimal vertex is <strong>degenerate</strong> (more than 2 constraint lines pass through it)</label>
+  <div class="result" data-q="1"></div>
+  <div class="sol" data-q="1">
+    <h3>Feasible corners</h3>
+    <p>Set each inequality to equality and find the intercepts. On the \(x_2\)-axis all three lines give
+      \(x_2 \le 4\): \(4(0)+5(4)=20\), \(2(0)+6(4)=24\), \(6(0)+4(4)=16\) — so <strong>all three boundaries pass
+      through \((0,4)\)</strong>. On the \(x_1\)-axis the tightest is \(6x_1 \le 16 \Rightarrow x_1 \le 8/3\).
+      The feasible region is the triangle \((0,0),\ (8/3,0),\ (0,4)\).</p>
+    <h3>Evaluate \(f = 5x_1 + 7x_2\)</h3>
+    <p>\((0,0)\!: 0\), \((8/3,0)\!: 40/3 \approx 13.3\), \((0,4)\!: 28\). Optimum \((x_1,x_2) = (0,4)\), \(f^* = 28\).</p>
+    <h3>Level line and degeneracy</h3>
+    <p>\(\nabla f = (5,7)\) points up-and-right; slide \(5x_1+7x_2 = z\) that way and its last contact is \((0,4)\).
+      The scan annotates \(\nabla f = [7;5]\) — that is transposed; for \(f = 5x_1 + 7x_2\) the gradient is \([5;7]\).
+      The answer is unchanged.</p>
+    <p><strong>\((0,4)\) is degenerate:</strong> three constraint lines meet there, not two. Moving along
+      \(2x_1+6x_2 = 24\) would raise \(f\) (\(5x_1+7x_2 = 28 + \tfrac{8}{3}x_1\)) but immediately breaks
+      \(4x_1+5x_2 \le 20\), so that edge is not feasible — an improving <em>direction</em> exists with no improving
+      <em>feasible edge</em>.</p>
+  </div>
+</div>
+
+<!-- Q2 -->
+<div class="card" id="q2">
+  <div class="tag">Q2 · Simplex · in scope</div>
+  <h2>Solve the Q1 LP by the simplex method</h2>
+  <div class="prob">Same LP as Q1. Add slacks \(s_1, s_2, s_3\) to the three \(\le\) rows; start from the all-slack basis.</div>
+  <div class="row">
+    <div><label>Entering variable, first pivot</label><input type="text" data-q="2" data-f="enter"></div>
+    <div><label>Minimum ratio in that ratio test</label><input type="text" data-q="2" data-f="ratio"></div>
+    <div><label>Pivots to reach optimality</label><input type="text" data-q="2" data-f="piv"></div>
+    <div><label>Optimal \(z\)</label><input type="text" data-q="2" data-f="z"></div>
+  </div>
+  <label class="chk"><input type="checkbox" data-q="2" data-f="tie"> The ratio test is a <strong>three-way tie</strong></label>
+  <label class="chk"><input type="checkbox" data-q="2" data-f="deg"> The optimal tableau is <strong>degenerate</strong> (a basic variable equals 0)</label>
+  <p class="muted" style="margin:8px 0 2px">Which slacks equal 0 at the optimum?</p>
+  <label class="chk"><input type="checkbox" data-q="2" data-f="s1"> \(s_1 = 0\)</label>
+  <label class="chk"><input type="checkbox" data-q="2" data-f="s2"> \(s_2 = 0\)</label>
+  <label class="chk"><input type="checkbox" data-q="2" data-f="s3"> \(s_3 = 0\)</label>
+  <div class="result" data-q="2"></div>
+  <div class="sol" data-q="2">
+    <h3>First pivot</h3>
+    <p>With the convention \(z - 5x_1 - 7x_2 = 0\), the most negative reduced cost is \(-7\), so <strong>\(x_2\) enters</strong>.
+      Ratio test: \(20/5 = 4\), \(24/6 = 4\), \(16/4 = 4\) — a <strong>three-way tie</strong>, minimum ratio \(4\).</p>
+    <h3>After one pivot</h3>
+    <p>Pivot any tied row (say \(s_1\) leaves). Then \(x_2 = 4 - 0.8x_1 - 0.2s_1\) and
+      \(z = 28 - 0.6x_1 - 1.4s_1\): no reduced cost improves, so the tableau is <strong>optimal after 1 pivot</strong>,
+      \(z^* = 28\), \((x_1,x_2) = (0,4)\).</p>
+    <h3>Degeneracy</h3>
+    <p>At the optimum \(s_1 = 0\) (non-basic), and the two remaining basic slacks are
+      \(s_2 = 24 - 6(4) = 0\) and \(s_3 = 16 - 4(4) = 0\). Basic variables at zero \(\Rightarrow\)
+      <strong>degenerate optimal tableau</strong>. All three slacks are zero here.</p>
+  </div>
+</div>
+
+<!-- Q3 -->
+<div class="card" id="q3">
+  <div class="tag warn">Q3 · Branch and bound · final-exam scope, not Quiz 1</div>
+  <h2>Solve the integer program by branch and bound</h2>
+  <div class="prob">
+    \[\max\; z = 7x_1 + 5x_2\qquad
+    \text{s.t.}\quad
+    \begin{aligned}[t]
+      &4x_1 + 6x_2 \le 18\\
+      &2x_1 + 6x_2 \le 9\\
+      &6x_1 + 3x_2 \le 27\\
+      &x_1,\,x_2 \ge 0,\ \text{integer}
+    \end{aligned}\]
+  </div>
+  <div class="row">
+    <div><label>LP-relaxation optimum \(x_1\)</label><input type="text" data-q="3" data-f="rx1"></div>
+    <div><label>… \(x_2\)</label><input type="text" data-q="3" data-f="rx2"></div>
+    <div><label>… value</label><input type="text" data-q="3" data-f="rz"></div>
+  </div>
+  <div class="row">
+    <div><label>Integer optimum \(x_1\)</label><input type="text" data-q="3" data-f="ix1"></div>
+    <div><label>… \(x_2\)</label><input type="text" data-q="3" data-f="ix2"></div>
+    <div><label>… value \(z^*\)</label><input type="text" data-q="3" data-f="iz"></div>
+  </div>
+  <div class="result" data-q="3"></div>
+  <div class="sol" data-q="3">
+    <h3>LP relaxation</h3>
+    <p>All three constraints are tight at \((x_1,x_2) = (4.5,\,0)\): \(4(4.5)=18\), \(2(4.5)=9\), \(6(4.5)=27\).
+      Value \(= 7(4.5) = 31.5\). (This relaxation vertex is itself degenerate.)</p>
+    <h3>Branch on \(x_1\) (fractional at \(4.5\))</h3>
+    <ul>
+      <li><strong>\(x_1 \ge 5\):</strong> infeasible — \(6x_1 \le 27\) forces \(x_1 \le 4.5\). Prune.</li>
+      <li><strong>\(x_1 \le 4\):</strong> relaxation optimum \((4,\ \tfrac16)\), value \(173/6 \approx 28.83\). Branch on \(x_2\):
+        <ul>
+          <li>\(x_2 \le 0\): \((4,0)\), value \(28\), integer &rarr; incumbent \(= 28\).</li>
+          <li>\(x_2 \ge 1\): relaxation optimum \((1.5,\,1)\), value \(15.5 < 28\). Prune.</li>
+        </ul>
+      </li>
+    </ul>
+    <p>Integer optimum <strong>\((x_1,x_2) = (4,0)\), \(z^* = 28\)</strong>. (The scan leaves the tree unfinished at one node;
+      the branches above are completed in <code>notes/beginner-notes.tex</code> §5.2.)</p>
+  </div>
+</div>
+
+<!-- Q4 -->
+<div class="card" id="q4">
+  <div class="tag">Q4 · Graphical method · in scope</div>
+  <h2>Solve graphically</h2>
+  <div class="prob">
+    \[\max\; z = 200x + 550y\qquad
+    \text{s.t.}\quad
+    \begin{aligned}[t]
+      &100x + 250y \le 5000\\
+      &x + y \le 50\\
+      &x,\,y \ge 0
+    \end{aligned}\]
+  </div>
+  <div class="row">
+    <div><label>Optimal \(x\)</label><input type="text" data-q="4" data-f="x"></div>
+    <div><label>Optimal \(y\)</label><input type="text" data-q="4" data-f="y"></div>
+    <div><label>Optimal value \(z^*\)</label><input type="text" data-q="4" data-f="z"></div>
+  </div>
+  <div class="result" data-q="4"></div>
+  <div class="sol" data-q="4">
+    <h3>Feasible region</h3>
+    <p>\(100x + 250y = 5000\) runs through \((50,0)\) and \((0,20)\); \(x + y = 50\) runs through \((50,0)\) and
+      \((0,50)\). The two lines meet at \((50,0)\), so \(x+y \le 50\) never binds elsewhere. The region is the
+      triangle \((0,0),\ (50,0),\ (0,20)\).</p>
+    <h3>Evaluate \(z = 200x + 550y\)</h3>
+    <p>\((0,0)\!: 0\), \((50,0)\!: 10000\), \((0,20)\!: 11000\). Optimum \((x,y) = (0,20)\), \(z^* = 11000\);
+      the level line's last contact is the vertex \((0,20)\).</p>
+  </div>
+</div>
+
+<!-- Q5 -->
+<div class="card" id="q5">
+  <div class="tag">Q5 · Simplex · in scope</div>
+  <h2>Solve the Q4 LP by the simplex method</h2>
+  <div class="prob">Same LP as Q4. Add slacks \(s_1\) to \(100x+250y \le 5000\) and \(s_2\) to \(x+y \le 50\).</div>
+  <div class="row">
+    <div><label>Entering variable, first pivot</label><input type="text" data-q="5" data-f="enter"></div>
+    <div><label>Minimum ratio in that ratio test</label><input type="text" data-q="5" data-f="ratio"></div>
+    <div><label>Pivots to reach optimality</label><input type="text" data-q="5" data-f="piv"></div>
+    <div><label>Optimal \(z\)</label><input type="text" data-q="5" data-f="z"></div>
+    <div><label>Value of the remaining slack \(s_2\) at optimum</label><input type="text" data-q="5" data-f="s2"></div>
+  </div>
+  <div class="result" data-q="5"></div>
+  <div class="sol" data-q="5">
+    <h3>First pivot</h3>
+    <p>\(z - 200x - 550y = 0\): most negative is \(-550\), so <strong>\(y\) enters</strong>. Ratio test:
+      \(5000/250 = 20\) vs \(50/1 = 50\); minimum \(= 20\), so \(s_1\) leaves.</p>
+    <h3>After one pivot</h3>
+    <p>\(y = 20 - 0.4x - 0.004s_1\), and \(z = 11000 - 20x - 2.2s_1\): optimal after <strong>1 pivot</strong>.
+      \((x,y) = (0,20)\), \(z^* = 11000\).</p>
+    <h3>Slack</h3>
+    <p>\(s_2 = 50 - (0 + 20) = 30 > 0\): the constraint \(x + y \le 50\) is <strong>not binding</strong>, so this
+      optimum is <em>non-degenerate</em> (contrast with Q2).</p>
+  </div>
+</div>
+
+<div class="card">
+  <span class="score" id="scoreOut">Not checked yet.</span>
+  <p class="muted">Each question scores 1 point when every field matches. Fractions accepted as
+    <code>8/3</code> or <code>2.667</code>; variables as <code>x2</code> or <code>y</code>.</p>
+</div>
+
+<details class="key">
+  <summary>Original hand-worked pages (answer key — open only after attempting)</summary>
+  <p class="muted">The lecturer's scans, <code>resources/EE6204_Exercises-part1.pdf</code>. Q3's tree is unfinished and
+    Q4–Q5 solutions are blank in the scan; those are completed above from the course notes.</p>
+  <object data="../resources/EE6204_Exercises-part1.pdf" type="application/pdf">
+    <p><a href="../resources/EE6204_Exercises-part1.pdf">Open EE6204_Exercises-part1.pdf</a></p>
+  </object>
+</details>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var STORE_KEY = 'ee6204-exercises-part1-mock-v1';
+  var THEME_KEY = 'ee6204-theme';
+
+  // ---- numeric / text comparison ------------------------------------------
+  function num(s) {
+    if (s == null) return NaN;
+    s = String(s).trim().replace(/\s+/g, '');
+    if (s === '') return NaN;
+    var m = s.match(/^(-?\d+(?:\.\d+)?)\/(-?\d+(?:\.\d+)?)$/);
+    if (m) return parseFloat(m[1]) / parseFloat(m[2]);
+    return parseFloat(s);
+  }
+  function numEq(got, want, tol) {
+    var g = num(got);
+    if (isNaN(g)) return false;
+    return Math.abs(g - want) <= (tol == null ? 1e-3 : tol);
+  }
+  function varEq(got, names) {
+    var subs = '₀₁₂₃₄₅₆₇₈₉';
+    var s = String(got || '').toLowerCase().split('').map(function (c) {
+      var i = subs.indexOf(c);
+      if (i >= 0) return String(i);
+      return /[\s_{}]/.test(c) ? '' : c;
+    }).join('');
+    return names.indexOf(s) >= 0;
+  }
+
+  // ---- answer key --------------------------------------------------------
+  // each checker gets a lookup fn f(field) -> raw string / bool
+  var KEY = {
+    1: function (f) {
+      return numEq(f('x1'), 0) && numEq(f('x2'), 4) && numEq(f('f'), 28)
+        && numEq(f('g1'), 5) && numEq(f('g2'), 7) && f('deg') === true;
+    },
+    2: function (f) {
+      return varEq(f('enter'), ['x2']) && numEq(f('ratio'), 4) && numEq(f('piv'), 1)
+        && numEq(f('z'), 28) && f('tie') === true && f('deg') === true
+        && f('s1') === true && f('s2') === true && f('s3') === true;
+    },
+    3: function (f) {
+      return numEq(f('rx1'), 4.5) && numEq(f('rx2'), 0) && numEq(f('rz'), 31.5)
+        && numEq(f('ix1'), 4) && numEq(f('ix2'), 0) && numEq(f('iz'), 28);
+    },
+    4: function (f) {
+      return numEq(f('x'), 0) && numEq(f('y'), 20) && numEq(f('z'), 11000);
+    },
+    5: function (f) {
+      return varEq(f('enter'), ['y']) && numEq(f('ratio'), 20) && numEq(f('piv'), 1)
+        && numEq(f('z'), 11000) && numEq(f('s2'), 30);
+    }
+  };
+
+  // ---- DOM wiring -------------------------------------------------------
+  var fields = Array.prototype.slice.call(document.querySelectorAll('[data-q][data-f]'));
+  function getter(q) {
+    return function (name) {
+      var el = document.querySelector('[data-q="' + q + '"][data-f="' + name + '"]');
+      if (!el) return undefined;
+      return el.type === 'checkbox' ? el.checked : el.value;
+    };
+  }
+
+  function save() {
+    var o = {};
+    fields.forEach(function (el) {
+      var k = el.getAttribute('data-q') + '.' + el.getAttribute('data-f');
+      o[k] = el.type === 'checkbox' ? el.checked : el.value;
+    });
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(o)); } catch (e) {}
+  }
+  function load() {
+    var o;
+    try { o = JSON.parse(localStorage.getItem(STORE_KEY) || '{}'); } catch (e) { o = {}; }
+    fields.forEach(function (el) {
+      var k = el.getAttribute('data-q') + '.' + el.getAttribute('data-f');
+      if (!(k in o)) return;
+      if (el.type === 'checkbox') el.checked = !!o[k];
+      else el.value = o[k];
+    });
+  }
+  fields.forEach(function (el) { el.addEventListener('input', save); el.addEventListener('change', save); });
+
+  function checkAll() {
+    var score = 0;
+    Object.keys(KEY).forEach(function (q) {
+      var ok = KEY[q](getter(q));
+      if (ok) score++;
+      var box = document.querySelector('.result[data-q="' + q + '"]');
+      box.className = 'result ' + (ok ? 'ok' : 'bad');
+      box.textContent = ok ? '✓ Correct.' : '✗ Not right yet — check the worked solution below.';
+      document.querySelector('.sol[data-q="' + q + '"]').classList.add('show');
+    });
+    document.getElementById('scoreOut').textContent = 'Score: ' + score + ' / 5';
+    stopTimer();
+    if (window.MathJax && window.MathJax.typesetPromise) window.MathJax.typesetPromise();
+  }
+
+  document.getElementById('check').addEventListener('click', checkAll);
+  document.getElementById('reveal').addEventListener('click', function () {
+    document.querySelectorAll('.sol').forEach(function (s) { s.classList.add('show'); });
+    if (window.MathJax && window.MathJax.typesetPromise) window.MathJax.typesetPromise();
+  });
+  document.getElementById('reset').addEventListener('click', function () {
+    try { localStorage.removeItem(STORE_KEY); } catch (e) {}
+    location.reload();
+  });
+
+  // ---- theme ----------------------------------------------------------
+  var themeSel = document.getElementById('theme');
+  try { themeSel.value = localStorage.getItem(THEME_KEY) || 'system'; } catch (e) {}
+  function applyTheme() { document.documentElement.setAttribute('data-theme', themeSel.value); }
+  themeSel.addEventListener('change', function () {
+    try { localStorage.setItem(THEME_KEY, themeSel.value); } catch (e) {}
+    applyTheme();
+  });
+  applyTheme();
+
+  // ---- count-up timer -----------------------------------------------
+  var t0 = Date.now(), tick = null;
+  function fmt(ms) {
+    var s = Math.floor(ms / 1000);
+    return ('0' + Math.floor(s / 60)).slice(-2) + ':' + ('0' + (s % 60)).slice(-2);
+  }
+  function startTimer() { tick = setInterval(function () {
+    document.getElementById('timer').textContent = fmt(Date.now() - t0);
+  }, 1000); }
+  function stopTimer() { if (tick) { clearInterval(tick); tick = null; } }
+  startTimer();
+
+  load();
+
+  // ---- MathJax, vendored for offline use ---------------------------
+  var s = document.createElement('script');
+  s.src = 'vendor/mathjax/tex-mml-chtml.js';
+  s.async = true;
+  s.onerror = function () { document.getElementById('mjNote').hidden = false; };
+  document.head.appendChild(s);
+
+  // ---- self-check: append ?selftest to the URL --------------------
+  if (/[?&]selftest\b/.test(location.search)) {
+    var pass = true, log = [];
+    function assert(c, m) { if (!c) { pass = false; log.push('FAIL ' + m); } else log.push('ok   ' + m); }
+    assert(num('8/3') > 2.66 && num('8/3') < 2.67, '8/3 parses');
+    assert(numEq('2.667', 8 / 3, 1e-2), 'decimal approx of 8/3');
+    assert(varEq('x2', ['x2']) && varEq('X_2', ['x2']) && varEq(' x₂ ', ['x2']), 'variable normalisation');
+    assert(!varEq('x1', ['x2']), 'wrong variable rejected');
+    // correct attempts should score 5
+    var allKeys = {
+      '1.x1':'0','1.x2':'4','1.f':'28','1.g1':'5','1.g2':'7','1.deg':true,
+      '2.enter':'x2','2.ratio':'4','2.piv':'1','2.z':'28','2.tie':true,'2.deg':true,'2.s1':true,'2.s2':true,'2.s3':true,
+      '3.rx1':'4.5','3.rx2':'0','3.rz':'31.5','3.ix1':'4','3.ix2':'0','3.iz':'28',
+      '4.x':'0','4.y':'20','4.z':'11000',
+      '5.enter':'y','5.ratio':'20','5.piv':'1','5.z':'11000','5.s2':'30'
+    };
+    function fakeGet(q) { return function (n) { return allKeys[q + '.' + n]; }; }
+    var sc = 0; Object.keys(KEY).forEach(function (q) { if (KEY[q](fakeGet(q))) sc++; });
+    assert(sc === 5, 'reference attempt scores 5/5 (got ' + sc + ')');
+    // a wrong answer must fail its question
+    allKeys['1.x2'] = '3';
+    assert(!KEY[1](fakeGet('1')), 'Q1 fails with x2=3');
+    console.log('[selftest] ' + (pass ? 'PASS' : 'FAIL') + '\n' + log.join('\n'));
+  }
+})();
+</script>
+</body>
+</html>
