@@ -305,6 +305,9 @@ That single fact is what both the graphical method and the simplex method exploi
 
 <p class="sub">Source: <code>notes/beginner-notes.tex</code> §1–2, <code>notes/notes.tex</code> §1–2.</p>
 
+<h3>Module 1 checkpoint — verify before continuing</h3>
+<div id="check1"></div>
+
 <!-- ==================== MODULE 2 ==================== -->
 <h2 id="m2">2 &middot; Turning words into a linear program</h2>
 
@@ -353,6 +356,9 @@ asks for, plus the standard-form step in Module&nbsp;4.</p>
 </div>
 
 <p class="sub">Source: <code>notes/beginner-notes.tex</code> §1.1, §2.1; Week&nbsp;1 transcript.</p>
+
+<h3>Module 2 checkpoint — verify before continuing</h3>
+<div id="check2"></div>
 
 <!-- ==================== MODULE 3 ==================== -->
 <h2 id="m3">3 &middot; The graphical method</h2>
@@ -443,6 +449,9 @@ feasible region.</div>
 
 <p class="sub">Source: <code>notes/beginner-notes.tex</code> §3; <code>notes/notes.tex</code> §2.1.</p>
 
+<h3>Module 3 checkpoint — verify before continuing</h3>
+<div id="check3"></div>
+
 <!-- ==================== MODULE 4 ==================== -->
 <h2 id="m4">4 &middot; Standard form: slack, surplus, artificial</h2>
 
@@ -494,6 +503,9 @@ even though their difference need not be.</p>
 
 <p class="sub">Source: <code>notes/beginner-notes.tex</code> §4; <code>notes/notes.tex</code> §2.2.
 The numerical gap examples are supplementary illustrations.</p>
+
+<h3>Module 4 checkpoint — verify before continuing</h3>
+<div id="check4"></div>
 
 <!-- ==================== MODULE 5 ==================== -->
 <h2 id="m5">5 &middot; The simplex method</h2>
@@ -577,6 +589,9 @@ forgot to re-scan the bottom row.</div>
 <p class="sub">Source: <code>notes/beginner-notes.tex</code> §5; <code>notes/notes.tex</code> §2.3;
 Week&nbsp;2 transcript.</p>
 
+<h3>Module 5 checkpoint — verify before continuing</h3>
+<div id="check5"></div>
+
 <!-- ==================== MODULE 6 ==================== -->
 <h2 id="m6">6 &middot; Two-phase and Big-M (if artificials appear)</h2>
 
@@ -625,6 +640,9 @@ transcript prefer it. Either is acceptable if done consistently.</div>
 
 <p class="sub">Source: <code>notes/beginner-notes.tex</code> §5 last paragraph;
 <code>notes/notes.tex</code> §2.2–2.3.</p>
+
+<h3>Module 6 checkpoint — verify before continuing</h3>
+<div id="check6"></div>
 
 <!-- ==================== MODULE 7 ==================== -->
 <h2 id="m7">7 &middot; Duality intuition &amp; sensitivity — official scope</h2>
@@ -690,6 +708,9 @@ row \((0,1,2,-1\mid 4)\), so \(B^{-1} = \begin{bmatrix}2 &amp; -1\\ -1 &amp; 1\e
 <p class="sub">Source: <code>notes/beginner-notes.tex</code> §6; <code>notes/notes.tex</code> §3;
 Week&nbsp;2 transcript.</p>
 
+<h3>Module 7 checkpoint — verify before continuing</h3>
+<div id="check7"></div>
+
 <!-- ==================== MODULE 8 ==================== -->
 <h2 id="m8">8 &middot; Legacy topics: transportation &amp; NLP</h2>
 
@@ -742,10 +763,16 @@ writing the area.</div>
 </div>
 </details>
 
+<h3>Module 8 checkpoint — verify before continuing</h3>
+<div id="check8"></div>
+
 <!-- ==================== MODULE 9 ==================== -->
 <h2 id="m9">9 &middot; Recall trainer</h2>
 <p class="sub">Read the prompt, say the answer aloud, then click to unblur and check.</p>
 <div id="recall"></div>
+
+<h3>Module 9 checkpoint — verify before continuing</h3>
+<div id="check9"></div>
 
 <!-- ==================== MODULE 10 ==================== -->
 <h2 id="m10">10 &middot; Quiz-day plan</h2>
@@ -776,6 +803,9 @@ writing the area.</div>
   <li>Time left over: re-check every ratio test and every sign in the bottom row — that's where the wrong option is designed to catch you.</li>
 </ul>
 </div>
+
+<h3>Module 10 checkpoint — final readiness check</h3>
+<div id="check10"></div>
 
 <!-- ==================== REFERENCE ==================== -->
 <h2 id="ref-ex">Reference &middot; the Week&nbsp;3 exercise class</h2>
@@ -881,6 +911,38 @@ writing the area.</div>
       why: 'Standard form needs b &ge; 0. Multiply by &minus;1 first (which also flips the inequality direction).' },
     { stem: 'Maximisation, all <code>&le;</code>, all <code>b &ge; 0</code>. What starting basis?', opts: ['the slack variables', 'artificials, via two-phase', 'the original variables'], correct: 0,
       why: 'Each slack appears in exactly one row with coefficient +1 — the slacks are a ready-made feasible basis, no Phase I needed.' }
+  ];
+  var CHECKPOINTS = [
+    { stem: 'A plan <code>(x1, x2) = (6, 6)</code> earns high profit but uses <code>2(6) + 6 = 18</code> testing-hours when only 16 are available. What is it?',
+      opts: ['feasible and optimal', 'infeasible', 'unbounded'], correct: 1,
+      why: 'It violates one resource limit. A point must satisfy every constraint before its profit matters.' },
+    { stem: 'The contract says "deliver at least 25 units." Which constraint captures it?',
+      opts: ['delivery &le; 25', 'delivery &ge; 25', 'delivery = 0'], correct: 1,
+      why: '"At least" is a floor, so delivery must be greater than or equal to 25.' },
+    { stem: 'For the graphical LP, an objective line above <code>z = 400</code> misses the feasible region. What does that verify?',
+      opts: ['the higher profit is unattainable', 'the LP is infeasible', 'every point is optimal'], correct: 0,
+      why: 'The feasible region still exists, but no feasible point reaches that higher objective value.' },
+    { stem: 'At <code>3x1 + x2 = 9</code> under the capacity <code>3x1 + x2 &le; 12</code>, what is the slack?',
+      opts: ['3', '&minus;3', '12'], correct: 0,
+      why: 'Slack fills the unused capacity: 9 + s = 12, so s = 3.' },
+    { stem: 'In a <code>z &minus; c&#7488;x = 0</code> tableau, the chosen entering column has positive entries 1 and 2 with RHS values 9 and 14. Which row leaves?',
+      opts: ['the first row', 'the second row', 'neither row'], correct: 1,
+      why: 'The ratios are 9/1 = 9 and 14/2 = 7. The smallest non-negative ratio is 7, so the second row leaves.' },
+    { stem: 'Phase I ends with a minimum artificial-variable sum greater than zero. What follows?',
+      opts: ['start Phase II', 'the original LP is infeasible', 'the original LP is unbounded'], correct: 1,
+      why: 'A positive Phase I optimum means the artificials cannot all leave at zero, so the original constraints have no feasible point.' },
+    { stem: 'For the walker LP, <code>b1</code> rises from 9 to 10, inside its allowable range. What profit should the shadow price predict?',
+      opts: ['410', '420', '440'], correct: 2,
+      why: 'Constraint 1 has shadow price 30, so one extra unit raises profit from 410 to 440 while the basis remains valid.' },
+    { stem: 'Which statement matches the official Quiz 1 scope?',
+      opts: ['transportation and NLP are tested', 'transportation and NLP are legacy reference only', 'branch and bound is required'], correct: 1,
+      why: 'The official scope is graphical method, simplex method, and simplex sensitivity analysis. Module 8 is reference only.' },
+    { stem: 'For the ratio test, which rows are eligible?',
+      opts: ['all rows', 'only rows with a positive entering-column coefficient', 'only rows with a negative RHS'], correct: 1,
+      why: 'Only a positive entering-column coefficient can make a current basic variable fall to zero as the entering variable increases.' },
+    { stem: 'Before submitting the MCQ once, what is the safest final action?',
+      opts: ['re-check ratio tests and bottom-row signs', 'submit early to unlock a second attempt', 'open a calculator app'], correct: 0,
+      why: 'The quiz allows one submission, and the official notice says no other equipment is needed. Use spare time to check the common sign and ratio traps.' }
   ];
 
   function buildMC(mountId, data, keyPrefix) {
@@ -1090,7 +1152,7 @@ writing the area.</div>
   })();
 
   /* ---------- progress ---------- */
-  var TOTAL_Q = LAB2.length + LAB4.length;
+  var TOTAL_Q = LAB2.length + LAB4.length + CHECKPOINTS.length;
   var TOTAL_R = RECALL.length;
   function paintProgress() {
     var qn = 0, i;
@@ -1113,6 +1175,9 @@ writing the area.</div>
   load();
   buildMC('lab2', LAB2, 'l2_');
   buildMC('lab4', LAB4, 'l4_');
+  CHECKPOINTS.forEach(function (item, i) {
+    buildMC('check' + (i + 1), [item], 'c' + (i + 1) + '_');
+  });
   paintProgress();
   // Dynamic labs add height above later anchors; align the requested section after they exist.
   requestAnimationFrame(function () {
