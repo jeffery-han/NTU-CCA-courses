@@ -347,30 +347,71 @@ code { font-family: var(--mono); background: var(--surface-2); padding: 1px 4px;
     return names.indexOf(s) >= 0;
   }
 
-  // ---- answer key --------------------------------------------------------
-  // each checker gets a lookup fn f(field) -> raw string / bool
+  // ---- answer key -------------------------------------------------------
+  // each question is a list of [fieldName, label, spec]; spec.test(raw)->bool,
+  // spec.blank(raw)->bool ("left empty" vs "answered wrong").
+  function N(want, tol) { return {
+    test: function (x) { return numEq(x, want, tol); },
+    blank: function (x) { return String(x == null ? '' : x).trim() === ''; }
+  }; }
+  function V(names) { return {
+    test: function (x) { return varEq(x, names); },
+    blank: function (x) { return String(x == null ? '' : x).trim() === ''; }
+  }; }
+  // an unticked box that should be ticked is reported as "not answered", not "wrong"
+  var YES = { test: function (x) { return x === true; }, blank: function (x) { return x !== true; } };
+
   var KEY = {
-    1: function (f) {
-      return numEq(f('x1'), 0) && numEq(f('x2'), 4) && numEq(f('f'), 28)
-        && numEq(f('g1'), 5) && numEq(f('g2'), 7) && f('deg') === true;
-    },
-    2: function (f) {
-      return varEq(f('enter'), ['x2']) && numEq(f('ratio'), 4) && numEq(f('piv'), 1)
-        && numEq(f('z'), 28) && f('tie') === true && f('deg') === true
-        && f('s1') === true && f('s2') === true && f('s3') === true;
-    },
-    3: function (f) {
-      return numEq(f('rx1'), 4.5) && numEq(f('rx2'), 0) && numEq(f('rz'), 31.5)
-        && numEq(f('ix1'), 4) && numEq(f('ix2'), 0) && numEq(f('iz'), 28);
-    },
-    4: function (f) {
-      return numEq(f('x'), 0) && numEq(f('y'), 20) && numEq(f('z'), 11000);
-    },
-    5: function (f) {
-      return varEq(f('enter'), ['y']) && numEq(f('ratio'), 20) && numEq(f('piv'), 1)
-        && numEq(f('z'), 11000) && numEq(f('s2'), 30);
-    }
+    1: [
+      ['x1', 'Optimal x₁', N(0)],
+      ['x2', 'Optimal x₂', N(4)],
+      ['f', 'Optimal value f*', N(28)],
+      ['g1', '∇f first component', N(5)],
+      ['g2', '∇f second component', N(7)],
+      ['deg', '"optimal vertex is degenerate" box', YES]
+    ],
+    2: [
+      ['enter', 'Entering variable', V(['x2'])],
+      ['ratio', 'Minimum ratio', N(4)],
+      ['piv', 'Pivots to optimality', N(1)],
+      ['z', 'Optimal z', N(28)],
+      ['tie', '"three-way tie" box', YES],
+      ['deg', '"optimal tableau is degenerate" box', YES],
+      ['s1', 's₁ = 0 box', YES],
+      ['s2', 's₂ = 0 box', YES],
+      ['s3', 's₃ = 0 box', YES]
+    ],
+    3: [
+      ['rx1', 'Relaxation x₁', N(4.5)],
+      ['rx2', 'Relaxation x₂', N(0)],
+      ['rz', 'Relaxation value', N(31.5)],
+      ['ix1', 'Integer optimum x₁', N(4)],
+      ['ix2', 'Integer optimum x₂', N(0)],
+      ['iz', 'Integer optimum value z*', N(28)]
+    ],
+    4: [
+      ['x', 'Optimal x', N(0)],
+      ['y', 'Optimal y', N(20)],
+      ['z', 'Optimal value z*', N(11000)]
+    ],
+    5: [
+      ['enter', 'Entering variable', V(['y'])],
+      ['ratio', 'Minimum ratio', N(20)],
+      ['piv', 'Pivots to optimality', N(1)],
+      ['z', 'Optimal z', N(11000)],
+      ['s2', 'Remaining slack s₂', N(30)]
+    ]
   };
+
+  function scoreQ(q, get) {
+    var wrong = [], blank = [];
+    KEY[q].forEach(function (row) {
+      var raw = get(row[0]);
+      if (row[2].test(raw)) return;
+      (row[2].blank(raw) ? blank : wrong).push(row[1]);
+    });
+    return { ok: wrong.length === 0 && blank.length === 0, wrong: wrong, blank: blank };
+  }
 
   // ---- DOM wiring -------------------------------------------------------
   var fields = Array.prototype.slice.call(document.querySelectorAll('[data-q][data-f]'));
@@ -405,11 +446,18 @@ code { font-family: var(--mono); background: var(--surface-2); padding: 1px 4px;
   function checkAll() {
     var score = 0;
     Object.keys(KEY).forEach(function (q) {
-      var ok = KEY[q](getter(q));
-      if (ok) score++;
+      var r = scoreQ(q, getter(q));
+      if (r.ok) score++;
       var box = document.querySelector('.result[data-q="' + q + '"]');
-      box.className = 'result ' + (ok ? 'ok' : 'bad');
-      box.textContent = ok ? '✓ Correct.' : '✗ Not right yet — check the worked solution below.';
+      box.className = 'result ' + (r.ok ? 'ok' : 'bad');
+      if (r.ok) {
+        box.textContent = '✓ All correct.';
+      } else {
+        var parts = [];
+        if (r.wrong.length) parts.push('Wrong — ' + r.wrong.join('; '));
+        if (r.blank.length) parts.push('Not answered — ' + r.blank.join('; '));
+        box.textContent = '✗ ' + parts.join('   ·   ') + '. See the worked solution below.';
+      }
       document.querySelector('.sol[data-q="' + q + '"]').classList.add('show');
     });
     document.getElementById('scoreOut').textContent = 'Score: ' + score + ' / 5';
@@ -475,11 +523,15 @@ code { font-family: var(--mono); background: var(--surface-2); padding: 1px 4px;
       '5.enter':'y','5.ratio':'20','5.piv':'1','5.z':'11000','5.s2':'30'
     };
     function fakeGet(q) { return function (n) { return allKeys[q + '.' + n]; }; }
-    var sc = 0; Object.keys(KEY).forEach(function (q) { if (KEY[q](fakeGet(q))) sc++; });
+    var sc = 0; Object.keys(KEY).forEach(function (q) { if (scoreQ(q, fakeGet(q)).ok) sc++; });
     assert(sc === 5, 'reference attempt scores 5/5 (got ' + sc + ')');
-    // a wrong answer must fail its question
+    // an unticked box must be reported as "not answered", a bad number as "wrong"
+    allKeys['1.deg'] = false;
     allKeys['1.x2'] = '3';
-    assert(!KEY[1](fakeGet('1')), 'Q1 fails with x2=3');
+    var r1 = scoreQ(1, fakeGet('1'));
+    assert(!r1.ok, 'Q1 fails with x2=3 and box unticked');
+    assert(r1.wrong.indexOf('Optimal x₂') >= 0, 'x2=3 reported as wrong');
+    assert(r1.blank.indexOf('"optimal vertex is degenerate" box') >= 0, 'unticked box reported as not answered');
     console.log('[selftest] ' + (pass ? 'PASS' : 'FAIL') + '\n' + log.join('\n'));
   }
 })();
