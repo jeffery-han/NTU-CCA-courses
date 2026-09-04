@@ -33,6 +33,7 @@
 
 ## File-organization record
 
+- 2026-09-04 transcript clean-up: both raw Gemini transcripts were archived and replaced by a filler-cleaned version at the same canonical path (existing citations still resolve). `resources/week-01-transcript.txt -> resources/transcripts-raw/week-01-transcript.txt`; `resources/week-02-transcript.txt -> resources/transcripts-raw/week-02-transcript.txt`. The `resources/transcripts-raw/` directory is new (holds the verbatim originals). New `resources/week-0N-transcript.txt` files are the cleaned text: double-spacing collapsed, filler / false starts / immediate repetitions removed, recurring ASR garble for standard terms fixed (e.g. "revue joint" -> "revolute joint", "cartan" -> "Cartesian", "DH digram" -> "DH diagram"). Word retention 94-95% vs raw; no summarization. No note content changed.
 - `Outline for Part I.pdf -> resources/course-outline-part-01.pdf`
 - `kinematics(3).pdf -> resources/lecture-01-manipulator-kinematics.pdf`
 - `6221-week1.txt -> resources/week-01-transcript.txt`

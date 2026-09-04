@@ -58,6 +58,7 @@
 ## File-organization record
 
 - 2026-09-04: added `notes/vendor/mathjax/output/chtml/fonts/woff-v2/` (23 WOFF files, copied from the already-vendored matching MathJax distribution in `EE-6203/notes/vendor/mathjax/`). No user file was moved, renamed, or deleted.
+- 2026-09-04 transcript clean-up: every raw Gemini transcript was archived and replaced by a filler-cleaned version at the same canonical path (existing citations still resolve). `resources/week-01-transcript.txt -> resources/transcripts-raw/week-01-transcript.txt`; `resources/week-02-transcript.txt -> resources/transcripts-raw/week-02-transcript.txt`; `resources/week-03-transcript.txt -> resources/transcripts-raw/week-03-transcript.txt`. The `resources/transcripts-raw/` directory is new (holds the verbatim originals). New `resources/week-0N-transcript.txt` files are the cleaned text: double-spacing collapsed; filler ("okay", "right", "you know", "lah"), false starts and immediate repetitions removed; recurring ASR garble for standard terms fixed (e.g. "Synplex" -> "simplex", "snack variable" -> "slack variable", "KKT"/"NP-hard" normalized). Word retention 85-96% vs raw (these lecturers are highly colloquial); no summarization. No note/mock content changed.
 - `EE6204 LP NLP(1).pdf -> resources/lecture-01-04-linear-and-nonlinear-programming.pdf`
 - `Introduction to Linear Programming.pdf -> resources/introduction-to-linear-programming.pdf`
 - `week1-transcript.txt -> resources/week-01-transcript.txt`
