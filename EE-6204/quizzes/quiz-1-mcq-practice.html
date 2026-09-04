@@ -111,8 +111,8 @@ sensitivity analysis &middot; 60&nbsp;minutes &middot; <strong>no calculator</st
 
 <div id="math-warning" class="notice">
   <strong>Equations are not rendering.</strong> This page loads MathJax from
-  <code>../notes/vendor/mathjax/tex-mml-chtml.js</code>. Keep that relative path intact, or serve
-  the <code>EE-6204</code> folder over a local HTTP server.
+  <code>vendor/mathjax/tex-mml-chtml.js</code>. Keep that folder next to this file, or open the
+  page in Chrome / over a local HTTP server.
 </div>
 
 <div class="notice">
@@ -536,7 +536,7 @@ conversation for a graded diagnosis against <code>quiz-1-mcq-practice.md</code>.
     if (w) w.style.display = 'block';
   }
   var s = document.createElement('script');
-  s.src = '../notes/vendor/mathjax/tex-mml-chtml.js';
+  s.src = 'vendor/mathjax/tex-mml-chtml.js';
   s.async = true;
   s.onerror = warn;
   s.onload = function () {
