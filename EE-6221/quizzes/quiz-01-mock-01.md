@@ -115,6 +115,10 @@ $$
   $R^{\mathsf T}R=I$, $\det R=+1$ (columns orthonormal). Physical sanity: radial distance
   $\sqrt{x^2+y^2}=d_3+L_t$, height $z=d_2$ — a cylinder, as the name promises.
 
+*Equally correct:* a frame choice with $\alpha_2=+90^\circ$ or a different $x_0$ gives e.g.
+$p=\big((d_3+L_t)c_1,\ (d_3+L_t)s_1,\ d_2\big)$ with the $R$ columns permuted/signed to match. Mark
+against the student's own diagram; the invariants are radial distance $d_3+L_t$ and height $d_2$.
+
 ### Q1 — common wrong paths and what each implies
 
 | Observed | Diagnosis | Fix |
@@ -166,8 +170,9 @@ $$
 
 - Same orientation as the pick (top-down approach, long axes still aligned): $R$ unchanged. — 1
 - $x,y$ of the translation = part-D centroid $x,y$: $(9,\ 3)$. — 1
-- $z$ = top of D + half-height of C $= (1+1) + 2 = 4$ (**raise by both half-heights**, not left at
-  D's centroid $z=1$ or D's top $z=2$). — 1
+- $z$: D's top surface is at (D centroid $z$) + (D half-height) $= 1 + 1 = 2$; the place pose lifts
+  C's centroid another (C half-height) $= 2$ above that, so $z = 2 + 2 = 4$. **Both half-heights
+  must be added** — not left at D's centroid $z=1$, nor at D's top $z=2$. — 1
 
 $$
 {}^{0}T_{\text{place}}=\begin{bmatrix}
