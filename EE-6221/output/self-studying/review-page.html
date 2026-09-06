@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EE6221 Robotics and Intelligent Sensors — Manipulator Kinematics (Quiz 1) — Review page</title>
+  <link rel="stylesheet" href="self-study-assets/katex/katex.min.css">
+  <style>
+    :root { color-scheme: light; font-family: system-ui, sans-serif; color: #202b36; background: #f6f7f9; }
+    body { max-width: 52rem; margin: auto; padding: 2rem 1rem; line-height: 1.75; }
+    main { background: white; border: 1px solid #dce2e8; padding: clamp(1rem, 4vw, 3rem); border-radius: 12px; overflow-wrap: anywhere; }
+    h1, h2, h3 { line-height: 1.3; }
+    h2 { margin-top: 2em; border-bottom: 1px solid #dce2e8; padding-bottom: .4em; }
+    .provenance { font-size: .9rem; color: #374c64; background: #edf2f7; padding: .35em .7em; border-radius: 4px; }
+    pre { background: #f1f3f6; padding: 1rem; overflow-x: auto; }
+    code { font-family: ui-monospace, monospace; }
+    .katex-display { overflow-x: auto; overflow-y: hidden; padding: .3em 0; }
+    footer { font-size: .85rem; color: #526171; margin-top: 1rem; }
+    @media print { body, main { background: white; border: 0; padding: 0; } }
+  </style>
+  <script defer src="self-study-assets/katex/katex.min.js"></script>
+  <script defer src="self-study-assets/katex/contrib/auto-render.min.js"></script>
+  <script defer src="self-study-assets/render-math.js"></script>
+</head>
+<body>
+  <main><h1>EE6221 Robotics and Intelligent Sensors — Manipulator Kinematics (Quiz 1) — Review page</h1>
+
+<h2>Quiz 1 logistics and scope</h2>
+
+<p>Quiz 1: ~23 Sep 2026, ~30 min, room via NTULearn. Source = class group chat + Week 3 lecture remarks, NOT an official written notice — verify. Scope = &quot;first four weeks&quot;: frames/rotations, homogeneous transforms, D–H direct kinematics + arm matrix + tool configuration vector, inverse kinematics (atan2, branches), cubic trajectory planning. OUT: Jacobian, pseudoinverse, singularities, differential motion, control, mobile robots, sensors. Drill speed on D–H table + transform multiplication + atan2 angle extraction.</p>
+
+<h2>Coordinate frames and rotation matrices</h2>
+
+<p>${}^{A}p={}^{A}R_{B}\,{}^{B}p$; columns of ${}^{A}R_{B}$ = axes of $\{B\}$ in $\{A\}$. Proper rotation: $R^{\mathsf T}R=I$, $R^{-1}=R^{\mathsf T}$, $\det R=+1$. Know $R_x,R_y,R_z$ cold ($R_y$ minus sign is bottom-left). Fixed-axis rotation ⇒ premultiply; mobile/body-axis rotation ⇒ postmultiply. $R=[r_1\,r_2\,r_3]$ = normal, sliding, approach; tool advances along $r_3$. Recover angles with atan2, never $\arctan$.</p>
+
+<h2>Homogeneous transformations, composition, and inversion</h2>
+
+<p>${}^{A}T_{B}=\begin{bmatrix}{}^{A}R_{B}&amp;{}^{A}p_{B}\\0&amp;1\end{bmatrix}$, $p_B$ = origin of $\{B\}$ in $\{A\}$. Compose by inner-label cancellation: ${}^{A}T_{C}={}^{A}T_{B}\,{}^{B}T_{C}$. Inverse: $T^{-1}=\begin{bmatrix}R^{\mathsf T}&amp;-R^{\mathsf T}p\\0&amp;1\end{bmatrix}$ — rotate AND negate the translation. Fixed-frame op premultiplies, current-frame op postmultiplies. Check: rotation block orthonormal, translation in length units.</p>
+
+<h2>Direct kinematics and the D–H algorithm</h2>
+
+<p>Arm matrix ${}^{0}T_{n}(q)={}^{0}T_{1}\cdots{}^{n-1}T_{n}$; top-left $3\times3$ = orientation, last column = position. D–H: $z_{k-1}$ = joint $k$ axis; $x_k$ = common normal $z_{k-1}\to z_k$. Params $\theta_k$ (about $z_{k-1}$), $d_k$ (along $z_{k-1}$), $a_k$ (along $x_k$, fixed), $\alpha_k$ (about $x_k$, fixed). Revolute ⇒ $\theta_k$ variable; prismatic ⇒ $d_k$ variable; exactly one per joint. Link transform template with $c_k,s_k,c_{\alpha k},s_{\alpha k}$ — memorise it. Workflow: axes → common normals → table → template → multiply in order. 2R: $x=a_1c_1+a_2c_{12}$, $y=a_1s_1+a_2s_{12}$, orientation $=q_1+q_2$. Tool config vector $w=[\,p;\ e^{q_n/\pi}r_3\,]$.</p>
+
+<h2>Inverse kinematics</h2>
+
+<p>IK: given $(R_d,p_d)$ find $q$ with ${}^{0}T_{n}(q)=[R_d\,p_d;0\,1]$. Not matrix inversion; many-to-one. Check reachability, orientation freedom, joint limits first. Branches: elbow-up/down — $\pm\arccos$ signals a two-branch choice. Analytic (per-robot, exact, all branches) vs numerical (general, needs guess + convergence). Key tool: from $\rho\sin\phi=Y,\ \rho\cos\phi=X$ take $\phi=\operatorname{atan2}(Y,X)$ — correct quadrant, safe at $X=0$. Pattern: decouple base first ($q_1=\operatorname{atan2}(w_2,w_1)$), carry as known, peel next; $\pm$ at elbow: $q_3=\pm\arccos\frac{\lVert b\rVert^2-a_2^2-a_3^2}{2a_2a_3}$. Never $\arctan$; $\arccos$ only gives $[0,\pi]$.</p>
+
+<h2>Trajectory planning: path vs trajectory and cubic interpolation</h2>
+
+<p>Path = spatial curve $\Gamma$; trajectory = $w(t)=\Gamma(s(t))$, $s:[0,T]\to[0,1]$, $\dot s$ = speed profile. Pick-and-place: pick → lift-off → place → set-down; lift-off $R_{\text{lift}}=R_{\text{pick}}$, $p_{\text{lift}}=p_{\text{pick}}-v\,r_3$ (retreat along $-r_3$). Cubic $w(t)=at^3+bt^2+ct+d$ on $[0,T]$ with $w(0),\dot w(0),w(T),\dot w(T)$: $d=w_0$, $c=v_0$, $a=\frac{2(w_0-w_1)+T(v_0+v_1)}{T^3}$, $b=\frac{3(w_1-w_0)-T(2v_0+v_1)}{T^2}$. Rest-to-rest: $a=-2\Delta/T^3$, $b=3\Delta/T^2$, peak speed $1.5\,\Delta/T$ at $T/2$. Chain segments with continuous velocity AND acceleration.</p>
+</main>
+  <footer>Generated from notes-bank.json. Hand annotations are not merged back into the bank.</footer>
+</body>
+</html>

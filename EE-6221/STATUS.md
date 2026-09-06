@@ -5,6 +5,7 @@
 - `notes/beginner-notes.tex` - detailed, self-contained teaching note for the supplied manipulator-kinematics material; compiled PDF is stored beside it.
 - `notes/notes.tex` - concise manipulator-kinematics review note; compiled PDF is stored beside it.
 - `notes/week-01-beginner-notes.tex` - preserved Week 1-only teaching supplement; it is not the canonical full-scope beginner note.
+- `output/self-studying/notes-bank.json` - `/self-study` bank scoped to Quiz 1 (6 sections: quiz logistics/scope, frames+rotations, homogeneous transforms, D-H direct kinematics, inverse kinematics, cubic trajectory planning). Built to `output/self-studying/beginner-notes.html` and `output/self-studying/review-page.html` (HTML mode; shares `output/self-studying/self-study-assets/`). Not a replacement for the canonical `.tex` notes; derived from `lecture-01-manipulator-kinematics.pdf`, `exercises-kinematics-not-for-submission.pdf`, `additional-materials/example-3.1.pdf`, and `notes/notes.tex`.
 
 ## Source coverage
 
@@ -44,6 +45,7 @@
 - Robot control, mobile-robot kinematics, and intelligent-sensor material remain pending in both notes. Course-specific public slides are now archived, but they have not yet been reviewed or synthesised.
 - The public exams and assignment files are validated and indexed in the archive `README.md`; their calculations remain unchecked.
 - No exact-code public quiz file was found. Commercial solution sites were excluded even when search snippets exposed exam wording.
+- Quiz 1 scope is UNOFFICIAL. Basis: class group-chat consensus (~2026-09-02) and the instructor's Week 3 lecture remarks (from a personal transcript) - quiz ~23 Sep 2026, ~30 min, rooms via NTULearn; "first four weeks only", explicitly excluding the following week's lecture. Mapped to: frames/rotations, homogeneous transforms, D-H direct kinematics + arm matrix + tool configuration vector, inverse kinematics, cubic trajectory planning. Jacobian / differential motion / singularities treated as out of scope. Re-check against the official NTULearn notice when posted and update `output/self-studying/notes-bank.json` section order 10.
 - Expand the detailed source robot examples only after choosing which manipulator convention/problem set the learner wants to practise.
 
 ## File-organization record
@@ -60,5 +62,6 @@
 
 ## Update record
 
+- 2026-09-06 `/self-study` Quiz 1: created `output/self-studying/` with `notes-bank.json` (6 sections), `config.json` (html), and built `beginner-notes.html` + `review-page.html` + `self-study-assets/`. Schema validation passed; both HTML pages rendered and visually checked in a browser (KaTeX math, matrices, provenance labels all correct; no LaTeX leakage). Scope established from an unofficial group-chat + lecture-remark basis (see Pending and unresolved). No `.tex` note or resource file was changed. `output/` is a new top-level directory for generated study material.
 - 2026-08-24: brought the course into the updated canonical layout, repaired note citations, preserved the Week 1-only supplement under an honest scoped filename, and created the canonical full manipulator-kinematics beginner note. Archived later-course material remains explicitly separate from reviewed note coverage.
 - 2026-08-24: compiled all three note outputs twice (`notes/beginner-notes.pdf`: 5 pages; `notes/notes.pdf`: 6 pages; `notes/week-01-beginner-notes.pdf`: 3 pages). Rendered and visually checked every page; no clipping, overlap, broken equations, or unreadable text was found.
