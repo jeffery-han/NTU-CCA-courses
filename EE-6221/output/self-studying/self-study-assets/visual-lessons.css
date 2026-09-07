@@ -1,0 +1,26 @@
+:root{font-family:system-ui,-apple-system,sans-serif;color:#172e3c;background:#f3f5f2;line-height:1.7;font-size:17px;color-scheme:light}
+*{box-sizing:border-box}body{margin:0}header,main,footer,nav{max-width:1050px;margin:auto}
+header{padding:64px 32px 30px}h1{font-size:clamp(2.1rem,5vw,3.7rem);line-height:1.13;letter-spacing:-.045em;margin:15px 0 20px}
+h2{font-size:clamp(1.5rem,3vw,2.1rem);line-height:1.25;margin:8px 0 24px}p{max-width:78ch}
+.eyebrow{font-size:.76rem;font-weight:750;letter-spacing:.12em;color:#356056}.meta,.source,footer{font-size:.82rem;color:#52636d}
+nav{display:flex;flex-wrap:wrap;gap:8px;padding:0 32px 25px}a{color:#165b71;text-underline-offset:3px}
+nav a{background:#fff;border:1px solid #cbd8d4;border-radius:22px;padding:8px 14px;text-decoration:none;font-size:.83rem}
+section{background:white;padding:clamp(22px,5vw,48px);margin:0 20px 24px;border:1px solid #d8e1dd;border-radius:18px;scroll-margin-top:20px}
+.lead{font-size:1.18rem;color:#194c44}.notice{border-left:4px solid #ae7724;background:#fff6e7;padding:15px 20px}
+.flow{display:flex;flex-wrap:wrap;gap:12px;align-items:center;background:#edf5f1;padding:20px;border-radius:12px}.flow span{flex:1;min-width:100px}
+label{display:block;font-weight:650;margin:18px 0 2px}output{font-variant-numeric:tabular-nums;color:#995321}
+input[type=range]{width:100%;accent-color:#b45e28;min-height:32px;cursor:pointer}
+svg[id],#trajectory-plots svg{display:block;width:100%;height:auto;background:#f7faf9;border:1px solid #d9e5df;border-radius:12px;margin:16px 0}
+svg[id] text,#trajectory-plots svg text{font-family:system-ui,sans-serif;font-size:14px;fill:#233b48}
+.readout{font-variant-numeric:tabular-nums;background:#edf4f8;padding:15px 18px;border-radius:9px;min-height:3.5em}
+details{border:1px solid #d4dfdb;border-radius:10px;padding:12px 17px;margin:14px 0}
+summary{font-weight:650;cursor:pointer}details[open]>summary{margin-bottom:18px}.reference{background:#fafbf9}
+.check{border:2px solid #a6c9bc;border-radius:12px;margin:30px 0 18px;padding:12px 20px}
+legend{font-weight:750;padding:0 8px}button{font:inherit;font-size:.92rem;background:#fff;color:#1b4751;border:1px solid #92aaa6;border-radius:8px;padding:10px 15px;margin:4px 8px 4px 0;cursor:pointer}
+button:hover{background:#edf5f1}button[data-result=correct]{background:#d8eee1;border-color:#2c7050}button[data-result=wrong]{background:#fff0df;border-color:#ab681c}
+.feedback{margin:12px 0 0}.feedback:empty{display:none}.next{display:inline-block;margin-top:8px;font-weight:650}
+:focus-visible{outline:3px solid #2f709c;outline-offset:4px}.katex-display{overflow-x:auto;overflow-y:hidden;padding:6px 0}
+.table-wrap{overflow-x:auto}table{border-collapse:collapse;min-width:560px;width:100%;font-size:.86rem}td,th{padding:10px;text-align:left;border-bottom:1px solid #ccd9d4}th{background:#eef5f1}caption{text-align:left;font-weight:700;margin-bottom:10px}
+footer{padding:20px 32px 50px}.skip{position:absolute;left:10px;top:-100px}.skip:focus{top:10px;background:white;padding:8px}
+@media(max-width:550px){header{padding:35px 22px 20px}nav{padding:0 20px 20px}section{margin:0 10px 16px}button{display:block;width:100%;margin:10px 0}svg[id] text,#trajectory-plots svg text{font-size:16px}.flow{font-size:.9rem}}
+@media print{body{background:white}section{break-inside:auto;border:0;padding:12px;margin:0}nav,.skip,.next,input,button{display:none}header{padding:0}h1{font-size:28pt}svg[id],#trajectory-plots svg{max-height:280px}details{break-inside:avoid}}
