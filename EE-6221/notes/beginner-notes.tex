@@ -1,7 +1,10 @@
 \documentclass[11pt,a4paper]{article}
 \usepackage[margin=25mm]{geometry}
 \usepackage{amsmath,amssymb,mathtools,enumitem}
-\usepackage{xurl}
+% xurl is absent from this machine's TinyTeX; url + UrlBreaks gives the same
+% break-anywhere behaviour for the long file paths cited in \source{}.
+\usepackage{url}
+\makeatletter\g@addto@macro\UrlBreaks{\UrlOrds}\makeatother
 \usepackage[hidelinks]{hyperref}
 \renewcommand{\texttt}[1]{\nolinkurl{#1}}
 \setlist[itemize]{nosep,leftmargin=*}
@@ -95,6 +98,35 @@ Use this construction order:
 \item Check the final rotation block is orthonormal and the translation has length units.
 \end{enumerate}
 
+\paragraph{One row per joint --- and a rigid tool is not a joint.}
+The table has exactly as many rows as the arm has \emph{joints}. It is tempting to give a row to
+every offset you can see in the drawing, but a fixed tool of length $L_t$ bolted to the last link
+contributes no degree of freedom, so it must never occupy a joint row. Handle it in one of two ways,
+and say which you are doing:
+\begin{itemize}
+\item post-multiply the arm matrix by a constant $\mathrm{Trans}(z,L_t)$, giving
+      ${}^0T_{\text{tool}}={}^0T_n\,\mathrm{Trans}(z,L_t)$; or
+\item add an explicitly labelled \emph{fixed} frame after the last joint row, with no starred
+      variable in it.
+\end{itemize}
+If a tool row displaces a real joint, the chain silently loses a degree of freedom: the forward
+equations can no longer reach the poses the arm physically reaches, and the inverse solution will
+ask for a joint variable that the table never defined.
+
+\paragraph{The thirty-second pre-flight check.}
+Before you multiply anything, count. Mark each joint variable in the table with a star
+($\theta_k^\ast$ or $d_k^\ast$), then count the stars and count the joints in the figure. The two
+numbers must agree. A cylindrical arm drawn with one revolute and two prismatic joints needs three
+starred variables --- one $\theta$ and two $d$'s. If you have two stars and a constant $L_t$ sitting
+in a row, a joint has gone missing. This check costs seconds and catches the single most expensive
+error in the question, because every later part inherits it.
+
+A second consistency check is just as cheap: the $\alpha_k$ in your table and the
+$R_x(\alpha_k)$ you write in ${}^{k-1}T_k$ must carry \emph{the same sign}. Writing
+$\alpha_2=+90^\circ$ in the table and $R_x(-90^\circ)$ in the transform is worse than either
+error alone, because a marker cannot tell which one you meant and cannot award the benefit of the
+doubt.
+
 For a planar two-revolute-link arm,
 \[
  x=a_1\cos q_1+a_2\cos(q_1+q_2),\qquad
@@ -114,8 +146,49 @@ Before solving equations, check three forms of feasibility:
 \end{itemize}
 An IK problem can have no solution, one solution, or multiple branches such as elbow-up and elbow-down. Use $\operatorname{atan2}(y,x)$ when reconstructing an angle: unlike $\arctan(y/x)$, it preserves quadrant information and remains meaningful when $x=0$.
 
+\paragraph{Finish the answer: feasibility and how many solutions.}
+Solving for the joint variables is only two-thirds of an inverse-kinematics answer. A complete
+solution also states the \emph{range} over which it is valid and \emph{how many} solutions there
+are. For a cylindrical arm with tool-tip target $(x,y,z)$ and a radial slide $d_3$ behind a tool of
+length $L_t$,
+\[
+ d_3=\sqrt{x^2+y^2}-L_t,\qquad d_2=z,\qquad \theta_1=\operatorname{atan2}(\cdot,\cdot),
+\]
+the answer is unfinished until you add: $d_3\ge 0$, i.e.\ $\sqrt{x^2+y^2}\ge L_t$ --- points closer
+to the column than the tool is long are unreachable --- and $z$ must lie inside the column's stroke.
+
+How many branches should you expect? Count the sub-chains, not the joints. Elbow-up/elbow-down pairs
+come from a \emph{two-revolute (2R) sub-chain}, where two link lengths and one target distance form a
+triangle that can close in two mirror-image ways. A cylindrical arm has one revolute joint and no 2R
+sub-chain, so its solution is \textbf{unique}. Reporting a $\pm$ branch for $d_3$ imports a pattern
+from a different geometry: $d_3+L_t=\sqrt{x^2+y^2}$ is a length, so only the positive root is
+physical.
+
 Analytic IK uses robot geometry to isolate variables and enumerate branches. Numerical IK instead iteratively reduces pose error, commonly through a Jacobian-based update. Numerical methods generalise better but need an initial guess, a convergence test, joint-limit handling, and a strategy near singularities.
 \source{\texttt{resources/lecture-01-manipulator-kinematics.pdf}, pp.~87--117.}
+
+\paragraph{The tool-configuration vector: six numbers instead of twelve.}
+Writing a tool pose as $(p,R)$ carries twelve numbers to express six degrees of freedom, and the
+rotation matrix is awkward to use as the \emph{input} to an inverse-kinematics problem. The handout
+therefore compresses orientation into the \emph{approach vector} $r_3$ --- the third column of $R$,
+the direction the tool advances --- which fixes the tool's direction but says nothing about how far
+it has rolled about that direction. Since $r_3$ is a unit vector, its \emph{length} is free, so the
+roll can be hidden in the magnitude:
+\[
+ w=\begin{bmatrix}p\\[2pt] e^{q_n/\pi}\,r_3\end{bmatrix}\in\mathbb{R}^6 ,
+\]
+where $q_n$ is the \textbf{tool roll angle} --- the rotation \emph{about} the approach vector. The
+exponential is chosen because $e^{q_n/\pi}>0$ always and is invertible, so the roll is recoverable:
+$q_n=\pi\ln\lVert w_{4:6}\rVert$.
+
+\paragraph{Common pitfall.}
+$q_n$ is the roll \emph{about} $r_3$, not the first joint angle. Rotating the whole arm about its
+base column swings the approach vector to a new \emph{direction}; it does not roll the tool about
+it, so it does not enter the exponent. An arm with no roll degree of freedom --- a cylindrical
+RPP arm, for instance --- has $q_n=0$, hence $e^{q_n/\pi}=1$ and $\lVert w_{4:6}\rVert=1$. If your
+$w$ comes out with $\lVert w_{4:6}\rVert\ne 1$ on an arm that cannot roll, the decode
+$q_n=\pi\ln\lVert w_{4:6}\rVert$ is claiming a roll the mechanism cannot perform.
+\source{\texttt{resources/lecture-01-manipulator-kinematics.pdf}, pp.~91--95.}
 
 \section{\enspace From a geometric path to a timed trajectory}
 A path specifies where the tool travels; a trajectory also specifies when it occupies each point. Writing $w(t)=\Gamma(s(t))$ separates the geometric curve $\Gamma$ from the timing law $s(t)$. This distinction lets the same collision-free path be reused with slower or faster motion.
@@ -131,7 +204,29 @@ can satisfy two endpoint positions and two endpoint velocities. Componentwise, f
  b&=\frac{3(w_1-w_0)-T(2v_0+v_1)}{T^2}.
 \end{align*}
 The powers of $T$ are a dimensional check: $a$ has units of position/time$^3$ and $b$ position/time$^2$. Multi-segment motion should join with suitable velocity and acceleration continuity; matching positions alone can still create abrupt motion.
-\source{\texttt{resources/lecture-01-manipulator-kinematics.pdf}, pp.~118--132.}
+
+\paragraph{Building a grasp pose: which way do the jaws close?}
+To write ${}^0T_{\text{pick}}$ for a parallel-jaw gripper you need two physical directions and then
+one cross product; guessing all three columns is how orthonormality gets lost.
+\begin{enumerate}
+\item \textbf{Approach} $r_3$ --- the direction the tool \emph{advances into} the part. Picking
+      from above means descending, so $r_3=-z_0=(0,0,-1)$, \emph{not} $+z_0$. The approach vector
+      points from the tool toward the workpiece.
+\item \textbf{Sliding} $r_2$ --- the direction the jaws \emph{close}. This is perpendicular to the
+      faces they touch. ``Grasp the long sides'' names the two faces being contacted; those faces
+      are separated \emph{across} the part, so the jaws travel along the \emph{short} axis. If the
+      long axis lies along $x_0$, then $r_2=(0,1,0)$. Choosing $r_2$ along the long axis instead
+      would drive the jaws at the part's short end faces.
+\item \textbf{Normal} $r_1=r_2\times r_3$ --- computed, never guessed. Then verify
+      $r_1\times r_2=r_3$ and $\det R=+1$. A right-handed orthonormal set can still be the
+      \emph{wrong} frame for the task, so this check confirms validity, not correctness.
+\item \textbf{Translation} --- the centroid of the part \emph{in its target location}. For a place
+      pose that stacks part $A$ on part $B$, the height is
+      $z = z_B + \tfrac12 h_B + \tfrac12 h_A$: rise to $B$'s top surface, then lift by $A$'s own
+      half-height. Both half-heights, or the part ends up buried in the one below it.
+\end{enumerate}
+\source{\texttt{resources/lecture-01-manipulator-kinematics.pdf}, pp.~118--132; tool-frame column
+naming (normal/sliding/approach) pp.~57--58.}
 
 \section{\enspace Jacobians, velocity control, and singularities}
 If the task coordinate is $x=w(q)$, differentiating with respect to time gives

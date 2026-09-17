@@ -5,7 +5,7 @@
 - `notes/beginner-notes.tex` - detailed, self-contained teaching note for the supplied manipulator-kinematics material; compiled PDF is stored beside it.
 - `notes/notes.tex` - concise manipulator-kinematics review note; compiled PDF is stored beside it.
 - `notes/week-01-beginner-notes.tex` - preserved Week 1-only teaching supplement; it is not the canonical full-scope beginner note.
-- `quizzes/quiz-01-mock-01.html` + `quizzes/quiz-01-mock-01.md` - answer-free mock Quiz 1 (exam page) and its answer key / marking rubric / diagnosis guide. `quizzes/quiz-01-intel.md` records the past-paper intelligence it is built on (logged-in RedNote search + KuRRe8 GitHub study note + the official `exercises-kinematics-not-for-submission.pdf`). `quizzes/quiz-assets/` is a vendored copy of the KaTeX + `render-math.js` assets (kept in-directory so the page works from `file://` in Safari). Unofficial; mirrors the *format* of recalled real papers and re-derives every answer. Mock uses a cylindrical (RPP) arm and new part coordinates so it collides with neither `notes/` nor the `/self-study` bank.
+- `quizzes/quiz-01-mock-01.html` + `quizzes/quiz-01-mock-01.md` - answer-free mock Quiz 1 (exam page) and its answer key / marking rubric / diagnosis guide. `quizzes/quiz-01-intel.md` records the past-paper intelligence it is built on (logged-in RedNote search + KuRRe8 GitHub study note + the official `exercises-kinematics-not-for-submission.pdf`). `quizzes/attempts/quiz-01-mock-01-2026-09-17.pdf` is the learner's sat script (handwritten, scanned) and `quizzes/quiz-01-mock-01-attempt-2026-09-17-marked.md` is its marked record: 12/20 core, 15/25 overall, with a part-by-part breakdown and a slips-vs-inverted-concepts split. `quizzes/quiz-assets/` is a vendored copy of the KaTeX + `render-math.js` assets (kept in-directory so the page works from `file://` in Safari). Unofficial; mirrors the *format* of recalled real papers and re-derives every answer. Mock uses a cylindrical (RPP) arm and new part coordinates so it collides with neither `notes/` nor the `/self-study` bank.
 - `output/self-studying/notes-bank.json` - `/self-study` bank scoped to Quiz 1 (6 sections: quiz logistics/scope, frames+rotations, homogeneous transforms, D-H direct kinematics, inverse kinematics, cubic trajectory planning). Built to `output/self-studying/beginner-notes.html` and `output/self-studying/review-page.html` (HTML mode; shares `output/self-studying/self-study-assets/`). Not a replacement for the canonical `.tex` notes; derived from `lecture-01-manipulator-kinematics.pdf`, `exercises-kinematics-not-for-submission.pdf`, `additional-materials/example-3.1.pdf`, and `notes/notes.tex`.
 
 ## Source coverage
@@ -52,12 +52,15 @@
 - Robot control, mobile-robot kinematics, and intelligent-sensor material remain pending in both notes. Course-specific public slides are now archived, but they have not yet been reviewed or synthesised.
 - The public exams and assignment files are validated and indexed in the archive `README.md`; their calculations remain unchecked.
 - No exact-code public quiz file was found. Commercial solution sites were excluded even when search snippets exposed exam wording. RedNote recollections (2024-25, `quizzes/quiz-01-intel.md`) converge on Quiz 1 = 2 free-response questions in ~30 min: Q1 D-H frame assignment + parameter table for a multi-joint arm (one sitting had 7 joints); Q2 pick-from-above arm matrix. Format evidence is high-confidence; question wording is not.
-- Quiz 1 mock built 2026-09-06 in `quizzes/`. Still outstanding: the official NTULearn Quiz 1 notice (date/time/venue/duration/aids/exact cutoff); whether the "first instructor's kinematics-equations" additions are examinable this run; the learner sitting the mock and stage-6 fold-back of any errors into the notes.
+- Quiz 1 mock built 2026-09-06 in `quizzes/`. **Sat, marked, and folded back on 2026-09-17** (loop stages 4-6 complete for mock 1). Still outstanding: the official NTULearn Quiz 1 notice (date/time/venue/duration/aids/exact cutoff); whether the "first instructor's kinematics-equations" additions are examinable this run; and two illegible cells in the script (the `z` entry of `0T_pick`, and a line read as `3 yeah.` where the Q2 orthonormality check belongs) that the learner should confirm.
+- A line at the top of the sat script, numbered `1.`, states path-vs-trajectory correctly but matches no question on mock 1. Unresolved whether it was a pre-exam memory dump or an answer to something else; recorded, not graded.
 - 2026-09-17 attempt to close the official-notice item **failed, and the item stays open**. The local `ntulearn` library holds EE6221 metadata only: 23 content nodes, but 0 materials discovered/downloaded/parsed, 0 announcements, 0 assessments, 0 indexed chunks (`library-status --course 3`, cache-only, last observed 2026-09-12T02:36Z, coverage PARTIAL). Every lexical search returns 0 hits - including `Jacobian`, which certainly appears in `lecture-01-manipulator-kinematics.pdf` - confirming the index is empty rather than the term absent. A fresh read was requested but could not run: no Chrome browser is connected to the `claude-in-chrome` extension (`list_connected_browsers` returned empty). **All Quiz 1 logistics therefore remain second-hand.** Re-run the `ntulearn-browser` sync for course_key 3 once Chrome is connected.
 - Quiz 1 scope is UNOFFICIAL. Basis: class group-chat consensus (~2026-09-02) and the instructor's Week 3 lecture remarks (from a personal transcript) - quiz ~23 Sep 2026, ~30 min, rooms via NTULearn; "first four weeks only", explicitly excluding the following week's lecture. Mapped to: frames/rotations, homogeneous transforms, D-H direct kinematics + arm matrix + tool configuration vector, inverse kinematics, cubic trajectory planning. Jacobian / differential motion / singularities treated as out of scope. **Corroborated 2026-09-17:** the Week 5 material (`additional-materials/week-05-velocity-kinematics.pdf`) differentiates the forward kinematic equations to get velocity, i.e. week 5 opens the Jacobian/velocity thread, so "first four weeks" is a genuine topic boundary and not merely a slide count. The robot-control and mobile-robot decks added the same day are later units. Still unofficial - this is inference from material dates and content, not a lecturer statement about the quiz. Re-check against the official NTULearn notice when posted and update `output/self-studying/notes-bank.json` section order 10.
 - Expand the detailed source robot examples only after choosing which manipulator convention/problem set the learner wants to practise.
 
 ## File-organization record
+
+- 2026-09-17 attempt filing: new `quizzes/attempts/` directory (canonical home for sat scripts). `~/Downloads/Scanned Document 5.pdf -> quizzes/attempts/quiz-01-mock-01-2026-09-17.pdf` (copied, not moved - the original is left in Downloads for the learner to delete). New sibling file `quizzes/quiz-01-mock-01-attempt-2026-09-17-marked.md`.
 
 - 2026-09-17 housekeeping (quiz-prep stage-2 pass): filed the four resources added 2026-09-11 and one stray course-root artifact. `resources/Robot control(1).pdf -> resources/lecture-02-robot-control.pdf`; `resources/Mobile Robot Kinematics(1).pdf -> resources/lecture-03-mobile-robot-kinematics.pdf`; `resources/Week 5 Kinamatics.pdf -> resources/additional-materials/week-05-velocity-kinematics.pdf` (identified by content: forward kinematic equations differentiated to velocity; the source spelling "Kinamatics" was a typo); `resources/control example.pdf -> resources/additional-materials/control-worked-example.pdf` (identified by content: error/characteristic-equation/gain-setting slides). `notes.pdf -> notes/notes.pdf` - the compiled review note was sitting at the course root while `STATUS.md` claimed it was beside its `.tex`; the course root now holds only `STATUS.md`. No file was overwritten or deleted, and no reference needed repair: a repo-wide grep for all five old names found zero citations in any `.md`, `.tex`, `.json`, or `.html`.
 
@@ -75,6 +78,38 @@
 - 2026-09-06 Quiz 1 mock: new `quizzes/` directory (canonical home for quiz practice, per `CLAUDE.md`). Added `quiz-01-intel.md`, `quiz-01-mock-01.html`, `quiz-01-mock-01.md`, and `quiz-assets/` (vendored copy of `output/self-studying/self-study-assets/` — KaTeX + `render-math.js`, duplicated in-directory so the page loads from `file://` in Safari without `..` subresource paths). No source material moved or renamed. The separate research handover at `~/Projects/output/quiz-test-prep/` now points here as the canonical location.
 
 ## Update record
+
+- 2026-09-17 quiz-prep stages 4-6 (mock 1 sat, marked, folded back). Score 12/20 core, 15/25 overall; full breakdown in
+`quizzes/quiz-01-mock-01-attempt-2026-09-17-marked.md`. Four errors were judged conceptual rather than execution slips
+and were written into both notes at their respective depths:
+  1. **A D-H table has one row per joint; a rigid tool is not a joint.** The script gave `L_t` a joint row, which
+     displaced the revolute `theta_1` and silently cost the chain a degree of freedom. Added to
+     `notes/beginner-notes.tex` sec. 5 as "One row per joint --- and a rigid tool is not a joint" plus a
+     "thirty-second pre-flight check" (star the joint variables, count them against the figure), and to
+     `notes/notes.tex` sec. "Standard Denavit--Hartenberg parameters" as a compact "Table invariants" list. The
+     existing text said only "Only one of theta_k and d_k is a joint variable", which did not rule out a tool row.
+  2. **Grasp direction.** `r_2` (sliding) is perpendicular to the faces being grasped, so grasping the long sides
+     closes the jaws along the *short* axis. Neither note covered how to build a grasp pose; added as a four-step
+     recipe (approach, sliding, normal by cross product, translation incl. the stacking half-heights) in
+     `beginner-notes.tex` sec. 7 and as a compact "Grasp-pose recipe" in `notes.tex` sec. "Trajectory planning".
+  3. **Tool-configuration vector exponent.** `q_n` is the tool *roll* angle, the rotation about the approach vector
+     (`resources/lecture-01-manipulator-kinematics.pdf`, pp. 92-93), not the base joint angle; an arm with no roll DOF
+     has `q_n = 0` and `||w_{4:6}|| = 1`. The beginner note had no tool-configuration-vector section at all - one was
+     added with the derivation and the pitfall; `notes.tex` gained the decode identity and the explicit warning.
+  4. **An IK answer is unfinished without feasibility and a branch count.** Added `d_3 >= 0`, column stroke, and the
+     rule that elbow-up/elbow-down pairs come from a 2R sub-chain (so a cylindrical arm's solution is unique) to both
+     notes.
+  The mock itself needed no correction: every item the script lost marks on was correctly specified, and Section C was
+  marked against the learner's own `alpha_2 = +pi/2` frame choice, which `quiz-01-mock-01.md` already permits as
+  equally correct. The `q_n` wording in the marked file was corrected mid-review after checking the lecture source -
+  "last joint's variable" and "tool roll angle" are the same thing for a standard wrist but not for this arm, and the
+  lecture defines the latter.
+  Compilation: both notes rebuilt with `xelatex` (`notes.pdf` 6 -> 7 pages, `beginner-notes.pdf` 5 -> 6 pages) and the
+  changed pages visually inspected. This required replacing `\usepackage{xurl}` with `url` +
+  `\g@addto@macro\UrlBreaks\UrlOrds` in `notes/notes.tex` and `notes/beginner-notes.tex`: `xurl.sty` is absent from
+  this machine's TinyTeX, a **pre-existing** blocker unrelated to this change that had left both notes uncompilable.
+  Long `\source{}` paths still break across lines correctly. `notes/week-01-beginner-notes.tex` still uses `xurl` and
+  remains uncompilable here; left alone as out of scope.
 
 - 2026-09-17 quiz-prep loop (stages 1-3 re-check; stage 4 handed to the learner): re-read the manifest, filed five files (see the file-organization record), and re-checked the Quiz 1 scope boundary against the four resources that landed after the 2026-09-05 sync. Week 5 opens velocity/Jacobian, which corroborates the week-1-4 cutoff and leaves `quizzes/quiz-01-mock-01.{html,md}` correctly scoped - no mock content changed. The official NTULearn notice could not be retrieved (empty local index; no connected Chrome) and stays listed under Pending. Neither note `.tex` was edited, so no recompile was needed; stage 6 will follow the graded attempt.
 

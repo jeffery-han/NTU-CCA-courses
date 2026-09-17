@@ -2,7 +2,10 @@
 
 \usepackage[margin=25mm]{geometry}
 \usepackage{amsmath,amssymb,mathtools}
-\usepackage{xurl}
+% xurl is absent from this machine's TinyTeX; url + UrlBreaks gives the same
+% break-anywhere behaviour for the long file paths cited in \source{}.
+\usepackage{url}
+\makeatletter\g@addto@macro\UrlBreaks{\UrlOrds}\makeatother
 \usepackage[hidelinks]{hyperref}
 \renewcommand{\texttt}[1]{\nolinkurl{#1}}
 
@@ -142,6 +145,21 @@ where $c_k=\cos\theta_k$, $s_k=\sin\theta_k$, $c_{\alpha k}=\cos\alpha_k$, and $
 
 \paragraph{Practical workflow.} Draw every $z$-axis first, then each common normal $x$-axis, and finally obtain $y$ by the right-hand rule. Tabulate $(\theta,d,a,\alpha)$ before multiplying matrices. A D--H frame assignment is not unique (pp.~61--65), but a consistent assignment yields the same physical tool pose.
 
+\paragraph{Table invariants (check before multiplying).}
+\begin{itemize}
+\item \textbf{One row per joint.} A rigid tool of length $L_t$ is \emph{not} a joint: append a
+      constant $\mathrm{Trans}(z,L_t)$ after ${}^0T_n$, or add a clearly labelled fixed frame. A
+      tool row that displaces a joint row costs the chain a degree of freedom.
+\item \textbf{Star count $=$ joint count.} Mark every joint variable ($\theta_k^\ast$ or
+      $d_k^\ast$) and compare with the figure. RPP cylindrical arm $\Rightarrow$ three stars:
+      $\theta_1^\ast,d_2^\ast,d_3^\ast$.
+\item \textbf{Sign agreement.} The $\alpha_k$ in the table and the $R_x(\alpha_k)$ in
+      ${}^{k-1}T_k$ must match in sign. A table/transform contradiction forfeits both.
+\item \textbf{Cylindrical sanity check.} For an RPP arm the tool tip must satisfy
+      $\sqrt{x^2+y^2}=d_3+L_t$ and $z=d_2$, whichever $x_0$ reference and $\alpha_2=\pm90^\circ$
+      you chose.
+\end{itemize}
+
 \subsection{Example: planar 2R position}
 
 For two coplanar revolute links of lengths $a_1,a_2$, with base angles $q_1,q_2$, the tool-tip position is
@@ -175,6 +193,17 @@ The handout stresses the first two feasibility conditions and notes that arbitra
 
 IK can have no solution, one solution, or several solutions. The five-axis example has distinct elbow-up and elbow-down branches; a controller must select a branch compatible with limits and continuity from the current joint state (pp.~101--105). Use $\atanTwo(y,x)$ rather than $\arctan(y/x)$ where an angle's quadrant matters.
 
+\paragraph{Close every IK answer with two statements.}
+\begin{itemize}
+\item \textbf{Feasibility.} Give the range, not just the formula. Cylindrical arm:
+      $d_3=\sqrt{x^2+y^2}-L_t\ge 0$ (so $\sqrt{x^2+y^2}\ge L_t$) and $d_2=z$ inside the column
+      stroke.
+\item \textbf{Branch count.} Elbow-up/elbow-down pairs come from a \textbf{2R sub-chain}. No 2R
+      sub-chain $\Rightarrow$ \emph{unique} solution --- a cylindrical arm has one revolute joint,
+      so no $\pm$ branch. $d_3+L_t=\sqrt{x^2+y^2}$ is a length: positive root only.
+\end{itemize}
+Always $\operatorname{atan2}$, never $\arctan$: quadrant is preserved and $x=0$ stays valid.
+
 \subsection{Analytic and numerical approaches}
 
 \textbf{Analytic IK} exploits a robot's particular geometry to isolate variables using trigonometry. It is fast and exact in ideal arithmetic, but is robot-specific. \textbf{Numerical IK} minimizes a pose error, for example
@@ -187,7 +216,9 @@ For its articulated-robot examples, the handout represents a tool configuration 
 \[
   \mathbf w=\begin{bmatrix}\mathbf p\\e^{q_n/\pi}\mathbf r_3\end{bmatrix}\in\R^6,
 \]
-where the scaled approach vector retains the approach direction and encodes the tool-roll angle $q_n$ in its magnitude (pp.~91--95). Treat this as the course's convenient task-coordinate representation for these examples, not as a universal replacement for rotation matrices.
+where the scaled approach vector retains the approach direction and encodes the tool-roll angle $q_n$ in its magnitude (pp.~91--95). Treat this as the course's convenient task-coordinate representation for these examples, not as a universal replacement for rotation matrices. Recover the roll by $q_n=\pi\ln\lVert\mathbf w_{4:6}\rVert$; the exponential is used because $e^{q_n/\pi}>0$ and is invertible.
+
+\textbf{Do not substitute a base joint angle for $q_n$.} $q_n$ is the roll \emph{about} $\mathbf r_3$. Rotating the arm about its base column re-aims $\mathbf r_3$ rather than rolling about it. An arm with no roll DOF (e.g.\ cylindrical RPP) has $q_n=0$, so $e^{q_n/\pi}=1$ and $\lVert\mathbf w_{4:6}\rVert=1$ --- a free check on any $\mathbf w$ you write.
 
 \section{Trajectory planning}
 
@@ -199,6 +230,14 @@ A robust pick-and-place plan is more than a start and end point. The handout's m
   \mathbf p_{\rm lift}=\mathbf p_{\rm pick}-v\mathbf r_3.
 \]
 The sign is meaningful: the approach vector points toward the object, so subtracting it retreats from the object under this convention.
+
+\paragraph{Grasp-pose recipe.} Two physical directions, then a cross product:
+$\mathbf r_3$ = approach, pointing \emph{from the tool into the part} ($-z_0$ for a top-down pick);
+$\mathbf r_2$ = jaw closing direction, \textbf{perpendicular to the faces grasped} (grasping the
+long sides $\Rightarrow$ jaws close along the \emph{short} axis); $\mathbf r_1=\mathbf r_2\times\mathbf r_3$,
+then confirm $\mathbf r_1\times\mathbf r_2=\mathbf r_3$ and $\det R=+1$. Translation = the part
+centroid \emph{at its destination}; stacking $A$ onto $B$ gives
+$z=z_B+\tfrac12 h_B+\tfrac12 h_A$ (both half-heights).
 
 \subsection{Path versus trajectory}
 
