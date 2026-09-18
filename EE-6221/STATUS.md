@@ -5,7 +5,7 @@
 - `notes/beginner-notes.tex` - detailed, self-contained teaching note for the supplied manipulator-kinematics material; compiled PDF is stored beside it.
 - `notes/notes.tex` - concise manipulator-kinematics review note; compiled PDF is stored beside it.
 - `notes/week-01-beginner-notes.tex` - preserved Week 1-only teaching supplement; it is not the canonical full-scope beginner note.
-- `quizzes/quiz-01-mock-01.html` + `quizzes/quiz-01-mock-01.md` - answer-free mock Quiz 1 (exam page) and its answer key / marking rubric / diagnosis guide. `quizzes/quiz-01-intel.md` records the past-paper intelligence it is built on (logged-in RedNote search + KuRRe8 GitHub study note + the official `exercises-kinematics-not-for-submission.pdf`). `quizzes/attempts/quiz-01-mock-01-2026-09-17.pdf` is the learner's sat script (handwritten, scanned) and `quizzes/quiz-01-mock-01-attempt-2026-09-17-marked.md` is its marked record: 12/20 core, 15/25 overall, with a part-by-part breakdown and a slips-vs-inverted-concepts split. `quizzes/quiz-assets/` is a vendored copy of the KaTeX + `render-math.js` assets (kept in-directory so the page works from `file://` in Safari). Unofficial; mirrors the *format* of recalled real papers and re-derives every answer. Mock uses a cylindrical (RPP) arm and new part coordinates so it collides with neither `notes/` nor the `/self-study` bank.
+- `quizzes/quiz-01-mock-01.html` + `quizzes/quiz-01-mock-01.md` - answer-free mock Quiz 1 (exam page) and its answer key / marking rubric / diagnosis guide. `quizzes/quiz-01-intel.md` records the past-paper intelligence it is built on (logged-in RedNote search + KuRRe8 GitHub study note + the official `exercises-kinematics-not-for-submission.pdf`). `quizzes/quiz-01-mock-02.html` + `quizzes/quiz-01-mock-02.md` are a second answer-free mock and its key/rubric/diagnosis file (same 25-mark shape: Q1 = 12, Q2 = 8, Section C = 5). Mock 2 rotates the architecture rather than drilling mock 1's errors: Q1 is an articulated **RRR** arm (twist at `alpha_1`, tool along `x_3`) instead of a cylindrical RPP; Q2's two parts have **perpendicular** long axes so the place pose needs a real 90-degree rotation about `z_0` rather than a copy of the pick orientation; Section C moves to **multi-branch IK** (genuine elbow-up/elbow-down from the shoulder+elbow 2R sub-chain) and **cubic trajectory interpolation**, the one in-scope topic mock 1 never tested. The tool-configuration vector is deliberately omitted (covered by mock 1). All answers re-derived and numerically verified, including the closed-form arm matrix against the numeric product at 2000 random configurations and both IK branches forward-substituted to the target. `quizzes/attempts/quiz-01-mock-01-2026-09-17.pdf` is the learner's sat script (handwritten, scanned) and `quizzes/quiz-01-mock-01-attempt-2026-09-17-marked.md` is its marked record: 12/20 core, 15/25 overall, with a part-by-part breakdown and a slips-vs-inverted-concepts split. `quizzes/quiz-assets/` is a vendored copy of the KaTeX + `render-math.js` assets (kept in-directory so the page works from `file://` in Safari). Unofficial; mirrors the *format* of recalled real papers and re-derives every answer. Mock uses a cylindrical (RPP) arm and new part coordinates so it collides with neither `notes/` nor the `/self-study` bank.
 - `output/self-studying/notes-bank.json` - `/self-study` bank scoped to Quiz 1 (6 sections: quiz logistics/scope, frames+rotations, homogeneous transforms, D-H direct kinematics, inverse kinematics, cubic trajectory planning). Built to `output/self-studying/beginner-notes.html` and `output/self-studying/review-page.html` (HTML mode; shares `output/self-studying/self-study-assets/`). Not a replacement for the canonical `.tex` notes; derived from `lecture-01-manipulator-kinematics.pdf`, `exercises-kinematics-not-for-submission.pdf`, `additional-materials/example-3.1.pdf`, and `notes/notes.tex`.
 
 ## Source coverage
@@ -78,6 +78,28 @@
 - 2026-09-06 Quiz 1 mock: new `quizzes/` directory (canonical home for quiz practice, per `CLAUDE.md`). Added `quiz-01-intel.md`, `quiz-01-mock-01.html`, `quiz-01-mock-01.md`, and `quiz-assets/` (vendored copy of `output/self-studying/self-study-assets/` — KaTeX + `render-math.js`, duplicated in-directory so the page loads from `file://` in Safari without `..` subresource paths). No source material moved or renamed. The separate research handover at `~/Projects/output/quiz-test-prep/` now points here as the canonical location.
 
 ## Update record
+
+- 2026-09-18 Quiz 1 mock 2 (quiz-prep stage 3, second pass). Built `quizzes/quiz-01-mock-02.html` (answer-free;
+30-minute timer over Q1+Q2 with Section C untimed, localStorage under its own key `ee6221-quiz1-mock2` so mock 1's
+saved state is untouched, per-question "answered on paper" toggles, plain-text export, two new inline SVG figures,
+light/dark tokens, offline via the existing in-directory `quiz-assets/`) and `quizzes/quiz-01-mock-02.md` (key,
+per-checkpoint rubric totalling 25, and a "common wrong paths" table per question). Coverage was chosen for breadth,
+not remediation - the learner explicitly asked that mock 2 not be built solely around the mock 1 performance - and the
+`quiz-01-mock-02.md` header documents the Mock 1 -> Mock 2 rotation choice by choice. Collision-checked against
+`notes/*.tex`, `quizzes/quiz-01-mock-01.*` and `output/self-studying/notes-bank.json`: the articulated RRR arm appears
+in the notes only as a taxonomy label (never a worked D-H example) and none of mock 2's numbers occur anywhere.
+Validation: all answers re-derived from scratch and checked numerically (`Q1` closed form vs. the numeric product of
+the three link matrices at 2000 random configurations; both `C1` IK branches forward-substituted to the target exactly;
+`C2` cubic checked at `t = 0, T/2, T` for value and velocity); page structurally validated (balanced containers, every
+`data-q` referenced by the exporter present in the DOM, every `getElementById` target present, all four asset
+references local and resolving, 70 balanced math spans, no remote requests). One real defect was found and fixed
+during figure QA: part E's rectangle had been placed *at* its centroid rather than centred on it, clipping below the
+viewBox; both figures now stay inside their viewBoxes and the px<->cm mapping reproduces the stated centroids and side
+lengths exactly. A deliberate trap is documented for the grader: mock 2's correct `0T_pick` rotation block is
+numerically identical to the answer the learner got *wrong* on mock 1, because part E's long axis is along `y_0`
+instead of `x_0` - `quiz-01-mock-02.md` carries an explicit grader's note not to mark it wrong for consistency, nor to
+credit it without the reasoning. Neither note `.tex` was changed; no source file moved or renamed. Stages 4-6 for
+mock 2 pending the learner.
 
 - 2026-09-17 quiz-prep stages 4-6 (mock 1 sat, marked, folded back). Score 12/20 core, 15/25 overall; full breakdown in
 `quizzes/quiz-01-mock-01-attempt-2026-09-17-marked.md`. Four errors were judged conceptual rather than execution slips

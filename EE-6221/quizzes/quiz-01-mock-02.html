@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EE6221 Quiz 1 — Mock 2 (answer-free)</title>
+  <link rel="stylesheet" href="quiz-assets/katex/katex.min.css">
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f6f7f9; --card: #ffffff; --ink: #202b36; --muted: #526171;
+      --line: #dce2e8; --accent: #1d4ed8; --pill: #edf2f7; --pill-ink: #374c64;
+      --warn-bg: #fff4e5; --warn-ink: #7a4b00;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      color: var(--ink); background: var(--bg);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #14181d; --card: #1c2229; --ink: #e6eaee; --muted: #9aa7b3;
+        --line: #2c343d; --accent: #6ea8fe; --pill: #232c36; --pill-ink: #b9c6d2;
+        --warn-bg: #3a2c14; --warn-ink: #f0c887;
+      }
+    }
+    body { max-width: 54rem; margin: auto; padding: 2rem 1rem 6rem; line-height: 1.7; }
+    main { background: var(--card); border: 1px solid var(--line); padding: clamp(1rem, 4vw, 2.6rem);
+           border-radius: 12px; overflow-wrap: anywhere; }
+    h1 { line-height: 1.25; margin-bottom: .2em; }
+    h2 { line-height: 1.3; margin-top: 2.2em; border-bottom: 1px solid var(--line); padding-bottom: .35em; }
+    h3 { margin-top: 1.6em; }
+    .pill { display: inline-block; font-size: .82rem; color: var(--pill-ink); background: var(--pill);
+            padding: .28em .7em; border-radius: 999px; margin: .15em .3em .15em 0; }
+    .note { font-size: .93rem; color: var(--muted); }
+    .warn { background: var(--warn-bg); color: var(--warn-ink); border-radius: 8px; padding: .7em 1em;
+            font-size: .92rem; }
+    .katex-display { overflow-x: auto; overflow-y: hidden; padding: .3em 0; }
+    figure { margin: 1.2em 0; text-align: center; }
+    figcaption { font-size: .88rem; color: var(--muted); margin-top: .4em; }
+    svg { max-width: 100%; height: auto; background: var(--card); }
+    .stroke { stroke: var(--ink); }
+    .fillmut { fill: var(--muted); }
+    .txt { fill: var(--ink); font: 13px system-ui, sans-serif; }
+    .txts { fill: var(--muted); font: 11px system-ui, sans-serif; }
+    ol.tasks > li { margin: .5em 0; }
+    .answered-toggle { display: flex; align-items: center; gap: .55em; margin: .8em 0 .2em;
+                       font-size: .92rem; padding: .5em .7em; border: 1px dashed var(--line);
+                       border-radius: 8px; background: var(--pill); }
+    .answered-toggle input { width: 1.1em; height: 1.1em; }
+    textarea.work { width: 100%; min-height: 5em; margin-top: .5em; font: 14px ui-monospace, monospace;
+                    padding: .6em; border: 1px solid var(--line); border-radius: 8px;
+                    background: var(--bg); color: var(--ink); resize: vertical; }
+    #bar { position: fixed; left: 0; right: 0; bottom: 0; background: var(--card);
+           border-top: 1px solid var(--line); padding: .6em 1rem; display: flex; gap: .8em;
+           align-items: center; justify-content: center; flex-wrap: wrap; font-size: .92rem; }
+    #timer { font: 600 1.05rem ui-monospace, monospace; }
+    #timer.over { color: #c0392b; }
+    button { font: inherit; padding: .45em .9em; border: 1px solid var(--line); border-radius: 8px;
+             background: var(--pill); color: var(--ink); cursor: pointer; }
+    button:hover { border-color: var(--accent); }
+    dialog { max-width: 46rem; width: 92%; border: 1px solid var(--line); border-radius: 12px;
+             background: var(--card); color: var(--ink); padding: 1.2rem; }
+    dialog textarea { width: 100%; min-height: 22em; font: 12px ui-monospace, monospace;
+                      background: var(--bg); color: var(--ink); border: 1px solid var(--line);
+                      border-radius: 8px; padding: .7em; }
+    table.trig { border-collapse: collapse; font-size: .9rem; margin: .6em 0; }
+    table.trig th, table.trig td { border: 1px solid var(--line); padding: .25em .6em; text-align: center; }
+    .given { border-collapse: collapse; font-size: .92rem; margin: .6em 0; }
+    .given th, .given td { border: 1px solid var(--line); padding: .3em .7em; text-align: left; }
+    @media print { #bar, .answered-toggle, textarea.work { display: none; } body { padding: 0; } main { border: 0; } }
+  </style>
+  <script defer src="quiz-assets/katex/katex.min.js"></script>
+  <script defer src="quiz-assets/katex/contrib/auto-render.min.js"></script>
+  <script defer src="quiz-assets/render-math.js"></script>
+</head>
+<body>
+<main>
+  <h1>EE6221 — Manipulator Kinematics<br>Quiz 1 · Mock 2</h1>
+  <p>
+    <span class="pill">2 core questions + 1 predicted section</span>
+    <span class="pill">30 minutes</span>
+    <span class="pill">closed book</span>
+    <span class="pill">no calculator</span>
+    <span class="pill">handwritten</span>
+    <span class="pill">25 marks</span>
+  </p>
+
+  <div class="warn">
+    <strong>Unofficial.</strong> Same format as Mock 1 and as the recalled real papers
+    (<code>quiz-01-intel.md</code>): two free-response questions, ~30&nbsp;min, closed book, hand-drawn
+    frames and hand-written matrices. Question&nbsp;1 = D–H modelling, Question&nbsp;2 = pick-and-place
+    arm matrix. <strong>Section C is a prediction.</strong> Mock&nbsp;2 rotates the arm architecture and
+    the predicted topics so the syllabus is covered from a different angle — it is <em>not</em> a
+    remedial drill on Mock&nbsp;1's mistakes. The ~23&nbsp;Sep&nbsp;2026 date and the scope boundary
+    remain second-hand; confirm against the NTULearn notice.
+  </div>
+
+  <h3>Instructions</h3>
+  <ul>
+    <li>Do Questions 1 and 2 on <strong>paper</strong> — draw the link-coordinate diagram, build the
+      D–H table, write every transformation matrix by hand. Mark each question
+      <em>answered on paper</em> below so the export records it.</li>
+    <li>Standard (Schilling) D–H convention, matching your notes: fill order
+      \(\theta,\,d,\,a,\,\alpha\); link transform built as
+      \(\mathrm{Rot}(z,\theta)\,\mathrm{Trans}(z,d)\,\mathrm{Trans}(x,a)\,\mathrm{Rot}(x,\alpha)\).</li>
+    <li><strong>Timing:</strong> run the 30-minute clock over Questions 1 and 2 only, then stop it and
+      attempt Section C untimed.</li>
+    <li>No calculator: an exact-value table is provided before Section&nbsp;C. Every numeric answer on
+      this paper is exact — if you find yourself needing a decimal, re-check the algebra.</li>
+  </ul>
+
+  <h2>Question 1 — D–H modelling of an articulated robot (12 marks)</h2>
+
+  <p>Figure 1 shows an <strong>articulated (RRR) robot</strong> — the classic waist / shoulder / elbow
+    arm. It has three revolute joints:</p>
+  <ul>
+    <li><strong>Joint 1</strong> — the <em>waist</em>: rotates the whole arm about the fixed
+      <strong>vertical</strong> column axis; joint angle \(\theta_1\).</li>
+    <li><strong>Joint 2</strong> — the <em>shoulder</em>: its axis is <strong>horizontal</strong> and
+      intersects the column axis, at height \(d_1\) above the base; joint angle \(\theta_2\).</li>
+    <li><strong>Joint 3</strong> — the <em>elbow</em>: its axis is horizontal and
+      <strong>parallel to the shoulder axis</strong>, a distance \(a_2\) out along link 2; joint angle
+      \(\theta_3\).</li>
+  </ul>
+  <p>Link 3 runs a distance \(a_3\) from the elbow to the wrist point, and a rigid tool of length
+    \(L_t\) continues in the <strong>same direction as link 3</strong>. Take \(x_0\) as any fixed
+    horizontal reference direction. D–H frame assignments are not unique — any internally consistent
+    choice that yields the correct physical tool pose earns full marks.</p>
+
+  <figure>
+    <svg viewBox="0 0 440 280" role="img" aria-label="Side view of an articulated RRR robot: vertical
+      column to a shoulder joint at height d1, link a2 to an elbow joint, link a3 to a wrist, then a
+      rigid tool of length Lt continuing in the same direction.">
+      <!-- ground -->
+      <line x1="20" y1="250" x2="420" y2="250" class="stroke" stroke-width="1.5"/>
+      <path d="M30 250 l-8 10 M60 250 l-8 10 M90 250 l-8 10 M120 250 l-8 10" class="stroke" stroke-width="1"/>
+      <!-- base + column -->
+      <rect x="55" y="232" width="60" height="18" class="stroke" fill="none" stroke-width="1.5"/>
+      <rect x="77" y="150" width="16" height="82" class="stroke" fill="none" stroke-width="1.5"/>
+      <!-- joint 1 rotation about vertical -->
+      <path d="M69 144 a16 6 0 1 0 32 0" class="stroke" fill="none" stroke-width="1.2" marker-end="url(#ar)"/>
+      <text class="txt" x="14" y="132">&#952;&#8321; waist</text>
+      <!-- d1 dimension -->
+      <line x1="45" y1="250" x2="45" y2="150" class="stroke" stroke-width="1" stroke-dasharray="3 3"/>
+      <text class="txt" x="22" y="205">d&#8321;</text>
+      <!-- shoulder joint (axis into page) -->
+      <circle cx="85" cy="150" r="5.5" class="stroke" fill="none" stroke-width="1.5"/>
+      <circle cx="85" cy="150" r="1.6" class="fillmut"/>
+      <text class="txt" x="58" y="143">&#952;&#8322;</text>
+      <!-- link a2: shoulder -> elbow (up-right) -->
+      <line x1="85" y1="150" x2="215" y2="75" class="stroke" stroke-width="3"/>
+      <text class="txt" x="138" y="100">a&#8322;</text>
+      <!-- elbow joint -->
+      <circle cx="215" cy="75" r="5.5" class="stroke" fill="none" stroke-width="1.5"/>
+      <circle cx="215" cy="75" r="1.6" class="fillmut"/>
+      <text class="txt" x="205" y="62">&#952;&#8323;</text>
+      <!-- link a3: elbow -> wrist -->
+      <line x1="215" y1="75" x2="315" y2="132" class="stroke" stroke-width="3"/>
+      <text class="txt" x="255" y="95">a&#8323;</text>
+      <!-- wrist point -->
+      <circle cx="315" cy="132" r="3" class="fillmut"/>
+      <text class="txts" x="298" y="152">wrist</text>
+      <!-- tool, same direction as link 3 -->
+      <line x1="315" y1="132" x2="375" y2="166" class="stroke" stroke-width="2" stroke-dasharray="6 3"/>
+      <circle cx="375" cy="166" r="2.5" class="fillmut"/>
+      <text class="txt" x="348" y="186">L_t</text>
+      <text class="txts" x="366" y="152">tool tip</text>
+      <!-- base frame -->
+      <line x1="85" y1="232" x2="85" y2="208" class="stroke" stroke-width="1.5" marker-end="url(#ar)"/>
+      <line x1="85" y1="232" x2="115" y2="232" class="stroke" stroke-width="1.5" marker-end="url(#ar)"/>
+      <text class="txt" x="92" y="206">z&#8320;</text>
+      <text class="txt" x="117" y="236">x&#8320;</text>
+      <defs>
+        <marker id="ar" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto">
+          <path d="M0 0 L6 3 L0 6 z" class="fillmut"/>
+        </marker>
+      </defs>
+    </svg>
+    <figcaption>Figure 1 — articulated (RRR) robot, side view, drawn at some arbitrary
+      \(\theta_2,\theta_3\). The shoulder and elbow axes are perpendicular to the page; the waist axis
+      is vertical. The tool (dashed) extends link 3 in the same direction.</figcaption>
+  </figure>
+
+  <ol class="tasks">
+    <li><strong>(a)</strong> Assign a coordinate frame to each link and draw the link-coordinate
+      diagram. Show every \(z_k\) and \(x_k\), and state where each origin sits. <em>(4)</em></li>
+    <li><strong>(b)</strong> Tabulate the four D–H parameters \((\theta_k, d_k, a_k, \alpha_k)\).
+      Mark which parameter is the joint variable in each row. <em>(3)</em></li>
+    <li><strong>(c)</strong> Write the three link transformation matrices \({}^{0}T_1\),
+      \({}^{1}T_2\), \({}^{2}T_3\). <em>(3)</em></li>
+    <li><strong>(d)</strong> Form the arm matrix \({}^{0}T_{\text{tool}}\) to the tool tip (include
+      \(L_t\)) and <strong>evaluate it numerically</strong> for the values in the table below.
+      Identify \(R\) and \(p\), and verify \(R^{\mathsf T}R = I\). <em>(2)</em></li>
+  </ol>
+
+  <table class="given">
+    <tr><th>\(d_1\)</th><th>\(a_2\)</th><th>\(a_3\)</th><th>\(L_t\)</th>
+        <th>\(\theta_1\)</th><th>\(\theta_2\)</th><th>\(\theta_3\)</th></tr>
+    <tr><td>4</td><td>3</td><td>2</td><td>1</td><td>\(90^\circ\)</td><td>\(30^\circ\)</td><td>\(60^\circ\)</td></tr>
+  </table>
+  <p class="note">Lengths are in arbitrary consistent units. Note that \(\theta_2+\theta_3\) is a
+    convenient angle here — exploit it.</p>
+
+  <label class="answered-toggle">
+    <input type="checkbox" data-q="q1-paper"> Question 1 answered on paper
+  </label>
+  <textarea class="work" data-q="q1-notes" placeholder="Optional: type any notes / final matrices here (not required — paper is primary)."></textarea>
+
+  <h2>Question 2 — pick-and-place arm matrix (8 marks)</h2>
+
+  <p>Figure 2 is a top view of a workstation. The base frame \(\{0\}\) has \(z_0\) vertically up; all
+    coordinates are in centimetres. Both parts are rectangular blocks resting flat on the table.</p>
+  <table class="given">
+    <tr><th>part</th><th>centroid \({}^{0}p\)</th><th>long side</th><th>short side</th><th>height</th></tr>
+    <tr><td><strong>E</strong></td><td>\([8,\ 3,\ 1]^{\mathsf T}\)</td>
+        <td>\(6\), along \(y_0\)</td><td>\(3\), along \(x_0\)</td><td>\(2\)</td></tr>
+    <tr><td><strong>F</strong></td><td>\([3,\ 8,\ 2]^{\mathsf T}\)</td>
+        <td>\(6\), along \(x_0\)</td><td>\(3\), along \(y_0\)</td><td>\(4\)</td></tr>
+  </table>
+  <p>Note that the two parts' long axes are <strong>perpendicular</strong> to each other.</p>
+  <p>Tool-frame convention (as in your notes): \(R = [\,r_1\ r_2\ r_3\,]\) are the tool
+    <em>normal</em>, <em>sliding</em>, and <em>approach</em> vectors; \(r_3\) points the way the tool
+    advances toward the part, \(r_2\) lies along the gripper's closing direction.</p>
+
+  <figure>
+    <svg viewBox="0 0 360 230" role="img" aria-label="Top view: base frame axes x0 and y0. Part E near
+      x=8, y=3 drawn as a tall rectangle with its long side along y0. Part F near x=3, y=8 drawn as a
+      wide rectangle with its long side along x0.">
+      <line x1="40" y1="200" x2="40" y2="25" class="stroke" stroke-width="1.5" marker-end="url(#ar2)"/>
+      <line x1="40" y1="200" x2="330" y2="200" class="stroke" stroke-width="1.5" marker-end="url(#ar2)"/>
+      <text class="txt" x="26" y="24">y&#8320;</text>
+      <text class="txt" x="332" y="204">x&#8320;</text>
+      <!-- tick marks -->
+      <line x1="150" y1="197" x2="150" y2="203" class="stroke" stroke-width="1"/>
+      <text class="txts" x="144" y="216">5</text>
+      <line x1="260" y1="197" x2="260" y2="203" class="stroke" stroke-width="1"/>
+      <text class="txts" x="252" y="216">10</text>
+      <line x1="37" y1="125" x2="43" y2="125" class="stroke" stroke-width="1"/>
+      <text class="txts" x="26" y="129">5</text>
+      <line x1="37" y1="50" x2="43" y2="50" class="stroke" stroke-width="1"/>
+      <text class="txts" x="22" y="54">10</text>
+      <!-- scale: origin (40,200), 22 px per cm in x, 15 px per cm in y -->
+      <!-- Part E: centroid (8,3) -> (216,155); long side 6 along y0 = 90px, short 3 along x0 = 66px -->
+      <rect x="183" y="110" width="66" height="90" class="stroke" fill="none" stroke-width="1.5"/>
+      <circle cx="216" cy="155" r="2.5" class="fillmut"/>
+      <text class="txt" x="256" y="150">E (8, 3)</text>
+      <text class="txts" x="256" y="165">long axis &#8741; y&#8320;</text>
+      <!-- Part F: centroid (3,8) -> (106,80); long side 6 along x0 = 132px, short 3 along y0 = 45px -->
+      <rect x="40" y="57.5" width="132" height="45" class="stroke" fill="none" stroke-width="1.5"/>
+      <circle cx="106" cy="80" r="2.5" class="fillmut"/>
+      <text class="txt" x="180" y="76">F (3, 8)</text>
+      <text class="txts" x="180" y="91">long axis &#8741; x&#8320;</text>
+      <defs>
+        <marker id="ar2" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto">
+          <path d="M0 0 L6 3 L0 6 z" class="fillmut"/>
+        </marker>
+      </defs>
+    </svg>
+    <figcaption>Figure 2 — workstation top view (not to scale). Part E's long axis runs along
+      \(y_0\); part F's runs along \(x_0\).</figcaption>
+  </figure>
+
+  <ol class="tasks">
+    <li><strong>(a)</strong> Find the arm-matrix value \({}^{0}T_{\text{pick}}\) needed to pick part E
+      from above by grasping its <strong>long sides</strong>. <em>(4)</em></li>
+    <li><strong>(b)</strong> Find \({}^{0}T_{\text{place}}\) needed to set part E on top of part F with
+      the centroids aligned <strong>and part E's long axis turned to line up with part F's</strong>.
+      <em>(3)</em></li>
+    <li><strong>(c)</strong> Verify that the rotation block of each answer satisfies
+      \(R^{\mathsf T}R = I\) and \(\det R = +1\), and state the rotation that carries your pick
+      orientation to your place orientation. <em>(1)</em></li>
+  </ol>
+
+  <label class="answered-toggle">
+    <input type="checkbox" data-q="q2-paper"> Question 2 answered on paper
+  </label>
+  <textarea class="work" data-q="q2-notes" placeholder="Optional notes."></textarea>
+
+  <h3>Exact values (no calculator)</h3>
+  <table class="trig">
+    <tr><th>angle</th><th>0&deg;</th><th>30&deg;</th><th>45&deg;</th><th>60&deg;</th><th>90&deg;</th></tr>
+    <tr><td>sin</td><td>0</td><td>1/2</td><td>&radic;2/2</td><td>&radic;3/2</td><td>1</td></tr>
+    <tr><td>cos</td><td>1</td><td>&radic;3/2</td><td>&radic;2/2</td><td>1/2</td><td>0</td></tr>
+  </table>
+  <p class="note">Also useful: \(\sqrt3 \approx 1.732\), \(\tan 30^\circ = 1/\sqrt3\),
+    \(\tan 60^\circ = \sqrt3\), \(\arccos\tfrac12 = 60^\circ\).</p>
+
+  <h2>Section C — predicted extension (5 marks)</h2>
+  <div class="warn">Not seen on any recalled Quiz 1 paper, but in the stated scope. Mock&nbsp;1's
+    Section C covered the tool-configuration vector and a single-solution inverse kinematics; this one
+    deliberately moves to <strong>multi-branch inverse kinematics</strong> and
+    <strong>cubic trajectory interpolation</strong>, so that across the two mocks the whole predicted
+    set is exercised. Attempt untimed; a low score here is not a core-topic gap.</div>
+
+  <ol class="tasks">
+    <li><strong>C1.</strong> Solve the inverse kinematics of the Question 1 arm for
+      <em>position only</em>: given a tool-tip target \((x,y,z)\), find \(\theta_1,\theta_2,\theta_3\).
+      State the reachability condition, and say <strong>how many</strong> solutions exist and why.
+      Then solve it for the target \(\big(0,\ \tfrac{3\sqrt3}{2},\ \tfrac{17}{2}\big)\) using the
+      Question 1 link lengths, giving <strong>every</strong> solution exactly. <em>(3)</em></li>
+    <li><strong>C2.</strong> A single joint must move from \(20^\circ\) to \(80^\circ\) in
+      \(T = 3\,\mathrm{s}\), starting and finishing at <strong>zero velocity</strong>. Fit a cubic
+      \(q(t) = a t^3 + b t^2 + c t + d\): give \(a,b,c,d\), the value at \(t = T/2\), and the maximum
+      joint rate. <em>(2)</em></li>
+  </ol>
+
+  <label class="answered-toggle">
+    <input type="checkbox" data-q="c-paper"> Section C answered on paper
+  </label>
+  <textarea class="work" data-q="c-notes" placeholder="Optional notes."></textarea>
+
+  <h2>Finish</h2>
+  <p class="note">Stop the timer, then Export and paste the block into the grading conversation along
+    with photos of your paper (one legible photo per question). Save photos or a scan to
+    <code>quizzes/attempts/quiz-01-mock-02-&lt;date&gt;.jpg</code> (a multi-page
+    <code>.pdf</code> is fine too). If the Copy button does nothing (some browsers block clipboard
+    access on <code>file://</code>), use <strong>Download .txt</strong> instead.</p>
+</main>
+
+<div id="bar">
+  <span id="timer">30:00</span>
+  <button id="start">Start</button>
+  <button id="pause">Pause</button>
+  <button id="reset">Reset timer</button>
+  <button id="export">Export answers</button>
+  <button id="wipe">Clear saved</button>
+</div>
+
+<dialog id="exportDlg">
+  <p><strong>Copy this block</strong> into the grading chat (with your paper photos).</p>
+  <textarea id="exportText" readonly></textarea>
+  <p style="margin-top:.7em; display:flex; gap:.6em;">
+    <button id="copyBtn">Copy</button>
+    <button id="dlBtn">Download .txt</button>
+    <button id="closeDlg">Close</button>
+  </p>
+</dialog>
+
+<script>
+(function () {
+  var KEY = "ee6221-quiz1-mock2";
+  var DURATION = 30 * 60;
+  var state = load();
+
+  function load() {
+    try { return JSON.parse(localStorage.getItem(KEY)) || {}; }
+    catch (e) { return {}; }
+  }
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+  }
+
+  // wire inputs
+  document.querySelectorAll("[data-q]").forEach(function (el) {
+    var q = el.getAttribute("data-q");
+    if (el.type === "checkbox") {
+      el.checked = !!state[q];
+      el.addEventListener("change", function () { state[q] = el.checked; save(); });
+    } else {
+      el.value = state[q] || "";
+      el.addEventListener("input", function () { state[q] = el.value; save(); });
+    }
+  });
+
+  // timer
+  var tEl = document.getElementById("timer");
+  var remaining = (typeof state.remaining === "number") ? state.remaining : DURATION;
+  var running = false, tick = null;
+  function fmt(s) {
+    var neg = s < 0; s = Math.abs(s);
+    var m = Math.floor(s / 60), ss = s % 60;
+    return (neg ? "-" : "") + m + ":" + (ss < 10 ? "0" : "") + ss;
+  }
+  function render() {
+    tEl.textContent = fmt(remaining);
+    tEl.classList.toggle("over", remaining < 0);
+  }
+  function step() {
+    remaining -= 1; state.remaining = remaining; save(); render();
+  }
+  function start() { if (!running) { running = true; tick = setInterval(step, 1000); } }
+  function pause() { running = false; if (tick) clearInterval(tick); }
+  document.getElementById("start").onclick = start;
+  document.getElementById("pause").onclick = pause;
+  document.getElementById("reset").onclick = function () {
+    pause(); remaining = DURATION; state.remaining = remaining; save(); render();
+  };
+  render();
+
+  // export
+  function buildExport() {
+    var L = [];
+    L.push("EE6221 QUIZ 1 — MOCK 2 — ATTEMPT EXPORT");
+    L.push("key file: quizzes/quiz-01-mock-02.md   (grade against this)");
+    L.push("marks: Q1 = 12, Q2 = 8, Section C = 5 (predicted)  |  total 25");
+    L.push("timed portion: Q1 + Q2 only; Section C attempted untimed");
+    L.push("time remaining at export: " + fmt(remaining) + "  (of 30:00; negative = overran)");
+    L.push("");
+    var rows = [
+      ["Q1  D-H modelling, articulated RRR robot", "q1-paper", "q1-notes"],
+      ["Q2  pick-and-place arm matrix (parts E, F)", "q2-paper", "q2-notes"],
+      ["C   predicted: multi-branch IK + cubic trajectory", "c-paper", "c-notes"]
+    ];
+    rows.forEach(function (r) {
+      var onPaper = state[r[1]] ? "ANSWERED ON PAPER" : "not marked done";
+      L.push("== " + r[0] + " — " + onPaper);
+      var n = (state[r[2]] || "").trim();
+      L.push(n ? n : "<blank>");
+      L.push("");
+    });
+    L.push("Attach: one photo per question, saved to quizzes/attempts/.");
+    return L.join("\n");
+  }
+  var dlg = document.getElementById("exportDlg");
+  document.getElementById("export").onclick = function () {
+    document.getElementById("exportText").value = buildExport();
+    if (typeof dlg.showModal === "function") dlg.showModal(); else alert(buildExport());
+  };
+  document.getElementById("closeDlg").onclick = function () { dlg.close(); };
+  document.getElementById("copyBtn").onclick = function () {
+    var t = document.getElementById("exportText");
+    t.select();
+    try { navigator.clipboard.writeText(t.value); } catch (e) { document.execCommand("copy"); }
+  };
+  document.getElementById("dlBtn").onclick = function () {
+    var blob = new Blob([document.getElementById("exportText").value], { type: "text/plain" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "ee6221-quiz1-mock2-attempt.txt";
+    a.click();
+  };
+  document.getElementById("wipe").onclick = function () {
+    if (!confirm("Clear all saved answers and reset the timer?")) return;
+    try { localStorage.removeItem(KEY); } catch (e) {}
+    location.reload();
+  };
+})();
+</script>
+</body>
+</html>
