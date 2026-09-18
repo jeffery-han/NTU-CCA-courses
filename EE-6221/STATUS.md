@@ -99,7 +99,7 @@ lengths exactly. A deliberate trap is documented for the grader: mock 2's correc
 numerically identical to the answer the learner got *wrong* on mock 1, because part E's long axis is along `y_0`
 instead of `x_0` - `quiz-01-mock-02.md` carries an explicit grader's note not to mark it wrong for consistency, nor to
 credit it without the reasoning. Neither note `.tex` was changed; no source file moved or renamed. Stages 4-6 for
-mock 2 pending the learner.
+mock 2 pending the learner. Clarified the same day, before the paper was sat, after the learner asked whether the "wrist" label implied a fourth joint: the figure label now reads "wrist point (no joint)", the caption says all three joints are shown, and a note in the question body states that the tool is rigid and that tool orientation is therefore not independently controllable on a 3-DOF arm (which is why Section C asks for position-only IK). Wording only - no question, answer, or mark allocation changed.
 
 - 2026-09-17 quiz-prep stages 4-6 (mock 1 sat, marked, folded back). Score 12/20 core, 15/25 overall; full breakdown in
 `quizzes/quiz-01-mock-01-attempt-2026-09-17-marked.md`. Four errors were judged conceptual rather than execution slips

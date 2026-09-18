@@ -120,10 +120,15 @@
       <strong>parallel to the shoulder axis</strong>, a distance \(a_2\) out along link 2; joint angle
       \(\theta_3\).</li>
   </ul>
-  <p>Link 3 runs a distance \(a_3\) from the elbow to the wrist point, and a rigid tool of length
-    \(L_t\) continues in the <strong>same direction as link 3</strong>. Take \(x_0\) as any fixed
-    horizontal reference direction. D–H frame assignments are not unique — any internally consistent
-    choice that yields the correct physical tool pose earns full marks.</p>
+  <p>Link 3 runs a distance \(a_3\) from the elbow to the <em>wrist point</em>, and a rigid tool of
+    length \(L_t\) continues in the <strong>same direction as link 3</strong>. Take \(x_0\) as any
+    fixed horizontal reference direction. D–H frame assignments are not unique — any internally
+    consistent choice that yields the correct physical tool pose earns full marks.</p>
+  <p class="note"><strong>These three are the only joints.</strong> "Wrist point" is just the name for
+    the far end of link 3 — where a wrist <em>would</em> attach on a six-axis robot. There is no wrist
+    joint here, and the tool is rigidly bolted on, so it contributes length but no degree of freedom.
+    One consequence: tool orientation is not independently controllable on this arm — it is whatever
+    \(\theta_1,\theta_2,\theta_3\) happen to produce.</p>
 
   <figure>
     <svg viewBox="0 0 440 280" role="img" aria-label="Side view of an articulated RRR robot: vertical
@@ -157,7 +162,7 @@
       <text class="txt" x="255" y="95">a&#8323;</text>
       <!-- wrist point -->
       <circle cx="315" cy="132" r="3" class="fillmut"/>
-      <text class="txts" x="298" y="152">wrist</text>
+      <text class="txts" x="284" y="152">wrist point (no joint)</text>
       <!-- tool, same direction as link 3 -->
       <line x1="315" y1="132" x2="375" y2="166" class="stroke" stroke-width="2" stroke-dasharray="6 3"/>
       <circle cx="375" cy="166" r="2.5" class="fillmut"/>
@@ -176,7 +181,8 @@
     </svg>
     <figcaption>Figure 1 — articulated (RRR) robot, side view, drawn at some arbitrary
       \(\theta_2,\theta_3\). The shoulder and elbow axes are perpendicular to the page; the waist axis
-      is vertical. The tool (dashed) extends link 3 in the same direction.</figcaption>
+      is vertical. All three joints are shown — the tool (dashed) extends link 3 rigidly and is not a
+      joint.</figcaption>
   </figure>
 
   <ol class="tasks">
