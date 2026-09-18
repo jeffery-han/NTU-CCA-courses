@@ -104,6 +104,18 @@ elbow up" presets are the two IK branches and visibly land on the same point.
   distinction was folded into `notes/beginner-notes.tex` sec. 5 ("Every D-H z is a joint axis - the reach direction is
   x") and as a caveat opening `notes/notes.tex`'s "Tool orientation vectors", whose previous wording invited exactly
   this reading. Both notes recompiled (7 pages each).
+  **Second correction, same thread.** The first fix overstated the rule as "every D-H z is a joint axis". The learner
+  pushed back - there is no joint at frame 3 - and was right. The precise rule is `z_{k-1}` is the axis of joint `k`,
+  so an n-joint arm's joints are described by `z_0 ... z_{n-1}` and **`z_n` is not a joint axis**: nothing downstream
+  constrains it, which is exactly why `alpha_n` and `d_n` are a free choice. `alpha_3 = 0` (giving `z_3 || z_2`) is a
+  convention picked because it keeps the table simplest, not a physical fact; `alpha_3 = +-90` is equally correct with a
+  matching arm matrix. Added the accompanying reason a gripper frame must be an appended fixed rotation rather than a
+  D-H row: `Rot(x, alpha_n)` holds `x_n` fixed and only spins `y_n, z_n` about it, so `alpha_n` can never point `z_n`
+  along `x_n` however it is chosen. Corrected in all three places (the walkthrough's part-(a) bullet, its part-(d)
+  detail box and its figure caption; `notes/beginner-notes.tex` sec. 5, now split into "Which z axes are joint axes -
+  and why the last one is not" plus a separate approach-vector pitfall; and `notes/notes.tex`'s "Tool orientation
+  vectors" caveat). Re-audited: `grep` confirms no blanket "every z is a joint axis" claim survives in any note or
+  quiz file. Both notes recompiled again (7 pages each); the walkthrough's 15 assertions still pass.
 
 - 2026-09-18 Quiz 1 mock 2 stages 4-6 (sat, marked, folded back). Score 12/20 core, 12/25 overall; breakdown in
 `quizzes/quiz-01-mock-02-attempt-2026-09-18-marked.md`. Core matched mock 1's 12/20 but the composition shifted:

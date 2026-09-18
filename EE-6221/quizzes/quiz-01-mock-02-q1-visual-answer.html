@@ -141,9 +141,9 @@
       <figcaption><strong>Side view</strong> — the arm's own vertical plane. Horizontal axis is the
         radial distance \(r\) from the column; vertical axis is height \(z\). A negative \(r\) means the arm has folded back past the column.
         The dashed circle is the reach envelope, centred on the shoulder. <span class="k1">frame 1</span>,
-        <span class="k2">frame 2</span>, <span class="k3">frame 3</span>. A ⊙ marks a \(z\) axis pointing out of the page &mdash; every
-        \(z_k\) is a <em>joint axis</em>, so the reach direction is \(x_k\), never
-        \(z_k\).</figcaption>
+        <span class="k2">frame 2</span>, <span class="k3">frame 3</span>. A ⊙ marks a \(z\) axis pointing out of the page. \(z_0,z_1,z_2\)
+        are the three joint axes; \(z_3\) is the chain's free end. The reach direction is always
+        \(x_k\).</figcaption>
     </figure>
     <figure>
       <svg id="svgTop" viewBox="0 0 380 340" role="img"
@@ -187,9 +187,11 @@
   <p>Two rules generate every frame, and they are worth separating because students usually apply the
     first and guess the second:</p>
   <ul>
-    <li><strong>Each \(z_k\) is a joint axis.</strong> \(z_0\) is the waist axis (vertical);
-      \(z_1\) is the shoulder axis (horizontal); \(z_2\) is the elbow axis, which is
-      <em>parallel</em> to the shoulder axis.</li>
+    <li><strong>\(z_{k-1}\) is the axis of joint \(k\).</strong> So \(z_0\) is the waist axis
+      (vertical); \(z_1\) is the shoulder axis (horizontal); \(z_2\) is the elbow axis, which is
+      <em>parallel</em> to the shoulder axis. Three joints, three axes — and note that this leaves
+      \(z_3\) unaccounted for, because no joint sits at the end of the last link. Its direction is a
+      convention you choose, not a physical fact; the detail box in part&nbsp;(d) works through it.</li>
     <li><strong>Each \(x_k\) is the common normal from \(z_{k-1}\) to \(z_k\).</strong> Between the
       two parallel axes that common normal runs straight along the link — which is exactly why
       \(a_2\) and \(a_3\) end up <em>being</em> the link lengths.</li>
@@ -333,25 +335,33 @@
   <div id="checks"></div>
 
   <details>
-    <summary>Careful: \(z_3\) is <em>not</em> the reach direction &mdash; \(x_3\) is</summary>
+    <summary>Careful: \(z_3\) is <em>not</em> the reach direction &mdash; and it is not a joint axis either</summary>
     <p>It is natural to expect the frame's \(z\) to point along the tool, because the course's
       tool-frame convention \(R=[\,r_1\ r_2\ r_3\,]\) = [normal, sliding, approach] puts the
       <em>approach</em> vector third, i.e. along \(z\). But that convention describes a
       <strong>tool frame</strong>, not a D&ndash;H link frame.</p>
-    <p>In D&ndash;H, <strong>every \(z_k\) is a joint axis.</strong> Row 3 here carries
-      \(\alpha_3=0\), so \(z_3\parallel z_2\) &mdash; the elbow axis, pointing square out of the
-      arm's plane (that is the \(\odot\) in the side view). The direction the arm
-      <em>reaches</em> is \(x_3\), and that is precisely why \(a_3+L_t\) sits in the \(a\) column:
-      \(\mathrm{Trans}(x,a)\) translates along \(x\).</p>
+    <p>The D&ndash;H rule is precise: <strong>\(z_{k-1}\) is the axis of joint \(k\).</strong> So
+      \(z_0\) is the waist axis, \(z_1\) the shoulder axis, \(z_2\) the elbow axis &mdash; all three
+      joints, accounted for by \(z_0,z_1,z_2\). <strong>\(z_3\) is not a joint axis at all:</strong>
+      there is no joint at frame 3, and nothing downstream constrains it.</p>
+    <p>So why is it drawn parallel to \(z_2\)? Because we <em>chose</em> \(\alpha_3=0\). The last
+      row's \(\alpha\) and \(d\) are not pinned by a next joint axis, so you pick them for
+      convenience, and \(0\) is the simplest choice. Pick \(\alpha_3=\pm90^\circ\) and \(z_3\)
+      points elsewhere; the arm matrix changes to match and is equally correct.</p>
+    <p>What is <em>not</em> a free choice is that the arm reaches along \(x_3\). That follows from the
+      construction: \(\theta_3\) swings \(x\) onto link 3, and \(\mathrm{Trans}(x,a_3)\) then walks
+      along it &mdash; which is exactly why the tool length \(a_3+L_t\) sits in the \(a\) column.</p>
     <p>Check it at the exam values: \(R=\begin{bmatrix}0&0&1\\0&-1&0\\1&0&0\end{bmatrix}\).
       Column 3 is \((1,0,0)=+x_0\) &mdash; horizontal, perpendicular to the arm's plane. Column 1 is
       \((0,0,1)\), straight up, which is exactly where the tool points when
       \(\theta_2+\theta_3=90^\circ\). Drag \(\theta_1\) and watch column 3 swing around the
       column while the tool keeps pointing up.</p>
-    <p>If you <em>want</em> a frame whose \(z\) is the approach vector &mdash; which is what
-      Question&nbsp;2's pick and place matrices use &mdash; you append a further
-      <strong>fixed</strong> rotation after \({}^{2}T_3\) to define the gripper frame. It is an extra
-      frame, not a joint, and it does not belong in the D&ndash;H table.</p>
+    <p>Wanting \(z_3\) along the tool is a perfectly reasonable goal &mdash; it is what
+      Question&nbsp;2's pick and place matrices need. But \(\alpha_3\) cannot deliver it:
+      \(\mathrm{Rot}(x,\alpha_3)\) holds \(x_3\) fixed and only spins \(y_3,z_3\) about it, so
+      \(z_3\) can be \(z_2\), or the in-plane perpendicular, but never \(x_3\) itself. That is the
+      real reason a gripper frame is an appended <strong>fixed</strong> rotation after
+      \({}^{2}T_3\) &mdash; an extra frame, not a joint, with no row in the D&ndash;H table.</p>
   </details>
 
   <details>
@@ -643,7 +653,7 @@
          matHTML(T, 3, 3, function (i, j) { return j === 0; }) +
          ' &nbsp; position \\(p=\\)' + matHTML([[T[0][3]], [T[1][3]], [T[2][3]]], 3, 1) + '</p>';
     h += '<p class="note" style="margin:.4em 0 0">Column 3 is \\(z_3\\), which is parallel to the ' +
-         'elbow axis and square to the arm\'s plane \u2014 <em>not</em> the reach direction. See below.</p>';
+         'elbow axis by our choice of \\(\\alpha_3=0\\), and is <em>not</em> the reach direction. See below.</p>';
     document.getElementById("armMat").innerHTML = h;
   }
 
