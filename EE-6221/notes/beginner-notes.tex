@@ -117,6 +117,21 @@ on the physical landmarks:
 This is exactly why $a_2$ and $a_3$ \emph{are} the link lengths: $x_k$ runs along the link, so the
 step along $x_k$ is the link.
 
+\paragraph{Every D--H $z$ is a joint axis --- the reach direction is $x$.}
+It is tempting to expect the last frame's $z$ axis to point along the tool, because the tool-frame
+convention $R=[\,r_1\ r_2\ r_3\,]$ = [normal, sliding, approach] puts the approach vector third,
+i.e.\ along $z$. That convention describes a \emph{tool frame}. A \emph{D--H link frame} is built to
+a different rule: $z_k$ is always a joint axis.
+
+So for the articulated arm, row 3 has $\alpha_3=0$, which makes $z_3\parallel z_2$ --- the elbow
+axis, perpendicular to the arm's plane. The direction the arm \emph{reaches} is $x_3$, and that is
+exactly why the tool length lives in the $a$ column: $\mathrm{Trans}(x,a)$ translates along $x$. Read
+the columns of ${}^0R_3$ as $[\,x_3\ y_3\ z_3\,]$, not as [normal, sliding, approach].
+
+If you want a frame whose $z$ \emph{is} the approach vector --- which is what a pick-and-place arm
+matrix uses --- append a further \textbf{fixed} rotation after ${}^{n-1}T_n$ to define the gripper
+frame. It is an extra frame, not a joint, so it never gets a row in the D--H table.
+
 \paragraph{Common pitfall.}
 $a_k=0$ does not mean frames $k-1$ and $k$ coincide. It means frame $k$'s origin stays
 \emph{on the $z_{k-1}$ axis} --- there is no common normal to step along, because the two joint axes

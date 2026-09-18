@@ -1,0 +1,845 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mock 2 · Q1 Visualized</title>
+  <link rel="stylesheet" href="quiz-assets/katex/katex.min.css">
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f6f7f9; --card: #ffffff; --ink: #202b36; --muted: #526171;
+      --line: #dce2e8; --accent: #1d4ed8; --pill: #edf2f7; --pill-ink: #374c64;
+      --warn-bg: #fff4e5; --warn-ink: #7a4b00;
+      --good-bg: #e7f6ec; --good-ink: #1d6b38;
+      --bad-bg: #fdecec; --bad-ink: #9b2226;
+      --f1: #1d4ed8; --f2: #b8590b; --f3: #7a1fa2; --link: #3f4c5a;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      color: var(--ink); background: var(--bg);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #14181d; --card: #1c2229; --ink: #e6eaee; --muted: #9aa7b3;
+        --line: #2c343d; --accent: #6ea8fe; --pill: #232c36; --pill-ink: #b9c6d2;
+        --warn-bg: #3a2c14; --warn-ink: #f0c887;
+        --good-bg: #16301f; --good-ink: #7fd39b;
+        --bad-bg: #3a1c1c; --bad-ink: #f0a0a0;
+        --f1: #6ea8fe; --f2: #f0a95c; --f3: #cf9bea; --link: #9aa7b3;
+      }
+    }
+    body { max-width: 60rem; margin: auto; padding: 2rem 1rem 5rem; line-height: 1.7; }
+    main { background: var(--card); border: 1px solid var(--line); padding: clamp(1rem, 4vw, 2.6rem);
+           border-radius: 12px; overflow-wrap: anywhere; }
+    h1 { line-height: 1.25; margin-bottom: .2em; }
+    h2 { line-height: 1.3; margin-top: 2.4em; border-bottom: 1px solid var(--line); padding-bottom: .35em; }
+    h3 { margin-top: 1.7em; }
+    .pill { display: inline-block; font-size: .82rem; color: var(--pill-ink); background: var(--pill);
+            padding: .28em .7em; border-radius: 999px; margin: .15em .3em .15em 0; }
+    .note { font-size: .93rem; color: var(--muted); }
+    .warn { background: var(--warn-bg); color: var(--warn-ink); border-radius: 8px; padding: .7em 1em;
+            font-size: .92rem; }
+    .katex-display { overflow-x: auto; overflow-y: hidden; padding: .3em 0; }
+    details { border: 1px solid var(--line); border-radius: 8px; padding: .55em .85em; margin: .9em 0;
+              background: var(--pill); }
+    details summary { cursor: pointer; font-weight: 600; font-size: .95rem; }
+    details[open] summary { margin-bottom: .5em; }
+
+    .panel { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 1.2rem;
+             align-items: start; margin: 1.1em 0; }
+    @media (max-width: 760px) { .panel { grid-template-columns: minmax(0,1fr); } }
+    figure { margin: 0; text-align: center; }
+    figcaption { font-size: .86rem; color: var(--muted); margin-top: .35em; }
+    svg { max-width: 100%; height: auto; background: var(--card); display: block; margin: auto; }
+    .ax { stroke: var(--muted); stroke-width: 1.2; }
+    .lk { stroke: var(--link); stroke-width: 5; stroke-linecap: round; }
+    .lk.hot { stroke: var(--accent); }
+    .tool { stroke: var(--link); stroke-width: 2.5; stroke-dasharray: 6 4; stroke-linecap: round; }
+    .gl { stroke: var(--line); stroke-width: 1; }
+    .lbl { fill: var(--ink); font: 12px system-ui, sans-serif; }
+    .lbls { fill: var(--muted); font: 10.5px system-ui, sans-serif; }
+
+    .ctrl { border: 1px solid var(--line); border-radius: 10px; padding: .8em 1em; background: var(--pill); }
+    .row { display: grid; grid-template-columns: 4.2em 1fr 4.6em; gap: .6em; align-items: center;
+           margin: .45em 0; font-size: .93rem; }
+    .row input[type=range] { width: 100%; }
+    .row output { font: 600 .92rem ui-monospace, monospace; text-align: right; }
+    .presets { display: flex; flex-wrap: wrap; gap: .45em; margin-top: .7em; }
+    button { font: inherit; font-size: .88rem; padding: .35em .75em; border: 1px solid var(--line);
+             border-radius: 7px; background: var(--card); color: var(--ink); cursor: pointer; }
+    button:hover { border-color: var(--accent); }
+    button.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+    table { border-collapse: collapse; font-size: .9rem; margin: .6em 0; }
+    th, td { border: 1px solid var(--line); padding: .3em .65em; text-align: center; }
+    th { background: var(--pill); }
+    table.dh tr[data-row] { cursor: pointer; }
+    table.dh tr.hot td { background: var(--pill); outline: 2px solid var(--accent); outline-offset: -2px; }
+    .mat { display: inline-grid; gap: 0 .55em; font: .88rem ui-monospace, monospace;
+           border-left: 2px solid var(--ink); border-right: 2px solid var(--ink);
+           padding: .35em .5em; margin: .3em .2em; vertical-align: middle; }
+    .mat span { text-align: right; padding: .05em .1em; }
+    .matwrap { display: flex; flex-wrap: wrap; gap: .4em; align-items: center; font-size: .9rem; }
+    .num { font: 600 .92rem ui-monospace, monospace; }
+
+    .quiz { border: 1px solid var(--line); border-radius: 10px; padding: .85em 1em; margin: 1.1em 0;
+            background: var(--pill); }
+    .quiz p:first-child { margin-top: 0; font-weight: 600; }
+    .opts { display: flex; flex-direction: column; gap: .4em; margin: .6em 0 0; }
+    .opts button { text-align: left; }
+    .fb { margin-top: .6em; font-size: .92rem; border-radius: 7px; padding: .55em .8em; display: none; }
+    .fb.show { display: block; }
+    .fb.good { background: var(--good-bg); color: var(--good-ink); }
+    .fb.bad { background: var(--bad-bg); color: var(--bad-ink); }
+
+    #tests { font: .86rem ui-monospace, monospace; white-space: pre-wrap; border: 1px solid var(--line);
+             border-radius: 8px; padding: .7em .9em; background: var(--pill); max-height: 21em;
+             overflow: auto; }
+    .tag { display: inline-block; font: 600 .78rem system-ui; padding: .1em .5em; border-radius: 5px; }
+    .tag.p { background: var(--good-bg); color: var(--good-ink); }
+    .tag.f { background: var(--bad-bg); color: var(--bad-ink); }
+    .k1 { color: var(--f1); } .k2 { color: var(--f2); } .k3 { color: var(--f3); }
+  </style>
+  <script defer src="quiz-assets/katex/katex.min.js"></script>
+  <script defer src="quiz-assets/katex/contrib/auto-render.min.js"></script>
+  <script defer src="quiz-assets/render-math.js"></script>
+</head>
+<body>
+<main>
+  <h1>Mock 2 · Question 1, visualized</h1>
+  <p>
+    <span class="pill">articulated RRR arm</span>
+    <span class="pill">parts (a)–(d)</span>
+    <span class="pill">interactive</span>
+    <span class="pill">offline</span>
+  </p>
+
+  <div class="warn">
+    <strong>This is the answer.</strong> Companion to <code>quiz-01-mock-02.html</code> (the paper) and
+    <code>quiz-01-mock-02.md</code> (the written key). Sit the paper first — a visible answer lets you
+    skip the retrieval, which is the part that actually teaches. Every number on this page is computed
+    live from the three link matrices, not typed in; the self-test at the bottom proves it.
+  </div>
+
+  <h2>0 · Why two pictures instead of one</h2>
+
+  <p>The arm is three-dimensional, but you never need to draw it in 3D. The reason is that the three
+    joints split cleanly into two groups:</p>
+  <ul>
+    <li><strong>\(\theta_1\) (waist)</strong> swings the <em>whole</em> arm about the vertical column.
+      It changes <em>which vertical plane</em> the arm lives in, and nothing else.</li>
+    <li><strong>\(\theta_2,\theta_3\) (shoulder, elbow)</strong> move the arm <em>inside</em> that
+      plane. Their axes are horizontal and parallel, so they act like a flat two-link arm.</li>
+  </ul>
+  <p>So draw a <strong>top view</strong> to see what \(\theta_1\) does, and a <strong>side view of the
+    arm's own vertical plane</strong> to see what \(\theta_2,\theta_3\) do. Every answer in parts
+    (a)–(d) reads off one of those two pictures. Drag the sliders and watch which picture reacts.</p>
+
+  <div class="panel">
+    <figure>
+      <svg id="svgSide" viewBox="0 0 380 380" role="img"
+           aria-label="Side view of the arm in its own vertical plane, showing the column, shoulder, elbow, wrist and tool tip with their coordinate frames."></svg>
+      <figcaption><strong>Side view</strong> — the arm's own vertical plane. Horizontal axis is the
+        radial distance \(r\) from the column; vertical axis is height \(z\). A negative \(r\) means the arm has folded back past the column.
+        The dashed circle is the reach envelope, centred on the shoulder. <span class="k1">frame 1</span>,
+        <span class="k2">frame 2</span>, <span class="k3">frame 3</span>. A ⊙ marks a \(z\) axis pointing out of the page &mdash; every
+        \(z_k\) is a <em>joint axis</em>, so the reach direction is \(x_k\), never
+        \(z_k\).</figcaption>
+    </figure>
+    <figure>
+      <svg id="svgTop" viewBox="0 0 380 340" role="img"
+           aria-label="Top view showing the base frame axes, the radial direction set by theta 1, and the tool tip position."></svg>
+      <figcaption><strong>Top view</strong> — looking down the column. \(\theta_1\) rotates the radial
+        line; the whole side view lives on it. This is the only picture where
+        <span class="k1">\(z_1\)</span> has a visible direction.</figcaption>
+    </figure>
+  </div>
+
+  <div class="ctrl">
+    <div class="row"><label for="s1">\(\theta_1\)</label><input id="s1" type="range" min="-180" max="180" step="1" value="90"><output id="o1"></output></div>
+    <div class="row"><label for="s2">\(\theta_2\)</label><input id="s2" type="range" min="-90" max="150" step="1" value="30"><output id="o2"></output></div>
+    <div class="row"><label for="s3">\(\theta_3\)</label><input id="s3" type="range" min="-150" max="150" step="1" value="60"><output id="o3"></output></div>
+    <div class="presets">
+      <button data-p="90,30,60" class="on">Exam values (a)–(d)</button>
+      <button data-p="90,90,-60">Same tool tip, elbow&nbsp;up</button>
+      <button data-p="0,0,0">Straight out along \(x_0\)</button>
+      <button data-p="45,60,-120">Folded back</button>
+    </div>
+    <p class="note" style="margin:.7em 0 0">Fixed link geometry, as given on the paper:
+      \(d_1=4\), \(a_2=3\), \(a_3=2\), \(L_t=1\) — so \(L_3\equiv a_3+L_t=3\).</p>
+  </div>
+
+  <p style="margin-top:1.1em">Tool tip right now:
+    <span class="num" id="pNow"></span>. Radial reach <span class="num" id="rNow"></span>,
+    height <span class="num" id="zNow"></span>.</p>
+
+  <div class="quiz" data-q="q0" data-correct="b">
+    <p>Press <em>Exam values</em>, then <em>Same tool tip, elbow up</em>. What happens to the tool tip?</p>
+    <div class="opts">
+      <button data-a="a">It moves to a different point</button>
+      <button data-a="b">It stays exactly where it was</button>
+      <button data-a="c">It stays at the same height but a different radius</button>
+    </div>
+    <div class="fb"></div>
+  </div>
+
+  <h2>1 · Part (a) — the frames, and where their origins sit</h2>
+
+  <p>Two rules generate every frame, and they are worth separating because students usually apply the
+    first and guess the second:</p>
+  <ul>
+    <li><strong>Each \(z_k\) is a joint axis.</strong> \(z_0\) is the waist axis (vertical);
+      \(z_1\) is the shoulder axis (horizontal); \(z_2\) is the elbow axis, which is
+      <em>parallel</em> to the shoulder axis.</li>
+    <li><strong>Each \(x_k\) is the common normal from \(z_{k-1}\) to \(z_k\).</strong> Between the
+      two parallel axes that common normal runs straight along the link — which is exactly why
+      \(a_2\) and \(a_3\) end up <em>being</em> the link lengths.</li>
+  </ul>
+
+  <p>The origins then fall on physical landmarks. This is the part my written key originally got
+    wrong, so it is worth watching move:</p>
+
+  <table id="origTable">
+    <tr><th>frame</th><th>origin \((x,y,z)\)</th><th>landmark</th><th>distance from previous</th></tr>
+  </table>
+
+  <p class="note">Drag \(\theta_2\) and watch the frame-2 origin travel: it is pinned to the elbow, a
+    distance \(a_2=3\) from the shoulder, never sitting on top of frame 1.</p>
+
+  <details>
+    <summary>Why \(a_1=0\) does <em>not</em> mean frames 1 and 2 coincide</summary>
+    <p>\(a_1=0\) is a statement about <strong>row 1 only</strong>: the shoulder axis intersects the
+      column axis, so there is no common normal to step along, and frame 1's origin stays
+      <em>on the column</em>. It says nothing whatsoever about frame 2.</p>
+    <p>Where frame \(k\)'s origin lands is decided by the translation column of
+      \({}^{k-1}T_k\), which is \((a_kc_k,\;a_ks_k,\;d_k)\): \(d_k\) steps along \(z_{k-1}\), then
+      \(a_k\) steps along the new \(x_k\). Row 2 carries \(a_2=3\), so frame 2 is displaced a full
+      link. The table above recomputes those distances live — they stay at \(3,3,2\) whatever the
+      angles do, because they are link lengths, not projections.</p>
+  </details>
+
+  <div class="quiz" data-q="q1" data-correct="c">
+    <p>Set \(\theta_2 = 90^\circ\). Where is the origin of frame 2?</p>
+    <div class="opts">
+      <button data-a="a">At the shoulder — \(a_1=0\) makes frames 1 and 2 coincide</button>
+      <button data-a="b">At the wrist, since \(x_2\) points along link 3</button>
+      <button data-a="c">At the elbow, a distance \(a_2\) from the shoulder along \(x_2\)</button>
+    </div>
+    <div class="fb"></div>
+  </div>
+
+  <h2>2 · Part (b) — the D–H table</h2>
+
+  <p>Three joints, so three rows, and every variable is a \(\theta\) because every joint is revolute.
+    Click a row to highlight what it does in the side view.</p>
+
+  <table class="dh" id="dhTable">
+    <tr><th>\(k\)</th><th>\(\theta_k\)</th><th>\(d_k\)</th><th>\(a_k\)</th><th>\(\alpha_k\)</th><th>variable</th><th>current value</th></tr>
+  </table>
+
+  <p>The single most important entry is <strong>\(\alpha_1=+90^\circ\)</strong>. It is the whole
+    reason this arm can reach up and down instead of sweeping a flat disc.</p>
+
+  <details>
+    <summary>Where \(\alpha_1=+90^\circ\) comes from, and what \(\alpha_1=0\) would cost you</summary>
+    <p>\(\alpha_k\) is the angle from \(z_{k-1}\) to \(z_k\), measured about \(x_k\). Here \(z_0\) is
+      vertical (the waist axis) and \(z_1\) is horizontal (the shoulder axis), so they are
+      perpendicular: \(\alpha_1=\pm90^\circ\). Either sign is acceptable provided the rest of your
+      table and diagram follow it consistently.</p>
+    <p>If you write \(\alpha_1=0\) instead, you are claiming the shoulder axis is <em>parallel</em> to
+      the column. Then all three axes are parallel, every link stays in one horizontal plane, and the
+      arm becomes a flat SCARA-like mechanism that cannot change the tool's height at all — the
+      \(z\) coordinate of your arm matrix would collapse to the constant \(d_1\). That is why the key
+      gives the row zero rather than partial credit.</p>
+    <p>Rows 2 and 3 then carry \(\alpha=0\) precisely <em>because</em> the shoulder and elbow axes are
+      parallel — a twist there would be the opposite error.</p>
+  </details>
+
+  <div class="quiz" data-q="q2" data-correct="a">
+    <p>Why is \(\alpha_2=0\) rather than \(\pm90^\circ\)?</p>
+    <div class="opts">
+      <button data-a="a">The elbow axis is parallel to the shoulder axis, so there is no twist between them</button>
+      <button data-a="b">Because \(a_2\neq0\), and a row cannot carry both \(a\) and \(\alpha\)</button>
+      <button data-a="c">Because row 1 already used the \(90^\circ\) twist, and each table has only one</button>
+    </div>
+    <div class="fb"></div>
+  </div>
+
+  <h2>3 · Part (c) — the three link transforms</h2>
+
+  <p>Once the table is right, each matrix is pure substitution into the template — this is the
+    cheapest mark on the paper and should never be left blank:</p>
+
+  \[
+  {}^{k-1}T_k=\begin{bmatrix}
+  c_k & -s_kc_{\alpha k} & s_ks_{\alpha k} & a_kc_k\\
+  s_k & c_kc_{\alpha k} & -c_ks_{\alpha k} & a_ks_k\\
+  0 & s_{\alpha k} & c_{\alpha k} & d_k\\
+  0&0&0&1\end{bmatrix}
+  \]
+
+  <div id="linkMats"></div>
+
+  <p class="note">Symbolic forms, for comparison with what you wrote:</p>
+  \[
+  {}^{0}T_1=\begin{bmatrix}c_1&0&s_1&0\\ s_1&0&-c_1&0\\ 0&1&0&d_1\\ 0&0&0&1\end{bmatrix},\quad
+  {}^{1}T_2=\begin{bmatrix}c_2&-s_2&0&a_2c_2\\ s_2&c_2&0&a_2s_2\\ 0&0&1&0\\ 0&0&0&1\end{bmatrix},\quad
+  {}^{2}T_3=\begin{bmatrix}c_3&-s_3&0&a_3c_3\\ s_3&c_3&0&a_3s_3\\ 0&0&1&0\\ 0&0&0&1\end{bmatrix}
+  \]
+
+  <details>
+    <summary>Reading \({}^{0}T_1\): the \(\alpha_1=90^\circ\) twist is what scrambles the columns</summary>
+    <p>Substituting \(\alpha_1=90^\circ\) gives \(c_{\alpha1}=0\) and \(s_{\alpha1}=1\). Column 2 of
+      the rotation block becomes \((-s_1\cdot 0,\ c_1\cdot 0,\ 1)=(0,0,1)\) and column 3 becomes
+      \((s_1,-c_1,0)\). So after row 1 the frame's \(y\) axis points <em>straight up</em> and its
+      \(z\) axis lies <em>horizontal</em> — which is the shoulder axis, as required.</p>
+    <p>Note also that \(d_1\) lands in the <strong>third</strong> slot of the translation column,
+      \((0,0,d_1)\), because \(\mathrm{Trans}(z,d)\) always translates along \(z\). Putting a \(d\)
+      into the \(x\) or \(y\) slot is the single most common arithmetic slip in part (c).</p>
+  </details>
+
+  <div class="quiz" data-q="q3" data-correct="b">
+    <p>In \({}^{0}T_1\), which slot of the translation column holds \(d_1\)?</p>
+    <div class="opts">
+      <button data-a="a">The first — \(d_1\) is the arm's reach from the column</button>
+      <button data-a="b">The third — \(\mathrm{Trans}(z,d)\) always translates along \(z\)</button>
+      <button data-a="c">The second, because the \(90^\circ\) twist swaps \(y\) and \(z\)</button>
+    </div>
+    <div class="fb"></div>
+  </div>
+
+  <h2>4 · Part (d) — the arm matrix, and the checks that catch sign errors</h2>
+
+  <p>Multiply base-to-tool, left to right. Folding the tool into row 3 as \(a_3+L_t\) — as the key
+    permits — takes you straight to the tool tip:</p>
+
+  <div id="armMat"></div>
+
+  <p>Symbolically, with \(L_3=a_3+L_t\) and \(c_{23}=\cos(\theta_2+\theta_3)\):</p>
+  \[
+  {}^{0}T_{\text{tool}}=\begin{bmatrix}
+  c_1c_{23} & -c_1s_{23} & s_1 & c_1(a_2c_2+L_3c_{23})\\
+  s_1c_{23} & -s_1s_{23} & -c_1 & s_1(a_2c_2+L_3c_{23})\\
+  s_{23} & c_{23} & 0 & d_1+a_2s_2+L_3s_{23}\\
+  0&0&0&1\end{bmatrix}
+  \]
+
+  <p>Read the structure rather than memorising it: the bracket
+    \(r=a_2c_2+L_3c_{23}\) is the <strong>radial reach</strong> you can see in the side view, and
+    \(\theta_1\) merely paints it onto \(x\) and \(y\) through \(c_1,s_1\). The height
+    \(z=d_1+a_2s_2+L_3s_{23}\) does not involve \(\theta_1\) at all — swinging the waist cannot raise
+    the tool. Watch the \(\theta_1\) slider: the third row never moves.</p>
+
+  <h3>The two checks, computed live</h3>
+  <div id="checks"></div>
+
+  <details>
+    <summary>Careful: \(z_3\) is <em>not</em> the reach direction &mdash; \(x_3\) is</summary>
+    <p>It is natural to expect the frame's \(z\) to point along the tool, because the course's
+      tool-frame convention \(R=[\,r_1\ r_2\ r_3\,]\) = [normal, sliding, approach] puts the
+      <em>approach</em> vector third, i.e. along \(z\). But that convention describes a
+      <strong>tool frame</strong>, not a D&ndash;H link frame.</p>
+    <p>In D&ndash;H, <strong>every \(z_k\) is a joint axis.</strong> Row 3 here carries
+      \(\alpha_3=0\), so \(z_3\parallel z_2\) &mdash; the elbow axis, pointing square out of the
+      arm's plane (that is the \(\odot\) in the side view). The direction the arm
+      <em>reaches</em> is \(x_3\), and that is precisely why \(a_3+L_t\) sits in the \(a\) column:
+      \(\mathrm{Trans}(x,a)\) translates along \(x\).</p>
+    <p>Check it at the exam values: \(R=\begin{bmatrix}0&0&1\\0&-1&0\\1&0&0\end{bmatrix}\).
+      Column 3 is \((1,0,0)=+x_0\) &mdash; horizontal, perpendicular to the arm's plane. Column 1 is
+      \((0,0,1)\), straight up, which is exactly where the tool points when
+      \(\theta_2+\theta_3=90^\circ\). Drag \(\theta_1\) and watch column 3 swing around the
+      column while the tool keeps pointing up.</p>
+    <p>If you <em>want</em> a frame whose \(z\) is the approach vector &mdash; which is what
+      Question&nbsp;2's pick and place matrices use &mdash; you append a further
+      <strong>fixed</strong> rotation after \({}^{2}T_3\) to define the gripper frame. It is an extra
+      frame, not a joint, and it does not belong in the D&ndash;H table.</p>
+  </details>
+
+  <details>
+    <summary>Why \(\det R=+1\) matters and \(R^{\mathsf T}R=I\) alone is not enough</summary>
+    <p>\(R^{\mathsf T}R=I\) says the columns are unit length and mutually perpendicular. That is also
+      true of a <em>reflection</em> — a frame that has been flipped inside out, which no physical
+      rotation can produce. Reflections have \(\det R=-1\). Since a sign error in one column is
+      exactly how you accidentally write a reflection, the determinant is the check that catches it,
+      and it costs one line.</p>
+    <p>The physical check is worth just as much: \(\sqrt{x^2+y^2}\) must equal the radial reach and
+      \(z\) the height you can read straight off the side view. Both are shown above and both are
+      recomputed from the matrix product, so if they ever disagree with the picture, the algebra is
+      wrong.</p>
+  </details>
+
+  <div class="quiz" data-q="q4" data-correct="c">
+    <p>Drag \(\theta_1\) alone. Which entries of \({}^{0}T_{\text{tool}}\) are unaffected?</p>
+    <div class="opts">
+      <button data-a="a">None — \(\theta_1\) is the first joint, so it changes everything downstream</button>
+      <button data-a="b">Only the translation column, since \(\theta_1\) is a pure rotation</button>
+      <button data-a="c">The whole third row: \(\theta_1\) spins the arm about a vertical axis, so it cannot change height</button>
+    </div>
+    <div class="fb"></div>
+  </div>
+
+  <h2>5 · Bonus — the same picture answers Section C1</h2>
+
+  <p>Section C asked for the inverse: given a tool tip, find the angles. The side view shows why there
+    are <strong>two</strong> answers. Once \(\theta_1\) has chosen the plane, you are left with a flat
+    two-link arm reaching a point — and a triangle with given side lengths closes in two mirror-image
+    ways, elbow up or elbow down.</p>
+
+  <p>The <em>Exam values</em> and <em>Same tool tip, elbow up</em> presets are exactly that pair. Both
+    put the tip at \(\big(0,\ \tfrac{3\sqrt3}{2},\ \tfrac{17}{2}\big)\):</p>
+
+  <table id="ikTable">
+    <tr><th>branch</th><th>\(\theta_1\)</th><th>\(\theta_2\)</th><th>\(\theta_3\)</th><th>tool tip from forward kinematics</th></tr>
+  </table>
+
+  <p class="note">Computed by solving the inverse kinematics for that target and then pushing each
+    solution back through the forward chain — so the agreement is a genuine round trip, not a restated
+    answer.</p>
+
+  <h2>6 · Self-test</h2>
+  <p class="note">Everything above is generated from one 4×4 matrix multiply. These assertions check it
+    against the paper's stated answers and against the closed form, including 400 random
+    configurations. They run automatically.</p>
+  <p><button id="runTests">Re-run</button> <span id="testTag"></span></p>
+  <div id="tests"></div>
+
+  <p class="note" style="margin-top:2em">Written key: <code>quiz-01-mock-02.md</code> ·
+    Paper: <code>quiz-01-mock-02.html</code> ·
+    Your marked attempt: <code>quiz-01-mock-02-attempt-2026-09-18-marked.md</code></p>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var P = { d1: 4, a2: 3, a3: 2, Lt: 1 };
+  var L3 = P.a3 + P.Lt;
+  var st = { t1: 90, t2: 30, t3: 60, row: 0 };
+
+  var rad = function (d) { return d * Math.PI / 180; };
+  var dg  = function (r) { return r * 180 / Math.PI; };
+
+  function A(th, d, a, al) {
+    var c = Math.cos(th), s = Math.sin(th), ca = Math.cos(al), sa = Math.sin(al);
+    return [[c, -s * ca, s * sa, a * c],
+            [s,  c * ca, -c * sa, a * s],
+            [0,  sa,      ca,     d],
+            [0, 0, 0, 1]];
+  }
+  function mul(M, N) {
+    var R = [], i, j, k, t;
+    for (i = 0; i < 4; i++) { R.push([]); for (j = 0; j < 4; j++) {
+      t = 0; for (k = 0; k < 4; k++) t += M[i][k] * N[k][j]; R[i].push(t); } }
+    return R;
+  }
+  function chain(t1, t2, t3) {
+    var A1 = A(rad(t1), P.d1, 0, rad(90)),
+        A2 = A(rad(t2), 0, P.a2, 0),
+        A3w = A(rad(t3), 0, P.a3, 0),
+        A3t = A(rad(t3), 0, L3, 0),
+        T2 = mul(A1, A2);
+    return { A1: A1, A2: A2, A3w: A3w, A3t: A3t,
+             T1: A1, T2: T2, T3w: mul(T2, A3w), T3t: mul(T2, A3t) };
+  }
+  var org = function (M) { return [M[0][3], M[1][3], M[2][3]]; };
+  var dist = function (u, v) { return Math.hypot(u[0] - v[0], u[1] - v[1], u[2] - v[2]); };
+  function fmt(x, n) {
+    n = (n === undefined) ? 3 : n;
+    if (Math.abs(x) < 5e-4) return "0";
+    var s = x.toFixed(n);
+    if (s.indexOf(".") >= 0) s = s.replace(/0+$/, "").replace(/\.$/, "");
+    return s === "-0" ? "0" : s;
+  }
+  function matHTML(M, rows, cols, hi) {
+    var h = '<span class="mat" style="grid-template-columns:repeat(' + cols + ',auto)">', i, j, v;
+    for (i = 0; i < rows; i++) for (j = 0; j < cols; j++) {
+      v = fmt(M[i][j]);
+      h += '<span' + (hi && hi(i, j) ? ' style="color:var(--accent);font-weight:700"' : '') + '>' + v + '</span>';
+    }
+    return h + '</span>';
+  }
+
+  // ---------- side view (r, z) ----------
+  // full workspace: r in [-6,6] (reach a2+L3 = 6 either side of the column), z in [-2,10]
+  var S = 26, OX = 185, OY = 289;
+  var sx = function (r) { return OX + r * S; };
+  var sy = function (z) { return OY - z * S; };
+
+  function frameMark(cx, cy, ang, cls, name, showZ) {
+    // ang = direction of the frame's x axis in the (r,z) plane, radians, CCW from +r
+    var L = 26, hx = cx + L * Math.cos(ang), hy = cy - L * Math.sin(ang),
+        ya = ang + Math.PI / 2, yx = cx + L * Math.cos(ya), yy = cy - L * Math.sin(ya), h = "";
+    h += '<line x1="' + cx + '" y1="' + cy + '" x2="' + hx + '" y2="' + hy + '" stroke="var(--' + cls + ')" stroke-width="1.8" marker-end="url(#a' + cls + ')"/>';
+    h += '<line x1="' + cx + '" y1="' + cy + '" x2="' + yx + '" y2="' + yy + '" stroke="var(--' + cls + ')" stroke-width="1.8" stroke-dasharray="3 2" marker-end="url(#a' + cls + ')"/>';
+    h += '<text class="lbls" style="fill:var(--\' + cls + \')" x="' + (hx + 3) + '" y="' + (hy - 3) + '">x' + name + '</text>';
+    h += '<text class="lbls" style="fill:var(--\' + cls + \')" x="' + (yx + 3) + '" y="' + (yy - 3) + '">y' + name + '</text>';
+    if (showZ) {
+      h += '<circle cx="' + cx + '" cy="' + cy + '" r="5.5" fill="none" stroke="var(--' + cls + ')" stroke-width="1.5"/>';
+      h += '<circle cx="' + cx + '" cy="' + cy + '" r="1.6" fill="var(--' + cls + ')"/>';
+      h += '<text class="lbls" style="fill:var(--\' + cls + \')" x="' + (cx - 20) + '" y="' + (cy + 16) + '">z' + name + '\u2299</text>';
+    }
+    return h;
+  }
+
+  function drawSide() {
+    var t2 = rad(st.t2), t23 = rad(st.t2 + st.t3);
+    var sh = [0, P.d1],
+        el = [P.a2 * Math.cos(t2), P.d1 + P.a2 * Math.sin(t2)],
+        wr = [el[0] + P.a3 * Math.cos(t23), el[1] + P.a3 * Math.sin(t23)],
+        tp = [el[0] + L3 * Math.cos(t23), el[1] + L3 * Math.sin(t23)];
+    var h = '<defs>';
+    ["f1", "f2", "f3", "muted"].forEach(function (c) {
+      h += '<marker id="a' + c + '" markerWidth="6" markerHeight="6" refX="5" refY="2" orient="auto">' +
+           '<path d="M0 0 L5 2 L0 4 z" fill="var(--' + c + ')"/></marker>';
+    });
+    h += '</defs>';
+    // grid
+    var g;
+    for (g = -6; g <= 6; g++) h += '<line class="gl" x1="' + sx(g) + '" y1="' + sy(-2) + '" x2="' + sx(g) + '" y2="' + sy(10) + '"/>';
+    for (g = -2; g <= 10; g++) h += '<line class="gl" x1="' + sx(-6) + '" y1="' + sy(g) + '" x2="' + sx(6) + '" y2="' + sy(g) + '"/>';
+    // ground + axes
+    h += '<line class="ax" x1="' + sx(-6) + '" y1="' + sy(0) + '" x2="' + sx(6) + '" y2="' + sy(0) + '" marker-end="url(#amuted)"/>';
+    h += '<line class="ax" x1="' + sx(0) + '" y1="' + sy(-2) + '" x2="' + sx(0) + '" y2="' + sy(10) + '" marker-end="url(#amuted)"/>';
+    h += '<text class="lbls" x="' + (sx(6) - 4) + '" y="' + (sy(0) + 15) + '">r</text>';
+    h += '<text class="lbls" x="' + (sx(0) + 6) + '" y="' + (sy(10) + 10) + '">z</text>';
+    // reach envelope in this plane
+    h += '<circle cx="' + sx(0) + '" cy="' + sy(P.d1) + '" r="' + (P.a2 + L3) * S + '" fill="none" stroke="var(--line)" stroke-width="1" stroke-dasharray="5 4"/>';
+    // column
+    h += '<line class="lk' + (st.row === 1 ? ' hot' : '') + '" x1="' + sx(0) + '" y1="' + sy(0) + '" x2="' + sx(sh[0]) + '" y2="' + sy(sh[1]) + '"/>';
+    h += '<text class="lbls" x="' + (sx(0) - 24) + '" y="' + sy(P.d1 / 2) + '">d\u2081=' + P.d1 + '</text>';
+    // links
+    h += '<line class="lk' + (st.row === 2 ? ' hot' : '') + '" x1="' + sx(sh[0]) + '" y1="' + sy(sh[1]) + '" x2="' + sx(el[0]) + '" y2="' + sy(el[1]) + '"/>';
+    h += '<line class="lk' + (st.row === 3 ? ' hot' : '') + '" x1="' + sx(el[0]) + '" y1="' + sy(el[1]) + '" x2="' + sx(wr[0]) + '" y2="' + sy(wr[1]) + '"/>';
+    h += '<line class="tool" x1="' + sx(wr[0]) + '" y1="' + sy(wr[1]) + '" x2="' + sx(tp[0]) + '" y2="' + sy(tp[1]) + '"/>';
+    // frames
+    h += frameMark(sx(sh[0]), sy(sh[1]), 0, "f1", "\u2081", true);
+    h += frameMark(sx(el[0]), sy(el[1]), t2, "f2", "\u2082", true);
+    h += frameMark(sx(tp[0]), sy(tp[1]), t23, "f3", "\u2083", true);
+    // base frame
+    h += '<line class="ax" x1="' + sx(0) + '" y1="' + sy(0) + '" x2="' + sx(0) + '" y2="' + (sy(0) - 24) + '" marker-end="url(#amuted)"/>';
+    h += '<text class="lbls" x="' + (sx(0) - 18) + '" y="' + (sy(0) - 26) + '">z\u2080</text>';
+    // landmark dots + labels
+    [[sh, "shoulder"], [el, "elbow"], [wr, "wrist"], [tp, "tool tip"]].forEach(function (d) {
+      h += '<circle cx="' + sx(d[0][0]) + '" cy="' + sy(d[0][1]) + '" r="3.2" fill="var(--ink)"/>';
+    });
+    h += '<text class="lbls" x="' + (sx(tp[0]) + 8) + '" y="' + (sy(tp[1]) + 16) + '">tool tip</text>';
+    // reach guides
+    h += '<line x1="' + sx(0) + '" y1="' + sy(tp[1]) + '" x2="' + sx(tp[0]) + '" y2="' + sy(tp[1]) + '" stroke="var(--accent)" stroke-width="1" stroke-dasharray="4 3"/>';
+    h += '<text class="lbls" style="fill:var(--accent)" x="' + (sx(tp[0] / 2) - 14) + '" y="' + (sy(tp[1]) - 5) + '">r=' + fmt(tp[0], 2) + '</text>';
+    h += '<line x1="' + sx(tp[0]) + '" y1="' + sy(0) + '" x2="' + sx(tp[0]) + '" y2="' + sy(tp[1]) + '" stroke="var(--accent)" stroke-width="1" stroke-dasharray="4 3"/>';
+    h += '<text class="lbls" style="fill:var(--accent)" x="' + (sx(tp[0]) + 5) + '" y="' + sy(tp[1] / 2) + '">z=' + fmt(tp[1], 2) + '</text>';
+    document.getElementById("svgSide").innerHTML = h;
+  }
+
+  // ---------- top view (x, y) ----------
+  var S2 = 22, TX = 190, TY = 170;
+  var tx = function (x) { return TX + x * S2; };
+  var ty = function (y) { return TY - y * S2; };
+
+  function drawTop() {
+    var K = chain(st.t1, st.t2, st.t3), p = org(K.T3t), R = K.T1;
+    var c1 = Math.cos(rad(st.t1)), s1 = Math.sin(rad(st.t1));
+    var r = Math.hypot(p[0], p[1]);
+    var h = '<defs>';
+    ["f1", "muted", "accent"].forEach(function (c) {
+      h += '<marker id="t' + c + '" markerWidth="6" markerHeight="6" refX="5" refY="2" orient="auto">' +
+           '<path d="M0 0 L5 2 L0 4 z" fill="var(--' + c + ')"/></marker>';
+    });
+    h += '</defs>';
+    var g;
+    for (g = -7; g <= 7; g++) {
+      h += '<line class="gl" x1="' + tx(g) + '" y1="' + ty(-7) + '" x2="' + tx(g) + '" y2="' + ty(7) + '"/>';
+      h += '<line class="gl" x1="' + tx(-7) + '" y1="' + ty(g) + '" x2="' + tx(7) + '" y2="' + ty(g) + '"/>';
+    }
+    // reach circle
+    h += '<circle cx="' + tx(0) + '" cy="' + ty(0) + '" r="' + (P.a2 + L3) * S2 + '" fill="none" stroke="var(--line)" stroke-width="1" stroke-dasharray="5 4"/>';
+    h += '<text class="lbls" x="' + tx(-6.6) + '" y="' + ty(6.2) + '">max reach ' + (P.a2 + L3) + '</text>';
+    // base axes
+    h += '<line class="ax" x1="' + tx(0) + '" y1="' + ty(0) + '" x2="' + tx(7) + '" y2="' + ty(0) + '" marker-end="url(#tmuted)"/>';
+    h += '<line class="ax" x1="' + tx(0) + '" y1="' + ty(0) + '" x2="' + tx(0) + '" y2="' + ty(7) + '" marker-end="url(#tmuted)"/>';
+    h += '<text class="lbls" x="' + (tx(7) - 12) + '" y="' + (ty(0) + 15) + '">x\u2080</text>';
+    h += '<text class="lbls" x="' + (tx(0) + 6) + '" y="' + (ty(7) + 10) + '">y\u2080</text>';
+    // theta1 arc
+    var aR = 34, a0 = 0, a1 = rad(st.t1);
+    h += '<path d="M ' + (tx(0) + aR) + ' ' + ty(0) + ' A ' + aR + ' ' + aR + ' 0 ' +
+         (Math.abs(st.t1) > 180 ? 1 : 0) + ' ' + (st.t1 >= 0 ? 0 : 1) + ' ' +
+         (tx(0) + aR * Math.cos(a1)) + ' ' + (ty(0) - aR * Math.sin(a1)) + '" fill="none" stroke="var(--f1)" stroke-width="1.6"/>';
+    h += '<text class="lbls" style="fill:var(--f1)" x="' + (tx(0) + aR * Math.cos(a1 / 2) + 4) + '" y="' + (ty(0) - aR * Math.sin(a1 / 2) - 5) + '">\u03B8\u2081=' + st.t1 + '\u00B0</text>';
+    // radial line = the plane the side view lives in
+    h += '<line x1="' + tx(0) + '" y1="' + ty(0) + '" x2="' + tx(6.6 * c1) + '" y2="' + ty(6.6 * s1) + '" stroke="var(--f1)" stroke-width="1.4" stroke-dasharray="7 4"/>';
+    h += '<text class="lbls" style="fill:var(--f1)" x="' + tx(6.0 * c1 - 0.9) + '" y="' + ty(6.0 * s1 + 0.55) + '">side-view plane</text>';
+    // x1 (radial) and z1 (perpendicular, horizontal)
+    h += '<line x1="' + tx(0) + '" y1="' + ty(0) + '" x2="' + tx(1.7 * c1) + '" y2="' + ty(1.7 * s1) + '" stroke="var(--f1)" stroke-width="2" marker-end="url(#tf1)"/>';
+    h += '<text class="lbls" style="fill:var(--f1)" x="' + tx(1.85 * c1) + '" y="' + ty(1.85 * s1) + '">x\u2081</text>';
+    h += '<line x1="' + tx(0) + '" y1="' + ty(0) + '" x2="' + tx(1.7 * R[0][2]) + '" y2="' + ty(1.7 * R[1][2]) + '" stroke="var(--f1)" stroke-width="2" stroke-dasharray="3 2" marker-end="url(#tf1)"/>';
+    h += '<text class="lbls" style="fill:var(--f1)" x="' + tx(1.9 * R[0][2]) + '" y="' + ty(1.9 * R[1][2]) + '">z\u2081</text>';
+    // projected arm + tool tip
+    h += '<line x1="' + tx(0) + '" y1="' + ty(0) + '" x2="' + tx(p[0]) + '" y2="' + ty(p[1]) + '" stroke="var(--accent)" stroke-width="3.5" stroke-linecap="round" opacity=".8"/>';
+    h += '<circle cx="' + tx(p[0]) + '" cy="' + ty(p[1]) + '" r="4" fill="var(--accent)"/>';
+    h += '<text class="lbls" style="fill:var(--accent)" x="' + (tx(p[0]) + 7) + '" y="' + (ty(p[1]) - 6) + '">(' + fmt(p[0], 2) + ', ' + fmt(p[1], 2) + ')</text>';
+    h += '<text class="lbls" style="fill:var(--accent)" x="' + tx(-6.6) + '" y="' + ty(-6.4) + '">projected reach \u221A(x\u00B2+y\u00B2) = ' + fmt(r, 3) + '</text>';
+    document.getElementById("svgTop").innerHTML = h;
+  }
+
+  // ---------- tables and matrices ----------
+  function drawOrigins() {
+    var K = chain(st.t1, st.t2, st.t3);
+    var rows = [
+      ["0", [0, 0, 0], "base, on the column axis", ""],
+      ["1", org(K.T1), "shoulder", "d\u2081 = " + fmt(dist([0, 0, 0], org(K.T1)))],
+      ["2", org(K.T2), "elbow", "a\u2082 = " + fmt(dist(org(K.T1), org(K.T2)))],
+      ["3", org(K.T3t), "tool tip", "a\u2083+L_t = " + fmt(dist(org(K.T2), org(K.T3t)))]
+    ];
+    var h = "<tr><th>frame</th><th>origin \\((x,y,z)\\)</th><th>landmark</th><th>distance from previous</th></tr>";
+    rows.forEach(function (r) {
+      h += '<tr><td class="num">' + r[0] + '</td><td class="num">(' + r[1].map(function (v) { return fmt(v, 3); }).join(", ") +
+           ')</td><td>' + r[2] + '</td><td class="num">' + r[3] + '</td></tr>';
+    });
+    var wr = org(K.T3w);
+    h += '<tr><td class="num">3\u2032</td><td class="num">(' + wr.map(function (v) { return fmt(v, 3); }).join(", ") +
+         ')</td><td>wrist, if \\(L_t\\) is kept separate</td><td class="num">a\u2083 = ' + fmt(dist(org(K.T2), wr)) + '</td></tr>';
+    document.getElementById("origTable").innerHTML = h;
+  }
+
+  function drawDH() {
+    var v = [st.t1, st.t2, st.t3];
+    var rows = [
+      [1, "\u03B8\u2081*", "d\u2081 = 4", "0", "+90\u00B0", "\u03B8\u2081 (revolute)"],
+      [2, "\u03B8\u2082*", "0", "a\u2082 = 3", "0", "\u03B8\u2082 (revolute)"],
+      [3, "\u03B8\u2083*", "0", "a\u2083+L_t = 3", "0", "\u03B8\u2083 (revolute)"]
+    ];
+    var h = "<tr><th>\\(k\\)</th><th>\\(\\theta_k\\)</th><th>\\(d_k\\)</th><th>\\(a_k\\)</th><th>\\(\\alpha_k\\)</th><th>variable</th><th>current</th></tr>";
+    rows.forEach(function (r, i) {
+      h += '<tr data-row="' + r[0] + '"' + (st.row === r[0] ? ' class="hot"' : '') + '>' +
+           '<td class="num">' + r[0] + '</td><td class="num">' + r[1] + '</td><td class="num">' + r[2] +
+           '</td><td class="num">' + r[3] + '</td><td class="num">' + r[4] + '</td><td>' + r[5] +
+           '</td><td class="num">' + v[i] + '\u00B0</td></tr>';
+    });
+    var el = document.getElementById("dhTable");
+    el.innerHTML = h;
+    el.querySelectorAll("tr[data-row]").forEach(function (tr) {
+      tr.onclick = function () {
+        var n = +tr.getAttribute("data-row");
+        st.row = (st.row === n) ? 0 : n;
+        drawDH(); drawSide();
+      };
+    });
+  }
+
+  function drawLinkMats() {
+    var K = chain(st.t1, st.t2, st.t3);
+    var h = '<div class="matwrap">' +
+      '<span>\\({}^{0}T_1=\\)</span>' + matHTML(K.A1, 4, 4) +
+      '<span>\\({}^{1}T_2=\\)</span>' + matHTML(K.A2, 4, 4) +
+      '<span>\\({}^{2}T_3=\\)</span>' + matHTML(K.A3t, 4, 4) +
+      '</div>';
+    document.getElementById("linkMats").innerHTML = h;
+  }
+
+  function drawArm() {
+    var K = chain(st.t1, st.t2, st.t3), T = K.T3t;
+    var h = '<div class="matwrap"><span>\\({}^{0}T_{\\text{tool}}={}^{0}T_1\\,{}^{1}T_2\\,{}^{2}T_3=\\)</span>' +
+            matHTML(T, 4, 4, function (i, j) { return j === 3 && i < 3; }) + '</div>';
+    h += '<p style="margin:.5em 0 0">Orientation \\(R=[\\,x_3\\ y_3\\ z_3\\,]\\) ' +
+         '(highlighted column 1 is \\(x_3\\), the direction the tool points): ' +
+         matHTML(T, 3, 3, function (i, j) { return j === 0; }) +
+         ' &nbsp; position \\(p=\\)' + matHTML([[T[0][3]], [T[1][3]], [T[2][3]]], 3, 1) + '</p>';
+    h += '<p class="note" style="margin:.4em 0 0">Column 3 is \\(z_3\\), which is parallel to the ' +
+         'elbow axis and square to the arm\'s plane \u2014 <em>not</em> the reach direction. See below.</p>';
+    document.getElementById("armMat").innerHTML = h;
+  }
+
+  function drawChecks() {
+    var K = chain(st.t1, st.t2, st.t3), T = K.T3t, i, j, k, t;
+    var R = [0, 1, 2].map(function (i) { return [0, 1, 2].map(function (j) { return T[i][j]; }); });
+    var RtR = [];
+    for (i = 0; i < 3; i++) { RtR.push([]); for (j = 0; j < 3; j++) {
+      t = 0; for (k = 0; k < 3; k++) t += R[k][i] * R[k][j]; RtR[i].push(t); } }
+    var det = R[0][0] * (R[1][1] * R[2][2] - R[1][2] * R[2][1])
+            - R[0][1] * (R[1][0] * R[2][2] - R[1][2] * R[2][0])
+            + R[0][2] * (R[1][0] * R[2][1] - R[1][1] * R[2][0]);
+    var t2 = rad(st.t2), t23 = rad(st.t2 + st.t3);
+    var rWant = P.a2 * Math.cos(t2) + L3 * Math.cos(t23);
+    var zWant = P.d1 + P.a2 * Math.sin(t2) + L3 * Math.sin(t23);
+    var rGot = Math.hypot(T[0][3], T[1][3]);
+    var okI = RtR.every(function (row, i) { return row.every(function (v, j) { return Math.abs(v - (i === j ? 1 : 0)) < 1e-9; }); });
+    var tag = function (b) { return '<span class="tag ' + (b ? 'p' : 'f') + '">' + (b ? 'OK' : 'FAIL') + '</span>'; };
+    var h = '<div class="matwrap"><span>\\(R^{\\mathsf T}R=\\)</span>' + matHTML(RtR, 3, 3) + tag(okI) + '</div>';
+    h += '<p style="margin:.45em 0">\\(\\det R=\\) <span class="num">' + fmt(det, 6) + '</span> ' + tag(Math.abs(det - 1) < 1e-9) + '</p>';
+    h += '<p style="margin:.45em 0">Radial: \\(\\sqrt{x^2+y^2}=\\) <span class="num">' + fmt(rGot, 4) +
+         '</span> vs \\(|a_2c_2+L_3c_{23}|=\\) <span class="num">' + fmt(Math.abs(rWant), 4) + '</span> ' +
+         tag(Math.abs(rGot - Math.abs(rWant)) < 1e-9) + '</p>';
+    h += '<p style="margin:.45em 0">Height: \\(z=\\) <span class="num">' + fmt(T[2][3], 4) +
+         '</span> vs \\(d_1+a_2s_2+L_3s_{23}=\\) <span class="num">' + fmt(zWant, 4) + '</span> ' +
+         tag(Math.abs(T[2][3] - zWant) < 1e-9) + '</p>';
+    document.getElementById("checks").innerHTML = h;
+  }
+
+  function ik(x, y, z) {
+    var t1 = Math.atan2(y, x), r = Math.hypot(x, y), s = z - P.d1;
+    var D = (r * r + s * s - P.a2 * P.a2 - L3 * L3) / (2 * P.a2 * L3);
+    if (Math.abs(D) > 1) return [];
+    return [1, -1].map(function (g) {
+      var t3 = Math.atan2(g * Math.sqrt(1 - D * D), D);
+      var t2 = Math.atan2(s, r) - Math.atan2(L3 * Math.sin(t3), P.a2 + L3 * Math.cos(t3));
+      return [dg(t1), dg(t2), dg(t3)];
+    });
+  }
+
+  function drawIK() {
+    var target = [0, 3 * Math.sqrt(3) / 2, 8.5];
+    var sols = ik(target[0], target[1], target[2]);
+    var names = ["elbow-down", "elbow-up"];
+    var h = "<tr><th>branch</th><th>\\(\\theta_1\\)</th><th>\\(\\theta_2\\)</th><th>\\(\\theta_3\\)</th><th>tool tip from forward kinematics</th></tr>";
+    sols.forEach(function (s, i) {
+      var p = org(chain(s[0], s[1], s[2]).T3t);
+      h += '<tr><td>' + names[i] + '</td>' +
+           s.map(function (v) { return '<td class="num">' + fmt(v, 1) + '\u00B0</td>'; }).join("") +
+           '<td class="num">(' + p.map(function (v) { return fmt(v, 3); }).join(", ") + ')</td></tr>';
+    });
+    document.getElementById("ikTable").innerHTML = h;
+  }
+
+  // ---------- self-test ----------
+  function runTests() {
+    var out = [], fails = 0;
+    function ok(c, m) { out.push((c ? "  pass  " : "  FAIL  ") + m); if (!c) fails++; }
+    var near = function (a, b, e) { return Math.abs(a - b) < (e || 1e-9); };
+
+    var K = chain(90, 30, 60), T = K.T3t;
+    out.push("-- the paper's stated answers (exam configuration) --");
+    ok(near(T[0][3], 0) && near(T[1][3], 3 * Math.sqrt(3) / 2) && near(T[2][3], 8.5),
+       "p = (0, 3\u221A3/2, 17/2) = (0, " + fmt(3 * Math.sqrt(3) / 2, 6) + ", 8.5)");
+    var Rexp = [[0, 0, 1], [0, -1, 0], [1, 0, 0]];
+    ok(Rexp.every(function (r, i) { return r.every(function (v, j) { return near(T[i][j], v); }); }),
+       "R = [[0,0,1],[0,-1,0],[1,0,0]]");
+
+    out.push("-- origins land on the physical landmarks --");
+    ok(near(dist([0, 0, 0], org(K.T1)), P.d1), "|o\u2080 \u2192 o\u2081| = d\u2081 = 4  (shoulder)");
+    ok(near(dist(org(K.T1), org(K.T2)), P.a2), "|o\u2081 \u2192 o\u2082| = a\u2082 = 3  (elbow, NOT the shoulder)");
+    ok(near(dist(org(K.T2), org(K.T3w)), P.a3), "|o\u2082 \u2192 o\u2083| = a\u2083 = 2  (wrist)");
+    ok(near(dist(org(K.T2), org(K.T3t)), L3), "|o\u2082 \u2192 tip| = a\u2083+L_t = 3");
+
+    out.push("-- 400 random configurations --");
+    var bad = 0, badDet = 0, badCF = 0, n, i, j, k, t, R, det, c1, s1, c2, s2, c23, s23, r, want, M;
+    for (n = 0; n < 400; n++) {
+      var q1 = Math.random() * 720 - 360, q2 = Math.random() * 720 - 360, q3 = Math.random() * 720 - 360;
+      M = chain(q1, q2, q3).T3t;
+      R = [0, 1, 2].map(function (i) { return [0, 1, 2].map(function (j) { return M[i][j]; }); });
+      for (i = 0; i < 3; i++) for (j = 0; j < 3; j++) {
+        t = 0; for (k = 0; k < 3; k++) t += R[k][i] * R[k][j];
+        if (!near(t, i === j ? 1 : 0)) bad++;
+      }
+      det = R[0][0] * (R[1][1] * R[2][2] - R[1][2] * R[2][1])
+          - R[0][1] * (R[1][0] * R[2][2] - R[1][2] * R[2][0])
+          + R[0][2] * (R[1][0] * R[2][1] - R[1][1] * R[2][0]);
+      if (!near(det, 1)) badDet++;
+      c1 = Math.cos(rad(q1)); s1 = Math.sin(rad(q1));
+      c2 = Math.cos(rad(q2)); s2 = Math.sin(rad(q2));
+      c23 = Math.cos(rad(q2 + q3)); s23 = Math.sin(rad(q2 + q3));
+      r = P.a2 * c2 + L3 * c23;
+      want = [[c1 * c23, -c1 * s23, s1, c1 * r],
+              [s1 * c23, -s1 * s23, -c1, s1 * r],
+              [s23, c23, 0, P.d1 + P.a2 * s2 + L3 * s23]];
+      for (i = 0; i < 3; i++) for (j = 0; j < 4; j++) if (!near(M[i][j], want[i][j])) badCF++;
+    }
+    ok(bad === 0, "R\u1D40R = I everywhere (" + bad + " deviations)");
+    ok(badDet === 0, "det R = +1 everywhere, so never a reflection (" + badDet + " deviations)");
+    ok(badCF === 0, "matrix product matches the closed form in the key (" + badCF + " deviations)");
+
+    out.push("-- \u03B8\u2081 cannot change height --");
+    var z0 = chain(0, 30, 60).T3t[2][3], badZ = 0;
+    for (n = -180; n <= 180; n += 5) if (!near(chain(n, 30, 60).T3t[2][3], z0)) badZ++;
+    ok(badZ === 0, "z is identical for every \u03B8\u2081 at fixed \u03B8\u2082,\u03B8\u2083");
+
+    out.push("-- inverse kinematics round trip (Section C1) --");
+    var tgt = [0, 3 * Math.sqrt(3) / 2, 8.5], sols = ik(tgt[0], tgt[1], tgt[2]);
+    ok(sols.length === 2, "two branches found for an interior target");
+    sols.forEach(function (s, i) {
+      var p = org(chain(s[0], s[1], s[2]).T3t);
+      ok(near(p[0], tgt[0]) && near(p[1], tgt[1]) && near(p[2], tgt[2]),
+         "branch " + (i + 1) + " (" + s.map(function (v) { return fmt(v, 1); }).join(", ") + ")\u00B0 returns to the target");
+    });
+    ok(near(sols[0][1], 30, 1e-6) && near(sols[0][2], 60, 1e-6),
+       "elbow-down branch recovers the exam configuration (90, 30, 60)");
+    ok(ik(0, 0, 40).length === 0, "an unreachable target yields no solution (|D| > 1)");
+
+    document.getElementById("tests").textContent = out.join("\n");
+    document.getElementById("testTag").innerHTML = fails
+      ? '<span class="tag f">' + fails + " FAILED</span>"
+      : '<span class="tag p">all checks passed</span>';
+  }
+
+  // ---------- wiring ----------
+  function redraw() {
+    document.getElementById("o1").textContent = st.t1 + "\u00B0";
+    document.getElementById("o2").textContent = st.t2 + "\u00B0";
+    document.getElementById("o3").textContent = st.t3 + "\u00B0";
+    var p = org(chain(st.t1, st.t2, st.t3).T3t);
+    document.getElementById("pNow").textContent = "(" + p.map(function (v) { return fmt(v, 3); }).join(", ") + ")";
+    document.getElementById("rNow").textContent = fmt(Math.hypot(p[0], p[1]), 3);
+    document.getElementById("zNow").textContent = fmt(p[2], 3);
+    drawSide(); drawTop(); drawOrigins(); drawDH(); drawLinkMats(); drawArm(); drawChecks(); drawIK();
+    if (window.renderMathInElement) {
+      ["origTable", "dhTable", "linkMats", "armMat", "checks", "ikTable"].forEach(function (id) {
+        try {
+          renderMathInElement(document.getElementById(id), {
+            delimiters: [{ left: "\\(", right: "\\)", display: false }],
+            throwOnError: false, trust: false
+          });
+        } catch (e) {}
+      });
+    }
+  }
+
+  ["s1", "s2", "s3"].forEach(function (id, i) {
+    document.getElementById(id).addEventListener("input", function (e) {
+      st["t" + (i + 1)] = +e.target.value;
+      document.querySelectorAll(".presets button").forEach(function (b) { b.classList.remove("on"); });
+      redraw();
+    });
+  });
+  document.querySelectorAll(".presets button").forEach(function (b) {
+    b.onclick = function () {
+      var v = b.getAttribute("data-p").split(",").map(Number);
+      st.t1 = v[0]; st.t2 = v[1]; st.t3 = v[2];
+      document.getElementById("s1").value = v[0];
+      document.getElementById("s2").value = v[1];
+      document.getElementById("s3").value = v[2];
+      document.querySelectorAll(".presets button").forEach(function (x) { x.classList.remove("on"); });
+      b.classList.add("on");
+      redraw();
+    };
+  });
+
+  var FB = {
+    q0: { good: "Right — identical. Two different elbow configurations, one tool tip. That is exactly the elbow-up / elbow-down pair Section C1 asks you to find, and it is why the inverse kinematics has two answers rather than one.",
+          bad:  "Look again at the tool tip readout above the sliders, and at the top view's coordinates. Both presets give (0, 2.598, 8.5). The arm folds differently; the tip does not move." },
+    q1: { good: "Correct. Row 2 carries a\u2082 = 3, and a row's a\u2096 displaces the origin along x\u2096 \u2014 so frame 2 is pinned to the elbow no matter what the angles do. Check the distance column in the table.",
+          bad:  "a\u2081 = 0 only says frame 1's origin stays on the column axis, because the shoulder axis intersects it. Frame 2's position is set by row 2, which carries a\u2082 = 3 \u2014 so frame 2 sits at the elbow, one full link away." },
+    q2: { good: "Exactly. \u03B1\u2096 measures the twist from z\u2096\u208B\u2081 to z\u2096. Shoulder and elbow axes are parallel, so that twist is zero \u2014 and rows 2 and 3 are the ordinary planar case.",
+          bad:  "\u03B1\u2096 is the angle between consecutive joint axes, and nothing else. There is no rule limiting a row to one non-zero parameter, and no rule limiting a table to one twist. The shoulder and elbow axes are parallel, so \u03B1\u2082 = 0." },
+    q3: { good: "Yes. Trans(z, d) puts d in the third slot, always \u2014 the translation column of any link transform is (a\u2096c\u2096, a\u2096s\u2096, d\u2096). Watch the live \u2070T\u2081 above: the 4 never leaves the third row.",
+          bad:  "The translation column of any D\u2013H link transform is (a\u2096c\u2096, a\u2096s\u2096, d\u2096), so d always lands third. Reach comes from a\u2096, not d\u2096. The \u03B1\u2081 twist rearranges the rotation block, not where d sits." },
+    q4: { good: "Right. The third row of R and the height z are both independent of \u03B8\u2081, because \u03B8\u2081 rotates about a vertical axis \u2014 it repaints the radial reach onto x and y but cannot lift the tool. Watch the third row stay still.",
+          bad:  "Drag \u03B8\u2081 and watch the arm matrix: the entire third row \u2014 (s\u2082\u2083, c\u2082\u2083, 0, d\u2081+a\u2082s\u2082+L\u2083s\u2082\u2083) \u2014 is frozen. \u03B8\u2081 rotates about a vertical axis, so it cannot change height." }
+  };
+  document.querySelectorAll(".quiz").forEach(function (q) {
+    var id = q.getAttribute("data-q"), want = q.getAttribute("data-correct"), fb = q.querySelector(".fb");
+    q.querySelectorAll(".opts button").forEach(function (b) {
+      b.onclick = function () {
+        var good = b.getAttribute("data-a") === want;
+        q.querySelectorAll(".opts button").forEach(function (x) { x.classList.remove("on"); });
+        b.classList.add("on");
+        fb.className = "fb show " + (good ? "good" : "bad");
+        fb.textContent = good ? FB[id].good : FB[id].bad;
+      };
+    });
+  });
+
+  document.getElementById("runTests").onclick = runTests;
+  redraw();
+  runTests();
+  window.addEventListener("load", function () { redraw(); });
+})();
+</script>
+</body>
+</html>
