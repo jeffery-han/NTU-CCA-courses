@@ -160,6 +160,17 @@ where $c_k=\cos\theta_k$, $s_k=\sin\theta_k$, $c_{\alpha k}=\cos\alpha_k$, and $
       you chose.
 \end{itemize}
 
+\paragraph{Where the origins land.} The translation column of $\prescript{k-1}{}{T}_{k}$ is
+$(a_kc_k,a_ks_k,d_k)$: $d_k$ steps along $z_{k-1}$, then $a_k$ steps along $x_k$. So $a_k\neq0$
+\emph{displaces} frame $k$'s origin by the link length --- which is why $a_k$ \emph{is} the link
+length when $x_k$ runs along the link. Articulated RRR with rows $(\theta_1,d_1,0,90^\circ)$,
+$(\theta_2,0,a_2,0)$, $(\theta_3,0,a_3,0)$: frame 1 $=$ shoulder, frame 2 $=$ \textbf{elbow},
+frame 3 $=$ wrist.
+
+\textbf{$a_k=0$ does not mean two frames coincide.} It means frame $k$'s origin stays \emph{on the
+$z_{k-1}$ axis}, because the joint axes intersect and there is no common normal to step along. The
+frames may still be $d_k$ apart, and later frames a full link apart.
+
 \subsection{Example: planar 2R position}
 
 For two coplanar revolute links of lengths $a_1,a_2$, with base angles $q_1,q_2$, the tool-tip position is
@@ -237,7 +248,15 @@ $\mathbf r_2$ = jaw closing direction, \textbf{perpendicular to the faces graspe
 long sides $\Rightarrow$ jaws close along the \emph{short} axis); $\mathbf r_1=\mathbf r_2\times\mathbf r_3$,
 then confirm $\mathbf r_1\times\mathbf r_2=\mathbf r_3$ and $\det R=+1$. Translation = the part
 centroid \emph{at its destination}; stacking $A$ onto $B$ gives
-$z=z_B+\tfrac12 h_B+\tfrac12 h_A$ (both half-heights).
+$z=z_B+\tfrac12 h_B+\tfrac12 h_A$ --- three terms, computed from the given dimensions, never carried
+over from a similar problem.
+
+\textbf{Run it twice.} $\mathbf r_2$ depends on the part's orientation \emph{at that pose}: current
+orientation at the pick, \emph{target} orientation at the place. Long axes differing by $90^\circ$
+$\Rightarrow R_{\rm place}=R_z(\pm90^\circ)R_{\rm pick}$; same orientation $\Rightarrow$ $R$
+unchanged and only the translation moves. Note that $R^{\mathsf T}R=I$ and $\det R=+1$ cannot catch
+a \emph{correct} matrix attached to the \emph{wrong} pose --- write the long-axis direction for each
+pose down first.
 
 \subsection{Path versus trajectory}
 

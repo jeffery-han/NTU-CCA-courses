@@ -5,7 +5,7 @@
 - `notes/beginner-notes.tex` - detailed, self-contained teaching note for the supplied manipulator-kinematics material; compiled PDF is stored beside it.
 - `notes/notes.tex` - concise manipulator-kinematics review note; compiled PDF is stored beside it.
 - `notes/week-01-beginner-notes.tex` - preserved Week 1-only teaching supplement; it is not the canonical full-scope beginner note.
-- `quizzes/quiz-01-mock-01.html` + `quizzes/quiz-01-mock-01.md` - answer-free mock Quiz 1 (exam page) and its answer key / marking rubric / diagnosis guide. `quizzes/quiz-01-intel.md` records the past-paper intelligence it is built on (logged-in RedNote search + KuRRe8 GitHub study note + the official `exercises-kinematics-not-for-submission.pdf`). `quizzes/quiz-01-mock-02.html` + `quizzes/quiz-01-mock-02.md` are a second answer-free mock and its key/rubric/diagnosis file (same 25-mark shape: Q1 = 12, Q2 = 8, Section C = 5). Mock 2 rotates the architecture rather than drilling mock 1's errors: Q1 is an articulated **RRR** arm (twist at `alpha_1`, tool along `x_3`) instead of a cylindrical RPP; Q2's two parts have **perpendicular** long axes so the place pose needs a real 90-degree rotation about `z_0` rather than a copy of the pick orientation; Section C moves to **multi-branch IK** (genuine elbow-up/elbow-down from the shoulder+elbow 2R sub-chain) and **cubic trajectory interpolation**, the one in-scope topic mock 1 never tested. The tool-configuration vector is deliberately omitted (covered by mock 1). All answers re-derived and numerically verified, including the closed-form arm matrix against the numeric product at 2000 random configurations and both IK branches forward-substituted to the target. `quizzes/attempts/quiz-01-mock-01-2026-09-17.pdf` is the learner's sat script (handwritten, scanned) and `quizzes/quiz-01-mock-01-attempt-2026-09-17-marked.md` is its marked record: 12/20 core, 15/25 overall, with a part-by-part breakdown and a slips-vs-inverted-concepts split. `quizzes/quiz-assets/` is a vendored copy of the KaTeX + `render-math.js` assets (kept in-directory so the page works from `file://` in Safari). Unofficial; mirrors the *format* of recalled real papers and re-derives every answer. Mock uses a cylindrical (RPP) arm and new part coordinates so it collides with neither `notes/` nor the `/self-study` bank.
+- `quizzes/quiz-01-mock-01.html` + `quizzes/quiz-01-mock-01.md` - answer-free mock Quiz 1 (exam page) and its answer key / marking rubric / diagnosis guide. `quizzes/quiz-01-intel.md` records the past-paper intelligence it is built on (logged-in RedNote search + KuRRe8 GitHub study note + the official `exercises-kinematics-not-for-submission.pdf`). `quizzes/quiz-01-mock-02.html` + `quizzes/quiz-01-mock-02.md` are a second answer-free mock and its key/rubric/diagnosis file (same 25-mark shape: Q1 = 12, Q2 = 8, Section C = 5). Mock 2 rotates the architecture rather than drilling mock 1's errors: Q1 is an articulated **RRR** arm (twist at `alpha_1`, tool along `x_3`) instead of a cylindrical RPP; Q2's two parts have **perpendicular** long axes so the place pose needs a real 90-degree rotation about `z_0` rather than a copy of the pick orientation; Section C moves to **multi-branch IK** (genuine elbow-up/elbow-down from the shoulder+elbow 2R sub-chain) and **cubic trajectory interpolation**, the one in-scope topic mock 1 never tested. The tool-configuration vector is deliberately omitted (covered by mock 1). `quizzes/attempts/quiz-01-mock-02-2026-09-18.pdf` is the sat script and `quizzes/quiz-01-mock-02-attempt-2026-09-18-marked.md` its marked record (12/20 core, 12/25 overall). All answers re-derived and numerically verified, including the closed-form arm matrix against the numeric product at 2000 random configurations and both IK branches forward-substituted to the target. `quizzes/attempts/quiz-01-mock-01-2026-09-17.pdf` is the learner's sat script (handwritten, scanned) and `quizzes/quiz-01-mock-01-attempt-2026-09-17-marked.md` is its marked record: 12/20 core, 15/25 overall, with a part-by-part breakdown and a slips-vs-inverted-concepts split. `quizzes/quiz-assets/` is a vendored copy of the KaTeX + `render-math.js` assets (kept in-directory so the page works from `file://` in Safari). Unofficial; mirrors the *format* of recalled real papers and re-derives every answer. Mock uses a cylindrical (RPP) arm and new part coordinates so it collides with neither `notes/` nor the `/self-study` bank.
 - `output/self-studying/notes-bank.json` - `/self-study` bank scoped to Quiz 1 (6 sections: quiz logistics/scope, frames+rotations, homogeneous transforms, D-H direct kinematics, inverse kinematics, cubic trajectory planning). Built to `output/self-studying/beginner-notes.html` and `output/self-studying/review-page.html` (HTML mode; shares `output/self-studying/self-study-assets/`). Not a replacement for the canonical `.tex` notes; derived from `lecture-01-manipulator-kinematics.pdf`, `exercises-kinematics-not-for-submission.pdf`, `additional-materials/example-3.1.pdf`, and `notes/notes.tex`.
 
 ## Source coverage
@@ -60,6 +60,7 @@
 
 ## File-organization record
 
+- 2026-09-18 attempt filing: `~/Downloads/Scanned Document 6.pdf -> quizzes/attempts/quiz-01-mock-02-2026-09-18.pdf` (copied, not moved; the original is left in Downloads for the learner to delete). New sibling file `quizzes/quiz-01-mock-02-attempt-2026-09-18-marked.md`.
 - 2026-09-17 attempt filing: new `quizzes/attempts/` directory (canonical home for sat scripts). `~/Downloads/Scanned Document 5.pdf -> quizzes/attempts/quiz-01-mock-01-2026-09-17.pdf` (copied, not moved - the original is left in Downloads for the learner to delete). New sibling file `quizzes/quiz-01-mock-01-attempt-2026-09-17-marked.md`.
 
 - 2026-09-17 housekeeping (quiz-prep stage-2 pass): filed the four resources added 2026-09-11 and one stray course-root artifact. `resources/Robot control(1).pdf -> resources/lecture-02-robot-control.pdf`; `resources/Mobile Robot Kinematics(1).pdf -> resources/lecture-03-mobile-robot-kinematics.pdf`; `resources/Week 5 Kinamatics.pdf -> resources/additional-materials/week-05-velocity-kinematics.pdf` (identified by content: forward kinematic equations differentiated to velocity; the source spelling "Kinamatics" was a typo); `resources/control example.pdf -> resources/additional-materials/control-worked-example.pdf` (identified by content: error/characteristic-equation/gain-setting slides). `notes.pdf -> notes/notes.pdf` - the compiled review note was sitting at the course root while `STATUS.md` claimed it was beside its `.tex`; the course root now holds only `STATUS.md`. No file was overwritten or deleted, and no reference needed repair: a repo-wide grep for all five old names found zero citations in any `.md`, `.tex`, `.json`, or `.html`.
@@ -79,6 +80,40 @@
 
 ## Update record
 
+- 2026-09-18 Quiz 1 mock 2 stages 4-6 (sat, marked, folded back). Score 12/20 core, 12/25 overall; breakdown in
+`quizzes/quiz-01-mock-02-attempt-2026-09-18-marked.md`. Core matched mock 1's 12/20 but the composition shifted:
+**the mock 1 fold-back worked** - the D-H table went 1/3 -> 3/3 (three joints, three rows, twist correctly in row 1,
+tool folded into `a_3 + L_t` rather than given a joint row, no table/transform sign contradiction) and the frame
+diagram 3/4 -> 4/4. Two new items were folded into both notes:
+  1. **Where each frame's origin lands.** `d_k` steps the origin along `z_{k-1}`, then `a_k` steps it along `x_k`, so
+     `a_k != 0` displaces the origin by the link length - which is why `a_k` *is* the link length when `x_k` runs along
+     the link. For the articulated RRR arm: frame 1 = shoulder, frame 2 = elbow, frame 3 = wrist. Paired with the
+     pitfall that **`a_k = 0` does not mean two frames coincide** - it means the origin stays on the `z_{k-1}` axis
+     because the joint axes intersect. Added to `notes/beginner-notes.tex` sec. 5 ("Where each frame's origin actually
+     lands" + a Common pitfall) and `notes/notes.tex` ("Where the origins land").
+  2. **The pick and the place are two different orientations.** `r_2` depends on the part's orientation *at that pose*:
+     its current orientation at the pick, its *target* orientation at the place. Long axes differing by 90 degrees give
+     `R_place = Rz(+-90) R_pick`. Critically, `R^T R = I` and `det R = +1` **cannot** catch a correct matrix attached to
+     the wrong pose, so the recommended habit is to write the long-axis direction for each pose down before writing
+     either matrix. Added to `notes/beginner-notes.tex` sec. 7 and `notes/notes.tex`'s grasp-pose recipe, which also
+     gained "three terms, computed from the given dimensions, never carried over from a similar problem".
+  The place-height slip (stopped at the supporting surface, dropping the moving part's half-height) was **not** treated
+  as a new gap - the three-term formula was already in both notes from the mock 1 fold-back and the same checkpoint was
+  passed on mock 1, so it is execution, not understanding.
+  **Correction to the mock:** `quizzes/quiz-01-mock-02.md` Q1(a) had described frame 2's origin as the shoulder and
+  claimed frames 1 and 2 coincide when `a_1 = 0`. Both were wrong - frame 2 is at the elbow. Found because the sat
+  script drew it correctly and disagreed with the key; verified numerically (`o_1 = (0,0,4)`, `o_2 = (0,2.598,5.5)`,
+  `|o_1 - o_2| = a_2 = 3`). The key and its checkpoint 4 are corrected and carry a dated correction notice; marks and
+  the arm matrix are unaffected, since the closed form was verified from the link-matrix product and never depended on
+  that prose. This is the origin of note item 1 above.
+  **Confirmed pacing problem (twice now, not a one-off):** mock 1 ended with Q1(d) blank; mock 2 ended with Q1(c),
+  Q1(d) and all of Section C blank - 10 of the 13 marks lost were *blank, not wrong*. The script shows three separate
+  drawings of the link-coordinate diagram, two struck through. Recorded as exam technique in the marked file (draw the
+  frames once; write the three link matrices straight off a correct table, since that is the cheapest mark on the
+  paper; budget roughly Q1 18 min / Q2 12 min), deliberately **not** written into the `.tex` notes, which are subject
+  notes rather than exam technique.
+  Compilation: both notes rebuilt with `xelatex` (`notes.pdf` 7 pages, `beginner-notes.pdf` 6 -> 7 pages) and the
+  changed pages visually inspected.
 - 2026-09-18 Quiz 1 mock 2 (quiz-prep stage 3, second pass). Built `quizzes/quiz-01-mock-02.html` (answer-free;
 30-minute timer over Q1+Q2 with Section C untimed, localStorage under its own key `ee6221-quiz1-mock2` so mock 1's
 saved state is untouched, per-question "answered on paper" toggles, plain-text export, two new inline SVG figures,

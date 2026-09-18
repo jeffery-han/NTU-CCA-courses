@@ -98,6 +98,32 @@ Use this construction order:
 \item Check the final rotation block is orthonormal and the translation has length units.
 \end{enumerate}
 
+\paragraph{Where each frame's origin actually lands.}
+The two translation parameters do not just appear in the matrix --- they \emph{move the origin}, and
+knowing where each origin ends up is what makes the table readable. Reading
+${}^{k-1}T_k=\mathrm{Rot}(z,\theta_k)\mathrm{Trans}(z,d_k)\mathrm{Trans}(x,a_k)\mathrm{Rot}(x,\alpha_k)$
+left to right: $d_k$ slides the origin along $z_{k-1}$, then $a_k$ slides it along the new $x_k$. So
+the translation column of ${}^{k-1}T_k$ is $(a_kc_k,\ a_ks_k,\ d_k)$, and frame $k$'s origin sits
+$a_k$ away from frame $k-1$'s whenever $a_k\neq0$.
+
+For the articulated (RRR) waist/shoulder/elbow arm, with rows
+$(\theta_1,d_1,0,90^\circ)$, $(\theta_2,0,a_2,0)$, $(\theta_3,0,a_3,0)$, the origins therefore land
+on the physical landmarks:
+\begin{itemize}
+\item frame 1 --- the \textbf{shoulder}, a height $d_1$ up the column ($a_1=0$, so no sideways step);
+\item frame 2 --- the \textbf{elbow}, a distance $a_2$ out along link 2;
+\item frame 3 --- the \textbf{wrist}, a distance $a_3$ out along link 3.
+\end{itemize}
+This is exactly why $a_2$ and $a_3$ \emph{are} the link lengths: $x_k$ runs along the link, so the
+step along $x_k$ is the link.
+
+\paragraph{Common pitfall.}
+$a_k=0$ does not mean frames $k-1$ and $k$ coincide. It means frame $k$'s origin stays
+\emph{on the $z_{k-1}$ axis} --- there is no common normal to step along, because the two joint axes
+intersect. The frames can still be separated by $d_k$ along that axis, and they are still different
+frames with different orientations. In the arm above, $a_1=0$ puts the shoulder origin on the column
+axis; frames 1 and 2 remain a full link apart.
+
 \paragraph{One row per joint --- and a rigid tool is not a joint.}
 The table has exactly as many rows as the arm has \emph{joints}. It is tempting to give a row to
 every offset you can see in the drawing, but a fixed tool of length $L_t$ bolted to the last link
@@ -223,8 +249,28 @@ one cross product; guessing all three columns is how orthonormality gets lost.
 \item \textbf{Translation} --- the centroid of the part \emph{in its target location}. For a place
       pose that stacks part $A$ on part $B$, the height is
       $z = z_B + \tfrac12 h_B + \tfrac12 h_A$: rise to $B$'s top surface, then lift by $A$'s own
-      half-height. Both half-heights, or the part ends up buried in the one below it.
+      half-height. Both half-heights, or the part ends up buried in the one below it. Three terms,
+      every time --- and compute them from the dimensions in front of you, never from a number you
+      remember from a similar problem.
 \end{enumerate}
+
+\paragraph{The pick and the place are two different orientations.}
+Run the recipe above \emph{twice}, because $r_2$ depends on how the part is lying \emph{at that
+moment}, and a place operation may well re-orient it:
+\begin{itemize}
+\item at the \textbf{pick}, use the part's \emph{current} long-axis direction;
+\item at the \textbf{place}, use its \emph{target} long-axis direction --- which is whatever the task
+      demands, for example ``aligned with the part underneath''.
+\end{itemize}
+If the two directions differ by $90^\circ$, so do the two gripper frames, and
+$R_{\text{place}}=R_z(\pm90^\circ)R_{\text{pick}}$. If they are the same, $R$ is unchanged and only
+the translation moves. Deciding which case you are in is the whole question --- and both frames are
+perfectly valid rotations, so orthonormality and $\det R=+1$ will \emph{not} catch the mistake of
+attaching the right matrix to the wrong pose.
+
+The cheap habit: before writing either matrix, write the long-axis direction for that pose on its own
+line (``long $\parallel y_0$'' then ``long $\parallel x_0$''). The jaw direction is then forced --- it
+is the perpendicular one --- and the two poses cannot be interchanged by accident.
 \source{\texttt{resources/lecture-01-manipulator-kinematics.pdf}, pp.~118--132; tool-frame column
 naming (normal/sliding/approach) pp.~57--58.}
 

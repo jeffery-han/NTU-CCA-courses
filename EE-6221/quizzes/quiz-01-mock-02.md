@@ -21,6 +21,12 @@ $$
 **Total: 20 core marks + 5 predicted = 25.** Same allocation as Mock 1 (Q1 = 12, Q2 = 8, Section
 C = 5), because the format evidence for that shape is the high-confidence part of the intel.
 
+> **Correction, 2026-09-18.** The Q1(a) frame table originally gave frame 2's origin as the
+> shoulder and claimed frames 1 and 2 coincide. Both were wrong — frame 2 is at the elbow. Found
+> when the first sat attempt drew it correctly and disagreed with the key. Corrected below; the
+> marks, the arm matrix, and every other answer are unaffected (the closed form was verified from
+> the link-matrix product, which never depended on that prose).
+
 ## How this paper was chosen (and what it is *not*)
 
 Mock 2 covers the same syllabus as Mock 1 from a different angle. The changes are architectural,
@@ -58,9 +64,14 @@ One valid assignment (frame 0 at the base, $z_0$ up the column, $x_0$ a fixed ho
 | Frame | origin | $z$ axis | $x$ axis |
 |---|---|---|---|
 | 0 | base, on the column axis | up the column (waist axis) | fixed horizontal reference |
-| 1 | on the column axis at height $d_1$ (the shoulder) | **horizontal**, along the shoulder axis | common normal of $z_0,z_1$ — horizontal, perpendicular to $z_1$ |
-| 2 | shoulder | along $z_1$ (elbow axis $\parallel$ shoulder axis) | along link 2, from shoulder toward elbow |
-| 3 | wrist point | along $z_2$ | along link 3, from elbow toward wrist |
+| 1 | on the column axis at height $d_1$ — the **shoulder** | **horizontal**, along the shoulder axis | common normal of $z_0,z_1$ — horizontal, perpendicular to $z_1$ |
+| 2 | the **elbow** | along $z_1$ (elbow axis $\parallel$ shoulder axis) | along link 2, from shoulder toward elbow |
+| 3 | the **tool tip** (or the wrist point, if $L_t$ is post-multiplied instead of folded into $a_3$) | along $z_2$ | along link 3 |
+
+Each row's $a_k$ *moves the origin*: ${}^{1}T_2$ has translation column $(a_2c_2,a_2s_2,0)$, so
+frame 2 lands a distance $a_2$ from frame 1 — at the elbow, not the shoulder. Verified numerically at
+the part-(d) configuration: $o_0=(0,0,0)$, $o_1=(0,0,4)$, $o_2=(0,2.598,5.5)$, $o_3=(0,2.598,8.5)$,
+with $\lvert o_1-o_2\rvert=a_2=3$ and $\lvert o_2-o_3\rvert=a_3+L_t=3$.
 
 Mark scheme:
 - 1 — $z_0$ vertical along the waist axis; origin of frame 1 lifted to the shoulder so that
@@ -70,9 +81,10 @@ Mark scheme:
 - 1 — every $x_k$ along the common normal / $z_{k-1}\times z_k$: in particular $x_2$ **along link 2**
   and $x_3$ **along link 3**, which is what makes $a_2,a_3$ the link lengths. Right-handed
   $y_k=z_k\times x_k$ shown or implied.
-- 1 — all three joints identified as revolute with $\theta_k$ starred; origins on the correct axes
-  (frame 1 and 2 origins coincide at the shoulder, since the shoulder axis intersects the column:
-  $a_1=0$).
+- 1 — all three joints identified as revolute with $\theta_k$ starred; origins on the correct
+  landmarks — frame 1 at the shoulder, frame 2 at the elbow, frame 3 at the wrist/tool tip.
+  $a_1=0$ means frame 1's origin lies **on the column axis** (the shoulder axis intersects it, so
+  row 1 has no common-normal offset); it does *not* mean frames 1 and 2 coincide.
 
 *Non-uniqueness:* $\alpha_1=-90^\circ$, a different $x_0$, or putting $d_1$ in row 1 vs. a fixed
 base offset are all acceptable. Mark against the student's own diagram; the invariants are in (d).
