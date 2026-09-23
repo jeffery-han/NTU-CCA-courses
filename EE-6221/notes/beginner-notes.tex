@@ -272,12 +272,57 @@ Finally subtract the tool offset to find the wrist, then read off the slider pos
 For this planar model, a feasible target has $\widehat w_2=\widehat w_5=0$, $\rho>0$, and recovered joints within their travel limits. Substitution checks the signs: $\cos\theta_3=\widehat w_4/\rho$ and $\sin\theta_3=-\widehat w_6/\rho$, so $d_1-L\sin\theta_3=\widehat w_3$ and $d_2+L\cos\theta_3=\widehat w_1$. A full tool-configuration target fixes all four joints: $\theta_3$ is periodic, while the exponential encodes one unwrapped $\theta_4$ value. A position-only target does not uniquely determine $\theta_3$ or $\theta_4$.
 \source{\texttt{resources/exercises-kinematics-not-for-submission.pdf}, Problem~1(c), p.~1; \texttt{resources/exercises-kinematics-solutions.pdf}, pp.~1--2. The step-by-step explanation and feasibility check are supplementary}
 
+\paragraph{The learner's upward-positive frame assignment.}
+An equally valid convention makes positive $\theta_3$ point the tool toward $+z$.
+With standard D--H order $R_z(\theta)T_z(d)T_x(a)R_x(\alpha)$, the learner's rows
+$(\theta,d,a,\alpha)$ are
+$(\pi/2,d_1,0,\pi/2)$, $(-\pi/2,d_2,0,\pi/2)$,
+$(\pi+\theta_3,0,0,\pi/2)$, and $(\theta_4-\pi/2,L,0,0)$.
+In particular, the third row's $\alpha_3=+\pi/2$ gives
+\[
+ {}^2T_3=\begin{bmatrix}
+ -c_3&0&-s_3&0\\
+ -s_3&0& c_3&0\\
+ 0&1&0&0\\
+ 0&0&0&1
+ \end{bmatrix},
+ \qquad c_3=\cos\theta_3,\quad s_3=\sin\theta_3.
+\]
+Multiplying all four rows, with $c_4=\cos\theta_4$ and $s_4=\sin\theta_4$, gives
+\[
+ {}^0T_4=\begin{bmatrix}
+ -s_3s_4&-s_3c_4&c_3&d_2+Lc_3\\
+ c_4&-s_4&0&0\\
+ c_3s_4&c_3c_4&s_3&d_1+Ls_3\\
+ 0&0&0&1
+ \end{bmatrix}.
+\]
+Thus $p=(d_2+Lc_3,0,d_1+Ls_3)^\trans$ and $r_3=(c_3,0,s_3)^\trans$.
+The complete rotation must have determinant $+1$;
+a handwritten matrix with this same $p$ and $r_3$ can still have incorrect first two columns.
+Using $\theta_4$ as the physical roll measured from this frame's zero-roll reference,
+\[
+ w=(d_2+Lc_3,\ 0,\ d_1+Ls_3,\ e^{\theta_4/\pi}c_3,\ 0,\ e^{\theta_4/\pi}s_3)^\trans.
+\]
+For a target $\widehat w$, set $\rho=\sqrt{\widehat w_4^2+\widehat w_6^2}>0$.
+First recover the approach direction and roll, then subtract $Lr_3$ from the tip to find the wrist:
+\[
+ \theta_3=\operatorname{atan2}(\widehat w_6,\widehat w_4),\qquad
+ \theta_4=\pi\ln\rho,\qquad
+ d_2=\widehat w_1-L\frac{\widehat w_4}{\rho},\qquad
+ d_1=\widehat w_3-L\frac{\widehat w_6}{\rho}.
+\]
+Require $\widehat w_2=\widehat w_5=0$ and check joint limits. This changes
+the sign used to recover $\theta_3$ from the supplied solution, but the wrist-offset
+subtraction retains the same form when expressed through $\widehat w_6/\rho$.
+\source{\texttt{resources/exercises-kinematics-not-for-submission.pdf}, Problem~1, p.~1; learner-supplied D--H frame sketch and calculation, 2026-09-23. The upward-positive convention and matrix correction are supplementary}
+
 \section{\enspace From a geometric path to a timed trajectory}
 A path specifies where the tool travels; a trajectory also specifies when it occupies each point. Writing $w(t)=\Gamma(s(t))$ separates the geometric curve $\Gamma$ from the timing law $s(t)$. This distinction lets the same collision-free path be reused with slower or faster motion.
 
 For one segment, a cubic polynomial
 \[
- w(t)=at^3+bt^2+ct+d,qquad 0\leq t\leq T,
+ w(t)=at^3+bt^2+ct+d,\qquad 0\leq t\leq T,
 \]
 can satisfy two endpoint positions and two endpoint velocities. Componentwise, for $w(0)=w_0$, $\dot w(0)=v_0$, $w(T)=w_1$, and $\dot w(T)=v_1$,
 \begin{align*}
