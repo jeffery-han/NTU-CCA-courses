@@ -90,7 +90,7 @@ chirality issue as in the tutor's key. As an alternative, set θ5 = −π/2 and 
   Also, $z_1$ and $z_2$ intersect, so $a_2 = 0$ and frames 1 and 2 share an origin. Writing
   $a_2 = 0.2$ moves the arm 0.2 m perpendicular to the link. This is a genuine gap, and it has been
   folded into the notes.
-- **Slip (repeat of Q1): x₃ direction (−1 in b).** θ3 + π points $x_3$ up while the 0.15 m link
+- **Slip (repeat of Q1): x₃ direction (inside the row-3 deduction above).** θ3 + π points $x_3$ up while the 0.15 m link
   hangs down. Point $x_3$ from $z_2$ toward $z_3$.
 - **Missing joint (−1 in a, −1 in b).** The arm has seven joints, but the table has six rows and
   there is no frame 7 or tool frame. The row-count check in the notes (count the variable entries,
