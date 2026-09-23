@@ -3,7 +3,7 @@
 **Paper:** `quiz-01-mock-05.html`. The questions are the Quiz-1-scope (kinematics) items from the
 unofficial tutor review slides `resources/ee6221-tutor-exam-review-2026.pdf`, pp. 4–26. Year labels
 are the tutor's. They refer to past **final-exam** questions, not to past Quiz 1 papers. The
-dynamics and control half (pp. 27–58) is outside Quiz 1 scope.
+dynamics and control half (pp. 27–58) is outside the recorded (unofficial) Quiz 1 scope.
 
 **Verification:** `quiz-01-mock-05-check.py` builds every D–H table below. For each table it finds
 a pose where each $z_{k-1}$ lies on joint $k$'s physical axis and the tool tip equals the figure's
