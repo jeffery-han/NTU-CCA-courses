@@ -304,6 +304,15 @@ Using $\theta_4$ as the physical roll measured from this frame's zero-roll refer
 \[
  w=(d_2+Lc_3,\ 0,\ d_1+Ls_3,\ e^{\theta_4/\pi}c_3,\ 0,\ e^{\theta_4/\pi}s_3)^\trans.
 \]
+There are six \emph{entries}, not six joint variables: the first three are the
+tool-tip coordinates $(p_x,p_y,p_z)$, and the last three are the scaled
+approach-vector coordinates. This robot has only four joint variables
+$(d_1,d_2,\theta_3,\theta_4)$. Since the mechanism moves in the base $xz$ plane,
+the tip has $p_y=0$ and its approach direction has $r_{3y}=0$; hence entries
+2 and 5 are zero. For a general requested vector
+$\widehat w=(\widehat w_1,\ldots,\widehat w_6)^\trans$, these two entries
+must be zero for the target to be reachable by this model. Writing them as
+zero at the outset merely specializes the target to a feasible planar one.
 For a target $\widehat w$, set $\rho=\sqrt{\widehat w_4^2+\widehat w_6^2}>0$.
 First recover the approach direction and roll, then subtract $Lr_3$ from the tip to find the wrist:
 \[

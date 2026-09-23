@@ -82,6 +82,7 @@
 
 ## Update record
 
+- 2026-09-23: Clarified in both PPRR inverse-kinematics notes that the tool vector has six coordinate entries but only four joint variables, and that planar motion forces entries 2 and 5 to zero for reachable targets. No files were organized or renamed. Both PDFs compiled with XeLaTeX and the revised pages were visually checked.
 - 2026-09-23: Checked the learner's PPRR D--H assignment ($\alpha_2=\alpha_3=+\pi/2$), corrected its third-row rotation, and added the upward-positive tool vector and inverse kinematics to both notes. The learner's photos remain conversation sources, not repository files; no course files were organized or renamed. Both PDFs compiled with XeLaTeX; the revised pages were visually checked.
 - 2026-09-23: Added a worked derivation of the PPRR tool-configuration vector and inverse kinematics from exercise Problem 1(c) to both canonical notes, using the supplied solution's sign convention. The beginner note explains the wrist-to-tip offset, scaled approach vector, quadrant-aware angle recovery, feasibility, and substitution check; the review note retains the equations and conditions. Both PDFs compiled with XeLaTeX and the added pages were visually checked. Other exercise parts remain pending.
 - 2026-09-18 Q1 visual walkthrough: added `quizzes/quiz-01-mock-02-q1-visual-answer.html`, an interactive answer for
