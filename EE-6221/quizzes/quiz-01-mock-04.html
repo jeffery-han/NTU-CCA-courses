@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EE6221 Quiz 1 — Final practice check</title>
+<link rel="stylesheet" href="quiz-assets/katex/katex.min.css">
+<style>
+:root { font: 17px/1.55 system-ui,sans-serif; color: #172334; background: #eef2f5; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+main { max-width: 850px; margin: 24px auto; padding: 34px 46px; background: white; box-shadow: 0 2px 18px #14263a19; }
+h1 { margin: 0; line-height: 1.2; } h2 { margin: 2rem 0 .5rem; border-top: 2px solid #183b59; padding-top: 1rem; }
+p,li { max-width: 74ch; } li { margin: .55rem 0; }
+.meta,figcaption { color: #435366; } .notice { border-left: 4px solid #b47412; background: #fff5e1; padding: .65rem 1rem; }
+figure { margin: 1.2rem 0; border: 1px solid #c8d2dc; padding: .5rem; break-inside: avoid; }
+svg { display: block; width: 100%; height: auto; } svg text { fill: #172334; font: 15px system-ui,sans-serif; }
+figcaption { font-size: .88rem; padding: .35rem .45rem; }
+table { border-collapse: collapse; width: 100%; margin: 1rem 0; } th,td { border: 1px solid #aab9c6; padding: .45rem .6rem; text-align: left; } th { background: #e9f0f5; }
+.write { min-height: 5rem; border-bottom: 1px solid #cad2d9; }
+.katex-display { overflow-x: auto; }
+@media (max-width:650px) { :root { font-size: 16px; } main { margin: 0; padding: 20px; } }
+@media print { :root { background: white; font-size: 11pt; } main { margin: 0; padding: 0; box-shadow: none; max-width: none; } h2 { break-after: avoid; } .write { min-height: 3rem; } }
+</style>
+<script defer src="quiz-assets/katex/katex.min.js"></script>
+<script defer src="quiz-assets/katex/contrib/auto-render.min.js"></script>
+<script defer src="quiz-assets/render-math.js"></script>
+</head>
+<body><main>
+<h1>EE6221 · Quiz 1 · Final practice check</h1>
+<p class="meta">20 marks · Suggested 30 minutes · Work on paper · Record your time: ______ minutes</p>
+<p class="notice"><strong>Unofficial new mock.</strong> These are new questions in the two-topic style suggested by the course exercise and unofficial past-student recollections. They are not an authentic previous quiz. The suggested time and readiness threshold below are practice choices, not NTU rules.</p>
+<p><strong>Readiness check:</strong> after marking, a useful stopping signal is at least 18/20, including at least 5/6 on Q1(c–d), a correct jaw-closing direction in Q2, and completion within 30 minutes without notes. This checks these two topics only; use the current NTULearn notice for actual quiz scope and rules.</p>
+<p>Use standard D–H: \({}^{k-1}T_k=R_z(\theta_k)T_z(d_k)T_x(a_k)R_x(\alpha_k)\). State your chosen frame directions. Consistent alternative frame assignments are acceptable.</p>
+
+<h2>Question 1 · RRP arm (12 marks)</h2>
+<p>A two-link horizontal arm has a vertical lifting rail at its tip. Joint 1 rotates about the upward vertical base axis. Joint 2 rotates about a parallel upward vertical axis at the elbow. Joint 3 moves the tool point <strong>upward</strong> along the vertical rail by signed displacement \(q_3\). At \(q_3=0\), the horizontal links and tool point are at height \(h\) above the floor. There is no extra tool offset or wrist joint.</p>
+<figure>
+<svg viewBox="0 0 760 325" role="img" aria-label="Two-view RRP arm drawing: top view shows base, link L1 to elbow, link L2 to vertical rail; side view shows fixed height h and upward moving tool point q3.">
+<defs><marker id="tip" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8Z" fill="#24394c"/></marker></defs>
+<text x="24" y="28" font-weight="700">Top view · arbitrary pose</text>
+<line x1="75" y1="265" x2="410" y2="265" stroke="#24394c" stroke-width="2" marker-end="url(#tip)"/><text x="417" y="271">x₀</text>
+<line x1="75" y1="265" x2="75" y2="48" stroke="#24394c" stroke-width="2" marker-end="url(#tip)"/><text x="61" y="43">y₀</text>
+<line x1="75" y1="265" x2="200" y2="145" stroke="#205d87" stroke-width="13" stroke-linecap="round"/>
+<line x1="200" y1="145" x2="370" y2="165" stroke="#205d87" stroke-width="13" stroke-linecap="round"/>
+<g fill="white" stroke="#205d87" stroke-width="3"><circle cx="75" cy="265" r="9"/><circle cx="200" cy="145" r="9"/><circle cx="370" cy="165" r="9"/></g>
+<text x="24" y="295">J₁: base axis z₀ ↑</text><text x="170" y="127">J₂: elbow axis z₁ ↑</text><text x="330" y="143">J₃: rail axis z₂ ↑</text>
+<text x="114" y="185">L₁</text><text x="278" y="143">L₂</text>
+<text x="478" y="28" font-weight="700">Side view · not to scale</text>
+<line x1="495" y1="283" x2="720" y2="283" stroke="#435366" stroke-width="2"/>
+<line x1="540" y1="283" x2="540" y2="160" stroke="#205d87" stroke-width="12"/>
+<line x1="540" y1="160" x2="650" y2="160" stroke="#205d87" stroke-width="10"/>
+<line x1="650" y1="160" x2="650" y2="77" stroke="#205d87" stroke-width="3" marker-end="url(#tip)"/>
+<circle cx="650" cy="77" r="5" fill="#205d87"/>
+<line x1="510" y1="283" x2="510" y2="160" stroke="#435366" stroke-dasharray="5 4"/>
+<text x="491" y="223">h</text><text x="660" y="122">q₃ ↑</text><text x="660" y="75">tool point</text>
+</svg>
+<figcaption>Figure 1. The top view shows only the linkage; the vertical rail is seen in the side view. All three joint axes point along \(+z_0\), which is out of the top-view page. The drawn pose is illustrative; use the numerical angles given below for part (d).</figcaption>
+</figure>
+<table><thead><tr><th>\(L_1\)</th><th>\(L_2\)</th><th>\(h\)</th><th>\(\theta_1\)</th><th>\(\theta_2\)</th><th>\(q_3\)</th></tr></thead><tbody><tr><td>4</td><td>3</td><td>5</td><td>\(90^\circ\)</td><td>\(90^\circ\)</td><td>1</td></tr></tbody></table>
+<ol>
+<li><strong>(a) 3 marks.</strong> Draw frames \(\{0\},\{1\},\{2\},\{3\}\) and mark each origin, \(z_k\), and \(x_k\). Put frame 1 at the elbow, frame 2 at the rail, and frame 3 at the tool point.</li>
+<li><strong>(b) 3 marks.</strong> Write the three D–H rows \((\theta_k,d_k,a_k,\alpha_k)\); mark each joint variable and show where \(h\) enters.</li>
+<li><strong>(c) 3 marks.</strong> Write \({}^{0}T_1\), \({}^{1}T_2\), and \({}^{2}T_3\), including each complete translation column.</li>
+<li><strong>(d) 3 marks.</strong> Give symbolic \({}^{0}T_3\), then evaluate its rotation and position at the values in the table. Check your result against the link directions in a quick top-view sketch of the <em>numeric</em> pose.</li>
+</ol><div class="write" aria-label="Space for Question 1 working"></div>
+
+<h2>Question 2 · Pick and place (8 marks)</h2>
+<p>Two rectangular blocks rest flat on a table. The gripper picks A from above by contacting its <strong>two long side faces</strong>, keeps holding it, and places it on B with their centroids and long axes aligned. The base axes \(x_0,y_0\) lie in the table plane; \(z_0\) points upward. All coordinates and dimensions use the same units.</p>
+<table><thead><tr><th>Part</th><th>Current centroid \((x_0,y_0,z_0)\)</th><th>Footprint</th><th>Height</th></tr></thead><tbody>
+<tr><td>A</td><td>\((5,11,1)\)</td><td>8 along \(y_0\); 2 along \(x_0\)</td><td>2</td></tr>
+<tr><td>B</td><td>\((12,4,1.5)\)</td><td>6 along \(x_0\); 3 along \(y_0\)</td><td>3</td></tr>
+</tbody></table>
+<figure>
+<svg viewBox="0 0 760 300" role="img" aria-label="Top view of two separate blocks: A is long vertically parallel to y0; B is long horizontally parallel to x0; x0 points right and y0 up.">
+<defs><marker id="axis-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8Z" fill="#24394c"/></marker></defs>
+<line x1="65" y1="270" x2="695" y2="270" stroke="#24394c" stroke-width="2" marker-end="url(#axis-arrow)"/><text x="704" y="276">x₀</text>
+<line x1="65" y1="270" x2="65" y2="32" stroke="#24394c" stroke-width="2" marker-end="url(#axis-arrow)"/><text x="51" y="28">y₀</text>
+<rect x="205" y="54" width="64" height="177" rx="2" fill="#b8d5e6" stroke="#183b59" stroke-width="2"/>
+<text x="229" y="151" font-size="23">A</text>
+<rect x="452" y="168" width="200" height="65" rx="2" fill="#d8c8a8" stroke="#6d542c" stroke-width="2"/>
+<text x="542" y="208" font-size="23">B</text>
+<text x="280" y="96">A's long axis ∥ y₀</text><text x="465" y="155">B's long axis ∥ x₀</text>
+</svg>
+<figcaption>Figure 2. Top view before picking. The blocks have different long-axis directions. Draw the jaw motion yourself; finger length does not determine the sliding vector.</figcaption>
+</figure>
+<p>Use \(R=[\,r_1\ r_2\ r_3\,]\): normal, jaw sliding/open-close, approach. For top-down contact, take \(r_3=-z_0\). Either consistent sign of the jaw axis is acceptable.</p>
+<ol>
+<li><strong>(a) 3 marks.</strong> Draw two jaws around A's long faces. State the jaw closing vector \(r_2\), calculate \(r_1\), and give \({}^{0}T_{\mathrm{pick}}\).</li>
+<li><strong>(b) 3 marks.</strong> Find A's destination centroid and give a physically consistent \({}^{0}T_{\mathrm{place}}\) that aligns its long axis with B's.</li>
+<li><strong>(c) 2 marks.</strong> Check both rotation matrices are right-handed and give the magnitude of the required turn about \(z_0\).</li>
+</ol><div class="write" aria-label="Space for Question 2 working"></div>
+<p class="meta">Topic sources: <code>resources/exercises-kinematics-not-for-submission.pdf</code> p. 2; <code>resources/lecture-01-manipulator-kinematics.pdf</code> pp. 57–58, 82–84; format lead: <code>quizzes/quiz-01-intel.md</code> (unofficial recollections).</p>
+</main></body></html>
