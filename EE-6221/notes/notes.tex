@@ -222,6 +222,13 @@ Always $\operatorname{atan2}$, never $\arctan$: quadrant is preserved and $x=0$ 
   \min_{\mathbf q}\;\lVert\mathbf w(\mathbf q)-\widehat{\mathbf w}\rVert^2,
 \]
 and is more broadly applicable but requires an initial guess and careful convergence handling (pp.~96--97).
+Common analytic steps: use geometric offsets to isolate a wrist, square and add
+coupled $x,y$ equations to eliminate an angle, then recover angles with
+$\operatorname{atan2}(\sin\theta,\cos\theta)$. For a planar 2R arm,
+$\cos\theta_2=(x^2+y^2-\ell_1^2-\ell_2^2)/(2\ell_1\ell_2)$:
+its value must lie in $[-1,1]$, and the two signs of $\sin\theta_2$
+usually give two elbow branches. Dividing to form $\tan\theta$ loses quadrant
+information and fails at a zero denominator. Check every branch by forward substitution.
 
 For its articulated-robot examples, the handout represents a tool configuration by a six-vector
 \[

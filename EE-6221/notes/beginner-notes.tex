@@ -218,6 +218,29 @@ from a different geometry: $d_3+L_t=\sqrt{x^2+y^2}$ is a length, so only the pos
 physical.
 
 Analytic IK uses robot geometry to isolate variables and enumerate branches. Numerical IK instead iteratively reduces pose error, commonly through a Jacobian-based update. Numerical methods generalise better but need an initial guess, a convergence test, joint-limit handling, and a strategy near singularities.
+
+\paragraph{Why solving backward can take more than rearrangement.}
+The PPRR arm below is easy because its first two joints independently locate the wrist,
+joint~3 aims the tool, and joint~4 rolls it. Other arms couple their angles. For a planar
+two-revolute arm, for example,
+\[
+ x=\ell_1\cos\theta_1+\ell_2\cos(\theta_1+\theta_2),\qquad
+ y=\ell_1\sin\theta_1+\ell_2\sin(\theta_1+\theta_2).
+\]
+Squaring and adding eliminates $\theta_1$:
+\[
+ x^2+y^2=\ell_1^2+\ell_2^2+2\ell_1\ell_2\cos\theta_2.
+\]
+Thus a reachable target must give $-1\leq (x^2+y^2-\ell_1^2-\ell_2^2)/(2\ell_1\ell_2)\leq1$;
+usually the two signs of $\sin\theta_2$ give two elbow configurations. Once a sign is
+chosen, $\theta_1=\operatorname{atan2}(y,x)-
+\operatorname{atan2}(\ell_2\sin\theta_2,\ell_1+\ell_2\cos\theta_2)$.
+Dividing a sine equation by a cosine equation can isolate $\tan\theta$,
+but $\arctan(\tan\theta)$ loses the quadrant and division fails when the cosine is zero.
+When both sine and cosine are known, $\operatorname{atan2}(\sin\theta,\cos\theta)$
+retains the quadrant without that division. These are recurring analytic-IK techniques;
+they still depend on the robot geometry and must be followed by branch, reachability,
+and joint-limit checks.
 \source{\texttt{resources/lecture-01-manipulator-kinematics.pdf}, pp.~87--117.}
 
 \paragraph{The tool-configuration vector: six numbers instead of twelve.}
