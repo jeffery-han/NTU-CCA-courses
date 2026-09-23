@@ -90,6 +90,7 @@
 
 ## Update record
 
+- 2026-09-23: Marked Mock 5 Q1 attempt (18/20; record `quizzes/quiz-01-mock-05-attempt-2026-09-23-marked.md`, scan `quizzes/attempts/quiz-01-mock-05-q1-2026-09-23.jpg`). Added the $x_k$-direction / $a_k\ge0$ rule to both notes' D--H construction steps. Both PDFs recompiled with XeLaTeX. No files moved or renamed.
 - 2026-09-23: Added Mock 5 (`quizzes/quiz-01-mock-05.html`, `.md` key, `-check.py`): every Quiz-1-scope question from tutor deck pp. 4-26, with four new figure crops (year labels and solution marks removed). The tutor's handwritten keys were re-derived rather than adopted; one sign error (seven-joint row 6) and two typos were recorded in the key. No files moved or renamed; notes unchanged, so no LaTeX compilation needed.
 - 2026-09-23: Built `quizzes/quiz-01-tutor-kinematics-mock.html` from the tutor deck's wall-mounted D–H and position-only IK questions, with a clean crop of the wall-arm diagram and no answer slide. This is a new practice artifact; the notes were not changed, so no LaTeX compilation was needed.
 - 2026-09-23: Added an answer-free seven-joint D–H stretch page from the tutor deck's semester-exam-style Q1, with a readable cropped diagram. Audited `quizzes/quiz-01-intel.md` so the deck is not mistaken for Quiz 1 evidence; exact quiz format remains unverified. The canonical notes were not changed, so no LaTeX compilation was needed.
