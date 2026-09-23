@@ -17,6 +17,8 @@ The tutor's handwritten keys were **not** adopted blindly. Two errors and one ty
 2. **Q1, row 2 label (a typo).** p. 10 labels row 2 "q1"; it should be q2.
 3. **Q5, part (ii) (a typo).** p. 23 writes "y = 0.2 − C₁q₂…"; the "−" should be "=".
 
+**Total:** 80 source marks for Q1–Q4 (20 each) plus 20 practice-weighted marks for Q5–Q6 (10 each). The Q5–Q6 source marks are not shown, so the set totals 100.
+
 D–H tables are not unique. Grade an answer against **its own drawn frames**. A table is right when
 each row reproduces the drawn $x_{k-1}\to x_k$ and $z_{k-1}\to z_k$ steps.
 
@@ -90,8 +92,14 @@ equals $(0.16+0.18+0.17+0.20,\;0,\;0.47−0.15+0.05)$.
 
 **Correction.** With the tutor's rows 1–5, the pose that points the 0.15 m link down, as drawn, gives
 $\theta_3 = 180°$. At that pose $z_5$ points **down**, so $d_6 = +0.05$ would put the gripper
-0.05 m *below* the prismatic line. The figure shows the gripper 0.05 m *above* it. No choice of the
-revolute angles fixes this, because the checker searches all of them. Two equivalent fixes exist:
+0.05 m *below* the prismatic line. The figure shows the gripper 0.05 m *above* it.
+
+No joint angles can fix this, and the reason does not depend on the checker's search. θ3 rolls
+about link 2's own axis. A 180° roll therefore carries the 0.15 m link and the 0.05 m offset across
+*together*, while the prismatic stage still points outward. θ4, θ6 and θ7 cannot separate them
+either. So the tutor's rows always put the link and the offset on the **same** side of the arm. The
+figure has them on **opposite** sides: the link goes down and the gripper sits up. A cross-product
+sign test gives −1 for the tutor's rows and +1 for the figure. Two equivalent fixes exist:
 
 - Keep $\theta_5 = \pi/2$ and set $d_6 = −0.05$.
 - Set $\theta_5 = −\pi/2$ and keep $d_6 = +0.05$. This flips $x_5$ and therefore $z_5$.
