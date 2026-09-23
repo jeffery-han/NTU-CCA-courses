@@ -12,7 +12,7 @@
 \newcommand{\source}[1]{\par\smallskip\noindent\textit{Source: #1.}\par\smallskip}
 \title{EE6221 Robotics and Intelligent Sensors\\\large Beginner Notes: Manipulator Kinematics}
 \author{Living course note}
-\date{Updated: 24 August 2026}
+\date{Updated: 23 September 2026}
 \begin{document}
 \maketitle
 \noindent\textbf{Scope and sources.} This self-contained note develops the supplied manipulator material from first vocabulary through direct and inverse kinematics, elementary trajectory planning, Jacobians, and singularities. It uses \texttt{resources/lecture-01-manipulator-kinematics.pdf}, pp.~1--156, \texttt{resources/course-outline-part-01.pdf}, and the Week~1/2 transcripts as supporting teaching context. Newly archived public slides, assignments, and examinations are recorded in \texttt{STATUS.md} but are not treated as covered here until independently reviewed.
@@ -242,6 +242,35 @@ RPP arm, for instance --- has $q_n=0$, hence $e^{q_n/\pi}=1$ and $\lVert w_{4:6}
 $w$ comes out with $\lVert w_{4:6}\rVert\ne 1$ on an arm that cannot roll, the decode
 $q_n=\pi\ln\lVert w_{4:6}\rVert$ is claiming a roll the mechanism cannot perform.
 \source{\texttt{resources/lecture-01-manipulator-kinematics.pdf}, pp.~91--95.}
+
+\paragraph{Worked application: the planar PPRR exercise.}
+In Problem~1 of \texttt{resources/exercises-kinematics-not-for-submission.pdf}, the first slide moves the arm vertically by $d_1$ and the second moves it horizontally by $d_2$. Use metres throughout and write the tool length as $L=0.20\,\mathrm m$. Choose base $x$ to the right, base $z$ upward, and $y$ normal to the page. For the angle convention in the supplied worked solution, a positive $\theta_3$ tips the tool direction toward negative $z$; $\theta_4$ rolls the gripper about that direction. Other consistent D--H frame choices can reverse signs or add fixed angle offsets.
+
+The wrist is at $p_w=(d_2,0,d_1)^\trans$. The unit \emph{approach vector}---the third column of the tool rotation matrix---and tool-tip position are
+\[
+ r_3=\begin{bmatrix}\cos\theta_3\\0\\-\sin\theta_3\end{bmatrix},\qquad
+ p=p_w+Lr_3=\begin{bmatrix}d_2+L\cos\theta_3\\0\\d_1-L\sin\theta_3\end{bmatrix}.
+\]
+The $Lr_3$ term is the displacement from wrist to tool tip: this is why the $200$-mm length affects position even though the two revolute axes intersect at the wrist. Joint~4 rotates about $r_3$, so the course's tool-roll coordinate is $q_n=\theta_4$. Substituting into the definition above gives
+\[
+ w=\begin{bmatrix}
+ d_2+L\cos\theta_3\\0\\d_1-L\sin\theta_3\\
+ e^{\theta_4/\pi}\cos\theta_3\\0\\-e^{\theta_4/\pi}\sin\theta_3
+ \end{bmatrix}.
+\]
+
+Now suppose a desired vector $\widehat w=(\widehat w_1,\ldots,\widehat w_6)^\trans$ is given. Define $\rho=\sqrt{\widehat w_4^2+\widehat w_6^2}$. Since $r_3$ is a unit vector, $\rho=e^{\theta_4/\pi}>0$; dividing the last three components by $\rho$ recovers the direction. Recover the angle with the two-argument function $\operatorname{atan2}$, which retains the quadrant:
+\[
+ \theta_3=\operatorname{atan2}(-\widehat w_6,\widehat w_4),\qquad
+ \theta_4=\pi\ln\rho.
+\]
+Finally subtract the tool offset to find the wrist, then read off the slider positions:
+\[
+ d_2=\widehat w_1-L\frac{\widehat w_4}{\rho},\qquad
+ d_1=\widehat w_3-L\frac{\widehat w_6}{\rho}.
+\]
+For this planar model, a feasible target has $\widehat w_2=\widehat w_5=0$, $\rho>0$, and recovered joints within their travel limits. Substitution checks the signs: $\cos\theta_3=\widehat w_4/\rho$ and $\sin\theta_3=-\widehat w_6/\rho$, so $d_1-L\sin\theta_3=\widehat w_3$ and $d_2+L\cos\theta_3=\widehat w_1$. A full tool-configuration target fixes all four joints: $\theta_3$ is periodic, while the exponential encodes one unwrapped $\theta_4$ value. A position-only target does not uniquely determine $\theta_3$ or $\theta_4$.
+\source{\texttt{resources/exercises-kinematics-not-for-submission.pdf}, Problem~1(c), p.~1; \texttt{resources/exercises-kinematics-solutions.pdf}, pp.~1--2. The step-by-step explanation and feasibility check are supplementary}
 
 \section{\enspace From a geometric path to a timed trajectory}
 A path specifies where the tool travels; a trajectory also specifies when it occupies each point. Writing $w(t)=\Gamma(s(t))$ separates the geometric curve $\Gamma$ from the timing law $s(t)$. This distinction lets the same collision-free path be reused with slower or faster motion.

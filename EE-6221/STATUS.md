@@ -34,7 +34,8 @@
 | `resources/lecture-03-mobile-robot-kinematics.pdf` | pp. 1-40 | not yet covered | not yet covered | Part 1 lecture 3, Mobile Robots: locomotion, wheel types, steered-wheel parameters, WMR kinematics. Added 2026-09-11; **out of Quiz 1 scope**. |
 | `resources/additional-materials/week-05-velocity-kinematics.pdf` | pp. 1-3 | not yet covered | not yet covered | Week 5 annotated derivation: forward kinematic equations differentiated to velocity (opens the Jacobian thread). Added 2026-09-11. Pages are handwritten/annotated - native text extraction yields only fragments ("Forward kinematic equations", "=> velocity"); not OCR'd. **Out of Quiz 1 scope** and the evidence that the week-1-4 cutoff is a genuine topic boundary. |
 | `resources/additional-materials/control-worked-example.pdf` | pp. 1-5 | not yet covered | not yet covered | Worked control example: error `e = xd - x`, characteristic equation, setting the `Kv`/`Kp` gains from a natural frequency. Added 2026-09-11; **out of Quiz 1 scope**. |
-| `resources/exercises-kinematics-not-for-submission.pdf` | all pages | not yet covered | not yet covered | Ungraded practice exercises for the Kinematics unit. Two problems only: (1) planar PPRR arm D-H + direct kinematics + tool config + IK + Jacobian; (2) pick-and-place arm matrices for parts A/B. RedNote recollection (Kenta) states these two problems matched the two Quiz 1 topics exactly - basis for `quizzes/quiz-01-intel.md` and the mock's structure. |
+| `resources/exercises-kinematics-not-for-submission.pdf` | pp. 1-2 | Inverse kinematics: PPRR Problem 1(c) only | Inverse kinematics: PPRR Problem 1(c) only | Ungraded practice exercises. Problem 1(a), (b), (d) and Problem 2 remain not yet covered by either note; the current addition develops the tool vector and IK only. RedNote recollection (Kenta) links the two problem topics to Quiz 1; see `quizzes/quiz-01-intel.md`. |
+| `resources/exercises-kinematics-solutions.pdf` | pp. 1-3 | Inverse kinematics: PPRR Problem 1(c), pp. 1-2 | Inverse kinematics: PPRR Problem 1(c), pp. 1-2 | Supplied worked solution, added 2026-09-23. The notes use its angle convention for the tool vector and IK; its other calculations are not yet covered or independently adopted. D-H frame assignments need not be unique. |
 | `resources/additional-materials/review-week-01-rotations-translation.pdf` | all pages | Sections 3-4 (partial) | Frames, rotations, and homogeneous transformations (partial) | Instructor review slides for fundamental rotations/translation; not yet cross-checked against note content. |
 | `resources/additional-materials/review-week-02-dh-algorithm-summary.pdf` | all pages | Section 5 (partial) | Direct kinematics and D-H arm equation (partial) | Instructor DH-algorithm summary slides; not yet cross-checked. |
 | `resources/additional-materials/transformation-optional.pdf` | all pages | Sections 3-4 (partial) | Frames, rotations, and homogeneous transformations (partial) | Optional supplementary transformation-matrix slides. |
@@ -60,6 +61,7 @@
 
 ## File-organization record
 
+- 2026-09-23: `resources/EE6221_Assignment_solution.pdf -> resources/exercises-kinematics-solutions.pdf` (descriptive name for the supplied three-page exercise solution; content preserved).
 - 2026-09-18 attempt filing: `~/Downloads/Scanned Document 6.pdf -> quizzes/attempts/quiz-01-mock-02-2026-09-18.pdf` (copied, not moved; the original is left in Downloads for the learner to delete). New sibling file `quizzes/quiz-01-mock-02-attempt-2026-09-18-marked.md`.
 - 2026-09-17 attempt filing: new `quizzes/attempts/` directory (canonical home for sat scripts). `~/Downloads/Scanned Document 5.pdf -> quizzes/attempts/quiz-01-mock-01-2026-09-17.pdf` (copied, not moved - the original is left in Downloads for the learner to delete). New sibling file `quizzes/quiz-01-mock-01-attempt-2026-09-17-marked.md`.
 
@@ -80,6 +82,7 @@
 
 ## Update record
 
+- 2026-09-23: Added a worked derivation of the PPRR tool-configuration vector and inverse kinematics from exercise Problem 1(c) to both canonical notes, using the supplied solution's sign convention. The beginner note explains the wrist-to-tip offset, scaled approach vector, quadrant-aware angle recovery, feasibility, and substitution check; the review note retains the equations and conditions. Both PDFs compiled with XeLaTeX and the added pages were visually checked. Other exercise parts remain pending.
 - 2026-09-18 Q1 visual walkthrough: added `quizzes/quiz-01-mock-02-q1-visual-answer.html`, an interactive answer for
 mock 2 Question 1, built on the insight that the arm never needs a 3D drawing - `theta_1` only chooses which vertical
 plane the arm occupies, and `theta_2`/`theta_3` act as a planar 2R arm inside it, so a top view plus a side view of

@@ -17,7 +17,7 @@
 
 \title{EE6221 Robotics: Course Notes\\\large Robotics Foundations and Manipulator Kinematics}
 \author{Living course note}
-\date{Updated: 24 August 2026}
+\date{Updated: 23 September 2026}
 
 \begin{document}
 \maketitle
@@ -230,6 +230,21 @@ For its articulated-robot examples, the handout represents a tool configuration 
 where the scaled approach vector retains the approach direction and encodes the tool-roll angle $q_n$ in its magnitude (pp.~91--95). Treat this as the course's convenient task-coordinate representation for these examples, not as a universal replacement for rotation matrices. Recover the roll by $q_n=\pi\ln\lVert\mathbf w_{4:6}\rVert$; the exponential is used because $e^{q_n/\pi}>0$ and is invertible.
 
 \textbf{Do not substitute a base joint angle for $q_n$.} $q_n$ is the roll \emph{about} $\mathbf r_3$. Rotating the arm about its base column re-aims $\mathbf r_3$ rather than rolling about it. An arm with no roll DOF (e.g.\ cylindrical RPP) has $q_n=0$, so $e^{q_n/\pi}=1$ and $\lVert\mathbf w_{4:6}\rVert=1$ --- a free check on any $\mathbf w$ you write.
+
+\paragraph{Planar PPRR exercise, Problem~1(c).}
+With base $x$ right and $z$ up, $L=0.20\,\mathrm m$, and positive $\theta_3$ tipping the tool toward $-z$ as in the supplied solution, the wrist is $(d_2,0,d_1)^\trans$, $\mathbf r_3=(c_3,0,-s_3)^\trans$, and $q_n=\theta_4$. Hence
+\[
+ \mathbf w=(d_2+Lc_3,\ 0,\ d_1-Ls_3,\ e^{\theta_4/\pi}c_3,\ 0,\ -e^{\theta_4/\pi}s_3)^\trans.
+\]
+For desired $\widehat{\mathbf w}$, let $\rho=\sqrt{\widehat w_4^2+\widehat w_6^2}>0$. Then
+\[
+ \theta_3=\operatorname{atan2}(-\widehat w_6,\widehat w_4),\quad
+ \theta_4=\pi\ln\rho,\quad
+ d_2=\widehat w_1-L\widehat w_4/\rho,\quad
+ d_1=\widehat w_3-L\widehat w_6/\rho.
+\]
+Require $\widehat w_2=\widehat w_5=0$ and respect joint limits. $\theta_3$ is periodic; the exponential encodes one unwrapped $\theta_4$. The $200$-mm tool length may be included as $d_4$ or as a separate fixed tool transform, depending on the D--H frame split. The source's D--H signs are one valid assignment, not a unique convention.
+\par\emph{Sources: \texttt{resources/exercises-kinematics-not-for-submission.pdf}, Problem~1(c), p.~1; \texttt{resources/exercises-kinematics-solutions.pdf}, pp.~1--2.}
 
 \section{Trajectory planning}
 
