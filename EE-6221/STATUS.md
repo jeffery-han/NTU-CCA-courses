@@ -90,6 +90,7 @@
 
 ## Update record
 
+- 2026-09-23: Marked Mock 5 Q2 attempt (13/20; appended to `quizzes/quiz-01-mock-05-attempt-2026-09-23-marked.md`, scan `quizzes/attempts/quiz-01-mock-05-q2-2026-09-23.jpg`). Added a "length along a joint axis is a $d$" pitfall (roll-about-link case) with $x_k\perp z_{k-1}$ and tip-walk checks to both notes. Both PDFs recompiled with XeLaTeX. No files moved or renamed.
 - 2026-09-23: Marked Mock 5 Q1 attempt (18/20; record `quizzes/quiz-01-mock-05-attempt-2026-09-23-marked.md`, scan `quizzes/attempts/quiz-01-mock-05-q1-2026-09-23.jpg`). Added the $x_k$-direction / $a_k\ge0$ rule to both notes' D--H construction steps. Both PDFs recompiled with XeLaTeX. No files moved or renamed.
 - 2026-09-23: Added Mock 5 (`quizzes/quiz-01-mock-05.html`, `.md` key, `-check.py`): every Quiz-1-scope question from tutor deck pp. 4-26, with four new figure crops (year labels and solution marks removed). The tutor's handwritten keys were re-derived rather than adopted; one sign error (seven-joint row 6) and two typos were recorded in the key. No files moved or renamed; notes unchanged, so no LaTeX compilation needed.
 - 2026-09-23: Built `quizzes/quiz-01-tutor-kinematics-mock.html` from the tutor deck's wall-mounted D–H and position-only IK questions, with a clean crop of the wall-arm diagram and no answer slide. This is a new practice artifact; the notes were not changed, so no LaTeX compilation was needed.

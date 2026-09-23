@@ -151,6 +151,23 @@ intersect. The frames can still be separated by $d_k$ along that axis, and they 
 frames with different orientations. In the arm above, $a_1=0$ puts the shoulder origin on the column
 axis; frames 1 and 2 remain a full link apart.
 
+\paragraph{Common pitfall: a length along a joint axis is a $d$, not an $a$.}
+Decide the column by \emph{direction}, not by whether the dimension looks like a ``link''. The rule
+is: $d_k$ is measured along $z_{k-1}$, and $a_k$ is measured along $x_k$, perpendicular to both
+axes. Take a roll joint that spins a link about the link's own centre line, such as $\theta_3$ in
+Mock~5 Q2. Its axis $z_2$ runs \emph{along} that link, so the link's $0.20$\,m length is $d_3$.
+Two things follow:
+\begin{itemize}
+\item $a_2=0$. The shoulder axis $z_1$ and the roll axis $z_2$ intersect, so frames 1 and 2 share
+      an origin.
+\item Putting $0.20$ in $a_2$ is wrong. It slides frame 2 along $x_2$, which is perpendicular to the
+      link, and so moves the whole arm sideways.
+\end{itemize}
+Two cheap checks catch this. First, every $x_k$ must be perpendicular to $z_{k-1}$. If your drawn
+$y_k$ and $z_k$ force $x_k$ to be parallel to $z_{k-1}$, the frame is not a D--H frame. Second,
+before handing in, walk the tool tip from the base along your table. At a drawn pose it must land at
+the figure's dimension sums.
+
 \paragraph{One row per joint --- and a rigid tool is not a joint.}
 The table has exactly as many rows as the arm has \emph{joints}. It is tempting to give a row to
 every offset you can see in the drawing, but a fixed tool of length $L_t$ bolted to the last link
