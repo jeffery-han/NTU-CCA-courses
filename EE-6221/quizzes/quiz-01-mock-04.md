@@ -2,43 +2,44 @@
 
 **Sit `quiz-01-mock-04.html` before reading this file.** This is an unofficial new practice paper, not a previous quiz. Core total: 20 marks. The 30-minute target and readiness threshold are study decisions, not NTU rules.
 
-## Q1 — RRP arm (12)
+## Q1 — articulated RRR arm (12)
 
-Use the frame locations specified in the question, with every $z$ axis upward. Take $x_1$ along link 1, $x_2$ along link 2, and $x_3\parallel x_2$; set $y_k=z_k\times x_k$. One valid standard D–H table is:
+One valid standard D–H assignment puts frame 0 at the base with $z_0$ up, frame 1 at the shoulder with $z_1$ horizontal along $-y_0$ when $\theta_1=0$, frame 2 at the elbow with $z_2\parallel z_1$, and frame 3 at the tool point with $z_3\parallel z_2$. At the zero references, $x_1,x_2,x_3$ point outward along the arm; the $x_k$ directions rotate with their joints. Complete each right-handed frame with $y_k=z_k\times x_k$.
 
-| $k$ | $\theta_k$ | $d_k$ | $a_k$ | $\alpha_k$ | joint variable |
+| $k$ | $\theta_k$ | $d_k$ | $a_k$ | $\alpha_k$ | variable |
 |---|---:|---:|---:|---:|---|
-| 1 | $\theta_1$ | $h$ | $L_1$ | $0$ | $\theta_1$ |
+| 1 | $\theta_1$ | $h$ | $0$ | $+90^\circ$ | $\theta_1$ |
 | 2 | $\theta_2$ | $0$ | $L_2$ | $0$ | $\theta_2$ |
-| 3 | $0$ | $q_3$ | $0$ | $0$ | $q_3$ |
+| 3 | $\theta_3$ | $0$ | $L_3$ | $0$ | $\theta_3$ |
 
-With $c_i=\cos\theta_i$ and $s_i=\sin\theta_i$,
+The first twist changes the joint axis from vertical to horizontal; the shoulder and elbow axes are parallel, so later twists are zero. Writing $c_i=\cos\theta_i$ and $s_i=\sin\theta_i$,
 
 $$
-{}^0T_1=\begin{bmatrix}c_1&-s_1&0&L_1c_1\\s_1&c_1&0&L_1s_1\\0&0&1&h\\0&0&0&1\end{bmatrix},\quad
+{}^0T_1=\begin{bmatrix}c_1&0&s_1&0\\s_1&0&-c_1&0\\0&1&0&h\\0&0&0&1\end{bmatrix},\quad
 {}^1T_2=\begin{bmatrix}c_2&-s_2&0&L_2c_2\\s_2&c_2&0&L_2s_2\\0&0&1&0\\0&0&0&1\end{bmatrix},\quad
-{}^2T_3=\begin{bmatrix}1&0&0&0\\0&1&0&0\\0&0&1&q_3\\0&0&0&1\end{bmatrix}.
+{}^2T_3=\begin{bmatrix}c_3&-s_3&0&L_3c_3\\s_3&c_3&0&L_3s_3\\0&0&1&0\\0&0&0&1\end{bmatrix}.
 $$
 
-Writing $c_{12}=\cos(\theta_1+\theta_2)$ and $s_{12}=\sin(\theta_1+\theta_2)$,
-
-$$
-{}^0T_3=\begin{bmatrix}
-c_{12}&-s_{12}&0&L_1c_1+L_2c_{12}\\
-s_{12}&c_{12}&0&L_1s_1+L_2s_{12}\\
-0&0&1&h+q_3\\0&0&0&1
-\end{bmatrix}.
-$$
-
-At $\theta_1=90^\circ$, $\theta_2=90^\circ$, $L_1=4$, $L_2=3$, $h=5$, $q_3=1$, the accumulated angle is $180^\circ$. Link 1 goes 4 along $+y_0$; link 2 goes 3 along $-x_0$. Therefore $p=(-3,4,6)^T$ and
+Let $c_{23}=\cos(\theta_2+\theta_3)$, $s_{23}=\sin(\theta_2+\theta_3)$, and $r=L_2c_2+L_3c_{23}$. Then
 
 $$
 {}^0T_3=\begin{bmatrix}
--1&0&0&-3\\0&-1&0&4\\0&0&1&6\\0&0&0&1
+c_1c_{23}&-c_1s_{23}&s_1&c_1r\\
+s_1c_{23}&-s_1s_{23}&-c_1&s_1r\\
+s_{23}&c_{23}&0&h+L_2s_2+L_3s_{23}\\
+0&0&0&1
 \end{bmatrix}.
 $$
 
-**Marks:** (a) 1 for vertical axes, 1 for specified origins, 1 for consistent $x$ directions/right-handed frames; (b) 1 each row; (c) 1 each complete link matrix; (d) 1 symbolic rotation, 1 symbolic position, 1 correct numeric pose plus directional check. Accept an alternative consistent D–H frame assignment only after checking its physical tool pose. The critical check is that $a_k$ produces $(a_k\cos\theta_k,a_k\sin\theta_k,d_k)$ in the preceding frame, not $(a_k,0,d_k)$ unless $\theta_k=0$.
+At $(\theta_1,\theta_2,\theta_3)=(0^\circ,90^\circ,-90^\circ)$, link 2 goes 4 upward from the shoulder and link 3 goes 3 along $+x_0$. Thus the tool point is $(3,0,3+4)=(3,0,7)$ and
+
+$$
+{}^0T_3=\begin{bmatrix}
+1&0&0&3\\0&0&-1&0\\0&1&0&7\\0&0&0&1
+\end{bmatrix}.
+$$
+
+**Marks:** (a) 1 for vertical waist/horizontal shoulder and elbow axes, 1 for base/shoulder/elbow/tool origins, 1 for consistent right-handed $x,y$ directions; (b) 1 for row 1 with $d_1=h$, $a_1=0$, and $\alpha_1=+90^\circ$, 1 each for rows 2 and 3; (c) 1 each complete link matrix; (d) 1 symbolic rotation, 1 symbolic position, 1 numeric result plus physical link-direction check. An alternative frame convention is acceptable if internally consistent and if it gives the same physical tool pose. A correct rotation with an unrotated link-length translation does not earn the symbolic-position mark.
 
 ## Q2 — pick and place (8)
 
@@ -66,4 +67,4 @@ For these signs, $R_{\rm place}R_{\rm pick}^T=R_z(+90^\circ)$: A's $+y_0$ long a
 
 The page's threshold is a practical stopping signal: at least 18/20 core, including at least 5/6 on Q1(c–d), a correct Q2 jaw direction, and a timed unassisted attempt. Meeting it supports stopping this D–H/pick-place drill; it does not verify every possible current Quiz 1 topic or official rule. The current NTULearn announcement controls those.
 
-Topic basis: `resources/exercises-kinematics-not-for-submission.pdf` p. 2, `resources/lecture-01-manipulator-kinematics.pdf` pp. 57–58 and 82–84, and the labelled unofficial format summary in `quizzes/quiz-01-intel.md`. All geometry and numbers in this mock are new.
+Topic basis: `resources/exercises-kinematics-not-for-submission.pdf` p. 2, `resources/lecture-01-manipulator-kinematics.pdf` pp. 57–58, 61–70, and 74–76, and the labelled unofficial format summary in `quizzes/quiz-01-intel.md`. All geometry and numbers in this mock are new.
