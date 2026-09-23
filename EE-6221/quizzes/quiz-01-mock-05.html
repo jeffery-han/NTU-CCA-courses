@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EE6221 Tutor Past-Paper Set</title>
+<link rel="stylesheet" href="quiz-assets/katex/katex.min.css">
+<style>
+:root { --ink:#172334; --muted:#435366; --bg:#eef2f5; --card:#fff; --line:#c8d2dc; --pill:#f3f6f9; --accent:#205d87; --warn:#b47412; --warnbg:#fff5e1;
+        font: 17px/1.55 system-ui,sans-serif; color: var(--ink); background: var(--bg); }
+@media (prefers-color-scheme: dark) { :root { --ink:#dfe7ef; --muted:#9fb0c2; --bg:#11181f; --card:#18222c; --line:#34475a; --pill:#1f2c38; --accent:#6fb3e0; --warn:#e0a54a; --warnbg:#2b2416; } }
+* { box-sizing: border-box; }
+body { margin: 0; padding-bottom: 4rem; background: var(--bg); }
+main { max-width: 860px; margin: 24px auto; padding: 34px 46px; background: var(--card); box-shadow: 0 2px 18px #14263a19; }
+h1 { margin: 0; line-height: 1.2; } h2 { margin: 2.2rem 0 .5rem; border-top: 2px solid var(--accent); padding-top: 1rem; }
+h3 { margin: 1.6rem 0 .3rem; }
+p,li { max-width: 76ch; } li { margin: .5rem 0; }
+.meta,figcaption { color: var(--muted); } .notice { border-left: 4px solid var(--warn); background: var(--warnbg); padding: .65rem 1rem; }
+.src { font-size: .85rem; color: var(--muted); }
+figure { margin: 1rem 0; border: 1px solid var(--line); padding: .5rem; background: #fff; break-inside: avoid; }
+figure img { display: block; width: 100%; height: auto; }
+figcaption { font-size: .85rem; padding: .35rem .45rem 0; color: #435366; }
+.marks { float: right; color: var(--muted); font-size: .92rem; }
+.katex-display { overflow-x: auto; overflow-y: hidden; }
+.answered-toggle { display: flex; align-items: center; gap: .55em; margin: .8em 0 .2em; font-size: .92rem; padding: .5em .7em; border: 1px dashed var(--line); border-radius: 8px; background: var(--pill); }
+textarea.work { width: 100%; min-height: 3.5em; font: 14px ui-monospace, monospace; padding: .6em; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); resize: vertical; }
+#bar { position: fixed; left: 0; right: 0; bottom: 0; background: var(--card); border-top: 1px solid var(--line); padding: .55em 1rem; display: flex; gap: .7em; align-items: center; justify-content: center; flex-wrap: wrap; font-size: .92rem; }
+#timer { font: 600 1.05rem ui-monospace, monospace; }
+button { font: inherit; padding: .4em .85em; border: 1px solid var(--line); border-radius: 8px; background: var(--pill); color: var(--ink); cursor: pointer; }
+dialog { max-width: 46rem; width: 92%; border: 1px solid var(--line); border-radius: 12px; background: var(--card); color: var(--ink); }
+dialog textarea { width: 100%; min-height: 20em; font: 12px ui-monospace, monospace; background: var(--bg); color: var(--ink); }
+@media (max-width:650px) { :root { font-size: 16px; } main { margin: 0; padding: 20px 16px; } }
+@media print { #bar, .answered-toggle, textarea.work { display: none; } main { margin: 0; padding: 0; box-shadow: none; max-width: none; } }
+</style>
+<script defer src="quiz-assets/katex/katex.min.js"></script>
+<script defer src="quiz-assets/katex/contrib/auto-render.min.js"></script>
+<script defer src="quiz-assets/render-math.js"></script>
+</head>
+<body><main>
+<h1>EE6221 · Quiz 1 scope · Tutor past-paper set (Mock 5)</h1>
+<p class="meta">6 questions · Work on paper · Timer counts up · Answer key: <code>quiz-01-mock-05.md</code> (open only after attempting)</p>
+<p class="notice"><strong>Source and status.</strong> These are the kinematics questions in the unofficial tutor review slides (<code>resources/ee6221-tutor-exam-review-2026.pdf</code>, pp. 4–26). The tutor labels them as past <em>final-exam</em> questions, not past Quiz 1 papers. The dynamics and control half of the slides (pp. 27–58) is outside the Quiz 1 scope and is left out. Each D–H question is exam-sized (20 marks), so this set is longer than a real quiz, which has two questions in about 30 minutes according to unofficial reports. Suggested practice timing: about 25 minutes per D–H question and 20 minutes per inverse-kinematics question. This timing is a study choice, not an NTU rule.</p>
+<p>Use standard D–H, \({}^{k-1}T_k=R_z(\theta_k)\,T_z(d_k)\,T_x(a_k)\,R_x(\alpha_k)\):</p>
+<ul>
+<li>\(\theta_k\) is the angle from \(x_{k-1}\) to \(x_k\), measured about \(z_{k-1}\).</li>
+<li>\(d_k\) is the distance from \(x_{k-1}\) to \(x_k\), measured along \(z_{k-1}\).</li>
+<li>\(a_k\) is the distance from \(z_{k-1}\) to \(z_k\), measured along \(x_k\).</li>
+<li>\(\alpha_k\) is the angle from \(z_{k-1}\) to \(z_k\), measured about \(x_k\).</li>
+</ul>
+\[ {}^{k-1}T_k=\begin{bmatrix}\cos\theta_k & -\cos\alpha_k\sin\theta_k & \sin\alpha_k\sin\theta_k & a_k\cos\theta_k\\ \sin\theta_k & \cos\alpha_k\cos\theta_k & -\sin\alpha_k\cos\theta_k & a_k\sin\theta_k\\ 0 & \sin\alpha_k & \cos\alpha_k & d_k\\ 0&0&0&1\end{bmatrix} \]
+<p>Draw every frame, including the base frame 0 and the tool frame. Consistent alternative frame choices are acceptable.</p>
+
+<h2>Section A · D–H modelling</h2>
+
+<h3>Q1 · Six-joint arm <span class="marks">20 marks</span></h3>
+<p class="src">Tutor p. 9, labelled 23-24 S2 Q1</p>
+<p>A robotic manipulator with six joints is shown in Figure A1.</p>
+<figure><img src="quiz-assets/ee6221-2023-2024-s2-q1-six-joint-figure.png" alt="Six-joint arm. Vertical base column with waist joint q1. The q2 axis is 0.47 m above the base, and a 0.16 m horizontal offset runs to the q2 pipe. Joint q3 is 0.15 m below that. Link 0.18 m runs to q4. A horizontal 0.17 m link runs to vertical axis q5. The gripper axis sits 0.05 m higher, and the gripper roll is q6 with 0.20 m to the tool tip."><figcaption>Figure A1 (cropped from the tutor slides)</figcaption></figure>
+<ol type="a">
+<li>Obtain the link coordinate diagram by using the Denavit–Hartenberg (D–H) algorithm. <span class="marks">(12)</span></li>
+<li>Derive the kinematic parameters of the robot based on the coordinate diagram obtained in part (a). <span class="marks">(8)</span></li>
+</ol>
+<label class="answered-toggle"><input type="checkbox" data-q="q1-paper"> Q1 answered on paper</label>
+<textarea class="work" data-q="q1-notes" placeholder="Optional: type your D–H table here (θ, d, a, α per row)."></textarea>
+
+<h3>Q2 · Seven-joint arm with a prismatic joint <span class="marks">20 marks</span></h3>
+<p class="src">Tutor p. 11, labelled 22-23 S2 Q1. The same robot is used by <code>quiz-01-stretch-01.html</code>.</p>
+<p>A robotic manipulator with seven joints is shown in Figure A2.</p>
+<figure><img src="quiz-assets/ee6221-2022-2023-s2-q1-seven-joint-figure-clean.png" alt="Seven-joint arm. Base θ1 is vertical, 0.55 m tall plus 0.10 m to the θ2 axis, which is offset 0.22 m horizontally. A 0.20 m link has roll θ3 about its own axis. A 0.15 m link runs to θ4, then prismatic d5 runs horizontally. θ6 is a vertical axis, the gripper is offset 0.05 m, and roll θ7 is 0.12 m from the tool tip."><figcaption>Figure A2 (cropped from the tutor slides)</figcaption></figure>
+<ol type="a">
+<li>Obtain the link coordinate diagram by using the D–H algorithm. <span class="marks">(12)</span></li>
+<li>Derive the kinematic parameters of the robot based on the coordinate diagram obtained in part (a). <span class="marks">(8)</span></li>
+</ol>
+<label class="answered-toggle"><input type="checkbox" data-q="q2-paper"> Q2 answered on paper</label>
+<textarea class="work" data-q="q2-notes" placeholder="Optional notes."></textarea>
+
+<h3>Q3 · Wall-mounted six-joint arm <span class="marks">20 marks</span></h3>
+<p class="src">Tutor pp. 13 and 15, labelled 24-25 S2 Q1. Dimensions are in centimetres.</p>
+<p>A robotic manipulator with six joints is mounted on a wall, as shown in Figure A3.</p>
+<figure><img src="quiz-assets/ee6221-2024-2025-s2-q1-wall-mounted-figure.png" alt="Wall-mounted arm. θ1 rolls about a horizontal axis out of the wall. θ2 is a vertical axis 25 cm from the wall. The prismatic d3 is raised 11 cm and runs horizontally to θ4. A 15 cm link runs to θ5. θ6 is the gripper roll, with 20 cm to the tool tip and a 4 cm lateral gripper offset."><figcaption>Figure A3 (cropped from the tutor slides)</figcaption></figure>
+<ol type="a">
+<li>Obtain the link coordinate diagram by using the D–H algorithm. <span class="marks">(11)</span></li>
+<li>Use the link coordinate diagram from part (a) to derive and tabulate the kinematic parameters of the robot. Compute the link-coordinate homogeneous transformation matrices of the first 3 joints, using the matrix given above. Multiplying the matrices is not required. <span class="marks">(9)</span></li>
+</ol>
+<label class="answered-toggle"><input type="checkbox" data-q="q3-paper"> Q3 answered on paper</label>
+<textarea class="work" data-q="q3-notes" placeholder="Optional notes."></textarea>
+
+<h3>Q4 · Six-joint arm on a prismatic column <span class="marks">20 marks</span></h3>
+<p class="src">Tutor p. 4 (the tutor's "problem definition" example). The slide labels it "22-23 S2", which conflicts with Q2's label, so its year is uncertain. The tutor gives no solution for it.</p>
+<p>A robotic manipulator with six joints is shown in Figure A4.</p>
+<figure><img src="quiz-assets/tutor-p04-six-joint-prismatic-base-figure.png" alt="Six-joint arm. A vertical prismatic column q1 carries a 0.15 m horizontal beam. Vertical revolute axis q2 drops 0.20 m to horizontal joint q3. A 0.19 m link runs to q4. A horizontal 0.18 m link and a 0.10 m drop lead to q5. Roll q6 has 0.25 m to the tool tip."><figcaption>Figure A4 (cropped from the tutor slides)</figcaption></figure>
+<ol type="a">
+<li>Obtain the link coordinate diagram by using the D–H algorithm. <span class="marks">(12)</span></li>
+<li>Derive the kinematic parameters of the robot based on the coordinate diagram obtained in part (a). <span class="marks">(8)</span></li>
+</ol>
+<label class="answered-toggle"><input type="checkbox" data-q="q4-paper"> Q4 answered on paper</label>
+<textarea class="work" data-q="q4-notes" placeholder="Optional notes."></textarea>
+
+<h2>Section B · Tool configuration and inverse kinematics</h2>
+
+<h3>Q5 · Four-variable arm on a mobile platform</h3>
+<p class="src">Tutor pp. 17 and 22 (year not labelled; marks not shown)</p>
+<p>A robot manipulator with four joint variables is mounted on a mobile platform. The transformation from the tool tip to the base coordinate frame is</p>
+\[ T_{\text{base}}^{\text{tool}}=\begin{bmatrix} -S_1S_3C_4-C_1S_4 & -S_1S_3S_4-C_1C_4 & -S_1C_3 & S_1q_2+0.25\,S_1C_3\\ C_1S_3C_4-S_1S_4 & -C_1C_3S_4-S_1C_4 & C_1C_3 & C_1q_2+0.25\,C_1C_3\\ -C_3C_4 & -C_3S_4 & -S_3 & -0.25\,S_3+0.25\\ 0&0&0&1\end{bmatrix} \]
+<p>Here \(q_1, q_2, q_3\) are the joint variables of the major axes, \(q_4\) is the tool roll angle, \(C_k=\cos q_k\) and \(S_k=\sin q_k\).</p>
+<ol type="i">
+<li>Derive the tool-configuration Jacobian matrix of the manipulator.</li>
+<li>Given \(x=0.2\), \(y=0.2\) and \(z=0\), solve the inverse kinematic problem to obtain \(q_1, q_2, q_3\). Orientation is not required.</li>
+<li>Determine the approach vector of the robot at this joint configuration.</li>
+</ol>
+<label class="answered-toggle"><input type="checkbox" data-q="q5-paper"> Q5 answered on paper</label>
+<textarea class="work" data-q="q5-notes" placeholder="Optional: q1, q2, q3 and the approach vector."></textarea>
+
+<h3>Q6 · Three-variable arm on a mobile robot</h3>
+<p class="src">Tutor p. 25, labelled 22-23 S2 Q3(b) (marks not shown)</p>
+<p>A robot manipulator with three joint variables \(q_1, q_2, q_3\) is mounted on a mobile robot. The link-coordinate homogeneous transformation from the base frame to the tool frame is</p>
+\[ T_{\text{base}}^{\text{tool}}=\begin{bmatrix} C_1C_2 & -S_1 & C_1S_2 & C_1S_2(q_3+0.1)\\ S_1C_2 & C_1 & S_1S_2 & S_1S_2(q_3+0.1)\\ -S_2 & 0 & C_2 & C_2(q_3+0.1)\\ 0&0&0&1\end{bmatrix} \]
+<p>Here \(S_1=\sin q_1\), \(S_2=\sin q_2\), \(C_1=\cos q_1\) and \(C_2=\cos q_2\).</p>
+<ol type="i">
+<li>Solve the inverse kinematic problem using an analytic method, expressing \((q_1,q_2,q_3)^{\mathsf T}\) in terms of the end-effector position \((x,y,z)^{\mathsf T}\). Orientation is not required.</li>
+<li>The robot is used to pick up an object whose centroid is at \(x=0.15\), \(y=0.25\), \(z=0.025\) units. Calculate the joint configuration, and discuss the problems associated with this task.</li>
+</ol>
+<label class="answered-toggle"><input type="checkbox" data-q="q6-paper"> Q6 answered on paper</label>
+<textarea class="work" data-q="q6-notes" placeholder="Optional notes."></textarea>
+
+<h2>Finish</h2>
+<p class="meta">Stop the timer, then press Export and paste the block into the grading chat. Include one photo per question, saved to <code>quizzes/attempts/quiz-01-mock-05-&lt;date&gt;.jpg</code>. If Copy does nothing on <code>file://</code>, use Download instead.</p>
+</main>
+
+<div id="bar"><span id="timer">0:00</span><button id="start">Start</button><button id="pause">Pause</button><button id="reset">Reset</button><button id="export">Export</button><button id="wipe">Clear saved</button></div>
+<dialog id="dlg"><p><strong>Copy this block</strong> into the grading chat.</p><textarea id="out" readonly></textarea>
+<p style="display:flex;gap:.6em"><button id="copy">Copy</button><button id="dl">Download .txt</button><button id="close">Close</button></p></dialog>
+
+<script>
+(function () {
+  var KEY = "ee6221-quiz1-mock5", st;
+  try { st = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { st = {}; }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
+  document.querySelectorAll("[data-q]").forEach(function (el) {
+    var q = el.dataset.q, box = el.type === "checkbox";
+    if (box) el.checked = !!st[q]; else el.value = st[q] || "";
+    el.addEventListener(box ? "change" : "input", function () { st[q] = box ? el.checked : el.value; save(); });
+  });
+  var t = st.elapsed || 0, tick = null, tEl = document.getElementById("timer");
+  function fmt(s) { return Math.floor(s / 60) + ":" + ("0" + s % 60).slice(-2); }
+  function render() { tEl.textContent = fmt(t); }
+  document.getElementById("start").onclick = function () { if (!tick) tick = setInterval(function () { t++; st.elapsed = t; save(); render(); }, 1000); };
+  function pause() { clearInterval(tick); tick = null; }
+  document.getElementById("pause").onclick = pause;
+  document.getElementById("reset").onclick = function () { pause(); t = 0; st.elapsed = 0; save(); render(); };
+  document.getElementById("wipe").onclick = function () { if (confirm("Clear saved answers and timer?")) { try { localStorage.removeItem(KEY); } catch (e) {} location.reload(); } };
+  render();
+  var Q = [["Q1 D-H six-joint (23-24 S2 Q1), 20 marks", 1], ["Q2 D-H seven-joint (22-23 S2 Q1), 20 marks", 2],
+           ["Q3 D-H wall-mounted + first 3 T matrices (24-25 S2 Q1), 20 marks", 3], ["Q4 D-H prismatic column (tutor p.4), 20 marks", 4],
+           ["Q5 tool Jacobian + IK + approach vector (tutor p.17)", 5], ["Q6 spherical RRP IK + pick discussion (22-23 S2 Q3b)", 6]];
+  function build() {
+    var L = ["EE6221 QUIZ 1 SCOPE - MOCK 5 (TUTOR PAST-PAPER SET) - ATTEMPT EXPORT",
+             "key file: EE-6221/quizzes/quiz-01-mock-05.md   check script: quiz-01-mock-05-check.py",
+             "elapsed time: " + fmt(t), ""];
+    Q.forEach(function (q) {
+      L.push("== " + q[0] + " - " + (st["q" + q[1] + "-paper"] ? "ANSWERED ON PAPER" : "not marked done"));
+      L.push((st["q" + q[1] + "-notes"] || "").trim() || "<blank>", "");
+    });
+    L.push("Attach one photo per question from quizzes/attempts/.");
+    return L.join("\n");
+  }
+  var dlg = document.getElementById("dlg"), out = document.getElementById("out");
+  document.getElementById("export").onclick = function () { out.value = build(); dlg.showModal(); };
+  document.getElementById("close").onclick = function () { dlg.close(); };
+  document.getElementById("copy").onclick = function () { out.select(); try { navigator.clipboard.writeText(out.value); } catch (e) { document.execCommand("copy"); } };
+  document.getElementById("dl").onclick = function () {
+    var a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([out.value], { type: "text/plain" }));
+    a.download = "quiz-01-mock-05-attempt.txt"; a.click();
+  };
+})();
+</script>
+</body></html>
