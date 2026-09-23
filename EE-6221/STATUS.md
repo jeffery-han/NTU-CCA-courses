@@ -2,6 +2,7 @@
 
 ## Note files
 
+- `quizzes/quiz-01-mock-03.html` is a new answer-free, offline Quiz 1 practice paper with two SVG diagrams: an RRP frame/D–H question and a pick/place question testing jaw closing direction. `quizzes/quiz-01-mock-03.md` is its separate answer key and marking guide. Its two-question shape uses the official practice exercise and unofficial prior-student recollections in `quizzes/quiz-01-intel.md`; it is not a past quiz. Optional Section C covers inverse transforms and the tool configuration vector. Sources: `resources/exercises-kinematics-not-for-submission.pdf` p. 2 and `resources/lecture-01-manipulator-kinematics.pdf` pp. 57–58, 82–84.
 - `notes/beginner-notes.tex` - detailed, self-contained teaching note for the supplied manipulator-kinematics material; compiled PDF is stored beside it.
 - `notes/notes.tex` - concise manipulator-kinematics review note; compiled PDF is stored beside it.
 - `notes/week-01-beginner-notes.tex` - preserved Week 1-only teaching supplement; it is not the canonical full-scope beginner note.
@@ -82,6 +83,7 @@
 
 ## Update record
 
+- 2026-09-23: Added `quizzes/quiz-01-mock-03.html` and a separate answer key after the learner's grasp-axis question. New RRP geometry and reversed pick/place long-axis orientation avoid reusing Mock 1 or 2 answers. No source files were moved or renamed; canonical notes already explain that sliding is perpendicular to grasped long faces.
 - 2026-09-23: Derived the $6\times4$ tool-configuration Jacobian for PPRR Problem 1(d) using the learner's upward-positive frame and explicit joint order in both notes. No files were organized or renamed. Both PDFs compiled with XeLaTeX and the revised pages were visually checked.
 - 2026-09-23: Expanded both notes' IK-method explanation with a planar 2R example: square-and-add elimination, elbow branches, why direct tangent division loses quadrant information, and forward substitution. No files were organized or renamed. Both PDFs compiled with XeLaTeX and the revised pages were visually checked.
 - 2026-09-23: Clarified in both PPRR inverse-kinematics notes that the tool vector has six coordinate entries but only four joint variables, and that planar motion forces entries 2 and 5 to zero for reachable targets. No files were organized or renamed. Both PDFs compiled with XeLaTeX and the revised pages were visually checked.
