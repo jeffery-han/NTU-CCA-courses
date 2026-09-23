@@ -415,6 +415,33 @@ If the task coordinate is $x=w(q)$, differentiating with respect to time gives
 \]
 Column $j$ of $J$ is the instantaneous task-space motion produced by unit speed at joint $j$ while all other joints are fixed. This is a local linear relationship at the current configuration, not an exact formula for a large finite displacement.
 
+\paragraph{Worked application: the PPRR tool-configuration Jacobian.}
+Continue with the learner's upward-positive convention from Problem~1(c), and order the
+\emph{four inputs} as $q=(d_1,d_2,\theta_3,\theta_4)^\trans$.
+The output $w(q)$ has six entries, so $J_{ij}=\partial w_i/\partial q_j$
+has six rows and four columns. For example, $w_1=d_2+L\cos\theta_3$ gives
+the first row $(0,1,-L\sin\theta_3,0)$: differentiate this one output
+with respect to each joint, holding the other joints fixed.
+Let $c_3=\cos\theta_3$, $s_3=\sin\theta_3$, and $E=e^{\theta_4/\pi}$.
+The full result is
+\[
+ J=\frac{\partial w}{\partial q}=
+ \begin{bmatrix}
+ 0&1&-Ls_3&0\\
+ 0&0&0&0\\
+ 1&0&Lc_3&0\\
+ 0&0&-Es_3&Ec_3/\pi\\
+ 0&0&0&0\\
+ 0&0&Ec_3&Es_3/\pi
+ \end{bmatrix}.
+\]
+Rows 2 and 5 vanish because those tool-vector entries are identically zero.
+The factors $E/\pi$ follow from differentiating $e^{\theta_4/\pi}$ with
+respect to the \emph{radian} angle $\theta_4$. This $J$ maps joint rates to
+rates of the course's six-entry $w$; an angular-velocity Jacobian based on
+$(\dot p,\omega)$ uses different orientation rows.
+\source{\texttt{resources/exercises-kinematics-not-for-submission.pdf}, Problem~1(d), p.~1; \texttt{resources/lecture-01-manipulator-kinematics.pdf}, pp.~133--141. The learner's angle convention and explicit differentiation are supplementary}
+
 When an exact inverse does not exist, the Moore--Penrose pseudoinverse gives a least-squares or minimum-norm rate command:
 \[
  \dot q=J^\dagger\dot x.

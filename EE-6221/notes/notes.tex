@@ -333,6 +333,24 @@ Let $\mathbf x=\mathbf w(\mathbf q)\in\R^6$ be the course's tool-configuration f
 \]
 $V$ is the tool-configuration Jacobian: column $j$ is the instantaneous tool motion caused by unit rate at joint $j$ (pp.~133--141). It is local: it maps velocities at the current configuration, not finite changes over an arbitrary interval.
 
+For Problem~1(d) with the learner's upward-positive convention, choose
+$q=(d_1,d_2,\theta_3,\theta_4)^\trans$ and $E=e^{\theta_4/\pi}$.
+Rows index the six outputs $w_i$; columns index the four joints $q_j$:
+\[
+ V=\left[\frac{\partial w_i}{\partial q_j}\right]_{6\times4}
+ =\begin{bmatrix}
+ 0&1&-Ls_3&0\\
+ 0&0&0&0\\
+ 1&0&Lc_3&0\\
+ 0&0&-Es_3&Ec_3/\pi\\
+ 0&0&0&0\\
+ 0&0&Ec_3&Es_3/\pi
+ \end{bmatrix}.
+\]
+This differentiates the course's $w$, not the alternative spatial twist
+$(\dot p,\boldsymbol\omega)$.
+\par\emph{Source: \texttt{resources/exercises-kinematics-not-for-submission.pdf}, Problem~1(d), p.~1; \texttt{resources/lecture-01-manipulator-kinematics.pdf}, pp.~133--141.}
+
 When the rank and dimensions permit it, a Moore--Penrose pseudoinverse maps a desired tool rate to a joint rate,
 \[
   \dot{\mathbf q}=V(\mathbf q)^\dagger\dot{\mathbf x}.
