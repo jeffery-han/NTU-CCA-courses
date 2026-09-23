@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EE6221 — Seven-joint D–H stretch</title>
+<style>
+:root{font:17px/1.5 system-ui,sans-serif;color:#172334;background:#edf2f5}*{box-sizing:border-box}body{margin:0}main{max-width:1050px;margin:24px auto;padding:32px 42px;background:white;box-shadow:0 2px 18px #14263a19}h1{margin:0;line-height:1.2}h2{border-top:2px solid #264d6d;padding-top:1rem;margin-top:2rem}.meta{color:#435366}.notice{padding:.7rem 1rem;background:#fff5e1;border-left:4px solid #b47412}figure{margin:1.2rem 0;border:1px solid #c8d2dc;padding:.6rem}img{display:block;width:100%;height:auto}figcaption{font-size:.9rem;color:#435366;margin:.5rem}table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{border:1px solid #aab9c6;padding:.4rem .55rem;text-align:center}th{background:#e9f0f5}td{height:2.3rem}.write{height:12rem;border:1px solid #aab9c6;margin-top:.6rem}@media(max-width:650px){:root{font-size:16px}main{margin:0;padding:18px}table{font-size:.8rem}th,td{padding:.25rem}}@media print{:root{background:white;font-size:11pt}main{margin:0;padding:0;box-shadow:none}figure,table{break-inside:avoid}.write{height:8rem}}
+</style>
+</head>
+<body><main>
+<h1>EE6221 · Seven-joint D–H stretch</h1>
+<p class="meta">One long problem · 20 marks · Suggested 35–45 minutes · Work on paper · Time taken: ______</p>
+<p class="notice"><strong>Source and scope:</strong> adapted as an answer-free practice page from the user-supplied <em>6221 tutor</em> deck, slide 11, which labels this diagram “22–23 S2 Q1.” The deck appears to review a semester examination; it does <strong>not</strong> identify this as a past Quiz 1 paper. Its handwritten example answer is on slide 12 and is deliberately omitted here.</p>
+<p>This is a tougher transfer exercise than Mock 3 or Mock 4. The seven-joint figure and dimensions come from the tutor slide. The prompts below paraphrase its two subquestions; no complete arm-matrix multiplication is required.</p>
+<figure>
+<img src="quiz-assets/ee6221-2022-2023-s2-q1-seven-joint-figure.png" alt="Seven-joint robot: vertical base joint theta 1; shoulder theta 2 offset 0.22 m and 0.55 plus 0.10 m high; inclined joints theta 3 and theta 4 with 0.20 m and 0.15 m links; sliding joint d5 along the horizontal forearm; wrist theta 6; tool theta 7 with 0.12 m offset and 0.05 m vertical separation.">
+<figcaption>Figure 1. Source: user-supplied tutor slide 11, cropped to retain the robot and dimensions. Zoom in if needed; the labels are part of the supplied figure.</figcaption>
+</figure>
+<h2>Part (a) · Link-coordinate diagram (12 marks)</h2>
+<p>Using the standard Denavit–Hartenberg algorithm, draw coordinate frames {0} through {7}. Show each joint-axis direction <em>z</em>, choose and label each common-normal direction <em>x</em>, place every origin, then complete the right-handed frames. State any frame-direction choice that differs from the diagram's implied reference orientation.</p>
+<div class="write" aria-label="Space for frame-assignment working"></div>
+<h2>Part (b) · Kinematic parameters (8 marks)</h2>
+<p>From <em>your own</em> frame diagram, fill the four parameters for every joint. Mark which entry in each row is the joint variable. Use metres and radians, and keep joint variables symbolic. Your table must agree with your drawing; D–H frames are not unique.</p>
+<table aria-label="Blank seven-row Denavit-Hartenberg table"><thead><tr><th>Joint k</th><th>θ<sub>k</sub></th><th>d<sub>k</sub> (m)</th><th>a<sub>k</sub> (m)</th><th>α<sub>k</sub> (rad)</th><th>Variable</th></tr></thead><tbody>
+<tr><th>1</th><td></td><td></td><td></td><td></td><td></td></tr><tr><th>2</th><td></td><td></td><td></td><td></td><td></td></tr><tr><th>3</th><td></td><td></td><td></td><td></td><td></td></tr><tr><th>4</th><td></td><td></td><td></td><td></td><td></td></tr><tr><th>5</th><td></td><td></td><td></td><td></td><td></td></tr><tr><th>6</th><td></td><td></td><td></td><td></td><td></td></tr><tr><th>7</th><td></td><td></td><td></td><td></td><td></td></tr>
+</tbody></table>
+<p class="meta">After you finish, send your frame sketch and table. I will mark them against your chosen convention and check the tutor's handwritten solution independently. This stretch does not replace the two-question Quiz 1 practice check.</p>
+</main></body></html>

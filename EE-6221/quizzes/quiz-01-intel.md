@@ -6,20 +6,20 @@ students below is **unofficial recollection** — labelled as such wherever it i
 
 ## Bottom line
 
-Quiz 1 has been, for several recent sittings, a **two-question, ~30-minute, closed-book, handwritten**
-paper:
+Student recollections suggest a **two-question, ~30-minute, closed-book, handwritten** Quiz 1
+paper; no authenticated historical Quiz 1 paper is saved here:
 
 1. **D–H modelling.** Given a manipulator drawing: assign link frames (the "how to draw the x/y/z
    axes" procedure the instructor drilled repeatedly in lecture examples) and tabulate the four D–H
-   parameters for every joint. One sitting had a 7-joint arm and students ran short on time — speed
-   is the graded skill, not cleverness.
+   parameters for every joint. A student recalled a 7-joint arm, but the newly supplied tutor deck
+   also shows a 7-joint **semester-exam Q1**; that detail is not confirmed as Quiz 1 evidence.
 2. **Pick-and-place arm matrix.** Write the homogeneous transformation (arm matrix)
    $^{\text{base}}T_{\text{pick}}$ for a gripper picking a part from above. Lower difficulty; the
    instructor worked the method in class.
 
-The format evidence is **converged** (four independent posters + one official handout point the same
-way). Question wording and any recalled numbers are **approximate** and were re-derived from scratch
-for the mock.
+Several student accounts point to the same two topics, and the official practice handout contains
+both. This supports the mock's practice focus, while question count, duration, and exact wording
+remain unverified by an original Quiz 1 paper. All mock numbers were newly chosen.
 
 ## The near-confirmation: the official practice handout
 
@@ -35,9 +35,9 @@ submission)") contains **exactly two problems**:
   $^{\text{base}}T_{\text{place}}$ to stack A on B with centroids and major axes aligned.
 
 RedNote poster **Kenta** states: *"quiz 前给出了两个练习题刚好对应这两个考点"* — the two practice
-problems handed out before the quiz corresponded exactly to the two exam topics. Problem 1 → Quiz Q1,
-Problem 2 → Quiz Q2. This upgrades the paper shape from student memory to an **official-current**
-source. Parts (c)/(d) of Problem 1 (Jacobian; full IK) sit at or beyond the stated Quiz 1 boundary
+problems handed out before the quiz corresponded to the two recalled Quiz 1 topics. The handout
+confirms those topics were practised officially, but it does not itself establish Quiz 1's exact
+question count or wording. Parts (c)/(d) of Problem 1 (Jacobian; full IK) sit at or beyond the stated Quiz 1 boundary
 and are treated as the "predicted extension", not the core paper.
 
 The mock therefore uses a **different arm and different part coordinates** — reusing Problem 1's PPRR
@@ -62,9 +62,10 @@ post about a different course.
 
 ## Evidence classes applied
 
-- **Format (drives the mock's structure) — HIGH.** 2 free-response questions; ~30 min; closed book;
-  handwritten; Q1 = D–H frame assignment + parameter table for a multi-joint arm; Q2 = pick-from-above
-  arm matrix. Sources 1, 4, 7 + the official handout agree.
+- **Format (drives the mock's structure) — PROVISIONAL.** Student recollections describe 2
+  free-response questions, ~30 min, closed book, handwritten: Q1 = D–H frame assignment/table,
+  Q2 = pick-from-above arm matrix. The official handout practises both topics, but does not confirm
+  the live quiz's exact format. The tutor deck below must not be counted as Quiz 1 corroboration.
 - **Question text — MEDIUM.** Re-derived from in-scope topics; recalled wording treated as
   approximate; the mock deliberately changes the arm and the coordinates.
 - **Answer keys — LOW / not adopted.** 新叶猫's self-corrections (source 2) are plausible textbook
@@ -83,6 +84,20 @@ Circulating Quiz 1 papers only ever show D–H + pick-and-place arm matrix. IK, 
 vector, and cubic trajectory planning are *in the stated scope* but *absent from recalled papers* —
 so they are the likely "one unseen item". The mock puts them in a clearly labelled predicted
 Section C.
+
+## New source audit: user-supplied tutor deck (2026-09-23)
+
+`resources/ee6221-tutor-exam-review-2026.pdf` is a 59-slide tutor deck supplied from WeChat, created
+in May 2026. Slide 2 says "Exam overview" and lists five course-wide topics. Slides 9, 11, and
+13–15 label kinematics problems "23–24 S2 Q1" (six joints), "22–23 S2 Q1" (seven joints), and
+"24–25 S2 Q1" (six joints). Later slides label control as Q2 and inverse kinematics as Q3. This
+combination points to **semester-examination Question 1**, not Quiz 1. The deck contains no "Quiz"
+label and is a tutor compilation with handwritten answers, not an authenticated original paper.
+Its diagrams are useful D–H practice; do not use them to assert that Quiz 1 had six or seven joints,
+the same mark allocation, or a full final-exam scope. `quizzes/quiz-01-stretch-01.html` presents the
+seven-joint slide-11 problem as a separate, clearly labelled stretch exercise without its slide-12
+answer. The exact relationship, if any, between this final-exam-style question and Kenta's
+seven-joint Quiz 1 recollection remains unresolved.
 
 ## Still outstanding (needs the learner)
 
