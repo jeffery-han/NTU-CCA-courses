@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Unofficial EE6203 Quiz 2 (LPH part) prediction paper: one 25-mark structured question, 45 minutes. Answer-free; submit the export for marking.">
+  <title>EE6203 Quiz 2 Prediction</title>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+    };
+    window.mathReady = false;
+    window.mathFallback = function () {
+      if (window.mathTried) { document.getElementById('math-warning')?.removeAttribute('hidden'); return; }
+      window.mathTried = true;
+      var s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js';
+      s.async = true;
+      s.onload = function () { window.mathReady = true; document.getElementById('math-warning')?.setAttribute('hidden',''); };
+      s.onerror = function () { document.getElementById('math-warning')?.removeAttribute('hidden'); };
+      document.head.appendChild(s);
+    };
+    window.addEventListener('load', () => {
+      window.setTimeout(() => {
+        const warning = document.getElementById('math-warning');
+        if (warning && !window.mathReady) warning.hidden = false;
+      }, 3500);
+    });
+  </script>
+  <script async src="vendor/mathjax/tex-mml-chtml.js"
+    onload="window.mathReady=true;document.getElementById('math-warning')?.setAttribute('hidden','')"
+    onerror="window.mathFallback()"></script>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f7f8fb; --surface: #ffffff; --surface-2: #eef3fb;
+      --text: #18202c; --muted: #5f6b7a; --border: #d8dee9;
+      --accent: #245ec7; --accent-soft: #e8f0ff;
+      --success: #176b45; --warning: #8a5700; --warning-soft: #fff3d8; --danger: #a33232;
+      --shadow: 0 12px 32px rgba(28,39,58,.08); --radius: 14px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #10141b; --surface: #171d26; --surface-2: #202a38;
+        --text: #edf2f8; --muted: #aab4c2; --border: #344052;
+        --accent: #8bb5ff; --accent-soft: #1e3558;
+        --success: #82d4ad; --warning: #ffd079; --warning-soft: #4a3514; --danger: #ffaaaa;
+        --shadow: 0 14px 34px rgba(0,0,0,.24);
+      }
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text);
+      font: 16px/1.62 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    .wrap { max-width: 56rem; margin: 0 auto; padding: 1.5rem 1rem 5rem; }
+    h1 { font-size: 1.7rem; margin: 0 0 .35rem; }
+    .lede { color: var(--muted); margin: 0 0 1rem; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 1.1rem 1.2rem; margin: 1rem 0; box-shadow: var(--shadow); }
+    .banner { background: var(--accent-soft); border-color: var(--accent); }
+    .warn { background: var(--warning-soft); border-color: var(--warning); color: var(--warning); }
+    .rules { margin: .4rem 0 0; padding-left: 1.15rem; } .rules li { margin: .25rem 0; }
+    .bar { position: sticky; top: 0; z-index: 20; display: flex; flex-wrap: wrap; gap: .5rem 1rem;
+      align-items: center; justify-content: space-between; background: var(--surface);
+      border: 1px solid var(--border); border-radius: var(--radius); padding: .7rem 1rem; box-shadow: var(--shadow); }
+    .clock { font-variant-numeric: tabular-nums; font-weight: 800; font-size: 1.3rem; min-width: 5rem; }
+    .clock.low { color: var(--warning); } .clock.out { color: var(--danger); }
+    .part { border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 11px;
+      padding: .95rem 1.1rem; margin: 1rem 0; background: var(--surface); min-width: 0; overflow-x: auto; }
+    .tag { font-size: .78rem; font-weight: 700; letter-spacing: .04em; color: var(--muted); text-transform: uppercase; }
+    .capture { display: grid; gap: .45rem; margin-top: .7rem; padding-top: .6rem; border-top: 1px dashed var(--border); }
+    .capture label { font-size: .92rem; }
+    .capture input[type=text] { font: inherit; width: 100%; padding: .4rem .6rem; border-radius: 8px;
+      border: 1px solid var(--border); background: var(--surface-2); color: var(--text); }
+    button { font: inherit; border: 1px solid var(--border); background: var(--surface-2); color: var(--text);
+      border-radius: 8px; padding: .42rem .85rem; cursor: pointer; }
+    button:hover { border-color: var(--accent); }
+    button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+    @media (prefers-color-scheme: dark) { button.primary { color: #10141b; } }
+    textarea { width: 100%; min-height: 14rem; font: .85rem/1.45 ui-monospace, Menlo, monospace;
+      background: var(--surface-2); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: .6rem; }
+    mjx-container { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+    footer { margin-top: 2.5rem; color: var(--muted); font-size: .85rem; border-top: 1px solid var(--border); padding-top: 1rem; }
+    @media print { .bar, .capture, #export, button { display: none !important; } body { background: #fff; } }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <h1>EE6203 Quiz 2 &mdash; prediction paper (LPH part)</h1>
+  <p class="lede"><strong>Unofficial prediction</strong>, not the real paper. One structured question, <strong>25 marks, 45 minutes</strong>,
+  shaped like an LPH exam question. The answer key is deliberately not on this page.</p>
+
+  <div id="math-warning" class="card warn" hidden>Equations need MathJax: keep this page beside its
+    <code>vendor/mathjax/</code> folder and reload.</div>
+
+  <section class="card banner">
+    <strong>Conditions.</strong>
+    <ul class="rules">
+      <li>Closed book, 45 minutes, pen and paper. Show all working: the working carries most of the marks.</li>
+      <li>Allowed: the transform table LPH says is issued in the quiz &mdash;
+        <a href="../resources/lph-transform-table-ay2018-19-s1.pdf">lph-transform-table-ay2018-19-s1.pdf</a> &mdash; and the facts given in the question.</li>
+      <li>No calculator is needed: \(T=\ln 2\) is chosen so that \(e^{-T}=\tfrac12\) and \(e^{-2T}=\tfrac14\).</li>
+      <li>Parts (c) and (d)(ii)&ndash;(iii) use Lecture 3, taught on 26 Sep. Sit the full paper after that session.</li>
+    </ul>
+  </section>
+
+  <div class="bar">
+    <span class="clock" id="clock">45:00</span>
+    <span>
+      <button class="primary" id="start">Start</button>
+      <button id="pause">Pause</button>
+      <button id="reset-timer">Reset timer</button>
+    </span>
+  </div>
+
+  <section class="card">
+    <p><strong>Question (25 marks).</strong> Conventions follow the LPH lecture notes:
+      \(\mathbf x(k+1)=\mathbf{\Phi}(T)\mathbf x(k)+\mathbf{\Theta}(T)u(k)\), state feedback \(u(k)=-\mathbf K\mathbf x(k)\).</p>
+
+    <div class="part" data-part="a">
+      <div class="tag">(a) &middot; 8 marks</div>
+      <p>A continuous-time plant is</p>
+      \[\dot{\mathbf x}(t)=\begin{bmatrix}-1&1\\0&-2\end{bmatrix}\mathbf x(t)+\begin{bmatrix}0\\1\end{bmatrix}u(t),\qquad
+        y(t)=\begin{bmatrix}1&0\end{bmatrix}\mathbf x(t).\]
+      <p>It is driven through a zero-order hold and sampled with period \(T=\ln 2\) s.</p>
+      <p>(i) Find \(\mathbf{\Phi}(T)\) and \(\mathbf{\Theta}(T)\) of the discretised state-space model.<br>
+         (ii) Where are the poles of the discrete-time system located?</p>
+    </div>
+
+    <div class="part" data-part="b">
+      <div class="tag">(b) &middot; 5 marks</div>
+      <p>Find the pulse transfer function \(Y(z)/U(z)\) of the discretised model in (a), and confirm that its poles agree with your answer to (a)(ii).</p>
+    </div>
+
+    <div class="part" data-part="c">
+      <div class="tag">(c) &middot; 6 marks</div>
+      <p>For the discretised model in (a):<br>
+        (i) show that it is controllable;<br>
+        (ii) design the deadbeat state-feedback gain \(\mathbf K\) using Ackermann's formula;<br>
+        (iii) verify your design by computing the state sequence from \(\mathbf x(0)=\begin{bmatrix}1&0\end{bmatrix}^T\).</p>
+    </div>
+
+    <div class="part" data-part="d">
+      <div class="tag">(d) &middot; 6 marks</div>
+      <p>A discrete-time process has transfer function</p>
+      \[G(z)=\frac{Y(z)}{U(z)}=\frac{z-0.5}{z^2-0.3z-0.1}.\]
+      <p>(i) Write down its controllable canonical form (CCF) state-space model by inspection.<br>
+         (ii) Test the controllability and the observability of this realisation.<br>
+         (iii) Explain your result in (ii) in terms of \(G(z)\).</p>
+    </div>
+  </section>
+
+  <section class="card" id="export">
+    <strong>Submit for marking.</strong>
+    <p>Photograph your written working (one photo per part is easiest to read) into
+      <code>EE-6203/quizzes/attempts/</code>, then paste the export block below into the chat along with the photo paths.</p>
+    <p><button class="primary" id="make">Build export</button> <button id="copy">Copy</button> <button id="clear">Clear my answers</button></p>
+    <textarea id="out" readonly aria-label="Export block"></textarea>
+  </section>
+
+  <footer>Key, rubric and wrong-path diagnosis: <code>quiz-02-prediction-paper.md</code> (open only after marking).
+    Numerical check: <code>quiz-02-prediction-check.py</code>. Source basis: LPH Lect 1&ndash;3 (<code>resources/lph-lecture-0[1-3]-*.pdf</code>).</footer>
+</div>
+
+<script>
+(function () {
+  var KEY = 'ee6203-quiz2-prediction-v1', TOTAL = 45 * 60;
+  var MARKS = { a: 8, b: 5, c: 6, d: 6 };
+  var LABEL = { a: 'ZOH discretisation: Phi(T), Theta(T), poles', b: 'pulse transfer function', c: 'controllability + deadbeat K (Ackermann)', d: 'CCF by inspection; controllability/observability' };
+  function load() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* storage unavailable */ } }
+  var state = load(); state.parts = state.parts || {}; state.left = state.left == null ? TOTAL : state.left;
+
+  document.querySelectorAll('.part').forEach(function (el) {
+    var p = el.dataset.part, s = state.parts[p] = state.parts[p] || { paper: false, final: '' };
+    var box = document.createElement('div'); box.className = 'capture';
+    box.innerHTML = '<label><input type="checkbox"> Answered on paper</label>' +
+      '<label>Final result (optional, e.g. K = [.. ..]): <input type="text" autocomplete="off"></label>';
+    var cb = box.querySelector('input[type=checkbox]'), tx = box.querySelector('input[type=text]');
+    cb.checked = s.paper; tx.value = s.final;
+    cb.addEventListener('change', function () { s.paper = cb.checked; save(); });
+    tx.addEventListener('input', function () { s.final = tx.value; save(); });
+    el.appendChild(box);
+  });
+
+  var clock = document.getElementById('clock'), timer = null;
+  function fmt(t) { var a = Math.abs(t); return (t < 0 ? '-' : '') + Math.floor(a / 60) + ':' + String(a % 60).padStart(2, '0'); }
+  function paint() { clock.textContent = fmt(state.left); clock.className = 'clock' + (state.left <= 0 ? ' out' : state.left <= 300 ? ' low' : ''); }
+  function stop() { if (timer) { clearInterval(timer); timer = null; } }
+  document.getElementById('start').onclick = function () {
+    if (timer) return; state.started = state.started || new Date().toISOString();
+    timer = setInterval(function () { state.left -= 1; paint(); save(); }, 1000);
+  };
+  document.getElementById('pause').onclick = stop;
+  document.getElementById('reset-timer').onclick = function () { stop(); state.left = TOTAL; delete state.started; paint(); save(); };
+  paint();
+
+  document.getElementById('make').onclick = function () {
+    var used = TOTAL - state.left, lines = [
+      'EE6203 Quiz 2 prediction paper (UNOFFICIAL) - attempt export',
+      'Key file: EE-6203/quizzes/quiz-02-prediction-paper.md   (single question, 25 marks: a8 b5 c6 d6)',
+      'Exported: ' + new Date().toISOString() + (state.started ? '   Started: ' + state.started : '   Timer not started'),
+      'Time used: ' + fmt(used) + ' of 45:00' + (state.left < 0 ? '  (OVER TIME)' : ''),
+      ''];
+    Object.keys(MARKS).forEach(function (p) {
+      var s = state.parts[p];
+      lines.push('(' + p + ') [' + MARKS[p] + ' marks] ' + LABEL[p] + ': ' + (s.paper ? 'answered on paper' : '<blank>') +
+        (s.final.trim() ? ' | final: ' + s.final.trim() : ''));
+    });
+    lines.push('', 'Working photos: EE-6203/quizzes/attempts/<list paths here>');
+    document.getElementById('out').value = lines.join('\n');
+  };
+  document.getElementById('copy').onclick = function () {
+    var o = document.getElementById('out'); o.select();
+    if (navigator.clipboard) navigator.clipboard.writeText(o.value).catch(function () { document.execCommand('copy'); });
+    else document.execCommand('copy');
+  };
+  document.getElementById('clear').onclick = function () {
+    stop(); state = { parts: {}, left: TOTAL }; save(); location.reload();
+  };
+})();
+</script>
+</body>
+</html>
