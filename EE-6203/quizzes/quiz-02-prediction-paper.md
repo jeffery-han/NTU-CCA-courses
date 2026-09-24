@@ -16,7 +16,7 @@
 
 **Sit it after the 26 Sep lecture.** Parts (a), (b) and the CCF step of (d) use only Weeks 5–6 material (Lect 1, Lect 2 §6–8). Part (c) (deadbeat, Lect 3 §12–13) and the observability half of (d) (Lect 3 §9–10) are taught on 26 Sep.
 
-Collision check: none of the systems below appears in LPH Lect 1–3 examples, the 2018-19 paper (A = diag(−10,−1); A = [[0,1],[1,0]]; deadbeat with \(e^{-T}\) entries) or the 2023 walkthroughs (A = diag(2,1); A = [[4,−1],[2,0]]; poles 0.9 ± j0.1).
+Collision check: none of the systems below appears in LPH Lect 1–3 examples (part (d) mirrors the *method* of Lect 3 Example 3.4, p. 6, but not its numbers: that example is \((z+0.2)/((z+0.8)(z+0.2))\)), the 2018-19 paper (A = diag(−10,−1); A = [[0,1],[1,0]]; deadbeat with \(e^{-T}\) entries) or the 2023 walkthroughs (A = diag(2,1); A = [[4,−1],[2,0]]; poles 0.9 ± j0.1).
 
 ---
 
@@ -31,7 +31,7 @@ It is driven through a ZOH and sampled with \(T=\ln 2\) s (so \(e^{-T}=\tfrac12,
 
 **(c)** (i) Show the discretised model is controllable. (ii) Design the deadbeat state-feedback gain \(\mathbf K\) (\(u(k)=-\mathbf K\mathbf x(k)\)) using Ackermann's formula. (iii) Verify the design from \(\mathbf x(0)=[1\ \ 0]^T\). **(6 marks)**
 
-**(d)** \(G(z)=\dfrac{z-0.5}{z^2-0.3z-0.1}\). (i) Write its CCF by inspection. (ii) Test the controllability and observability of that realisation. (iii) Explain the result in terms of \(G(z)\). **(6 marks)**
+**(d)** \(G(z)=\dfrac{z-0.5}{z^2-0.1z-0.2}\). (i) Write its CCF by inspection. (ii) Test the controllability and observability of that realisation. (iii) Explain the result in terms of \(G(z)\). **(6 marks)**
 
 ---
 
@@ -55,7 +55,7 @@ Poles: eigenvalues of the triangular \(\boldsymbol\Phi(T)\) → \(z=\tfrac12,\ \
 | \(\boldsymbol\Theta(T)=[1/8\ \ 3/8]^T\) | 2 |
 | Poles \(1/2,\ 1/4\) with a reason (eigenvalues / \(e^{sT}\)) | 1 |
 
-Common wrong paths: using \(\mathbf A\mathbf B T\) or \(\mathbf B T\) for \(\boldsymbol\Theta\) (Euler approximation, not ZOH-exact); integrating the first column of \(\boldsymbol\Phi\) (multiplying by \(\mathbf B\) selects column 2); writing \(\boldsymbol\Phi(T)=e^{\mathbf A}T\) or exponentiating entry-wise (\(e^{1}\) in the (1,2) slot) — the matrix exponential is not element-wise; sign slip giving \(\boldsymbol\Theta_1=\tfrac58\) (added instead of subtracted the \(e^{-2\eta}\) integral); poles quoted as \(-1,-2\) (continuous poles, not discrete).
+Common wrong paths: using \(\mathbf A\mathbf B T\) or \(\mathbf B T\) for \(\boldsymbol\Theta\) (Euler approximation, not ZOH-exact); integrating the first column of \(\boldsymbol\Phi\) (multiplying by \(\mathbf B\) selects column 2); writing \(\boldsymbol\Phi(T)=e^{\mathbf A}T\) or exponentiating entry-wise (\(e^{1}\) in the (1,2) slot) — the matrix exponential is not element-wise; sign slip giving \(\boldsymbol\Theta_1=\tfrac78\) (added instead of subtracted the \(e^{-2\eta}\) integral: \(\tfrac12+\tfrac38\)); poles quoted as \(-1,-2\) (continuous poles, not discrete).
 
 ### (b) — 5 marks · *Derivable*
 
@@ -96,13 +96,13 @@ Common wrong paths: \(\mathbf W_C=[\boldsymbol\Theta\ \ \boldsymbol\Phi^T\boldsy
 
 ### (d) — 6 marks · *Derivable*; part (iii) wording *convention-dependent*
 
-(i) \(a_1=-0.3,\ a_0=-0.1,\ b_1=1,\ b_0=-0.5\) (LPH §6.3 layout):
-\(\mathbf A_C=\begin{bmatrix}0&1\\0.1&0.3\end{bmatrix},\ \mathbf B_C=\begin{bmatrix}0\\1\end{bmatrix},\ \mathbf C_C=[-0.5\ \ 1],\ d_C=0\).
+(i) \(a_1=-0.1,\ a_0=-0.2,\ b_1=1,\ b_0=-0.5\) (LPH §6.3 layout):
+\(\mathbf A_C=\begin{bmatrix}0&1\\0.2&0.1\end{bmatrix},\ \mathbf B_C=\begin{bmatrix}0\\1\end{bmatrix},\ \mathbf C_C=[-0.5\ \ 1],\ d_C=0\).
 
-(ii) \(\mathbf W_C=[\mathbf B_C\ \ \mathbf A_C\mathbf B_C]=\begin{bmatrix}0&1\\1&0.3\end{bmatrix}\), \(|\mathbf W_C|=-1\neq0\) → controllable (always, for a CCF).
-\(\mathbf C_C\mathbf A_C=[0.1\ \ -0.2]\), \(\mathbf W_O=\begin{bmatrix}-0.5&1\\0.1&-0.2\end{bmatrix}\), \(|\mathbf W_O|=0.1-0.1=0\) → **not observable**.
+(ii) \(\mathbf W_C=[\mathbf B_C\ \ \mathbf A_C\mathbf B_C]=\begin{bmatrix}0&1\\1&0.1\end{bmatrix}\), \(|\mathbf W_C|=-1\neq0\) → controllable (always, for a CCF).
+\(\mathbf C_C\mathbf A_C=[0.2\ \ -0.4]\), \(\mathbf W_O=\begin{bmatrix}-0.5&1\\0.2&-0.4\end{bmatrix}\), \(|\mathbf W_O|=0.2-0.2=0\) → **not observable**.
 
-(iii) \(z^2-0.3z-0.1=(z-0.5)(z+0.2)\): the zero at 0.5 cancels the pole at 0.5, so \(G(z)=\frac1{z+0.2}\) is really first order. A 2-state realisation of it must lose controllability or observability (Lect 3 §10.1); the CCF keeps controllability, so the mode \(z=0.5\) is unobservable. (An OCF of the same \(G\) would be observable but uncontrollable.)
+(iii) \(z^2-0.1z-0.2=(z-0.5)(z+0.4)\): the zero at 0.5 cancels the pole at 0.5, so \(G(z)=\frac1{z+0.4}\) is really first order. A 2-state realisation of it must lose controllability or observability (Lect 3 §10.1); the CCF keeps controllability, so the mode \(z=0.5\) is unobservable. (An OCF of the same \(G\) would be observable but uncontrollable.)
 
 | Checkpoint | Marks |
 |---|---:|
@@ -111,7 +111,7 @@ Common wrong paths: \(\mathbf W_C=[\boldsymbol\Theta\ \ \boldsymbol\Phi^T\boldsy
 | \(\mathbf W_O\) and \(\lvert\mathbf W_O\rvert=0\) ⇒ unobservable | 2 |
 | Pole–zero cancellation at 0.5 identified as the cause | 1 |
 
-Common wrong paths: bottom row \([-0.1\ \ 0.3]\) or \([0.3\ \ 0.1]\) (sign/order of \(a_i\) flipped); \(\mathbf C_C=[1\ \ -0.5]\) (\(b\) order reversed); concluding "minimal/ both properties hold" after checking only controllability; cancelling first and writing a 1-state CCF — correct TF, but it answers a different question and loses (ii)/(iii).
+Common wrong paths: bottom row \([-0.2\ \ -0.1]\) or \([0.1\ \ 0.2]\) (sign/order of \(a_i\) flipped); \(\mathbf C_C=[1\ \ -0.5]\) (\(b\) order reversed); concluding "minimal/ both properties hold" after checking only controllability; cancelling first and writing a 1-state CCF — correct TF, but it answers a different question and loses (ii)/(iii).
 
 ---
 

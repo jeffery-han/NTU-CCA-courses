@@ -28,6 +28,7 @@ Theta = sum(w * expm(Ac, e) @ Bc for w, e in zip(wts, eta)) * (T / n) / 3
 assert close(Phi, [[1/2, 1/4], [0, 1/4]]), Phi
 assert close(Theta, [[1/8], [3/8]]), Theta
 assert close(sorted(np.linalg.eigvals(Phi)), [1/4, 1/2])
+assert close((1 - 0.5) + 0.5 * (1 - 0.25), 7/8)          # rubric wrong path: sign slip in Theta_1
 
 # (b) G(z) = C (zI - Phi)^-1 Theta  ==  (2z+1) / (16 (z-1/2)(z-1/4))
 for z in (2.0, -3.0, 0.9 + 0.7j):
@@ -50,19 +51,19 @@ x0 = np.array([[1.0], [0.0]])
 x1 = Acl @ x0; x2 = Acl @ x1
 assert close(x1, [[1/4], [-3/4]]) and close(x2, 0)
 
-# (d) CCF by inspection of G(z) = (z - 0.5) / (z^2 - 0.3 z - 0.1)
-assert close(np.polymul([1, -0.5], [1, 0.2]), [1, -0.3, -0.1])
-Ad = np.array([[0.0, 1.0], [0.1, 0.3]])
+# (d) CCF by inspection of G(z) = (z - 0.5) / (z^2 - 0.1 z - 0.2)
+assert close(np.polymul([1, -0.5], [1, 0.4]), [1, -0.1, -0.2])
+Ad = np.array([[0.0, 1.0], [0.2, 0.1]])
 Bd = np.array([[0.0], [1.0]])
 Cd = np.array([[-0.5, 1.0]])
-assert close(np.poly(Ad), [1, -0.3, -0.1])
+assert close(np.poly(Ad), [1, -0.1, -0.2])
 Wo = np.vstack([Cd, Cd @ Ad])
-assert close(Wo, [[-0.5, 1], [0.1, -0.2]])
+assert close(Wo, [[-0.5, 1], [0.2, -0.4]])
 assert np.linalg.matrix_rank(Wo) == 1                              # unobservable
 assert np.linalg.matrix_rank(np.hstack([Bd, Ad @ Bd])) == 2        # controllable
 for z in (2.0, -1.5):
     g = (Cd @ np.linalg.inv(z * np.eye(2) - Ad) @ Bd)[0, 0]
-    assert close(g, 1 / (z + 0.2))                                 # cancelled to first order
+    assert close(g, 1 / (z + 0.4))                                 # cancelled to first order
 # the unobservable mode is the cancelled pole z = 0.5: Wo v = 0 for its eigenvector
 w, V = np.linalg.eig(Ad)
 v = V[:, np.argmin(abs(w - 0.5))]
