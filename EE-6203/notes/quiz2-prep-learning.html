@@ -1,0 +1,662 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Self-study companion for NTU EE6203 Quiz 2 (Dr Lee Peng Hin, Lectures 1-3): state-space models, ZOH discretisation, controllability, observability, pole placement and deadbeat control, with self-checking exercises after every section.">
+<title>EE6203 Quiz 2 Companion</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+  options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+};
+</script>
+<script async src="vendor/mathjax/tex-mml-chtml.js"
+  onerror="document.getElementById('math-warning').hidden=false"></script>
+<style>
+:root {
+  color-scheme: light dark;
+  --bg:#f7f8fb; --surface:#fff; --surface-2:#eef3fb; --text:#18202c; --muted:#5f6b7a;
+  --border:#d8dee9; --accent:#245ec7; --accent-soft:#e8f0ff;
+  --good:#176b45; --good-soft:#e5f6ed; --warn:#8a5700; --warn-soft:#fff3d8; --bad:#a33232; --bad-soft:#fdeaea;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#10141b; --surface:#171d26; --surface-2:#202a38; --text:#edf2f8; --muted:#aab4c2;
+    --border:#344052; --accent:#8bb5ff; --accent-soft:#1e3558;
+    --good:#82d4ad; --good-soft:#17392d; --warn:#ffd079; --warn-soft:#4a3514; --bad:#ffaaaa; --bad-soft:#4a2528;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:#10141b; --surface:#171d26; --surface-2:#202a38; --text:#edf2f8; --muted:#aab4c2;
+  --border:#344052; --accent:#8bb5ff; --accent-soft:#1e3558;
+  --good:#82d4ad; --good-soft:#17392d; --warn:#ffd079; --warn-soft:#4a3514; --bad:#ffaaaa; --bad-soft:#4a2528;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin:0; background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.62; }
+a { color:var(--accent); }
+button, input { font:inherit; }
+button { border:1px solid var(--border); border-radius:9px; background:var(--surface); color:var(--text); padding:.45rem .8rem; cursor:pointer; }
+button:hover { border-color:var(--accent); }
+button.primary { background:var(--accent); color:var(--bg); border-color:var(--accent); font-weight:700; }
+:focus-visible { outline:3px solid color-mix(in srgb, var(--accent) 50%, transparent); outline-offset:2px; }
+.app { display:grid; grid-template-columns:270px minmax(0,1fr); }
+.sidebar { position:sticky; top:0; height:100vh; overflow-y:auto; padding:1.1rem; background:var(--surface); border-right:1px solid var(--border); }
+.sidebar h1 { font-size:1.05rem; margin:0 0 .2rem; }
+.sidebar p { color:var(--muted); font-size:.85rem; margin:.2rem 0 1rem; }
+nav a { display:flex; justify-content:space-between; gap:.5rem; padding:.45rem .6rem; border-radius:8px; color:var(--text); text-decoration:none; font-size:.92rem; }
+nav a:hover { background:var(--accent-soft); color:var(--accent); }
+nav .score { color:var(--muted); font-size:.78rem; white-space:nowrap; }
+nav .score.done { color:var(--good); font-weight:700; }
+main { max-width:960px; width:100%; margin-inline:auto; padding:clamp(1rem,3vw,2.6rem); }
+section.module { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:clamp(1rem,3vw,2rem); margin-bottom:2rem; }
+h2 { margin-top:0; font-size:clamp(1.4rem,2.4vw,1.9rem); line-height:1.25; }
+h3 { margin-top:2rem; font-size:1.2rem; }
+.src { display:inline-block; font-size:.78rem; color:var(--muted); border:1px solid var(--border); border-radius:99px; padding:.05rem .55rem; margin-left:.3rem; vertical-align:middle; }
+.box { border-left:4px solid var(--accent); background:var(--accent-soft); padding:.7rem 1rem; border-radius:0 10px 10px 0; margin:1rem 0; }
+.box.warn { border-color:var(--warn); background:var(--warn-soft); }
+.box.good { border-color:var(--good); background:var(--good-soft); }
+.box.extra { border-color:var(--muted); background:var(--surface-2); }
+.box > :first-child { margin-top:0; } .box > :last-child { margin-bottom:0; }
+details { border:1px solid var(--border); border-radius:10px; padding:.5rem .9rem; margin:.6rem 0; background:var(--surface); }
+details summary { cursor:pointer; font-weight:600; }
+details[open] summary { margin-bottom:.4rem; }
+mjx-container[display="true"] { overflow-x:auto; overflow-y:hidden; max-width:100%; padding-bottom:2px; }
+main p, main li { overflow-wrap:anywhere; }
+table { border-collapse:collapse; margin:.8rem 0; } td, th { border:1px solid var(--border); padding:.3rem .6rem; text-align:center; }
+.checks { border:2px dashed var(--accent); border-radius:14px; padding:1rem; margin:1.6rem 0; }
+.checks > h4 { margin:0 0 .5rem; color:var(--accent); }
+.q { border-top:1px solid var(--border); padding:.8rem 0; }
+.q:first-of-type { border-top:none; }
+.q .prompt { margin:.1rem 0 .5rem; }
+.q .hint, .q .explain { display:none; padding:.5rem .8rem; border-radius:8px; margin-top:.5rem; }
+.q .hint.show { display:block; background:var(--warn-soft); }
+.q .explain.show { display:block; }
+.q.right .explain { background:var(--good-soft); }
+.q.wrong .explain { background:var(--bad-soft); }
+.q .row { display:flex; flex-wrap:wrap; gap:.5rem; align-items:center; }
+.q input[type=text] { width:9rem; padding:.4rem .6rem; border:1px solid var(--border); border-radius:8px; background:var(--bg); color:var(--text); }
+.q ol.opts { list-style:none; padding:0; margin:.3rem 0 .6rem; }
+.q ol.opts li label { display:flex; gap:.5rem; align-items:flex-start; padding:.35rem .5rem; border-radius:8px; cursor:pointer; }
+.q ol.opts li label:hover { background:var(--surface-2); }
+.verdict { font-weight:700; }
+.q.right .verdict { color:var(--good); } .q.wrong .verdict { color:var(--bad); }
+svg.diagram { width:100%; max-width:640px; height:auto; display:block; margin:1rem auto; color:var(--text); }
+.lab { background:var(--surface-2); border-radius:12px; padding:1rem; margin:1rem 0; }
+.lab input[type=range] { width:min(100%,320px); }
+.hero { background:linear-gradient(135deg,var(--accent-soft),var(--surface)); }
+.facts { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:.6rem; margin:1rem 0; }
+.facts div { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:.6rem .8rem; font-size:.92rem; }
+.facts strong { display:block; color:var(--accent); }
+#math-warning { background:var(--warn-soft); padding:.6rem 1rem; }
+.theme-btn { margin-top:1rem; width:100%; }
+@media (max-width: 860px) {
+  .app { grid-template-columns:minmax(0,1fr); }
+  .sidebar { position:static; height:auto; border-right:none; border-bottom:1px solid var(--border); }
+  nav { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.1rem; }
+  .theme-btn { margin-top:.5rem; }
+}
+</style>
+</head>
+<body>
+<div id="math-warning" hidden>Equations could not load: keep this file beside its <code>vendor/mathjax/</code> folder.</div>
+<div class="app">
+<aside class="sidebar">
+  <h1>EE6203 Quiz 2 companion</h1>
+  <p>LPH block, Lectures 1–3 (§1–13). Score shows correct self-checks per module.</p>
+  <nav id="nav"></nav>
+  <button class="theme-btn" id="theme-btn" type="button">Toggle light / dark</button>
+  <button class="theme-btn" id="reset-btn" type="button">Reset my progress</button>
+</aside>
+<main>
+
+<!-- ============================================================ M0 -->
+<section class="module hero" id="m0" data-title="0 · Start here">
+<h2>0 · Start here: what the quiz is and the matrix toolkit</h2>
+<p>This page teaches Dr Lee Peng Hin's (LPH) part of EE6203 from zero, in the order of his slides. Every section ends with small exercises. Type an answer, press <em>Check</em>, and you get feedback straight away, plus a worked explanation. Fractions such as <code>4/3</code> are accepted.</p>
+<div class="facts">
+  <div><strong>When / where</strong>Mon 5 Oct 2026, in LT2A after the first part of Lecture 4 (observers). 45 min, 15%.</div>
+  <div><strong>Scope</strong>LPH Lectures 1, 2, 3, up to the end of Example 3.13 (deadbeat). Observers (Lect 4) are <em>not</em> in it.</div>
+  <div><strong>Format</strong>Pen and paper, <em>no MCQ</em>, every answer calculated. Closed book, <em>no formula sheet</em>; only the transform table is given. Bring a calculator.</div>
+  <div><strong>Past sittings (unofficial)</strong>3 questions, all 2nd-order: Q1 modelling → Q2 ZOH discretisation + controllability/observability → Q3 deadbeat gain + response.</div>
+</div>
+<p class="box">Source of the rules: LPH, 26 Sep 2026 make-up lecture (<code>resources/week-07-transcript.txt</code>): “Your quiz the scope will be until here … lecture one, two, and three”, “no formula sheet … only the … transform table”, “you must remember … Ackermann formula … the controllability matrix”. The past-sitting pattern comes from student recollections in <code>quizzes/quiz-02-intel.md</code>, which are unofficial. The issued table is <a href="../resources/lph-transform-table-ay2018-19-s1.pdf">lph-transform-table-ay2018-19-s1.pdf</a>.</p>
+<p>Since there is no formula sheet, every formula on this page that is marked <strong>MEMORISE</strong> must come from your memory on the day. Module 11 ends with a recall drill.</p>
+
+<h3>The matrix toolkit you need (LPH handout <span class="src">lph-matrix-basics-summary.pdf</span>)</h3>
+<p>Every question in this block is a 2×2 (sometimes 3×3) matrix calculation. Five tools cover it:</p>
+<ol>
+<li><strong>Determinant</strong>: \(\det\begin{bmatrix}a&b\\c&d\end{bmatrix}=ad-bc\).</li>
+<li><strong>Inverse of a 2×2</strong>: swap the diagonal, negate the off-diagonal, divide by the determinant:
+\[\begin{bmatrix}a&b\\c&d\end{bmatrix}^{-1}=\frac{1}{ad-bc}\begin{bmatrix}d&-b\\-c&a\end{bmatrix}.\]
+This works only if \(ad-bc\neq0\). More generally, \(\mathbf M^{-1}=\operatorname{adj}\mathbf M/\det\mathbf M\), where the adjoint is the transpose of the cofactor matrix.</li>
+<li><strong>Rank</strong>: the number of linearly independent columns. For a square \(n\times n\) matrix, rank \(=n\) exactly when \(\det\neq0\). That fact is the whole controllability/observability test.</li>
+<li><strong>Eigenvalues</strong>: the roots of \(\det(\lambda\mathbf I-\mathbf A)=0\). For 2×2, \(\lambda^2-(\operatorname{tr}\mathbf A)\lambda+\det\mathbf A=0\). For a triangular matrix they are simply the diagonal entries.</li>
+<li><strong>Cayley–Hamilton</strong>: a matrix satisfies its own characteristic equation. If \(\det(z\mathbf I-\mathbf A)=z^2+a_1z+a_0\), then \(\mathbf A^2+a_1\mathbf A+a_0\mathbf I=\mathbf 0\). This is why Ackermann's formula (Module 9) works.</li>
+</ol>
+
+<div class="checks"><h4>Check · matrix toolkit</h4>
+<div class="q" data-id="m0-1" data-answer="10"><p class="prompt">\(\det\begin{bmatrix}3&1\\2&4\end{bmatrix}=\;?\)</p><p class="hint">\(ad-bc\).</p><div class="explain">\(3\cdot4-1\cdot2=10\).</div></div>
+<div class="q" data-id="m0-2" data-answer="2"><p class="prompt">Find the bottom-right entry of \(\begin{bmatrix}2&1\\1&1\end{bmatrix}^{-1}\).</p><p class="hint">The determinant is 1. Swap the diagonal.</p><div class="explain">\(\frac11\begin{bmatrix}1&-1\\-1&2\end{bmatrix}\), so the entry is 2.</div></div>
+<div class="q" data-id="m0-3" data-answer="1"><p class="prompt">What is the rank of \(\begin{bmatrix}1&2\\2&4\end{bmatrix}\)?</p><p class="hint">Is the second column a multiple of the first?</p><div class="explain">Column 2 = 2 × column 1, and the determinant is 0, so the rank is 1, not full.</div></div>
+<div class="q" data-id="m0-4" data-answer="-2"><p class="prompt">Find the larger eigenvalue of \(\begin{bmatrix}0&1\\-6&-5\end{bmatrix}\).</p><p class="hint">\(\lambda^2-(\text{tr})\lambda+\det=\lambda^2+5\lambda+6\).</p><div class="explain">\((\lambda+2)(\lambda+3)=0\) gives \(-2,-3\). The larger one is \(-2\).</div></div>
+<div class="q" data-id="m0-5" data-choice="2"><p class="prompt">\(\mathbf A\) has \(\det(z\mathbf I-\mathbf A)=z^2-0.5z+0.06\). Cayley–Hamilton says:</p>
+<ol class="opts"><li>\(\mathbf A^2=\mathbf 0\)</li><li>\(\mathbf A^2-0.5\mathbf A+0.06=0\) as scalars only</li><li>\(\mathbf A^2-0.5\mathbf A+0.06\mathbf I=\mathbf 0\)</li></ol>
+<p class="hint">Replace \(z\) by \(\mathbf A\), and replace the constant term \(c\) by \(c\mathbf I\).</p><div class="explain">A matrix satisfies its own characteristic polynomial, with the constant multiplying \(\mathbf I\).</div></div>
+</div>
+</section>
+
+<!-- ============================================================ M1 -->
+<section class="module" id="m1" data-title="1 · State-space models">
+<h2>1 · What a state is, and building state-space models <span class="src">Lect 1 §1–1.2, slides 5–24</span></h2>
+<h3>1.1 The idea of a state</h3>
+<p>A circuit or motor has memory: what it does next depends on what has already happened. LPH's motivating example is the series RLC circuit (slides 9–12). Solving one second-order equation for the current hides the capacitor voltage. If you track <em>both</em> the inductor current \(i_L\) and the capacitor voltage \(v_C\), every other voltage in the circuit follows from them.</p>
+<div class="box"><p><strong>Definition (slide 13).</strong> The <em>state</em> is a minimum set of internal variables \(x_1,\dots,x_n\). Knowing them at time \(t_0\), together with the input from \(t_0\) onwards, is enough to predict all future states and outputs.</p></div>
+<p>Write the states as a column vector \(\mathbf x\). A linear time-invariant (LTI) system then has the form <span class="src">(1.1)–(1.2)</span>:</p>
+\[\dot{\mathbf x}(t)=\mathbf A\mathbf x(t)+\mathbf B u(t),\qquad y(t)=\mathbf C\mathbf x(t)+D u(t).\]
+<p>Here \(\mathbf A\) is \(n\times n\) (the dynamics), \(\mathbf B\) is \(n\times r\) (how the inputs push the states), \(\mathbf C\) is \(m\times n\) (what you measure), and \(D\) is the direct feed-through. In this quiz everything is single-input single-output (\(r=m=1\)) and \(n=2\).</p>
+<p><em>Why first-order equations?</em> A second-order ODE becomes two first-order ones if you call the position one state and the velocity another. Newton's law \(M\ddot y=F\) (Example 1.1) with \(x_1=y,\;x_2=\dot y\) gives \(\dot x_1=x_2\) and \(\dot x_2=F/M\):</p>
+\[\dot{\mathbf x}=\begin{bmatrix}0&1\\0&0\end{bmatrix}\mathbf x+\begin{bmatrix}0\\1/M\end{bmatrix}F,\quad y=\begin{bmatrix}1&0\end{bmatrix}\mathbf x.\]
+
+<h3>1.2 Recipe A: ODE → state space</h3>
+<ol>
+<li><strong>Normalise</strong>: divide by the coefficient of the highest derivative so that \(\ddot y\) stands alone.</li>
+<li>Choose \(x_1=y,\;x_2=\dot y\). Then row 1 is always \(\dot x_1=x_2\).</li>
+<li>Row 2 is \(\dot x_2=\ddot y=\) (the normalised ODE solved for \(\ddot y\)).</li>
+</ol>
+<p><strong>Worked.</strong> \(2\ddot y+6\dot y+4y=8u\). Dividing by 2 gives \(\ddot y=-2y-3\dot y+4u\), so</p>
+\[\mathbf A=\begin{bmatrix}0&1\\-2&-3\end{bmatrix},\;\mathbf B=\begin{bmatrix}0\\4\end{bmatrix},\;\mathbf C=\begin{bmatrix}1&0\end{bmatrix},\;D=0.\]
+<p class="box warn"><strong>Pitfall.</strong> If you forget to normalise, every entry in row 2 is off by the leading coefficient. Also, the bottom row of \(\mathbf A\) holds the <em>negated</em> ODE coefficients.</p>
+<p><strong>Physical example from the slides: the servomotor</strong> (Example 1.2, slides 21–24). Motor torque \(K_Ti=J\ddot\theta+B\dot\theta\), back-emf \(e_m=K_b\dot\theta\), and armature KVL \(e=iR_a+e_m\) (neglecting \(L_a\)). Eliminating \(i\) with \(x_1=\theta,\;x_2=\dot\theta\) gives</p>
+\[\dot{\mathbf x}=\begin{bmatrix}0&1\\0&-\dfrac{BR_a+K_TK_b}{JR_a}\end{bmatrix}\mathbf x+\begin{bmatrix}0\\\dfrac{K_T}{JR_a}\end{bmatrix}e,\qquad y=\begin{bmatrix}1&0\end{bmatrix}\mathbf x.\]
+<p>The servo used throughout the lecture has these numbers chosen so that \(\mathbf A=\begin{bmatrix}0&1\\0&-1\end{bmatrix},\;\mathbf B=\begin{bmatrix}0\\1\end{bmatrix}\) (Example 1.4).</p>
+
+<div class="checks"><h4>Check · ODE → state space</h4>
+<p>Take \(3\ddot y+12\dot y+9y=6u\) with \(x_1=y,\;x_2=\dot y\).</p>
+<div class="q" data-id="m1-1" data-answer="-3"><p class="prompt">Find \(a_{21}\), the bottom-left entry of \(\mathbf A\).</p><p class="hint">Divide by 3 first.</p><div class="explain">\(\ddot y=-3y-4\dot y+2u\), so \(a_{21}=-3\).</div></div>
+<div class="q" data-id="m1-2" data-answer="-4"><p class="prompt">Find \(a_{22}\).</p><p class="hint">This is the coefficient of \(\dot y=x_2\) after normalising.</p><div class="explain">\(-12/3=-4\).</div></div>
+<div class="q" data-id="m1-3" data-answer="2"><p class="prompt">Find \(b_2\), the bottom entry of \(\mathbf B\).</p><p class="hint">\(6/3\).</p><div class="explain">\(b_2=2\) and \(b_1=0\).</div></div>
+</div>
+
+<h3>1.3 Recipe B: continuous block diagram → state space <span class="src">supplementary; past sittings asked this</span></h3>
+<p class="box extra">This recipe is my addition, built on LPH's state definition. Past Quiz 2 sittings asked “find a state-space model from the block diagram” (intel file).</p>
+<ol>
+<li>Put a state at the <strong>output of every dynamic block</strong> (\(1/s\), \(k/(s+a)\)).</li>
+<li>A block \(\dfrac{k}{s+a}\) with input \(e\) and output \(x\) means \((s+a)X=kE\), which in the time domain is \(\dot x=-ax+ke\).</li>
+<li>A block \(1/s\) means \(\dot x=e\) (its input).</li>
+<li>Write each block's input from the summing junctions, in terms of states and \(u\), and substitute.</li>
+</ol>
+<svg class="diagram" viewBox="0 0 640 170" role="img" aria-label="Block diagram: u enters a summing junction with minus feedback 2 y, then block 3 over s plus 4 giving x2, then block 1 over s giving x1 equal to y.">
+<defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs>
+<g fill="none" stroke="currentColor" stroke-width="1.6">
+<line x1="20" y1="60" x2="98" y2="60" marker-end="url(#ar)"/><circle cx="110" cy="60" r="12"/>
+<line x1="122" y1="60" x2="198" y2="60" marker-end="url(#ar)"/><rect x="200" y="35" width="100" height="50" rx="6"/>
+<line x1="300" y1="60" x2="388" y2="60" marker-end="url(#ar)"/><rect x="390" y="35" width="80" height="50" rx="6"/>
+<line x1="470" y1="60" x2="610" y2="60" marker-end="url(#ar)"/>
+<polyline points="560,60 560,140 400,140" marker-end="url(#ar)"/><rect x="330" y="120" width="70" height="40" rx="6"/>
+<polyline points="330,140 110,140 110,74" marker-end="url(#ar)"/>
+</g>
+<g fill="currentColor" font-size="17" font-family="serif" text-anchor="middle">
+<text x="30" y="50">u</text><text x="250" y="66">3/(s+4)</text><text x="430" y="66">1/s</text><text x="345" y="50">x₂</text><text x="520" y="50">x₁ = y</text>
+<text x="365" y="146">2</text><text x="124" y="92">−</text><text x="92" y="52">+</text>
+</g></svg>
+<p><strong>Worked.</strong> States: \(x_1\) = the output of \(1/s\) \(=y\), and \(x_2\) = the output of \(3/(s+4)\). The input to \(3/(s+4)\) is \(u-2x_1\). So</p>
+\[\dot x_1=x_2,\qquad \dot x_2=-4x_2+3(u-2x_1)=-6x_1-4x_2+3u,\]
+\[\mathbf A=\begin{bmatrix}0&1\\-6&-4\end{bmatrix},\;\mathbf B=\begin{bmatrix}0\\3\end{bmatrix},\;\mathbf C=\begin{bmatrix}1&0\end{bmatrix}.\]
+<p><em>Sanity check:</em> the block diagram's own closed-loop transfer function is \(\frac{3/(s(s+4))}{1+6/(s(s+4))}=\frac{3}{s^2+4s+6}\). The model's characteristic polynomial \(\det(s\mathbf I-\mathbf A)=s^2+4s+6\) matches.</p>
+
+<h3>1.4 Recipe C: discrete block diagram (delays) → state space <span class="src">Lect 3 Ex 3.5, slides 14–15</span></h3>
+<p>The discrete version is the same idea with \(z^{-1}\) (a one-sample delay) in place of \(1/s\). <strong>The output of each delay is a state \(x_i(k)\), and the signal entering that delay is \(x_i(k+1)\).</strong> In LPH's Example 3.5, the first delay has feedback \(-0.2\), so \(x_1(k+1)=-0.2x_1(k)\). The second junction adds \(x_1\) and \(u\) and subtracts \(0.5x_2\), so \(x_2(k+1)=x_1(k)-0.5x_2(k)+u(k)\), with \(y=x_2\).</p>
+<svg class="diagram" viewBox="0 0 640 170" role="img" aria-label="Discrete block diagram: u enters junction one with plus feedback 0.5 x1, through z inverse gives x1; x1 enters junction two with minus feedback 0.25 x2, through z inverse gives x2 equal to y.">
+<g fill="none" stroke="currentColor" stroke-width="1.6">
+<line x1="20" y1="60" x2="78" y2="60" marker-end="url(#ar)"/><circle cx="90" cy="60" r="12"/>
+<line x1="102" y1="60" x2="148" y2="60" marker-end="url(#ar)"/><rect x="150" y="38" width="60" height="44" rx="6"/>
+<line x1="210" y1="60" x2="338" y2="60" marker-end="url(#ar)"/><circle cx="350" cy="60" r="12"/>
+<line x1="362" y1="60" x2="418" y2="60" marker-end="url(#ar)"/><rect x="420" y="38" width="60" height="44" rx="6"/>
+<line x1="480" y1="60" x2="610" y2="60" marker-end="url(#ar)"/>
+<polyline points="250,60 250,140 180,140" marker-end="url(#ar)"/><rect x="130" y="122" width="50" height="36" rx="6"/><polyline points="130,140 90,140 90,74" marker-end="url(#ar)"/>
+<polyline points="560,60 560,140 450,140" marker-end="url(#ar)"/><rect x="400" y="122" width="50" height="36" rx="6"/><polyline points="400,140 350,140 350,74" marker-end="url(#ar)"/>
+</g>
+<g fill="currentColor" font-size="17" font-family="serif" text-anchor="middle">
+<text x="30" y="50">u(k)</text><text x="180" y="66">z⁻¹</text><text x="450" y="66">z⁻¹</text><text x="270" y="50">x₁(k)</text><text x="535" y="50">x₂(k) = y</text>
+<text x="155" y="146">0.5</text><text x="425" y="146">0.25</text><text x="104" y="92">+</text><text x="364" y="92">−</text><text x="326" y="52">+</text>
+</g></svg>
+
+<h3>1.5 From state space back to a transfer function <span class="src">Lect 1 §1.2, slides 18–20</span></h3>
+<p>Take Laplace transforms with \(\mathbf x(0)=\mathbf 0\): \(s\mathbf X=\mathbf A\mathbf X+\mathbf BU\), so \(\mathbf X=(s\mathbf I-\mathbf A)^{-1}\mathbf BU\). Therefore</p>
+\[\boxed{G(s)=\frac{Y(s)}{U(s)}=\mathbf C(s\mathbf I-\mathbf A)^{-1}\mathbf B+D=\frac{\mathbf C\,\operatorname{adj}(s\mathbf I-\mathbf A)\,\mathbf B}{\det(s\mathbf I-\mathbf A)}+D}\quad\textbf{MEMORISE}\]
+<p>The denominator is \(\det(s\mathbf I-\mathbf A)\), so <strong>the poles are the eigenvalues of \(\mathbf A\)</strong>. For the servo, this gives \(\Theta(s)/E(s)=\dfrac{K_T/JR_a}{s\,(s+(BR_a+K_TK_b)/JR_a)}\) (slide 24).</p>
+
+<div class="checks"><h4>Check · diagrams and transfer functions</h4>
+<div class="q" data-id="m1-4" data-answer="-0.25"><p class="prompt">Discrete diagram above (with 0.5 and 0.25): find \(a_{22}\) in \(\mathbf x(k+1)=\mathbf A\mathbf x(k)+\mathbf Bu(k)\).</p><p class="hint">The input to the second delay is \(x_1(k)-0.25x_2(k)\).</p><div class="explain">\(x_2(k+1)=x_1(k)-0.25x_2(k)\), so \(a_{22}=-0.25\) and \(a_{21}=1\). Row 1: \(x_1(k+1)=0.5x_1(k)+u(k)\). So \(\mathbf A=\begin{bmatrix}0.5&0\\1&-0.25\end{bmatrix},\;\mathbf B=\begin{bmatrix}1\\0\end{bmatrix},\;\mathbf C=[0\;\,1]\).</div></div>
+<div class="q" data-id="m1-5" data-answer="-6"><p class="prompt">Replace the feedback gain 2 in the <em>continuous</em> diagram by 3 and the block \(3/(s+4)\) by \(2/(s+5)\). Find \(a_{21}\).</p><p class="hint">\(\dot x_2=-5x_2+2(u-3x_1)\).</p><div class="explain">\(\dot x_2=-6x_1-5x_2+2u\), so \(a_{21}=-6\).</div></div>
+<div class="q" data-id="m1-6" data-answer="1"><p class="prompt">For \(\mathbf A=\begin{bmatrix}0&1\\-2&-3\end{bmatrix},\mathbf B=\begin{bmatrix}0\\2\end{bmatrix},\mathbf C=[1\;0]\), evaluate the DC gain \(G(0)\).</p><p class="hint">\(G(s)=\mathbf C(s\mathbf I-\mathbf A)^{-1}\mathbf B\). Here \(\det(s\mathbf I-\mathbf A)=s^2+3s+2\).</p><div class="explain">\(\operatorname{adj}(s\mathbf I-\mathbf A)=\begin{bmatrix}s+3&1\\-2&s\end{bmatrix}\). Then \(\mathbf C\operatorname{adj}\mathbf B=[s+3\;\;1]\begin{bmatrix}0\\2\end{bmatrix}=2\), so \(G(s)=\dfrac{2}{s^2+3s+2}\) and \(G(0)=1\).</div></div>
+<div class="q" data-id="m1-7" data-answer="-2"><p class="prompt">Same system: what is the more negative pole?</p><p class="hint">Poles are the eigenvalues of \(\mathbf A\).</p><div class="explain">\(s^2+3s+2=(s+1)(s+2)\), so the poles are \(-1\) and \(-2\).</div></div>
+</div>
+</section>
+
+<!-- ============================================================ M2 -->
+<section class="module" id="m2" data-title="2 · Solving ẋ = Ax + Bu">
+<h2>2 · The state transition matrix \(\mathbf\Phi(t)\) <span class="src">Lect 1 §1.3, slides 25–30</span></h2>
+<p>Before discretising, you need the continuous solution. Transform \(\dot{\mathbf x}=\mathbf A\mathbf x+\mathbf Bu\) <em>keeping</em> the initial state: \(s\mathbf X-\mathbf x(0)=\mathbf A\mathbf X+\mathbf BU\), so</p>
+\[\mathbf X(s)=(s\mathbf I-\mathbf A)^{-1}\mathbf x(0)+(s\mathbf I-\mathbf A)^{-1}\mathbf BU(s).\]
+<p>The first term is the free response, the second the forced response. Inverting gives</p>
+\[\boxed{\mathbf\Phi(t)=\mathcal L^{-1}\{(s\mathbf I-\mathbf A)^{-1}\}=e^{\mathbf At}}\quad\textbf{MEMORISE}\]
+\[\mathbf x(t)=\mathbf\Phi(t-t_0)\mathbf x(t_0)+\int_{t_0}^{t}\mathbf\Phi(t-\tau)\mathbf Bu(\tau)\,d\tau \quad(1.21).\]
+<p>The integral is a convolution: the forced part “remembers” each past input pushed through \(\mathbf\Phi\).</p>
+<p><strong>Properties</strong> (slide 27): \(\mathbf\Phi(0)=\mathbf I\); \(\mathbf\Phi^{-1}(t)=\mathbf\Phi(-t)\); \(\mathbf\Phi(t_2-t_1)\mathbf\Phi(t_1-t_0)=\mathbf\Phi(t_2-t_0)\); \(\mathbf\Phi(t)^k=\mathbf\Phi(kt)\).</p>
+
+<h3>Worked: \(\mathbf A=\begin{bmatrix}0&1\\0&-2\end{bmatrix}\)</h3>
+<details><summary>Step 1: form \(s\mathbf I-\mathbf A\) and invert</summary>
+\[s\mathbf I-\mathbf A=\begin{bmatrix}s&-1\\0&s+2\end{bmatrix},\quad\det=s(s+2),\quad (s\mathbf I-\mathbf A)^{-1}=\begin{bmatrix}\frac1s&\frac1{s(s+2)}\\0&\frac1{s+2}\end{bmatrix}.\]
+Why the 2×2 rule: swap the diagonal to \(s+2,\,s\), negate the off-diagonal \(-1\to+1\), and divide by \(s(s+2)\).</details>
+<details><summary>Step 2: invert entry by entry (partial fractions)</summary>
+\(\frac1{s(s+2)}=\frac12\left(\frac1s-\frac1{s+2}\right)\to\frac12(1-e^{-2t})\). The other entries come straight from the table: \(1/s\to1\), \(1/(s+2)\to e^{-2t}\).
+\[\mathbf\Phi(t)=\begin{bmatrix}1&\tfrac12(1-e^{-2t})\\0&e^{-2t}\end{bmatrix}.\]
+Check: at \(t=0\) this is \(\mathbf I\). ✓</details>
+<p>The lecture's servo (\(\mathbf A=\begin{bmatrix}0&1\\0&-1\end{bmatrix}\)) gives \(\mathbf\Phi(t)=\begin{bmatrix}1&1-e^{-t}\\0&e^{-t}\end{bmatrix}\) the same way (slide 39).</p>
+
+<div class="checks"><h4>Check · \(\mathbf\Phi(t)\)</h4>
+<div class="q" data-id="m2-1" data-answer="0.22313"><p class="prompt">\(\mathbf A=\begin{bmatrix}-1&0\\0&-3\end{bmatrix}\). Find \(\Phi_{22}(0.5)\) to 4 significant figures.</p><p class="hint">For a diagonal \(\mathbf A\), \(\mathbf\Phi=\operatorname{diag}(e^{-t},e^{-3t})\).</p><div class="explain">\(e^{-1.5}=0.2231\).</div></div>
+<div class="q" data-id="m2-2" data-answer="2"><p class="prompt">For the double integrator \(\mathbf A=\begin{bmatrix}0&1\\0&0\end{bmatrix}\), find \(\Phi_{12}(2)\).</p><p class="hint">\((s\mathbf I-\mathbf A)^{-1}=\begin{bmatrix}1/s&1/s^2\\0&1/s\end{bmatrix}\).</p><div class="explain">\(\mathbf\Phi(t)=\begin{bmatrix}1&t\\0&1\end{bmatrix}\), so \(\Phi_{12}(2)=2\).</div></div>
+<div class="q" data-id="m2-3" data-answer="0.43233"><p class="prompt">For the worked \(\mathbf A=\begin{bmatrix}0&1\\0&-2\end{bmatrix}\), find \(\Phi_{12}(1)\).</p><p class="hint">\(\tfrac12(1-e^{-2t})\).</p><div class="explain">\(\tfrac12(1-e^{-2})=0.4323\).</div></div>
+<div class="q" data-id="m2-4" data-choice="1"><p class="prompt">Which expression equals \(\mathbf\Phi^{-1}(t)\)?</p><ol class="opts"><li>\(\mathbf\Phi(t)^{\mathsf T}\)</li><li>\(\mathbf\Phi(-t)\)</li><li>\(-\mathbf\Phi(t)\)</li></ol><p class="hint">\(e^{\mathbf At}e^{-\mathbf At}=\mathbf I\).</p><div class="explain">Running time backwards undoes the transition: \(\mathbf\Phi(t)\mathbf\Phi(-t)=\mathbf\Phi(0)=\mathbf I\).</div></div>
+</div>
+</section>
+
+<!-- ============================================================ M3 -->
+<section class="module" id="m3" data-title="3 · ZOH discretisation">
+<h2>3 · Discretising with a zero-order hold <span class="src">Lect 1 §2, slides 31–40 + slide-40 note</span></h2>
+<p>A computer sends \(u(kT)\) every \(T\) seconds, and the zero-order hold (ZOH) keeps it <strong>constant</strong> until the next sample. Our goal is a model that jumps straight from \(\mathbf x(kT)\) to \(\mathbf x((k+1)T)\).</p>
+<h3>Derivation (why the formula looks the way it does)</h3>
+<details open><summary>Step 1: apply (1.21) over one sampling interval</summary>
+Set \(t_0=kT\) and \(t=(k+1)T\):
+\[\mathbf x((k+1)T)=\mathbf\Phi(T)\mathbf x(kT)+\int_{kT}^{(k+1)T}\mathbf\Phi((k+1)T-\tau)\mathbf B\,u(\tau)\,d\tau.\]</details>
+<details><summary>Step 2: use the hold, \(u(\tau)=u(kT)\) on the interval</summary>
+Because the input is constant, it comes out of the integral: \(\left[\int_{kT}^{(k+1)T}\mathbf\Phi((k+1)T-\tau)\,d\tau\,\mathbf B\right]u(kT)\). Without the ZOH this step would fail. That is the whole reason a hold gives an exact discrete model.</details>
+<details><summary>Step 3: substitute \(\lambda=(k+1)T-\tau\)</summary>
+As \(\tau\) runs from \(kT\) to \((k+1)T\), \(\lambda\) runs from \(T\) down to 0, and \(d\lambda=-d\tau\), which flips the limits back. The \(k\) disappears:
+\[\mathbf\Theta(T)=\int_0^T\mathbf\Phi(\lambda)\,d\lambda\;\mathbf B.\]</details>
+<div class="box good">
+\[\boxed{\mathbf x(k+1)=\mathbf\Phi(T)\,\mathbf x(k)+\mathbf\Theta(T)\,u(k),\quad y(k)=\mathbf C\mathbf x(k)+Du(k)}\]
+\[\boxed{\mathbf\Phi(T)=\mathcal L^{-1}\{(s\mathbf I-\mathbf A)^{-1}\}\big|_{t=T},\qquad \mathbf\Theta(T)=\Big[\int_0^T\mathbf\Phi(\tau)\,d\tau\Big]\mathbf B}\quad\textbf{MEMORISE}\]
+<p>\(\mathbf C\) and \(D\) do not change. Following LPH, after discretising we drop the “\(T\)” and write \(\mathbf x(k)\).</p></div>
+<p class="box warn"><strong>Pitfalls.</strong> (1) Integrate \(\mathbf\Phi(\tau)\) first, then multiply by \(\mathbf B\). In practice it is fastest to multiply first (\(\mathbf\Phi(\tau)\mathbf B\) is a column) and then integrate that column; both give the same result. (2) \(\mathbf\Theta\ne\mathbf BT\). That is only the small-\(T\) approximation.</p>
+
+<h3>Lecture example: the servo, \(T=0.1\) s <span class="src">Example 1.4, slides 38–40</span></h3>
+<p>\(\mathbf\Phi(t)\mathbf B=\begin{bmatrix}1-e^{-t}\\e^{-t}\end{bmatrix}\). Integrating from 0 to \(T\) gives \(\begin{bmatrix}T+e^{-T}-1\\1-e^{-T}\end{bmatrix}\) (LPH's handwritten slide-40 note). At \(T=0.1\):</p>
+\[\mathbf x(k+1)=\begin{bmatrix}1&0.0952\\0&0.905\end{bmatrix}\mathbf x(k)+\begin{bmatrix}0.00484\\0.0952\end{bmatrix}u(k),\qquad y(k)=[1\;\;0]\,\mathbf x(k).\]
+<p>Modules 9 and 10 reuse this model.</p>
+
+<h3>Worked: \(\mathbf A=\begin{bmatrix}0&1\\0&-2\end{bmatrix},\;\mathbf B=\begin{bmatrix}0\\2\end{bmatrix},\;T=0.5\)</h3>
+<details><summary>Step 1: \(\mathbf\Phi(T)\)</summary>From Module 2, \(\mathbf\Phi(0.5)=\begin{bmatrix}1&\tfrac12(1-e^{-1})\\0&e^{-1}\end{bmatrix}=\begin{bmatrix}1&0.3161\\0&0.3679\end{bmatrix}\).</details>
+<details><summary>Step 2: \(\mathbf\Phi(\tau)\mathbf B\), then integrate</summary>
+\(\mathbf\Phi(\tau)\mathbf B=\begin{bmatrix}1-e^{-2\tau}\\2e^{-2\tau}\end{bmatrix}\), so
+\(\mathbf\Theta(T)=\begin{bmatrix}T-\tfrac12(1-e^{-2T})\\1-e^{-2T}\end{bmatrix}=\begin{bmatrix}0.1839\\0.6321\end{bmatrix}\) at \(T=0.5\).</details>
+<details><summary>Step 3: sanity checks</summary>
+For small \(T\), \(\mathbf\Theta\approx\mathbf BT=[0,\;1]^{\mathsf T}\). Our second entry, 0.632, is below 1 because the \(-2\) pole leaks state away during the interval. The first entry is positive because \(x_2\) feeds \(x_1\). ✓</details>
+
+<h3>Lecture example: double integrator <span class="src">Example 1.6, slides 48–50</span></h3>
+<p>\(\mathbf\Phi(T)=\begin{bmatrix}1&T\\0&1\end{bmatrix}\) and \(\mathbf\Theta(T)=\int_0^T\begin{bmatrix}\tau\\1\end{bmatrix}d\tau=\begin{bmatrix}T^2/2\\T\end{bmatrix}\). Memorise this one: it reappears in the deadbeat example.</p>
+
+<div class="checks"><h4>Check · ZOH discretisation</h4>
+<p>Discretise \(\mathbf A=\begin{bmatrix}0&1\\0&-1\end{bmatrix},\;\mathbf B=\begin{bmatrix}0\\1\end{bmatrix}\) (the servo) with \(T=0.2\). Give 4 significant figures.</p>
+<div class="q" data-id="m3-1" data-answer="0.181269"><p class="prompt">\(\Phi_{12}(T)\)</p><p class="hint">\(1-e^{-T}\).</p><div class="explain">\(1-e^{-0.2}=0.1813\).</div></div>
+<div class="q" data-id="m3-2" data-answer="0.818731"><p class="prompt">\(\Phi_{22}(T)\)</p><p class="hint">\(e^{-T}\).</p><div class="explain">\(e^{-0.2}=0.8187\).</div></div>
+<div class="q" data-id="m3-3" data-answer="0.0187308"><p class="prompt">\(\Theta_1(T)\)</p><p class="hint">\(T+e^{-T}-1\).</p><div class="explain">\(0.2+0.81873-1=0.01873\). Compare 0.00484 at \(T=0.1\): it grows roughly like \(T^2/2\).</div></div>
+<div class="q" data-id="m3-4" data-answer="0.181269"><p class="prompt">\(\Theta_2(T)\)</p><p class="hint">\(1-e^{-T}\).</p><div class="explain">\(0.1813\).</div></div>
+<div class="q" data-id="m3-5" data-answer="0.125"><p class="prompt">For the double integrator with \(T=0.5\), find \(\Theta_1\).</p><p class="hint">\(T^2/2\).</p><div class="explain">\(0.25/2=0.125\), and \(\Theta_2=0.5\).</div></div>
+</div>
+</section>
+
+<!-- ============================================================ M4 -->
+<section class="module" id="m4" data-title="4 · Discrete TF, poles, zeros">
+<h2>4 · Discrete transfer function, poles and zeros <span class="src">Lect 1 §3, slides 41–52</span></h2>
+<p>Exactly as in continuous time, take z-transforms of \(\mathbf x(k+1)=\mathbf A\mathbf x(k)+\mathbf Bu(k)\) with \(\mathbf x(0)=\mathbf 0\): \(z\mathbf X=\mathbf A\mathbf X+\mathbf BU\). (From here on, \(\mathbf A,\mathbf B\) mean the discrete matrices \(\mathbf\Phi,\mathbf\Theta\).)</p>
+\[\boxed{G(z)=\frac{Y(z)}{U(z)}=\mathbf C(z\mathbf I-\mathbf A)^{-1}\mathbf B+D}\quad\textbf{MEMORISE}\]
+<ul>
+<li><strong>Poles</strong> (§3.1): values of \(z\) where the unforced system has a non-trivial solution, \(\det(z\mathbf I-\mathbf A)=0\). They are the eigenvalues of \(\mathbf A\). Stable means \(|z|\lt1\).</li>
+<li><strong>Zeros</strong> (§3.2): values \(z_0\) at which a non-zero state/input combination gives zero output. Stacking the state and output equations gives
+\[\det\begin{bmatrix}z_0\mathbf I-\mathbf A&-\mathbf B\\\mathbf C&D\end{bmatrix}=0.\]
+For SISO with no cancellation, this is just the numerator of \(G(z)\).</li>
+</ul>
+<h3>Lecture example 1.5</h3>
+<p>\(\mathbf A=\begin{bmatrix}1.35&0.55\\-0.45&0.35\end{bmatrix},\;\mathbf B=\begin{bmatrix}0.5\\0.5\end{bmatrix},\;\mathbf C=[1\;\,-1]\). Then \(\det(z\mathbf I-\mathbf A)=z^2-1.7z+0.72=(z-0.9)(z-0.8)\), and \(G(z)=\dfrac{1}{z^2-1.7z+0.72}\): poles at 0.9 and 0.8, and no finite zeros.</p>
+<h3>Lecture example 1.6: the double integrator after ZOH</h3>
+<p>\(G(z)=\dfrac{T^2}{2}\dfrac{z+1}{(z-1)^2}\). Sampling created a zero at \(z=-1\) that the continuous \(1/s^2\) never had. Zeros are <em>not</em> mapped by \(z=e^{sT}\); only poles are.</p>
+<h3>Worked: the Module 3 system (\(T=0.5\))</h3>
+<details><summary>Show the transfer function</summary>
+\[(z\mathbf I-\mathbf A)^{-1}=\dfrac{1}{(z-1)(z-0.3679)}\begin{bmatrix}z-0.3679&0.3161\\0&z-1\end{bmatrix}.\] Multiplying by \(\mathbf C=[1\;0]\) on the left and \(\mathbf\Theta\) on the right:
+\[G(z)=\frac{0.1839(z-0.3679)+0.3161\cdot0.6321}{(z-1)(z-0.3679)}=\frac{0.1839\,(z+0.7183)}{(z-1)(z-0.3679)}.\]
+Poles \(1,\;e^{-1}\) are the images \(e^{sT}\) of \(s=0,-2\). The zero is \(-0.718\).</details>
+
+<div class="checks"><h4>Check · poles and zeros</h4>
+<div class="q" data-id="m4-1" data-answer="0.5"><p class="prompt">\(\mathbf A=\begin{bmatrix}0.5&1\\0&0.2\end{bmatrix}\). What is the larger pole?</p><p class="hint">The matrix is triangular.</p><div class="explain">The eigenvalues are the diagonal entries, 0.5 and 0.2.</div></div>
+<div class="q" data-id="m4-2" data-answer="0.70711"><p class="prompt">\(\mathbf A=\begin{bmatrix}0&1\\-0.5&1\end{bmatrix}\). Find the pole magnitude \(|z|\).</p><p class="hint">\(z^2-z+0.5=0\). For complex poles, \(|z|^2=\) the constant term.</p><div class="explain">\(z=0.5\pm0.5j\), so \(|z|=\sqrt{0.5}=0.7071\lt1\): stable.</div></div>
+<div class="q" data-id="m4-3" data-answer="2"><p class="prompt">Same \(\mathbf A\) with \(\mathbf B=[0\;1]^{\mathsf T},\;\mathbf C=[1\;0]\). Find the DC gain \(G(1)\).</p><p class="hint">Show \(G(z)=1/(z^2-z+0.5)\) first.</p><div class="explain">\(\operatorname{adj}(z\mathbf I-\mathbf A)=\begin{bmatrix}z-1&1\\-0.5&z\end{bmatrix}\), and \(\mathbf C\operatorname{adj}\mathbf B=1\). So \(G(1)=1/0.5=2\).</div></div>
+<div class="q" data-id="m4-4" data-answer="-0.71828"><p class="prompt">In the worked example above, give the exact zero (it equals \(2-e\)) to 4 significant figures.</p><p class="hint">\(2-2.71828\).</p><div class="explain">\(-0.7183\).</div></div>
+<div class="q" data-id="m4-5" data-answer="-1"><p class="prompt">Where is the zero of the ZOH double integrator?</p><p class="hint">Look at its numerator.</p><div class="explain">\(z+1=0\), so the zero is at \(z=-1\), for any \(T\).</div></div>
+</div>
+</section>
+
+<!-- ============================================================ M5 -->
+<section class="module" id="m5" data-title="5 · State transition x(k)">
+<h2>5 · Solving the discrete state equation by recursion <span class="src">Lect 1 §4, slides 53–56</span></h2>
+<p>The simplest solution method is to <strong>iterate</strong>: \(\mathbf x(1)=\mathbf A\mathbf x(0)+\mathbf Bu(0)\), then \(\mathbf x(2)=\mathbf A\mathbf x(1)+\mathbf Bu(1)=\mathbf A^2\mathbf x(0)+\mathbf{AB}u(0)+\mathbf Bu(1)\), and so on. The pattern is</p>
+\[\boxed{\mathbf x(k)=\mathbf A^k\mathbf x(0)+\sum_{i=0}^{k-1}\mathbf A^{k-1-i}\mathbf B\,u(i)}\quad(4.3)\quad\textbf{MEMORISE}\]
+<p>The oldest input, \(u(0)\), has passed through \(\mathbf A\) the most times. In the quiz, just iterate step by step: it is quicker and less error-prone than forming powers of \(\mathbf A\).</p>
+<h3>Worked</h3>
+<p>\(\mathbf A=\begin{bmatrix}0&1\\-0.5&1\end{bmatrix}\), \(\mathbf B=\begin{bmatrix}0\\1\end{bmatrix}\), \(\mathbf x(0)=\begin{bmatrix}1\\0\end{bmatrix}\), \(u(0)=2\), \(u(1)=-1\).</p>
+<details><summary>\(k=0\to1\)</summary>\(\mathbf A\mathbf x(0)=\begin{bmatrix}0\\-0.5\end{bmatrix}\). Add \(\mathbf Bu(0)=\begin{bmatrix}0\\2\end{bmatrix}\) to get \(\mathbf x(1)=\begin{bmatrix}0\\1.5\end{bmatrix}\).</details>
+<details><summary>\(k=1\to2\)</summary>\(\mathbf A\mathbf x(1)=\begin{bmatrix}1.5\\1.5\end{bmatrix}\). Add \(\mathbf Bu(1)=\begin{bmatrix}0\\-1\end{bmatrix}\) to get \(\mathbf x(2)=\begin{bmatrix}1.5\\0.5\end{bmatrix}\), so \(y(2)=\mathbf C\mathbf x(2)=1.5\) for \(\mathbf C=[1\;0]\).</details>
+<p class="box warn"><strong>Pitfall.</strong> Use the right input at each step: \(u(k)\) drives the step from \(k\) to \(k+1\). The input \(u(2)\) does not affect \(\mathbf x(2)\).</p>
+
+<div class="checks"><h4>Check · iterate</h4>
+<p>\(\mathbf A=\begin{bmatrix}0.5&1\\0&-0.5\end{bmatrix}\), \(\mathbf B=\begin{bmatrix}1\\0\end{bmatrix}\), \(\mathbf x(0)=\begin{bmatrix}1\\2\end{bmatrix}\), \(u(0)=1\), \(u(1)=0\).</p>
+<div class="q" data-id="m5-1" data-answer="3.5"><p class="prompt">\(x_1(1)\)</p><p class="hint">\(0.5\cdot1+1\cdot2+1\cdot u(0)\).</p><div class="explain">\(0.5+2+1=3.5\), and \(x_2(1)=-1\).</div></div>
+<div class="q" data-id="m5-2" data-answer="0.75"><p class="prompt">\(x_1(2)\)</p><p class="hint">Use \(\mathbf x(1)=[3.5,\,-1]^{\mathsf T}\) and \(u(1)=0\).</p><div class="explain">\(0.5\cdot3.5+1\cdot(-1)=0.75\).</div></div>
+<div class="q" data-id="m5-3" data-answer="0.5"><p class="prompt">\(x_2(2)\)</p><p class="hint">\(-0.5\,x_2(1)\).</p><div class="explain">\(-0.5\cdot(-1)=0.5\).</div></div>
+<div class="q" data-id="m5-4" data-choice="0"><p class="prompt">In \(\mathbf x(3)\), the input \(u(0)\) is multiplied by:</p><ol class="opts"><li>\(\mathbf A^2\mathbf B\)</li><li>\(\mathbf A^3\mathbf B\)</li><li>\(\mathbf B\)</li></ol><p class="hint">\(\mathbf A^{k-1-i}\) with \(k=3,i=0\).</p><div class="explain">\(\mathbf A^{3-1-0}\mathbf B=\mathbf A^2\mathbf B\). The latest input \(u(2)\) gets just \(\mathbf B\).</div></div>
+</div>
+</section>
+
+<!-- ============================================================ M6 -->
+<section class="module" id="m6" data-title="6 · Canonical forms">
+<h2>6 · Similarity transformations and canonical forms <span class="src">Lect 2 §5–6, slides 2–20</span></h2>
+<h3>6.1 Same system, different states</h3>
+<p>Many state vectors describe the same physical system. Introduce new states \(\mathbf w\) through a constant non-singular \(\mathbf P\): \(\mathbf x=\mathbf P\mathbf w\) (5.3). Substituting into \(\mathbf x(k+1)=\mathbf A\mathbf x+\mathbf Bu\) and multiplying by \(\mathbf P^{-1}\) gives</p>
+\[\mathbf A_w=\mathbf P^{-1}\mathbf A\mathbf P,\quad\mathbf B_w=\mathbf P^{-1}\mathbf B,\quad\mathbf C_w=\mathbf C\mathbf P,\quad d_w=d.\]
+<p><strong>Invariants:</strong> the characteristic polynomial (so the poles) and the transfer function. Proof: \(\det(z\mathbf I-\mathbf P^{-1}\mathbf A\mathbf P)=\det(\mathbf P^{-1}(z\mathbf I-\mathbf A)\mathbf P)=\det(z\mathbf I-\mathbf A)\).</p>
+<h3>6.2 Controllable canonical form (CCF) and observable canonical form (OCF)</h3>
+<p>Write the characteristic polynomial as \(z^n+a_{n-1}z^{n-1}+\dots+a_1z+a_0\) (6.3). For \(n=2\):</p>
+\[\textbf{CCF: }\mathbf A_C=\begin{bmatrix}0&1\\-a_0&-a_1\end{bmatrix},\;\mathbf B_C=\begin{bmatrix}0\\1\end{bmatrix};\qquad \textbf{OCF: }\mathbf A_O=\begin{bmatrix}0&-a_0\\1&-a_1\end{bmatrix}=\mathbf A_C^{\mathsf T},\;\mathbf C_O=[0\;\;1].\]
+<p>In the CCF, the <em>last row</em> holds the negated coefficients and \(\mathbf B\) is \([0\cdots0\;1]^{\mathsf T}\). That structure is what makes pole placement easy (Module 9).</p>
+<p><strong>Transformation to CCF</strong> (6.10), provided the controllability matrix \(\mathbf W_C\) (Module 7) is non-singular:</p>
+\[\mathbf x=\mathbf P\mathbf w,\qquad \mathbf P=\mathbf W_C\,\tilde{\mathbf W}_C^{-1},\]
+<p>where \(\tilde{\mathbf W}_C=[\mathbf B_C\;\;\mathbf A_C\mathbf B_C]\) is the controllability matrix of the CCF. <em>Why:</em> \(\mathbf W_C\) transforms as \(\tilde{\mathbf W}_C=\mathbf P^{-1}\mathbf W_C\). For the OCF, \(\mathbf w=\mathbf Q\mathbf x\) with \(\mathbf Q=\tilde{\mathbf W}_O^{-1}\mathbf W_O\) (6.15).</p>
+<details><summary>Worked (Example 2.1): \(\mathbf A=\operatorname{diag}(0.5,0.8),\;\mathbf B=[1\;1]^{\mathsf T}\)</summary>
+\(\det(z\mathbf I-\mathbf A)=z^2-1.3z+0.4\), so \(a_1=-1.3,\;a_0=0.4\).
+\(\mathbf W_C=[\mathbf B\;\mathbf{AB}]=\begin{bmatrix}1&0.5\\1&0.8\end{bmatrix}\). In the CCF, \(\mathbf A_C\mathbf B_C=[1\;\;1.3]^{\mathsf T}\), so \(\tilde{\mathbf W}_C=\begin{bmatrix}0&1\\1&1.3\end{bmatrix}\) and \(\tilde{\mathbf W}_C^{-1}=\begin{bmatrix}-1.3&1\\1&0\end{bmatrix}\).
+\[\mathbf P=\begin{bmatrix}1&0.5\\1&0.8\end{bmatrix}\begin{bmatrix}-1.3&1\\1&0\end{bmatrix}=\begin{bmatrix}-0.8&1\\-0.5&1\end{bmatrix}.\]
+Check: \(\mathbf P^{-1}\mathbf B=[0\;1]^{\mathsf T}\) ✓, and \(\mathbf P^{-1}\mathbf A\mathbf P=\begin{bmatrix}0&1\\-0.4&1.3\end{bmatrix}\) ✓.</details>
+
+<h3>6.3 Writing the CCF/OCF straight from a transfer function (by inspection)</h3>
+<p>For a strictly proper \(G(z)=\dfrac{b_{n-1}z^{n-1}+\dots+b_1z+b_0}{z^n+a_{n-1}z^{n-1}+\dots+a_0}\):</p>
+\[\mathbf C_C=[b_0\;\;b_1\;\cdots\;b_{n-1}],\qquad \mathbf B_O=[b_0\;\;b_1\;\cdots\;b_{n-1}]^{\mathsf T}.\]
+<p>If the numerator has the <em>same</em> degree as the denominator, first divide: \(G=d+\)(strictly proper remainder). Example 2.2: \(\frac{-2z^3+2z^2-z+2}{z^3+z^2-z-3/4}=-2+\frac{4z^2-3z+1/2}{z^3+z^2-z-3/4}\), so \(d_C=-2\), \(\mathbf C_C=[\tfrac12\;\;-3\;\;4]\), and the last row of \(\mathbf A_C\) is \([\tfrac34\;\;1\;\;-1]\).</p>
+<p class="box warn"><strong>Pitfall.</strong> The order is reversed relative to how you read the polynomial. \(\mathbf C_C\) starts with \(b_0\) (the constant term), and the last row of \(\mathbf A_C\) starts with \(-a_0\).</p>
+
+<div class="checks"><h4>Check · canonical forms</h4>
+<p>\(G(z)=\dfrac{3z-1}{z^2+0.4z-0.12}\), in CCF.</p>
+<div class="q" data-id="m6-1" data-answer="0.12"><p class="prompt">Bottom-left entry of \(\mathbf A_C\)</p><p class="hint">\(-a_0\), with \(a_0=-0.12\).</p><div class="explain">\(-(-0.12)=0.12\).</div></div>
+<div class="q" data-id="m6-2" data-answer="-0.4"><p class="prompt">Bottom-right entry of \(\mathbf A_C\)</p><p class="hint">\(-a_1\).</p><div class="explain">\(-0.4\). So \(\mathbf A_C=\begin{bmatrix}0&1\\0.12&-0.4\end{bmatrix}\).</div></div>
+<div class="q" data-id="m6-3" data-answer="-1"><p class="prompt">First entry of \(\mathbf C_C\)</p><p class="hint">\(b_0\) is the numerator's constant term.</p><div class="explain">\(\mathbf C_C=[b_0\;\;b_1]=[-1\;\;3]\).</div></div>
+<div class="q" data-id="m6-4" data-answer="1.5"><p class="prompt">\(G(z)=\dfrac{z^2+2}{z^2-z+0.5}\): after dividing, find \(b_0\) of the remainder (with \(d=1\)).</p><p class="hint">\(z^2+2-(z^2-z+0.5)=z+1.5\).</p><div class="explain">Remainder \(\frac{z+1.5}{z^2-z+0.5}\), so \(\mathbf C_C=[1.5\;\;1]\) and \(d=1\).</div></div>
+<div class="q" data-id="m6-5" data-answer="-0.6"><p class="prompt">\(\mathbf A=\operatorname{diag}(0.2,0.6),\;\mathbf B=[1\;1]^{\mathsf T}\). Find \(P_{11}\) of \(\mathbf P=\mathbf W_C\tilde{\mathbf W}_C^{-1}\).</p><p class="hint">\(a_1=-0.8\). For \(n=2\), \(\tilde{\mathbf W}_C^{-1}=\begin{bmatrix}a_1&1\\1&0\end{bmatrix}\).</p><div class="explain">\(\mathbf W_C=\begin{bmatrix}1&0.2\\1&0.6\end{bmatrix}\), so \(\mathbf P=\begin{bmatrix}a_1+0.2&1\\a_1+0.6&1\end{bmatrix}=\begin{bmatrix}-0.6&1\\-0.2&1\end{bmatrix}\).</div></div>
+<div class="q" data-id="m6-6" data-choice="1"><p class="prompt">Which is <em>not</em> invariant under a similarity transformation?</p><ol class="opts"><li>the poles</li><li>the matrix \(\mathbf B\)</li><li>the transfer function</li></ol><p class="hint">\(\mathbf B_w=\mathbf P^{-1}\mathbf B\).</p><div class="explain">\(\mathbf B\) changes. The characteristic polynomial and \(G(z)\) do not.</div></div>
+</div>
+</section>
+
+<!-- ============================================================ M7 -->
+<section class="module" id="m7" data-title="7 · Controllability">
+<h2>7 · Controllability <span class="src">Lect 2 §7–8, slides 21–39</span></h2>
+<p>LPH's design plan (§7): (1) design state feedback \(u=-\mathbf K\mathbf x\), assuming all states are measured; (2) if they are not, design an observer to estimate them. By the separation principle the two designs are independent. Quiz 2 covers step 1. Before designing, ask whether the input <em>can</em> steer the state at all.</p>
+<h3>Where the test comes from</h3>
+<p>From (4.3) with \(N=n\) steps:</p>
+\[\mathbf x(n)-\mathbf A^n\mathbf x(0)=\underbrace{[\mathbf B\;\;\mathbf{AB}\;\cdots\;\mathbf A^{n-1}\mathbf B]}_{\mathbf W_C}\begin{bmatrix}u(n-1)\\u(n-2)\\\vdots\\u(0)\end{bmatrix}.\]
+<p>This is \(n\) equations in \(n\) unknown inputs. You can hit <em>any</em> target exactly when \(\mathbf W_C\) is invertible.</p>
+<div class="box good"><p><strong>Theorem.</strong> \((\mathbf A,\mathbf B)\) is controllable \(\iff\) \(\operatorname{rank}\mathbf W_C=n\), where \(\mathbf W_C=[\mathbf B\;\;\mathbf{AB}\;\cdots\;\mathbf A^{n-1}\mathbf B]\). For SISO, this means \(\det\mathbf W_C\ne0\). <strong>MEMORISE</strong></p></div>
+<p class="box warn"><strong>Pitfall.</strong> The unknown vector is in <em>reverse</em> time order, \([u(1);u(0)]\) for \(n=2\). If you write it the other way, you swap the answers.</p>
+<h3>Physical meaning <span class="src">Examples 2.5, 2.9</span></h3>
+<p>In a balanced bridge (Example 2.9: \(\frac{R_3}{R_3+R_4}=\frac{R_2}{R_1+R_2}\), i.e. \(R_1R_3=R_2R_4\)), the capacitor voltage cannot be moved by the source at all, and \(\det\mathbf W_C=0\). Uncontrollable means part of the state is unreachable from the input.</p>
+<h3>Worked: steer from the origin to a target</h3>
+<p>\(\mathbf A=\begin{bmatrix}1&1\\0&1\end{bmatrix},\;\mathbf B=\begin{bmatrix}0\\1\end{bmatrix}\). Reach \(\mathbf x(2)=[2\;\;1]^{\mathsf T}\) from \(\mathbf 0\).</p>
+<details><summary>Solve</summary>\(\mathbf{AB}=[1\;1]^{\mathsf T}\), so \(\mathbf W_C=\begin{bmatrix}0&1\\1&1\end{bmatrix}\) with \(\det=-1\ne0\): controllable.
+\(\mathbf x(2)=\mathbf{AB}\,u(0)+\mathbf B\,u(1)\) gives \(2=u(0)\) and \(1=u(0)+u(1)\). So \(u(0)=2,\;u(1)=-1\). Verify by iterating: \(\mathbf x(1)=[0\;2]^{\mathsf T}\), then \(\mathbf x(2)=[2\;\;1]^{\mathsf T}\) ✓.</details>
+<h3>Worked: a parameter that kills controllability (past-quiz style)</h3>
+<p>\(\mathbf A=\begin{bmatrix}a&1\\0&0.5\end{bmatrix},\;\mathbf B=\begin{bmatrix}1\\1\end{bmatrix}\). \(\mathbf{AB}=\begin{bmatrix}a+1\\0.5\end{bmatrix}\), so \(\det\mathbf W_C=\det\begin{bmatrix}1&a+1\\1&0.5\end{bmatrix}=0.5-(a+1)=-(a+0.5)\). The system is controllable for every \(a\neq-0.5\).</p>
+
+<div class="checks"><h4>Check · controllability</h4>
+<div class="q" data-id="m7-1" data-answer="1"><p class="prompt">\(\mathbf A=\begin{bmatrix}0.5&0\\0&0.5\end{bmatrix},\;\mathbf B=\begin{bmatrix}1\\2\end{bmatrix}\). What is \(\operatorname{rank}\mathbf W_C\)?</p><p class="hint">\(\mathbf{AB}=0.5\mathbf B\).</p><div class="explain">The two columns are parallel, so the rank is 1: uncontrollable. A single input cannot independently drive two identical modes.</div></div>
+<div class="q" data-id="m7-2" data-answer="1"><p class="prompt">\(\mathbf A=\begin{bmatrix}0&1\\-0.5&1\end{bmatrix},\;\mathbf B=\begin{bmatrix}0\\1\end{bmatrix}\). Reach \(\mathbf x(2)=[1\;\;0]^{\mathsf T}\) from \(\mathbf 0\). Find \(u(0)\).</p><p class="hint">\(\mathbf{AB}=[1\;\;1]^{\mathsf T}\). Write \(\mathbf x(2)=\mathbf{AB}u(0)+\mathbf Bu(1)\).</p><div class="explain">First row: \(1=u(0)\).</div></div>
+<div class="q" data-id="m7-3" data-answer="-1"><p class="prompt">Same problem: find \(u(1)\).</p><p class="hint">Second row: \(0=u(0)+u(1)\).</p><div class="explain">\(u(1)=-1\). Check: \(\mathbf x(1)=[0\;1]^{\mathsf T}\), and \(\mathbf x(2)=[1\;\;1]^{\mathsf T}+[0\;\,-1]^{\mathsf T}=[1\;\;0]^{\mathsf T}\) ✓.</div></div>
+<div class="q" data-id="m7-4" data-answer="0.4"><p class="prompt">\(\mathbf A=\begin{bmatrix}0.2&\beta\\0&0.6\end{bmatrix},\;\mathbf B=\begin{bmatrix}1\\1\end{bmatrix}\). For which \(\beta\) is the system uncontrollable?</p><p class="hint">\(\mathbf{AB}=[0.2+\beta\;\;0.6]^{\mathsf T}\).</p><div class="explain">\(\det\mathbf W_C=0.6-(0.2+\beta)=0.4-\beta\), which vanishes at \(\beta=0.4\).</div></div>
+</div>
+</section>
+
+<!-- ============================================================ M8 -->
+<section class="module" id="m8" data-title="8 · Observability">
+<h2>8 · Observability, pole-zero cancellation, and loss by sampling <span class="src">Lect 3 §9–10, slides 2–19</span></h2>
+<p>Observability is the mirror question: can the initial state be worked out from the measured outputs (and known inputs)? With \(u=0\), \(y(k)=\mathbf C\mathbf A^k\mathbf x(0)\), so stacking \(n\) outputs gives</p>
+\[\begin{bmatrix}y(0)\\y(1)\\\vdots\\y(n-1)\end{bmatrix}=\underbrace{\begin{bmatrix}\mathbf C\\\mathbf{CA}\\\vdots\\\mathbf{CA}^{n-1}\end{bmatrix}}_{\mathbf W_O}\mathbf x(0)\quad(9.3).\]
+<div class="box good"><p><strong>Theorem.</strong> \((\mathbf A,\mathbf C)\) is observable \(\iff\operatorname{rank}\mathbf W_O=n\). <strong>MEMORISE</strong> \(\mathbf W_O\) stacks rows, while \(\mathbf W_C\) places columns side by side.</p></div>
+<p>LPH's physical example (3.1): an LC loop measured by a quantity it never touches. The loop can ring while the output stays 0, so it is unobservable. If you measure \(x_2\) instead, it becomes observable: <em>both properties depend on what you call the input and the output.</em></p>
+<h3>Worked: find \(\mathbf x(0)\)</h3>
+<p>\(\mathbf A=\begin{bmatrix}1&1\\0&2\end{bmatrix},\;\mathbf C=[1\;0],\;u=0,\;y(0)=1,\;y(1)=2\).</p>
+<details><summary>Solve</summary>\(\mathbf{CA}=[1\;\;1]\), so \(\mathbf W_O=\begin{bmatrix}1&0\\1&1\end{bmatrix}\) with \(\det=1\): observable. Then \(y(0)=x_1(0)=1\) and \(y(1)=x_1(0)+x_2(0)=2\), so \(\mathbf x(0)=[1\;\;1]^{\mathsf T}\).
+LPH (26 Sep): “we don't need to remember the formula, we can solve this using the output equation”, i.e. just write \(y(k)=\mathbf C\mathbf x(k)\) row by row. If \(u(0)\ne0\), then \(y(1)=\mathbf C(\mathbf A\mathbf x(0)+\mathbf Bu(0))\): subtract the known \(\mathbf{CB}u(0)\).</details>
+
+<h3>Pole-zero cancellation <span class="src">§10.1, Examples 3.4–3.5</span></h3>
+<div class="box"><p><strong>Theorem.</strong> (I) If \(G(z)\) has a pole-zero cancellation, the realisation is uncontrollable, unobservable, or both, depending on how the states are chosen. (II) With no cancellation, there is always a controllable <em>and</em> observable realisation.</p></div>
+<p>Example 3.4: \(G(z)=\dfrac{z+0.2}{(z+0.8)(z+0.2)}\). Realised in <strong>CCF</strong> it is controllable but <em>unobservable</em>: \(\mathbf W_O=\begin{bmatrix}0.2&1\\-0.16&-0.8\end{bmatrix}\), \(\det=0\). Realised in <strong>OCF</strong> it is observable but <em>uncontrollable</em>. This is no accident: the CCF is always controllable by construction, and the OCF always observable.</p>
+<p>Example 3.5 (the delay diagram from Module 1): \(\mathbf W_C=\begin{bmatrix}0&0\\1&-0.5\end{bmatrix}\) is singular, and \(G=\frac{z+0.2}{(z+0.2)(z+0.5)}\) cancels. The \(x_1\) mode is never excited by \(u\).</p>
+
+<h3>Loss of controllability/observability by sampling <span class="src">§10.2, Examples 3.6–3.7</span></h3>
+<p>Discretisation can only lose these properties, never create them: a controllable discrete model requires a controllable continuous one. Example 3.6, the harmonic oscillator \(\omega^2/(s^2+\omega^2)\), has ZOH matrices containing \(\cos\omega T,\sin\omega T\). Both \(\mathbf W_C\) and \(\mathbf W_O\) become singular when \(\mathbf{\omega T=k\pi}\) (\(k\) an integer). Intuition: sampling every half-period sees the oscillation at the same phase, so the samples cannot tell where it is. Example 3.7 (the ZOH double integrator, \(\mathbf W_O=\begin{bmatrix}1&0\\1&T\end{bmatrix}\), \(\det\mathbf W_O=T\)) stays observable for every \(T>0\): it has no oscillatory mode to alias. Slide 18 gives \(\det\mathbf W_C=-\sin\omega T(1-\cos\omega T)\) and \(\det\mathbf W_O=\sin\omega T\) for the oscillator; both vanish at \(\omega T=q\pi\).</p>
+
+<div class="checks"><h4>Check · observability</h4>
+<div class="q" data-id="m8-1" data-choice="1"><p class="prompt">\(\mathbf A=\begin{bmatrix}0.5&1\\0&0.25\end{bmatrix},\;\mathbf C=[0\;\;1]\). This pair is:</p><ol class="opts"><li>observable</li><li>not observable</li></ol><p class="hint">\(\mathbf{CA}=[0\;\;0.25]\).</p><div class="explain">\(\mathbf W_O=\begin{bmatrix}0&1\\0&0.25\end{bmatrix}\) has \(\det=0\). The output only ever sees \(x_2\), which is never influenced by \(x_1\). With \(\mathbf C=[1\;0]\) instead, \(\det\mathbf W_O=1\): observable.</div></div>
+<div class="q" data-id="m8-2" data-answer="-2"><p class="prompt">\(\mathbf A=\begin{bmatrix}0&1\\-0.5&1\end{bmatrix},\;\mathbf B=\begin{bmatrix}1\\0\end{bmatrix},\;\mathbf C=[1\;0]\), \(u(0)=1\), \(y(0)=2\), \(y(1)=-1\). Find \(x_2(0)\).</p><p class="hint">\(y(1)=\mathbf C\mathbf A\mathbf x(0)+\mathbf{CB}u(0)=x_2(0)+1\).</p><div class="explain">\(-1=x_2(0)+1\), so \(x_2(0)=-2\). Also \(x_1(0)=y(0)=2\).</div></div>
+<div class="q" data-id="m8-3" data-answer="1.5708"><p class="prompt">Harmonic oscillator with \(\omega=2\) rad/s. What is the smallest \(T>0\) that destroys controllability of the ZOH model?</p><p class="hint">\(\omega T=\pi\).</p><div class="explain">\(T=\pi/2\approx1.571\) s.</div></div>
+<div class="q" data-id="m8-4" data-choice="0"><p class="prompt">\(G(z)=\dfrac{z-0.5}{(z-0.5)(z+0.3)}\) realised in CCF is:</p><ol class="opts"><li>controllable, not observable</li><li>observable, not controllable</li><li>both</li></ol><p class="hint">The CCF is always controllable, and there is a cancellation.</p><div class="explain">The CCF guarantees controllability, so the cancellation must show up as unobservability (Example 3.4 pattern).</div></div>
+</div>
+</section>
+
+<!-- ============================================================ M9 -->
+<section class="module" id="m9" data-title="9 · Pole placement">
+<h2>9 · State feedback by pole placement, and Ackermann's formula <span class="src">Lect 3 §11–12, slides 20–44</span></h2>
+<p>Feed back the state: \(u(k)=-\mathbf K\mathbf x(k)\) with \(\mathbf K=[k_1\;k_2\;\cdots\;k_n]\) (11.1). This is a <em>regulator</em>, since the reference is 0. The closed loop is</p>
+\[\mathbf x(k+1)=(\mathbf A-\mathbf B\mathbf K)\mathbf x(k)\quad(11.2),\qquad \text{characteristic polynomial } \det(z\mathbf I-\mathbf A+\mathbf B\mathbf K).\]
+<p>Choose the desired poles \(p_1,\dots,p_n\), form \(\alpha_C(z)=(z-p_1)\cdots(z-p_n)=z^n+\alpha_{n-1}z^{n-1}+\dots+\alpha_0\) (11.5), and make the two polynomials equal. <strong>The poles can be placed anywhere \(\iff(\mathbf A,\mathbf B)\) is controllable.</strong></p>
+<h3>Method 1: match coefficients</h3>
+<p>Expand \(\det(z\mathbf I-\mathbf A+\mathbf B\mathbf K)\) with symbols \(k_1,k_2\), then equate the coefficients of \(z^1\) and \(z^0\). This gives two linear equations.</p>
+<p><strong>Shortcut in CCF</strong> (11.14): \(\mathbf A_C-\mathbf B_C\mathbf K\) only changes the last row, to \([-(a_0+k_1)\;\;-(a_1+k_2)\;\cdots]\). Hence \(k_{i+1}=\alpha_i-a_i\).</p>
+<details><summary>Worked (CCF): \(\mathbf A=\begin{bmatrix}0&1\\-0.5&1.5\end{bmatrix},\;\mathbf B=\begin{bmatrix}0\\1\end{bmatrix}\), poles at 0.2 and 0.3</summary>
+Plant: \(z^2-1.5z+0.5\), so \(a_1=-1.5,\;a_0=0.5\). Desired: \((z-0.2)(z-0.3)=z^2-0.5z+0.06\), so \(\alpha_1=-0.5,\;\alpha_0=0.06\).
+\(k_1=\alpha_0-a_0=0.06-0.5=-0.44\) and \(k_2=\alpha_1-a_1=-0.5+1.5=1\), giving \(\mathbf K=[-0.44\;\;1]\).
+Check: the last row of \(\mathbf A-\mathbf B\mathbf K\) is \([-0.5+0.44,\;1.5-1]=[-0.06,\;0.5]\) ✓.</details>
+<h3>Method 2: Ackermann's formula (no CCF needed)</h3>
+<div class="box good">
+\[\boxed{\mathbf K=[0\;\cdots\;0\;\;1]\,\mathbf W_C^{-1}\,\alpha_C(\mathbf A),\qquad \alpha_C(\mathbf A)=\mathbf A^n+\alpha_{n-1}\mathbf A^{n-1}+\dots+\alpha_0\mathbf I}\quad(12.1)\quad\textbf{MEMORISE}\]
+<p>LPH: “You can use method one or method two, up to you … you must remember those formula.” The row vector \([0\cdots0\;1]\mathbf W_C^{-1}\) is just the <em>last row</em> of \(\mathbf W_C^{-1}\).</p></div>
+<details><summary>Worked (Ackermann): double integrator, \(T=0.5\): \(\mathbf A=\begin{bmatrix}1&0.5\\0&1\end{bmatrix},\;\mathbf B=\begin{bmatrix}0.125\\0.5\end{bmatrix}\), both poles at 0.5</summary>
+Step 1: \(\mathbf{AB}=[0.375\;\;0.5]^{\mathsf T}\), so \(\mathbf W_C=\begin{bmatrix}0.125&0.375\\0.5&0.5\end{bmatrix}\) with \(\det=-0.125\). The last row of \(\mathbf W_C^{-1}\) is \(\frac{1}{-0.125}[-0.5\;\;0.125]=[4\;\,-1]\).
+Step 2: \(\alpha_C(z)=(z-0.5)^2=z^2-z+0.25\), so \(\alpha_C(\mathbf A)=\mathbf A^2-\mathbf A+0.25\mathbf I\). With \(\mathbf A^2=\begin{bmatrix}1&1\\0&1\end{bmatrix}\) this is \(\begin{bmatrix}0.25&0.5\\0&0.25\end{bmatrix}\).
+Step 3: \(\mathbf K=[4\;\,-1]\begin{bmatrix}0.25&0.5\\0&0.25\end{bmatrix}=[1\;\;1.75]\).
+Check: \(\mathbf A-\mathbf B\mathbf K=\begin{bmatrix}0.875&0.28125\\-0.5&0.125\end{bmatrix}\). Its trace is 1 and its determinant is 0.25, so the characteristic polynomial is \(z^2-z+0.25\) ✓.</details>
+<p><strong>Lecture example 3.8 / 3.11 (servo, \(T=0.1\)).</strong> Desired poles \(0.888\pm j0.173\) (damping 0.46, time constant 1 s) give \(\alpha_C=z^2-1.776z+0.819\). Both methods give \(\mathbf K=[4.52\;\;1.12]\).</p>
+<h3>Zeros under state feedback <span class="src">§11.1, Example 3.9</span></h3>
+<p>With \(u=-\mathbf K\mathbf x+r\), state feedback moves the poles but <strong>leaves the zeros unchanged</strong>. The servo's zero at \(-0.9676\) is still there after feedback. In Example 3.9, one closed-loop pole is placed <em>on</em> that zero. The pole cancels it, so \(Y/R=0.00484/(z-0.9781)\), and the closed loop becomes <strong>unobservable</strong> (\(\det\mathbf W_{O,cl}=0\)) while staying controllable.</p>
+
+<div class="checks"><h4>Check · pole placement</h4>
+<p>\(\mathbf A=\begin{bmatrix}0&1\\-0.3&1.2\end{bmatrix},\;\mathbf B=\begin{bmatrix}0\\1\end{bmatrix}\). Place the poles at 0.5 and 0.4.</p>
+<div class="q" data-id="m9-1" data-answer="-0.1"><p class="prompt">\(k_1\)</p><p class="hint">\(\alpha_C=z^2-0.9z+0.2\), and the plant has \(a_0=0.3,\;a_1=-1.2\).</p><div class="explain">\(k_1=\alpha_0-a_0=0.2-0.3=-0.1\).</div></div>
+<div class="q" data-id="m9-2" data-answer="0.3"><p class="prompt">\(k_2\)</p><p class="hint">\(\alpha_1-a_1\).</p><div class="explain">\(-0.9-(-1.2)=0.3\). Check: the last row of \(\mathbf A-\mathbf B\mathbf K\) is \([-0.2\;\;0.9]\) ✓.</div></div>
+<p>Ackermann: double integrator with \(T=1\), so \(\mathbf A=\begin{bmatrix}1&1\\0&1\end{bmatrix},\;\mathbf B=\begin{bmatrix}0.5\\1\end{bmatrix}\), both poles at 0.5.</p>
+<div class="q" data-id="m9-3" data-answer="0.25"><p class="prompt">\(k_1\)</p><p class="hint">\(\mathbf W_C=\begin{bmatrix}0.5&1.5\\1&1\end{bmatrix}\), and the last row of \(\mathbf W_C^{-1}\) is \([1\;\,-0.5]\). Use \(\alpha_C(\mathbf A)=\mathbf A^2-\mathbf A+0.25\mathbf I\).</p><div class="explain">\(\mathbf A^2=\begin{bmatrix}1&2\\0&1\end{bmatrix}\), so \(\alpha_C(\mathbf A)=\begin{bmatrix}0.25&1\\0&0.25\end{bmatrix}\). Then \(\mathbf K=[1\;\,-0.5]\,\alpha_C(\mathbf A)=[0.25\;\;0.875]\).</div></div>
+<div class="q" data-id="m9-4" data-answer="0.875"><p class="prompt">\(k_2\)</p><p class="hint">Second column: \(1\cdot1+(-0.5)\cdot0.25\).</p><div class="explain">\(0.875\). Check: \(\mathbf A-\mathbf B\mathbf K=\begin{bmatrix}0.875&0.5625\\-0.25&0.125\end{bmatrix}\), with trace 1 and det 0.25 ✓.</div></div>
+<div class="q" data-id="m9-5" data-choice="2"><p class="prompt">State feedback \(u=-\mathbf K\mathbf x+r\) changes:</p><ol class="opts"><li>poles and zeros</li><li>zeros only</li><li>poles only (zeros stay)</li></ol><p class="hint">§11.1.</p><div class="explain">The zeros are invariant. A pole placed on a zero cancels it and costs observability (Example 3.9).</div></div>
+</div>
+</section>
+
+<!-- ============================================================ M10 -->
+<section class="module" id="m10" data-title="10 · Deadbeat control">
+<h2>10 · Deadbeat control <span class="src">Lect 3 §13, slides 45–62</span></h2>
+<p>The solution of the closed loop is \(\mathbf x(k)=(\mathbf A-\mathbf B\mathbf K)^k\mathbf x(0)\). Stability needs every \(|\lambda_i|\lt1\). Deadbeat takes the extreme choice: <strong>put every closed-loop pole at \(z=0\)</strong> (13.1). Then \(\alpha_C(z)=z^n\), so Cayley–Hamilton gives \((\mathbf A-\mathbf B\mathbf K)^n=\mathbf 0\): the matrix is <em>nilpotent</em>. As a result,</p>
+\[\mathbf x(k)=\mathbf 0\text{ for all }k\ge n,\text{ from any }\mathbf x(0).\]
+<p>The state reaches rest in at most \(n\) samples, so the settling time is at most \(nT\). This only exists in discrete time; no continuous pole location does it.</p>
+<div class="box good">\[\boxed{\mathbf K=[0\;\cdots\;0\;\;1]\,\mathbf W_C^{-1}\,\mathbf A^n}\quad\text{(Ackermann with }\alpha_C(\mathbf A)=\mathbf A^n)\quad\textbf{MEMORISE}\]
+<p>Or by Method 1: in CCF, \(k_{i+1}=0-a_i=-a_i\) (Example 3.13: \(\mathbf K=[-0.5\;\,-0.2\;\;1.1]\)).</p></div>
+<h3>Lecture example 3.12: double integrator</h3>
+<p>\(\mathbf A=\begin{bmatrix}1&T\\0&1\end{bmatrix},\;\mathbf B=\begin{bmatrix}T^2/2\\T\end{bmatrix}\). This gives \(\mathbf K=\left[\dfrac1{T^2}\;\;\dfrac3{2T}\right]\) and \(\mathbf A-\mathbf B\mathbf K=\begin{bmatrix}1/2&T/4\\-1/T&-1/2\end{bmatrix}\), whose square is \(\mathbf 0\). From \(\mathbf x(0)=[1\;1]^{\mathsf T}\): \(u(0)=-\left(\frac1{T^2}+\frac3{2T}\right)\) and \(u(1)=\frac1{T^2}+\frac1{2T}\).</p>
+<div class="lab" id="dblab"><strong>Try it: the price of speed.</strong> Move \(T\) and watch the control effort.<br>
+<label>T = <span id="dbT">1.00</span> s <input type="range" id="dbslider" min="0.2" max="2" step="0.05" value="1"></label>
+<p id="dbout" aria-live="polite"></p>
+<p style="margin:0">LPH (slide 58): a smaller \(T\) settles faster (\(\le2T\)) but needs larger \(|u|\). Choose \(T\) to satisfy the sampling theorem while keeping \(u\) within actuator limits. The table on slide 56 has \(T=2,1,0.5\) giving \(u(0)=-1,-2.5,-7\).</p></div>
+
+<h3>Worked: deadbeat from scratch</h3>
+<p>\(\mathbf A=\begin{bmatrix}1&1\\0&0.5\end{bmatrix},\;\mathbf B=\begin{bmatrix}0\\1\end{bmatrix},\;\mathbf x(0)=[1\;1]^{\mathsf T}\).</p>
+<details><summary>Step 1: controllability and \(\mathbf W_C^{-1}\)</summary>\(\mathbf{AB}=[1\;\;0.5]^{\mathsf T}\), so \(\mathbf W_C=\begin{bmatrix}0&1\\1&0.5\end{bmatrix}\) with \(\det=-1\). Then \(\mathbf W_C^{-1}=\begin{bmatrix}-0.5&1\\1&0\end{bmatrix}\), whose last row is \([1\;\;0]\).</details>
+<details><summary>Step 2: \(\mathbf A^2\) and \(\mathbf K\)</summary>\(\mathbf A^2=\begin{bmatrix}1&1.5\\0&0.25\end{bmatrix}\), so \(\mathbf K=[1\;\;0]\mathbf A^2=[1\;\;1.5]\).</details>
+<details><summary>Step 3: verify by iterating (past sittings asked for this)</summary>\(\mathbf A-\mathbf B\mathbf K=\begin{bmatrix}1&1\\-1&-1\end{bmatrix}\), with trace 0 and det 0, so \(\alpha=z^2\) ✓.
+\(u(0)=-\mathbf K\mathbf x(0)=-2.5\) and \(\mathbf x(1)=[2\;\,-2]^{\mathsf T}\). Then \(u(1)=-\mathbf K\mathbf x(1)=1\) and \(\mathbf x(2)=[0\;\;0]^{\mathsf T}\) ✓, which stays at zero.</details>
+<p class="box warn"><strong>Pitfalls.</strong> (1) The sign: LPH uses \(u=-\mathbf K\mathbf x\), so \(\mathbf A-\mathbf B\mathbf K\). (2) \(\mathbf A^n\) is the original plant \(\mathbf A\) raised to \(n\), not \(\mathbf A-\mathbf B\mathbf K\). (3) Fractional gains are normal: two 2026 sitters who got a fractional \(\mathbf K\) doubted themselves. Verify by checking that the trace and determinant of \(\mathbf A-\mathbf B\mathbf K\) are both 0, then trust it.</p>
+
+<div class="checks"><h4>Check · deadbeat</h4>
+<p>\(\mathbf A=\begin{bmatrix}1&0.5\\0&2\end{bmatrix},\;\mathbf B=\begin{bmatrix}1\\1\end{bmatrix}\).</p>
+<div class="q" data-id="m10-1" data-answer="-2"><p class="prompt">\(k_1\) of the deadbeat gain</p><p class="hint">\(\mathbf W_C=\begin{bmatrix}1&1.5\\1&2\end{bmatrix}\) (det 0.5), the last row of \(\mathbf W_C^{-1}\) is \([-2\;\;2]\), and \(\mathbf A^2=\begin{bmatrix}1&1.5\\0&4\end{bmatrix}\).</p><div class="explain">\(\mathbf K=[-2\;\;2]\mathbf A^2=[-2\;\;-3+8]=[-2\;\;5]\).</div></div>
+<div class="q" data-id="m10-2" data-answer="5"><p class="prompt">\(k_2\)</p><p class="hint">\(-2\cdot1.5+2\cdot4\).</p><div class="explain">5. Check: \(\mathbf A-\mathbf B\mathbf K=\begin{bmatrix}3&-4.5\\2&-3\end{bmatrix}\), with trace 0 and det \(-9+9=0\) ✓.</div></div>
+<div class="q" data-id="m10-3" data-answer="6"><p class="prompt">With \(\mathbf x(0)=[2\;\;0]^{\mathsf T}\), find \(x_1(1)\).</p><p class="hint">\(\mathbf x(1)=(\mathbf A-\mathbf B\mathbf K)\mathbf x(0)\).</p><div class="explain">\(\mathbf x(1)=[6\;\;4]^{\mathsf T}\). Then \(\mathbf x(2)=[18-18\;\;12-12]^{\mathsf T}=\mathbf 0\) ✓.</div></div>
+<div class="q" data-id="m10-4" data-answer="4"><p class="prompt">Same start: find \(u(0)\).</p><p class="hint">\(-\mathbf K\mathbf x(0)\).</p><div class="explain">\(-(-2\cdot2+5\cdot0)=4\).</div></div>
+<div class="q" data-id="m10-5" data-answer="0.6"><p class="prompt">A 3rd-order deadbeat loop with \(T=0.2\) s: what is the maximum settling time in seconds?</p><p class="hint">At most \(n\) samples.</p><div class="explain">\(nT=0.6\) s.</div></div>
+<div class="q" data-id="m10-6" data-answer="-7"><p class="prompt">Example 3.12 with \(T=0.5\) and \(\mathbf x(0)=[1\;1]^{\mathsf T}\): find \(u(0)\).</p><p class="hint">\(-(1/T^2+3/(2T))\).</p><div class="explain">\(-(4+3)=-7\), matching slide 56.</div></div>
+</div>
+</section>
+
+<!-- ============================================================ M11 -->
+<section class="module" id="m11" data-title="11 · Quiz-shaped drill">
+<h2>11 · Quiz-shaped drill and formula recall</h2>
+<p>This drill has three linked questions in the shape past sittings reported (unofficial; see <code>quizzes/quiz-02-intel.md</code>). The numbers are new. Work each part on paper <em>first</em>, then enter the result. An older timed practice paper exists at <a href="../quizzes/quiz-02-prediction-paper.html">quiz-02-prediction-paper.html</a>. It predates the confirmed rules: it is one 25-mark question and lacks a Q1 modelling part, so treat it as extra practice, not as the quiz shape.</p>
+<h3>Q1 · Modelling</h3>
+<p>A motor obeys \(4\ddot y+2\dot y=8u\). Take \(x_1=y,\;x_2=\dot y\).</p>
+<div class="checks"><h4>Q1 checks</h4>
+<div class="q" data-id="d1-1" data-answer="-0.5"><p class="prompt">(a) \(a_{22}\)</p><p class="hint">Normalise: \(\ddot y=-0.5\dot y+2u\).</p><div class="explain">\(\mathbf A=\begin{bmatrix}0&1\\0&-0.5\end{bmatrix},\;\mathbf B=\begin{bmatrix}0\\2\end{bmatrix},\;\mathbf C=[1\;0]\).</div></div>
+<div class="q" data-id="d1-2" data-answer="2"><p class="prompt">(b) \(Y(s)/U(s)=\dfrac{K}{s(s+0.5)}\). Find \(K\).</p><p class="hint">\(\mathbf C\operatorname{adj}(s\mathbf I-\mathbf A)\mathbf B\) with \(\det=s(s+0.5)\).</p><div class="explain">\(\operatorname{adj}=\begin{bmatrix}s+0.5&1\\0&s\end{bmatrix}\), and \([s+0.5\;\;1]\begin{bmatrix}0\\2\end{bmatrix}=2\), so \(G=\dfrac{2}{s(s+0.5)}\) and \(K=2\). Cross-check from the ODE: \(8/(4s^2+2s)=2/(s(s+0.5))\) ✓. If you got 8, you forgot to normalise.</div></div>
+</div>
+<h3>Q2 · ZOH discretisation and controllability</h3>
+<p>\(\dot{\mathbf x}=\begin{bmatrix}-1&\gamma\\0&-2\end{bmatrix}\mathbf x+\begin{bmatrix}0\\1\end{bmatrix}u,\;y=[1\;\;0]\mathbf x\), sampled with a ZOH at \(T=\ln2\) s (so \(e^{-T}=\tfrac12\)).</p>
+<details><summary>Method reminder</summary>\((s\mathbf I-\mathbf A)^{-1}=\begin{bmatrix}\frac1{s+1}&\frac{\gamma}{(s+1)(s+2)}\\0&\frac1{s+2}\end{bmatrix}\), and \(\frac{\gamma}{(s+1)(s+2)}\to\gamma(e^{-t}-e^{-2t})\). So
+\[\mathbf\Phi(T)=\begin{bmatrix}\tfrac12&\tfrac{\gamma}4\\0&\tfrac14\end{bmatrix},\qquad \mathbf\Theta(T)=\int_0^T\begin{bmatrix}\gamma(e^{-\tau}-e^{-2\tau})\\e^{-2\tau}\end{bmatrix}d\tau=\begin{bmatrix}\gamma/8\\3/8\end{bmatrix}.\]</details>
+<div class="checks"><h4>Q2 checks</h4>
+<div class="q" data-id="d2-1" data-answer="0.5"><p class="prompt">(a) With \(\gamma=2\): \(\Phi_{12}\)</p><p class="hint">\(\gamma(e^{-T}-e^{-2T})=\gamma(\tfrac12-\tfrac14)\).</p><div class="explain">\(2\cdot\tfrac14=0.5\).</div></div>
+<div class="q" data-id="d2-2" data-answer="0.25"><p class="prompt">(a) With \(\gamma=2\): \(\Theta_1\)</p><p class="hint">\(\gamma\left[(1-e^{-T})-\tfrac12(1-e^{-2T})\right]\).</p><div class="explain">\(2\left[\tfrac12-\tfrac38\right]=\tfrac14\).</div></div>
+<div class="q" data-id="d2-3" data-answer="-0.09375"><p class="prompt">(b) With \(\gamma=2\): \(\det\mathbf W_C\) of the discrete model</p><p class="hint">\(\mathbf\Phi\mathbf\Theta=[\tfrac{5\gamma}{32}\;\;\tfrac3{32}]^{\mathsf T}\).</p><div class="explain">\(\det[\mathbf\Theta\;\;\mathbf\Phi\mathbf\Theta]=\frac{\gamma}{8}\cdot\frac3{32}-\frac38\cdot\frac{5\gamma}{32}=-\frac{3\gamma}{64}\). At \(\gamma=2\) this is \(-3/32=-0.09375\ne0\): controllable. In general the discrete system is controllable \(\iff\gamma\ne0\). With \(\gamma=0\), \(x_1\) is cut off from the input.</div></div>
+<div class="q" data-id="d2-4" data-answer="-0.5"><p class="prompt">(c) The discrete transfer function is \(\dfrac{\gamma}{8}\dfrac{z-z_0}{(z-\frac12)(z-\frac14)}\). Find the zero \(z_0\).</p><p class="hint">Combine \(\frac{\gamma/8}{z-1/2}+\frac{(\gamma/4)(3/8)}{(z-1/2)(z-1/4)}\).</p><div class="explain">Numerator \(\frac\gamma8\left[(z-\tfrac14)+\tfrac34\right]=\frac\gamma8(z+\tfrac12)\), so \(z_0=-0.5\).</div></div>
+</div>
+<h3>Q3 · Deadbeat on the Q2 model (\(\gamma=2\))</h3>
+<p>\(\mathbf x(k+1)=\begin{bmatrix}\tfrac12&\tfrac12\\0&\tfrac14\end{bmatrix}\mathbf x(k)+\begin{bmatrix}\tfrac14\\\tfrac38\end{bmatrix}u(k)\), with \(\mathbf x(0)=[1\;\;1]^{\mathsf T}\).</p>
+<div class="checks"><h4>Q3 checks</h4>
+<div class="q" data-id="d3-1" data-answer="1"><p class="prompt">(a) \(k_1\)</p><p class="hint">\(\mathbf W_C=\begin{bmatrix}1/4&5/16\\3/8&3/32\end{bmatrix}\), \(\det=-3/32\). Its last row of the inverse is \(\frac{1}{-3/32}[-\tfrac38\;\;\tfrac14]=[4\;\;-\tfrac83]\). And \(\mathbf A^2=\begin{bmatrix}1/4&3/8\\0&1/16\end{bmatrix}\).</p><div class="explain">\(k_1=4\cdot\tfrac14=1\).</div></div>
+<div class="q" data-id="d3-2" data-answer="1.333333"><p class="prompt">(a) \(k_2\) (fraction allowed)</p><p class="hint">\(4\cdot\tfrac38-\tfrac83\cdot\tfrac1{16}\).</p><div class="explain">\(\tfrac32-\tfrac16=\tfrac43\). So \(\mathbf K=[1\;\;\tfrac43]\), a fractional gain, which is fine. Check: \(\mathbf A-\mathbf B\mathbf K=\begin{bmatrix}1/4&1/6\\-3/8&-1/4\end{bmatrix}\), with trace 0 and det \(-\tfrac1{16}+\tfrac1{16}=0\) ✓.</div></div>
+<div class="q" data-id="d3-3" data-answer="-2.333333"><p class="prompt">(b) \(u(0)\)</p><p class="hint">\(-\mathbf K\mathbf x(0)\).</p><div class="explain">\(-(1+\tfrac43)=-\tfrac73\).</div></div>
+<div class="q" data-id="d3-4" data-answer="0.416667"><p class="prompt">(b) \(x_1(1)\)</p><p class="hint">\((\mathbf A-\mathbf B\mathbf K)\mathbf x(0)\).</p><div class="explain">\(\tfrac14+\tfrac16=\tfrac5{12}\).</div></div>
+<div class="q" data-id="d3-5" data-answer="-0.625"><p class="prompt">(b) \(x_2(1)\)</p><p class="hint">\(-\tfrac38-\tfrac14\).</p><div class="explain">\(-\tfrac58\). Then \(\mathbf x(2)=\left[\tfrac14\cdot\tfrac5{12}-\tfrac16\cdot\tfrac58,\;-\tfrac38\cdot\tfrac5{12}+\tfrac14\cdot\tfrac58\right]^{\mathsf T}=\mathbf 0\) ✓: deadbeat in 2 steps.</div></div>
+</div>
+
+<h3>Formula recall (no formula sheet on the day)</h3>
+<p>Say or write each formula before opening it.</p>
+<details><summary>Transfer function from state space</summary>\(G=\mathbf C(z\mathbf I-\mathbf A)^{-1}\mathbf B+D\) (same with \(s\)). Poles = eigenvalues of \(\mathbf A\).</details>
+<details><summary>Continuous state transition matrix</summary>\(\mathbf\Phi(t)=\mathcal L^{-1}\{(s\mathbf I-\mathbf A)^{-1}\}\).</details>
+<details><summary>ZOH discretisation</summary>\(\mathbf A_d=\mathbf\Phi(T)\), \(\mathbf B_d=\mathbf\Theta(T)=\left[\int_0^T\mathbf\Phi(\tau)d\tau\right]\mathbf B\), \(\mathbf C,D\) unchanged.</details>
+<details><summary>Discrete state transition</summary>\(\mathbf x(k)=\mathbf A^k\mathbf x(0)+\sum_{i=0}^{k-1}\mathbf A^{k-1-i}\mathbf Bu(i)\).</details>
+<details><summary>Zeros</summary>\(\det\begin{bmatrix}z_0\mathbf I-\mathbf A&-\mathbf B\\\mathbf C&D\end{bmatrix}=0\).</details>
+<details><summary>Similarity transformation</summary>\(\mathbf x=\mathbf P\mathbf w\): \(\mathbf P^{-1}\mathbf A\mathbf P,\;\mathbf P^{-1}\mathbf B,\;\mathbf C\mathbf P\). For CCF, \(\mathbf P=\mathbf W_C\tilde{\mathbf W}_C^{-1}\).</details>
+<details><summary>CCF / OCF</summary>CCF: superdiagonal 1s, last row \(-a_0,\dots,-a_{n-1}\), \(\mathbf B=[0\cdots1]^{\mathsf T}\), \(\mathbf C=[b_0\cdots b_{n-1}]\). OCF = the transpose structure: \(\mathbf A_O=\mathbf A_C^{\mathsf T}\), \(\mathbf B_O=\mathbf C_C^{\mathsf T}\), \(\mathbf C_O=[0\cdots1]\).</details>
+<details><summary>Controllability / observability</summary>\(\mathbf W_C=[\mathbf B\;\mathbf{AB}\cdots\mathbf A^{n-1}\mathbf B]\) and \(\mathbf W_O=[\mathbf C;\mathbf{CA};\dots;\mathbf{CA}^{n-1}]\). Each property holds iff the matrix has rank \(n\).</details>
+<details><summary>Pole placement (CCF shortcut)</summary>\(u=-\mathbf K\mathbf x\), \(\det(z\mathbf I-\mathbf A+\mathbf B\mathbf K)=\alpha_C(z)\). In CCF, \(k_{i+1}=\alpha_i-a_i\).</details>
+<details><summary>Ackermann / deadbeat</summary>\(\mathbf K=[0\cdots0\;1]\mathbf W_C^{-1}\alpha_C(\mathbf A)\). For deadbeat, \(\alpha_C(\mathbf A)=\mathbf A^n\) and \(\mathbf x(k)=\mathbf 0\) for \(k\ge n\).</details>
+<details><summary>Two facts people forget</summary>(1) Sampling with \(\omega T=k\pi\) loses controllability/observability of an oscillator. (2) State feedback does not move zeros; a pole on a zero gives an unobservable closed loop.</details>
+</section>
+
+<p style="color:var(--muted);font-size:.85rem">Sources: <code>resources/lph-lecture-0{1,2,3}-*.pdf</code>, <code>lph-lecture-01-slide-40-theta-note.pdf</code>, <code>lph-matrix-basics-summary.pdf</code>, <code>week-05/06/07-transcript.txt</code>, <code>quizzes/quiz-02-intel.md</code>. Lecture example numbers follow the slides; all other examples are original and are verified by <code>notes/quiz2-prep-learning-check.py</code>. “Supplementary” boxes and intuition notes are additions, not slide content.</p>
+</main>
+</div>
+
+<script>
+(() => {
+  const KEY = 'ee6203-quiz2-prep-learning-v1';
+  let state = {};
+  try { state = JSON.parse(localStorage.getItem(KEY)) || {}; } catch {}
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch {} };
+  const typeset = el => window.MathJax?.typesetPromise?.([el]).catch(() => {});
+
+  function parse(v) {
+    v = v.trim().replace(/−/g, '-');
+    const f = v.match(/^(-?[\d.]+)\s*\/\s*(-?[\d.]+)$/);
+    return f ? Number(f[1]) / Number(f[2]) : (v === '' ? NaN : Number(v));
+  }
+  function close(x, a) { return Math.abs(x - a) <= Math.max(0.015 * Math.abs(a), 5e-4); }
+
+  document.querySelectorAll('.q').forEach(q => {
+    const id = q.dataset.id, isChoice = 'choice' in q.dataset;
+    const row = document.createElement('div'); row.className = 'row';
+    let input;
+    if (isChoice) {
+      q.querySelectorAll('ol.opts li').forEach((li, i) => {
+        li.innerHTML = `<label><input type="radio" name="${id}" value="${i}"><span>${li.innerHTML}</span></label>`;
+      });
+    } else {
+      input = document.createElement('input'); input.type = 'text'; input.inputMode = 'decimal';
+      input.setAttribute('aria-label', 'Your answer'); input.placeholder = 'e.g. -0.25 or 4/3';
+      row.append(input);
+    }
+    const check = Object.assign(document.createElement('button'), { type: 'button', className: 'primary', textContent: 'Check' });
+    const hintBtn = Object.assign(document.createElement('button'), { type: 'button', textContent: 'Hint' });
+    const verdict = Object.assign(document.createElement('span'), { className: 'verdict' });
+    verdict.setAttribute('aria-live', 'polite');
+    row.append(check, hintBtn, verdict);
+    q.querySelector('.hint').before(row);
+    hintBtn.onclick = () => q.querySelector('.hint').classList.toggle('show');
+    const grade = () => {
+      let ok;
+      if (isChoice) {
+        const sel = q.querySelector('input:checked'); if (!sel) { verdict.textContent = 'Pick an option first.'; return; }
+        ok = Number(sel.value) === Number(q.dataset.choice);
+      } else {
+        const x = parse(input.value); if (!Number.isFinite(x)) { verdict.textContent = 'Enter a number.'; return; }
+        ok = close(x, Number(q.dataset.answer));
+      }
+      q.classList.toggle('right', ok); q.classList.toggle('wrong', !ok);
+      verdict.textContent = ok ? '✓ Correct' : '✗ Not yet. Read the explanation, then retry.';
+      q.querySelector('.explain').classList.add('show');
+      if (ok) state[id] = 1; else if (!state[id]) state[id] = 0;
+      save(); updateNav();
+    };
+    check.onclick = grade;
+    input?.addEventListener('keydown', e => { if (e.key === 'Enter') grade(); });
+    if (state[id] === 1) { q.classList.add('right'); verdict.textContent = '✓ Done earlier'; }
+  });
+
+  const nav = document.getElementById('nav');
+  const modules = [...document.querySelectorAll('section.module')];
+  function updateNav() {
+    nav.innerHTML = modules.map(m => {
+      const qs = [...m.querySelectorAll('.q')], done = qs.filter(q => state[q.dataset.id] === 1).length;
+      return `<a href="#${m.id}"><span>${m.dataset.title}</span><span class="score${done === qs.length ? ' done' : ''}">${done}/${qs.length}</span></a>`;
+    }).join('');
+  }
+  updateNav();
+
+  document.getElementById('reset-btn').onclick = () => { state = {}; save(); location.reload(); };
+  const root = document.documentElement;
+  try { const t = localStorage.getItem(KEY + '-theme'); if (t) root.dataset.theme = t; } catch {}
+  document.getElementById('theme-btn').onclick = () => {
+    const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    root.dataset.theme = dark ? 'light' : 'dark';
+    try { localStorage.setItem(KEY + '-theme', root.dataset.theme); } catch {}
+  };
+
+  const slider = document.getElementById('dbslider'), out = document.getElementById('dbout');
+  function lab() {
+    const T = Number(slider.value);
+    document.getElementById('dbT').textContent = T.toFixed(2);
+    const u0 = -(1 / T ** 2 + 3 / (2 * T)), u1 = 1 / T ** 2 + 1 / (2 * T);
+    out.innerHTML = `K = [${(1 / T ** 2).toFixed(3)}, ${(3 / (2 * T)).toFixed(3)}] &nbsp;·&nbsp; u(0) = ${u0.toFixed(3)} &nbsp;·&nbsp; u(1) = ${u1.toFixed(3)} &nbsp;·&nbsp; at rest by t = 2T = ${(2 * T).toFixed(2)} s`;
+  }
+  slider.oninput = lab; lab();
+  typeset(document.body);
+})();
+</script>
+</body>
+</html>

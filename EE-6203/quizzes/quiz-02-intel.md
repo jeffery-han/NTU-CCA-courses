@@ -56,6 +56,6 @@ The current prediction paper (one 25-mark question, parts a–d) predates this e
 
 ## Scope boundary (provisional)
 
-Lect 1 §1–4, Lect 2 §5–8, Lect 3 §9–13 are expected (now corroborated by the 2026 S2 "LPH-Lecture1～3"). Session 3 (26 Sep) decides whether §11–13 (state feedback, Ackermann, deadbeat) are reached and whether Lect 4 §14 (observers) starts. **Re-check against the 26 Sep transcript.** Past-exam observer and LQR parts (Lect 4–5) are outside Quiz 2 unless that transcript says otherwise.
+Lect 1 §1–4, Lect 2 §5–8, Lect 3 §9–13 are expected (now corroborated by the 2026 S2 "LPH-Lecture1～3"). Session 3 (26 Sep) decides whether §11–13 (state feedback, Ackermann, deadbeat) are reached and whether Lect 4 §14 (observers) starts. **Resolved 2026-10-01 by `resources/week-07-transcript.txt`:** session 3 finished Lect 3 through Example 3.13 and LPH set the quiz scope there; observers (Lect 4) are out. LPH also stated: no MCQ, closed book, no formula sheet, transform table provided, own calculator. Past-exam observer and LQR parts (Lect 4–5) are outside Quiz 2 unless that transcript says otherwise.
 
 Schedule facts come from NTULearn and the lecturer; verify any change there, not from student posts.
