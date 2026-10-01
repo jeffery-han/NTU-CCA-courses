@@ -47,6 +47,14 @@ exp['m0-1'] = det(M([[3, 1], [2, 4]]))
 exp['m0-2'] = inv(M([[2, 1], [1, 1]]))[1, 1]
 exp['m0-3'] = np.linalg.matrix_rank(M([[1, 2], [2, 4]]))
 exp['m0-4'] = max(np.linalg.eigvals(M([[0, 1], [-6, -5]])).real)
+exp['m0-6'] = det(M([[1, 2], [3, 4]]))  # a0 = det A
+A = M([[2, 1], [0, 3.0]])
+assert np.allclose(A @ A, 5 * A - 6 * np.eye(2))
+exp['m0-7'] = (A @ A)[0, 1]
+A = M([[0, 1], [-6, -5.0]])
+assert np.allclose(A @ A + 5 * A + 6 * np.eye(2), 0)
+Acl = M([[1, 1], [-1, -1.0]])
+assert np.allclose(Acl @ Acl, 0)
 # M1
 exp['m1-1'], exp['m1-2'], exp['m1-3'] = -9 / 3, -12 / 3, 6 / 3
 A1 = M([[0.5, 0], [1, -0.25]])  # discrete diagram

@@ -133,8 +133,36 @@ svg.diagram { width:100%; max-width:640px; height:auto; display:block; margin:1r
 This works only if \(ad-bc\neq0\). More generally, \(\mathbf M^{-1}=\operatorname{adj}\mathbf M/\det\mathbf M\), where the adjoint is the transpose of the cofactor matrix.</li>
 <li><strong>Rank</strong>: the number of linearly independent columns. For a square \(n\times n\) matrix, rank \(=n\) exactly when \(\det\neq0\). That fact is the whole controllability/observability test.</li>
 <li><strong>Eigenvalues</strong>: the roots of \(\det(\lambda\mathbf I-\mathbf A)=0\). For 2×2, \(\lambda^2-(\operatorname{tr}\mathbf A)\lambda+\det\mathbf A=0\). For a triangular matrix they are simply the diagonal entries.</li>
-<li><strong>Cayley–Hamilton</strong>: a matrix satisfies its own characteristic equation. If \(\det(z\mathbf I-\mathbf A)=z^2+a_1z+a_0\), then \(\mathbf A^2+a_1\mathbf A+a_0\mathbf I=\mathbf 0\). This is why Ackermann's formula (Module 9) works.</li>
+<li><strong>Cayley–Hamilton</strong>: a matrix satisfies its own characteristic equation. This gets its own section next, because Ackermann's formula and deadbeat control depend on it.</li>
 </ol>
+
+<h3>0.1 The characteristic equation and Cayley–Hamilton, from scratch</h3>
+<p class="box extra">This section is supplementary background: LPH uses these results on Lect 2 slide 7 (eq. 6.3), Lect 3 slides 41–51 (Ackermann, deadbeat) and the matrix handout, without deriving them.</p>
+<p><strong>Eigenvalues.</strong> An eigenvalue \(\lambda\) of a square matrix \(\mathbf A\) is a number for which some <em>non-zero</em> vector \(\mathbf v\) satisfies \(\mathbf A\mathbf v=\lambda\mathbf v\). In words, \(\mathbf A\) only stretches \(\mathbf v\), it does not turn it.</p>
+<details><summary>Step 1: turn “\(\mathbf A\mathbf v=\lambda\mathbf v\)” into an equation for \(\lambda\) alone</summary>
+Move everything to one side: \((\lambda\mathbf I-\mathbf A)\mathbf v=\mathbf 0\). (The \(\mathbf I\) is needed because you cannot subtract a matrix from a number.) A matrix that sends a non-zero vector to \(\mathbf 0\) must be singular, so
+\[\det(\lambda\mathbf I-\mathbf A)=0.\]
+The left side is a polynomial in \(\lambda\), the <strong>characteristic polynomial</strong>. Setting it to zero gives the <strong>characteristic equation</strong>, whose roots are the eigenvalues.</details>
+<details><summary>Step 2: the 2×2 shortcut</summary>
+\(\det\begin{bmatrix}\lambda-a&-b\\-c&\lambda-d\end{bmatrix}=(\lambda-a)(\lambda-d)-bc=\lambda^2-(a+d)\lambda+(ad-bc)\), that is,
+\[\lambda^2-(\operatorname{tr}\mathbf A)\,\lambda+\det\mathbf A.\]
+Example: \(\mathbf A=\begin{bmatrix}0&1\\-6&-5\end{bmatrix}\) has trace \(-5\) and determinant \(6\). So the characteristic polynomial is \(\lambda^2+5\lambda+6=(\lambda+2)(\lambda+3)\), and the eigenvalues are \(-2,-3\).</details>
+<details><summary>Step 3: why control engineers care</summary>
+The transfer function \(G(z)=\mathbf C(z\mathbf I-\mathbf A)^{-1}\mathbf B\) has denominator \(\det(z\mathbf I-\mathbf A)\), which is the same polynomial with \(z\) in place of \(\lambda\). LPH writes it \(z^n+a_{n-1}z^{n-1}+\dots+a_0\) (6.3). Hence <strong>poles = eigenvalues of \(\mathbf A\)</strong>, and “the characteristic polynomial” in Lectures 2–3 always means \(\det(z\mathbf I-\mathbf A)\). The name of the variable (\(\lambda\), \(s\), \(z\)) does not matter.</details>
+<div class="box good"><p><strong>Cayley–Hamilton theorem.</strong> Every square matrix satisfies its own characteristic equation. Take the characteristic polynomial, replace the variable by \(\mathbf A\), and replace the constant \(c\) by \(c\mathbf I\). The result is the <em>zero matrix</em>:</p>
+\[\lambda^2+5\lambda+6=0\quad\Longrightarrow\quad\mathbf A^2+5\mathbf A+6\mathbf I=\mathbf 0.\]</div>
+<details><summary>Verify it on the example</summary>
+\(\mathbf A^2=\begin{bmatrix}-6&-5\\30&19\end{bmatrix}\), \(5\mathbf A=\begin{bmatrix}0&5\\-30&-25\end{bmatrix}\), \(6\mathbf I=\begin{bmatrix}6&0\\0&6\end{bmatrix}\). The sum is \(\begin{bmatrix}0&0\\0&0\end{bmatrix}\) ✓.</details>
+<details><summary>Why it is true (intuition)</summary>
+For an eigenvector, \(\mathbf A\mathbf v=\lambda\mathbf v\) gives \(\mathbf A^2\mathbf v=\lambda^2\mathbf v\), and so on. So \((\mathbf A^2+5\mathbf A+6\mathbf I)\mathbf v=(\lambda^2+5\lambda+6)\mathbf v=0\cdot\mathbf v\): the matrix polynomial sends every eigenvector to zero. When the eigenvectors span the whole space, it sends every vector to zero, so it is the zero matrix. (The theorem holds for every square matrix; this argument is only the intuition.)</details>
+<p><strong>What it buys you in Quiz 2.</strong></p>
+<ol>
+<li><strong>Higher powers collapse.</strong> \(\mathbf A^2=-5\mathbf A-6\mathbf I\), so \(\mathbf A^3,\mathbf A^4,\dots\) are all combinations of \(\mathbf A\) and \(\mathbf I\). This is also why \(\mathbf W_C\) stops at \(\mathbf A^{n-1}\mathbf B\): \(\mathbf A^n\mathbf B\) would add no new direction.</li>
+<li><strong>Ackermann</strong> (Module 9) uses the same move with the <em>desired</em> polynomial: \(\alpha_C(\mathbf A)=\mathbf A^2+\alpha_1\mathbf A+\alpha_0\mathbf I\).</li>
+<li><strong>Deadbeat</strong> (Module 10): choose \(\mathbf K\) so that \(\mathbf A-\mathbf B\mathbf K\) has characteristic polynomial \(z^2\). Cayley–Hamilton then gives \((\mathbf A-\mathbf B\mathbf K)^2=\mathbf 0\), so \(\mathbf x(2)=\mathbf 0\) from any \(\mathbf x(0)\).</li>
+<li><strong>A fast check of your gain.</strong> For a 2×2 deadbeat design, \(\mathbf A-\mathbf B\mathbf K\) must have trace 0 and determinant 0.</li>
+</ol>
+<p class="box warn"><strong>Pitfalls.</strong> Writing \(+6\) instead of \(+6\mathbf I\) (you cannot add a number to a matrix). Thinking the result is the number 0 rather than the zero matrix. Mixing up \(\det(\lambda\mathbf I-\mathbf A)\), which is a polynomial, with \(\det\mathbf A\), which is one number.</p>
 
 <div class="checks"><h4>Check · matrix toolkit</h4>
 <div class="q" data-id="m0-1" data-answer="10"><p class="prompt">\(\det\begin{bmatrix}3&1\\2&4\end{bmatrix}=\;?\)</p><p class="hint">\(ad-bc\).</p><div class="explain">\(3\cdot4-1\cdot2=10\).</div></div>
@@ -144,6 +172,11 @@ This works only if \(ad-bc\neq0\). More generally, \(\mathbf M^{-1}=\operatornam
 <div class="q" data-id="m0-5" data-choice="2"><p class="prompt">\(\mathbf A\) has \(\det(z\mathbf I-\mathbf A)=z^2-0.5z+0.06\). Cayley–Hamilton says:</p>
 <ol class="opts"><li>\(\mathbf A^2=\mathbf 0\)</li><li>\(\mathbf A^2-0.5\mathbf A+0.06=0\) as scalars only</li><li>\(\mathbf A^2-0.5\mathbf A+0.06\mathbf I=\mathbf 0\)</li></ol>
 <p class="hint">Replace \(z\) by \(\mathbf A\), and replace the constant term \(c\) by \(c\mathbf I\).</p><div class="explain">A matrix satisfies its own characteristic polynomial, with the constant multiplying \(\mathbf I\).</div></div>
+<div class="q" data-id="m0-6" data-answer="-2"><p class="prompt">\(\mathbf A=\begin{bmatrix}1&2\\3&4\end{bmatrix}\). Its characteristic polynomial is \(\lambda^2+a_1\lambda+a_0\). Find \(a_0\).</p><p class="hint">\(\lambda^2-(\operatorname{tr})\lambda+\det\).</p><div class="explain">\(\det\mathbf A=4-6=-2\), so \(\lambda^2-5\lambda-2\) and \(a_0=-2\) (with \(a_1=-5\)).</div></div>
+<div class="q" data-id="m0-7" data-answer="5"><p class="prompt">\(\mathbf A=\begin{bmatrix}2&1\\0&3\end{bmatrix}\). Use Cayley–Hamilton (not multiplication) to write \(\mathbf A^2\) in terms of \(\mathbf A\) and \(\mathbf I\), then give the top-right entry of \(\mathbf A^2\).</p><p class="hint">The characteristic polynomial is \(\lambda^2-5\lambda+6\), so \(\mathbf A^2=5\mathbf A-6\mathbf I\).</p><div class="explain">\(5\mathbf A-6\mathbf I=\begin{bmatrix}4&5\\0&9\end{bmatrix}\), so the entry is 5. Multiplying directly gives the same: \(2\cdot1+1\cdot3=5\) ✓.</div></div>
+<div class="q" data-id="m0-8" data-choice="1"><p class="prompt">A 2×2 closed-loop matrix \(\mathbf A_{cl}\) has trace 0 and determinant 0. What does Cayley–Hamilton say?</p>
+<ol class="opts"><li>\(\mathbf A_{cl}=\mathbf 0\)</li><li>\(\mathbf A_{cl}^2=\mathbf 0\), so \(\mathbf x(2)=\mathbf 0\) from any start</li><li>nothing, unless \(\mathbf A_{cl}\) is diagonal</li></ol>
+<p class="hint">Its characteristic polynomial is \(\lambda^2-0\cdot\lambda+0\).</p><div class="explain">The polynomial is \(\lambda^2\), so \(\mathbf A_{cl}^2=\mathbf 0\). The matrix itself need not be zero: for example \(\begin{bmatrix}1&1\\-1&-1\end{bmatrix}\) from Module 10. This is exactly the deadbeat property.</div></div>
 </div>
 </section>
 
