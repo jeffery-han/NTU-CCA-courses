@@ -97,9 +97,14 @@ svg.diagram { width:100%; max-width:640px; height:auto; display:block; margin:1r
   nav { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.1rem; }
   .theme-btn { margin-top:.5rem; }
 }
-figure.slide { margin:1rem auto; max-width:600px; }
-figure.slide img { width:100%; display:block; margin-bottom:.4rem; border:1px solid var(--border); border-radius:6px; background:#fff; }
-figure.slide figcaption { font-size:.85rem; color:var(--muted); text-align:center; }
+a.slide-link { text-decoration:underline dotted; text-underline-offset:2px; cursor:zoom-in; }
+.slides { display:grid; gap:.8rem; margin-top:.6rem; }
+.slides figure { margin:0; }
+.slides img { width:100%; max-width:720px; display:block; border:1px solid var(--border); border-radius:6px; background:#fff; }
+.slides figcaption { font-size:.8rem; color:var(--muted); }
+dialog.slide-view { width:min(780px,96vw); max-height:92vh; padding:1rem; border:1px solid var(--border); border-radius:12px; background:var(--surface); color:var(--text); }
+dialog.slide-view::backdrop { background:rgb(0 0 0 / .55); }
+dialog.slide-view .bar { display:flex; justify-content:space-between; align-items:center; position:sticky; top:-1rem; background:var(--surface); padding:.3rem 0; }
 </style>
 </head>
 <body>
@@ -115,7 +120,7 @@ figure.slide figcaption { font-size:.85rem; color:var(--muted); text-align:cente
 <main>
 
 <!-- ============================================================ M0 -->
-<section class="module hero" id="m0" data-title="0 · Start here">
+<section class="module hero" id="m0" data-lect="2" data-title="0 · Start here">
 <h2>0 · Start here: what the quiz is and the matrix toolkit</h2>
 <p>This page teaches Dr Lee Peng Hin's (LPH) part of EE6203 from zero, in the order of his slides. Every section ends with small exercises. Type an answer, press <em>Check</em>, and you get feedback straight away, plus a worked explanation. Fractions such as <code>4/3</code> are accepted.</p>
 <div class="facts">
@@ -184,11 +189,10 @@ For an eigenvector, \(\mathbf A\mathbf v=\lambda\mathbf v\) gives \(\mathbf A^2\
 </section>
 
 <!-- ============================================================ M1 -->
-<section class="module" id="m1" data-title="1 · State-space models">
+<section class="module" id="m1" data-lect="1" data-title="1 · State-space models">
 <h2>1 · What a state is, and building state-space models <span class="src">Lect 1 §1–1.2, slides 5–24</span></h2>
 <h3>1.1 The idea of a state</h3>
 <p>A circuit or motor has memory: what it does next depends on what has already happened. LPH's motivating example is the series RLC circuit (slides 9–12). Solving one second-order equation for the current hides the capacitor voltage. If you track <em>both</em> the inductor current \(i_L\) and the capacitor voltage \(v_C\), every other voltage in the circuit follows from them.</p>
-<figure class="slide"><img src="quiz2-slides/l1-s09.jpg" alt="Lecture 1, slide 9: the series RLC circuit, where i<sub>L</sub> and v<sub>C</sub> are the natural states." loading="lazy"><figcaption>Lecture 1, slide 9: the series RLC circuit, where i<sub>L</sub> and v<sub>C</sub> are the natural states.</figcaption></figure>
 <div class="box"><p><strong>Definition (slide 14).</strong> The <em>state</em> is a minimum set of internal variables \(x_1,\dots,x_n\). Knowing them at time \(t_0\), together with the input from \(t_0\) onwards, is enough to predict all future states and outputs.</p></div>
 <p>Write the states as a column vector \(\mathbf x\). A linear time-invariant (LTI) system then has the form <span class="src">(1.1)–(1.2)</span>:</p>
 \[\dot{\mathbf x}(t)=\mathbf A\mathbf x(t)+\mathbf B u(t),\qquad y(t)=\mathbf C\mathbf x(t)+D u(t).\]
@@ -208,7 +212,6 @@ For an eigenvector, \(\mathbf A\mathbf v=\lambda\mathbf v\) gives \(\mathbf A^2\
 <p><strong>Physical example from the slides: the servomotor</strong> (Example 1.2, slides 21–24). Motor torque \(K_Ti=J\ddot\theta+B\dot\theta\), back-emf \(e_m=K_b\dot\theta\), and armature KVL \(e=iR_a+e_m\) (neglecting \(L_a\)). Eliminating \(i\) with \(x_1=\theta,\;x_2=\dot\theta\) gives</p>
 \[\dot{\mathbf x}=\begin{bmatrix}0&1\\0&-\dfrac{BR_a+K_TK_b}{JR_a}\end{bmatrix}\mathbf x+\begin{bmatrix}0\\\dfrac{K_T}{JR_a}\end{bmatrix}e,\qquad y=\begin{bmatrix}1&0\end{bmatrix}\mathbf x.\]
 <p>The servo used throughout the lecture has these numbers chosen so that \(\mathbf A=\begin{bmatrix}0&1\\0&-1\end{bmatrix},\;\mathbf B=\begin{bmatrix}0\\1\end{bmatrix}\) (Example 1.4).</p>
-<figure class="slide"><img src="quiz2-slides/l1-s21.jpg" alt="Lecture 1, slide 21 (Figure 3): the armature-controlled servomotor of Example 1.2." loading="lazy"><figcaption>Lecture 1, slide 21 (Figure 3): the armature-controlled servomotor of Example 1.2.</figcaption></figure>
 
 <div class="checks"><h4>Check · ODE → state space</h4>
 <p>Take \(3\ddot y+12\dot y+9y=6u\) with \(x_1=y,\;x_2=\dot y\).</p>
@@ -246,7 +249,6 @@ For an eigenvector, \(\mathbf A\mathbf v=\lambda\mathbf v\) gives \(\mathbf A^2\
 
 <h3>1.4 Recipe C: discrete block diagram (delays) → state space <span class="src">Lect 3 Ex 3.5, slides 14–15</span></h3>
 <p>The discrete version is the same idea with \(z^{-1}\) (a one-sample delay) in place of \(1/s\). <strong>The output of each delay is a state \(x_i(k)\), and the signal entering that delay is \(x_i(k+1)\).</strong> In LPH's Example 3.5, the first delay has feedback \(-0.2\), so \(x_1(k+1)=-0.2x_1(k)\). The second junction adds \(x_1\) and \(u\) and subtracts \(0.5x_2\), so \(x_2(k+1)=x_1(k)-0.5x_2(k)+u(k)\), with \(y=x_2\).</p>
-<figure class="slide"><img src="quiz2-slides/l3-s14.jpg" alt="Lecture 3, slide 14: the Example 3.5 delay diagram. Each z<sup>−1</sup> output is a state." loading="lazy"><figcaption>Lecture 3, slide 14: the Example 3.5 delay diagram. Each z<sup>−1</sup> output is a state.</figcaption></figure>
 <svg class="diagram" viewBox="0 0 640 170" role="img" aria-label="Discrete block diagram: u enters junction one with plus feedback 0.5 x1, through z inverse gives x1; x1 enters junction two with minus feedback 0.25 x2, through z inverse gives x2 equal to y.">
 <g fill="none" stroke="currentColor" stroke-width="1.6">
 <line x1="20" y1="60" x2="78" y2="60" marker-end="url(#ar)"/><circle cx="90" cy="60" r="12"/>
@@ -276,7 +278,7 @@ For an eigenvector, \(\mathbf A\mathbf v=\lambda\mathbf v\) gives \(\mathbf A^2\
 </section>
 
 <!-- ============================================================ M2 -->
-<section class="module" id="m2" data-title="2 · Solving ẋ = Ax + Bu">
+<section class="module" id="m2" data-lect="1" data-title="2 · Solving ẋ = Ax + Bu">
 <h2>2 · The state transition matrix \(\mathbf\Phi(t)\) <span class="src">Lect 1 §1.3, slides 25–30</span></h2>
 <p>Before discretising, you need the continuous solution. Transform \(\dot{\mathbf x}=\mathbf A\mathbf x+\mathbf Bu\) <em>keeping</em> the initial state: \(s\mathbf X-\mathbf x(0)=\mathbf A\mathbf X+\mathbf BU\), so</p>
 \[\mathbf X(s)=(s\mathbf I-\mathbf A)^{-1}\mathbf x(0)+(s\mathbf I-\mathbf A)^{-1}\mathbf BU(s).\]
@@ -305,10 +307,9 @@ Check: at \(t=0\) this is \(\mathbf I\). ✓</details>
 </section>
 
 <!-- ============================================================ M3 -->
-<section class="module" id="m3" data-title="3 · ZOH discretisation">
+<section class="module" id="m3" data-lect="1" data-title="3 · ZOH discretisation">
 <h2>3 · Discretising with a zero-order hold <span class="src">Lect 1 §2, slides 31–40 + slide-40 note</span></h2>
 <p>A computer sends \(u(kT)\) every \(T\) seconds, and the zero-order hold (ZOH) keeps it <strong>constant</strong> until the next sample. Our goal is a model that jumps straight from \(\mathbf x(kT)\) to \(\mathbf x((k+1)T)\).</p>
-<figure class="slide"><img src="quiz2-slides/l1-s31.jpg" alt="Lecture 1, slide 31 (Figure 4): the computer, the ZOH and the continuous plant, sampled every T." loading="lazy"><figcaption>Lecture 1, slide 31 (Figure 4): the computer, the ZOH and the continuous plant, sampled every T.</figcaption></figure>
 <h3>Derivation (why the formula looks the way it does)</h3>
 <details open><summary>Step 1: apply (1.21) over one sampling interval</summary>
 Set \(t_0=kT\) and \(t=(k+1)T\):
@@ -339,7 +340,6 @@ For small \(T\), \(\mathbf\Theta\approx\mathbf BT=[0,\;1]^{\mathsf T}\). Our sec
 
 <h3>Lecture example: double integrator <span class="src">Example 1.6, slides 48–50</span></h3>
 <p>\(\mathbf\Phi(T)=\begin{bmatrix}1&T\\0&1\end{bmatrix}\) and \(\mathbf\Theta(T)=\int_0^T\begin{bmatrix}\tau\\1\end{bmatrix}d\tau=\begin{bmatrix}T^2/2\\T\end{bmatrix}\). Memorise this one: it reappears in the deadbeat example.</p>
-<figure class="slide"><img src="quiz2-slides/l1-s48.jpg" alt="Lecture 1, slide 48: Example 1.6, the double integrator 1/s² and its states." loading="lazy"><figcaption>Lecture 1, slide 48: Example 1.6, the double integrator 1/s² and its states.</figcaption></figure>
 
 <div class="checks"><h4>Check · ZOH discretisation</h4>
 <p>Discretise \(\mathbf A=\begin{bmatrix}0&1\\0&-1\end{bmatrix},\;\mathbf B=\begin{bmatrix}0\\1\end{bmatrix}\) (the servo) with \(T=0.2\). Give 4 significant figures.</p>
@@ -352,7 +352,7 @@ For small \(T\), \(\mathbf\Theta\approx\mathbf BT=[0,\;1]^{\mathsf T}\). Our sec
 </section>
 
 <!-- ============================================================ M4 -->
-<section class="module" id="m4" data-title="4 · Discrete TF, poles, zeros">
+<section class="module" id="m4" data-lect="1" data-title="4 · Discrete TF, poles, zeros">
 <h2>4 · Discrete transfer function, poles and zeros <span class="src">Lect 1 §3, slides 41–52</span></h2>
 <p>Exactly as in continuous time, take z-transforms of \(\mathbf x(k+1)=\mathbf A\mathbf x(k)+\mathbf Bu(k)\) with \(\mathbf x(0)=\mathbf 0\): \(z\mathbf X=\mathbf A\mathbf X+\mathbf BU\). (From here on, \(\mathbf A,\mathbf B\) mean the discrete matrices \(\mathbf\Phi,\mathbf\Theta\).)</p>
 \[\boxed{G(z)=\frac{Y(z)}{U(z)}=\mathbf C(z\mathbf I-\mathbf A)^{-1}\mathbf B+D}\quad\textbf{MEMORISE}\]
@@ -382,7 +382,7 @@ Poles \(1,\;e^{-1}\) are the images \(e^{sT}\) of \(s=0,-2\). The zero is \(-0.7
 </section>
 
 <!-- ============================================================ M5 -->
-<section class="module" id="m5" data-title="5 · State transition x(k)">
+<section class="module" id="m5" data-lect="1" data-title="5 · State transition x(k)">
 <h2>5 · Solving the discrete state equation by recursion <span class="src">Lect 1 §4, slides 53–56</span></h2>
 <p>The simplest solution method is to <strong>iterate</strong>: \(\mathbf x(1)=\mathbf A\mathbf x(0)+\mathbf Bu(0)\), then \(\mathbf x(2)=\mathbf A\mathbf x(1)+\mathbf Bu(1)=\mathbf A^2\mathbf x(0)+\mathbf{AB}u(0)+\mathbf Bu(1)\), and so on. The pattern is</p>
 \[\boxed{\mathbf x(k)=\mathbf A^k\mathbf x(0)+\sum_{i=0}^{k-1}\mathbf A^{k-1-i}\mathbf B\,u(i)}\quad(4.3)\quad\textbf{MEMORISE}\]
@@ -403,13 +403,12 @@ Poles \(1,\;e^{-1}\) are the images \(e^{sT}\) of \(s=0,-2\). The zero is \(-0.7
 </section>
 
 <!-- ============================================================ M6 -->
-<section class="module" id="m6" data-title="6 · Canonical forms">
+<section class="module" id="m6" data-lect="2" data-title="6 · Canonical forms">
 <h2>6 · Similarity transformations and canonical forms <span class="src">Lect 2 §5–6, slides 2–20</span></h2>
 <h3>6.1 Same system, different states</h3>
 <p>Many state vectors describe the same physical system. Introduce new states \(\mathbf w\) through a constant non-singular \(\mathbf P\): \(\mathbf x=\mathbf P\mathbf w\) (5.3). Substituting into \(\mathbf x(k+1)=\mathbf A\mathbf x+\mathbf Bu\) and multiplying by \(\mathbf P^{-1}\) gives</p>
 \[\mathbf A_w=\mathbf P^{-1}\mathbf A\mathbf P,\quad\mathbf B_w=\mathbf P^{-1}\mathbf B,\quad\mathbf C_w=\mathbf C\mathbf P,\quad d_w=d.\]
 <p><strong>Invariants:</strong> the characteristic polynomial (so the poles) and the transfer function. Proof: \(\det(z\mathbf I-\mathbf P^{-1}\mathbf A\mathbf P)=\det(\mathbf P^{-1}(z\mathbf I-\mathbf A)\mathbf P)=\det(z\mathbf I-\mathbf A)\).</p>
-<figure class="slide"><img src="quiz2-slides/l2-s02.jpg" alt="Lecture 2, slide 2: one circuit modelled with two different state choices, which motivates similarity transforms." loading="lazy"><figcaption>Lecture 2, slide 2: one circuit modelled with two different state choices, which motivates similarity transforms.</figcaption></figure>
 <h3>6.2 Controllable canonical form (CCF) and observable canonical form (OCF)</h3>
 <p>Write the characteristic polynomial as \(z^n+a_{n-1}z^{n-1}+\dots+a_1z+a_0\) (6.3). For \(n=2\):</p>
 \[\textbf{CCF: }\mathbf A_C=\begin{bmatrix}0&1\\-a_0&-a_1\end{bmatrix},\;\mathbf B_C=\begin{bmatrix}0\\1\end{bmatrix};\qquad \textbf{OCF: }\mathbf A_O=\begin{bmatrix}0&-a_0\\1&-a_1\end{bmatrix}=\mathbf A_C^{\mathsf T},\;\mathbf C_O=[0\;\;1].\]
@@ -441,7 +440,7 @@ Check: \(\mathbf P^{-1}\mathbf B=[0\;1]^{\mathsf T}\) ✓, and \(\mathbf P^{-1}\
 </section>
 
 <!-- ============================================================ M7 -->
-<section class="module" id="m7" data-title="7 · Controllability">
+<section class="module" id="m7" data-lect="2" data-title="7 · Controllability">
 <h2>7 · Controllability <span class="src">Lect 2 §7–8, slides 21–39</span></h2>
 <p>LPH's design plan (§7): (1) design state feedback \(u=-\mathbf K\mathbf x\), assuming all states are measured; (2) if they are not, design an observer to estimate them. By the separation principle the two designs are independent. Quiz 2 covers step 1. Before designing, ask whether the input <em>can</em> steer the state at all.</p>
 <h3>Where the test comes from</h3>
@@ -452,7 +451,6 @@ Check: \(\mathbf P^{-1}\mathbf B=[0\;1]^{\mathsf T}\) ✓, and \(\mathbf P^{-1}\
 <p class="box warn"><strong>Pitfall.</strong> The unknown vector is in <em>reverse</em> time order, \([u(1);u(0)]\) for \(n=2\). If you write it the other way, you swap the answers.</p>
 <h3>Physical meaning <span class="src">Examples 2.5, 2.9</span></h3>
 <p>In a balanced bridge (Example 2.9: \(\frac{R_3}{R_3+R_4}=\frac{R_2}{R_1+R_2}\), i.e. \(R_1R_3=R_2R_4\)), the capacitor voltage cannot be moved by the source at all, and \(\det\mathbf W_C=0\). Uncontrollable means part of the state is unreachable from the input.</p>
-<figure class="slide"><img src="quiz2-slides/l2-s28.jpg" alt="Lecture 2, slides 28 and 37: the Example 2.5 circuit and the Example 2.9 bridge circuit, both uncontrollable." loading="lazy"><img src="quiz2-slides/l2-s37.jpg" alt="Lecture 2, slides 28 and 37: the Example 2.5 circuit and the Example 2.9 bridge circuit, both uncontrollable." loading="lazy"><figcaption>Lecture 2, slides 28 and 37: the Example 2.5 circuit and the Example 2.9 bridge circuit, both uncontrollable.</figcaption></figure>
 <h3>Worked: steer from the origin to a target</h3>
 <p>\(\mathbf A=\begin{bmatrix}1&1\\0&1\end{bmatrix},\;\mathbf B=\begin{bmatrix}0\\1\end{bmatrix}\). Reach \(\mathbf x(2)=[2\;\;1]^{\mathsf T}\) from \(\mathbf 0\).</p>
 <details><summary>Solve</summary>\(\mathbf{AB}=[1\;1]^{\mathsf T}\), so \(\mathbf W_C=\begin{bmatrix}0&1\\1&1\end{bmatrix}\) with \(\det=-1\ne0\): controllable.
@@ -469,13 +467,12 @@ Check: \(\mathbf P^{-1}\mathbf B=[0\;1]^{\mathsf T}\) ✓, and \(\mathbf P^{-1}\
 </section>
 
 <!-- ============================================================ M8 -->
-<section class="module" id="m8" data-title="8 · Observability">
+<section class="module" id="m8" data-lect="3" data-title="8 · Observability">
 <h2>8 · Observability, pole-zero cancellation, and loss by sampling <span class="src">Lect 3 §9–10, slides 2–19</span></h2>
 <p>Observability is the mirror question: can the initial state be worked out from the measured outputs (and known inputs)? With \(u=0\), \(y(k)=\mathbf C\mathbf A^k\mathbf x(0)\), so stacking \(n\) outputs gives</p>
 \[\begin{bmatrix}y(0)\\y(1)\\\vdots\\y(n-1)\end{bmatrix}=\underbrace{\begin{bmatrix}\mathbf C\\\mathbf{CA}\\\vdots\\\mathbf{CA}^{n-1}\end{bmatrix}}_{\mathbf W_O}\mathbf x(0)\quad(9.3).\]
 <div class="box good"><p><strong>Theorem.</strong> \((\mathbf A,\mathbf C)\) is observable \(\iff\operatorname{rank}\mathbf W_O=n\). <strong>MEMORISE</strong> \(\mathbf W_O\) stacks rows, while \(\mathbf W_C\) places columns side by side.</p></div>
 <p>LPH's physical example (3.1): an LC loop measured by a quantity it never touches. The loop can ring while the output stays 0, so it is unobservable. If you measure \(x_2\) instead, it becomes observable: <em>both properties depend on what you call the input and the output.</em></p>
-<figure class="slide"><img src="quiz2-slides/l3-s06.jpg" alt="Lecture 3, slide 6: the Example 3.1 LC loop and measured output." loading="lazy"><figcaption>Lecture 3, slide 6: the Example 3.1 LC loop and measured output.</figcaption></figure>
 <h3>Worked: find \(\mathbf x(0)\)</h3>
 <p>\(\mathbf A=\begin{bmatrix}1&1\\0&2\end{bmatrix},\;\mathbf C=[1\;0],\;u=0,\;y(0)=1,\;y(1)=2\).</p>
 <details><summary>Solve</summary>\(\mathbf{CA}=[1\;\;1]\), so \(\mathbf W_O=\begin{bmatrix}1&0\\1&1\end{bmatrix}\) with \(\det=1\): observable. Then \(y(0)=x_1(0)=1\) and \(y(1)=x_1(0)+x_2(0)=2\), so \(\mathbf x(0)=[1\;\;1]^{\mathsf T}\).
@@ -498,11 +495,10 @@ LPH (26 Sep): “we don't need to remember the formula, we can solve this using 
 </section>
 
 <!-- ============================================================ M9 -->
-<section class="module" id="m9" data-title="9 · Pole placement">
+<section class="module" id="m9" data-lect="3" data-title="9 · Pole placement">
 <h2>9 · State feedback by pole placement, and Ackermann's formula <span class="src">Lect 3 §11–12, slides 20–44</span></h2>
 <p>Feed back the state: \(u(k)=-\mathbf K\mathbf x(k)\) with \(\mathbf K=[k_1\;k_2\;\cdots\;k_n]\) (11.1). This is a <em>regulator</em>, since the reference is 0. The closed loop is</p>
 \[\mathbf x(k+1)=(\mathbf A-\mathbf B\mathbf K)\mathbf x(k)\quad(11.2),\qquad \text{characteristic polynomial } \det(z\mathbf I-\mathbf A+\mathbf B\mathbf K).\]
-<figure class="slide"><img src="quiz2-slides/l3-s20.jpg" alt="Lecture 3, slide 20 (Figure 5): the closed loop with linear state feedback u = −Kx + r." loading="lazy"><figcaption>Lecture 3, slide 20 (Figure 5): the closed loop with linear state feedback u = −Kx + r.</figcaption></figure>
 <p>Choose the desired poles \(p_1,\dots,p_n\), form \(\alpha_C(z)=(z-p_1)\cdots(z-p_n)=z^n+\alpha_{n-1}z^{n-1}+\dots+\alpha_0\) (11.5), and make the two polynomials equal. <strong>The poles can be placed anywhere \(\iff(\mathbf A,\mathbf B)\) is controllable.</strong></p>
 <h3>Method 1: match coefficients</h3>
 <p>Expand \(\det(z\mathbf I-\mathbf A+\mathbf B\mathbf K)\) with symbols \(k_1,k_2\), then equate the coefficients of \(z^1\) and \(z^0\). This gives two linear equations.</p>
@@ -523,7 +519,6 @@ Check: \(\mathbf A-\mathbf B\mathbf K=\begin{bmatrix}0.875&0.28125\\-0.5&0.125\e
 <p><strong>Lecture example 3.8 / 3.11 (servo, \(T=0.1\)).</strong> Desired poles \(0.888\pm j0.173\) (damping 0.46, time constant 1 s) give \(\alpha_C=z^2-1.776z+0.819\). Both methods give \(\mathbf K=[4.52\;\;1.12]\).</p>
 <h3>Zeros under state feedback <span class="src">§11.1, Example 3.9</span></h3>
 <p>With \(u=-\mathbf K\mathbf x+r\), state feedback moves the poles but <strong>leaves the zeros unchanged</strong>. The servo's zero at \(-0.9676\) is still there after feedback. In Example 3.9, one closed-loop pole is placed <em>on</em> that zero. The pole cancels it, so \(Y/R=0.00484/(z-0.9781)\), and the closed loop becomes <strong>unobservable</strong> (\(\det\mathbf W_{O,cl}=0\)) while staying controllable.</p>
-<figure class="slide"><img src="quiz2-slides/l3-s31.jpg" alt="Lecture 3, slide 31: state feedback moves the poles (×) but the zeros (○) stay where they are." loading="lazy"><figcaption>Lecture 3, slide 31: state feedback moves the poles (×) but the zeros (○) stay where they are.</figcaption></figure>
 
 <div class="checks"><h4>Check · pole placement</h4>
 <p>\(\mathbf A=\begin{bmatrix}0&1\\-0.3&1.2\end{bmatrix},\;\mathbf B=\begin{bmatrix}0\\1\end{bmatrix}\). Place the poles at 0.5 and 0.4.</p>
@@ -537,7 +532,7 @@ Check: \(\mathbf A-\mathbf B\mathbf K=\begin{bmatrix}0.875&0.28125\\-0.5&0.125\e
 </section>
 
 <!-- ============================================================ M10 -->
-<section class="module" id="m10" data-title="10 · Deadbeat control">
+<section class="module" id="m10" data-lect="3" data-title="10 · Deadbeat control">
 <h2>10 · Deadbeat control <span class="src">Lect 3 §13, slides 45–62</span></h2>
 <p>The solution of the closed loop is \(\mathbf x(k)=(\mathbf A-\mathbf B\mathbf K)^k\mathbf x(0)\). Stability needs every \(|\lambda_i|\lt1\). Deadbeat takes the extreme choice: <strong>put every closed-loop pole at \(z=0\)</strong> (13.1). Then \(\alpha_C(z)=z^n\), so Cayley–Hamilton gives \((\mathbf A-\mathbf B\mathbf K)^n=\mathbf 0\): the matrix is <em>nilpotent</em>. As a result,</p>
 \[\mathbf x(k)=\mathbf 0\text{ for all }k\ge n,\text{ from any }\mathbf x(0).\]
@@ -550,7 +545,6 @@ Check: \(\mathbf A-\mathbf B\mathbf K=\begin{bmatrix}0.875&0.28125\\-0.5&0.125\e
 <label>T = <span id="dbT">1.00</span> s <input type="range" id="dbslider" min="0.2" max="2" step="0.05" value="1"></label>
 <p id="dbout" aria-live="polite"></p>
 <p style="margin:0">LPH (slide 58): a smaller \(T\) settles faster (\(\le2T\)) but needs larger \(|u|\). Choose \(T\) to satisfy the sampling theorem while keeping \(u\) within actuator limits. The table on slide 56 has \(T=2,1,0.5\) giving \(u(0)=-1,-2.5,-7\).</p></div>
-<figure class="slide"><img src="quiz2-slides/l3-s56.jpg" alt="Lecture 3, slides 56–57: Table 1 (u(0), u(1) for T = 2, 1, 0.5) and Figure 8, the deadbeat responses." loading="lazy"><img src="quiz2-slides/l3-s57.jpg" alt="Lecture 3, slides 56–57: Table 1 (u(0), u(1) for T = 2, 1, 0.5) and Figure 8, the deadbeat responses." loading="lazy"><figcaption>Lecture 3, slides 56–57: Table 1 (u(0), u(1) for T = 2, 1, 0.5) and Figure 8, the deadbeat responses.</figcaption></figure>
 
 <h3>Worked: deadbeat from scratch</h3>
 <p>\(\mathbf A=\begin{bmatrix}1&1\\0&0.5\end{bmatrix},\;\mathbf B=\begin{bmatrix}0\\1\end{bmatrix},\;\mathbf x(0)=[1\;1]^{\mathsf T}\).</p>
@@ -620,6 +614,50 @@ Check: \(\mathbf A-\mathbf B\mathbf K=\begin{bmatrix}0.875&0.28125\\-0.5&0.125\e
 </main>
 </div>
 
+<script>
+// Lecture-slide images (rendered from resources/lph-lecture-0{1,2,3}-*.pdf into quiz2-slides/).
+(() => {
+  const SLIDES = { 1: 56, 2: 39, 3: 62 };
+  const items = spec => {
+    const [l, r] = spec.split(':'); let [a, b] = r.split('-').map(Number); b = Math.min(b || a, SLIDES[l]);
+    return Array.from({ length: b - a + 1 }, (_, i) => ({ src: `quiz2-slides/l${l}-s${String(a + i).padStart(2, '0')}.jpg`, cap: `Lecture ${l}, slide ${a + i}` }));
+  };
+  const grid = list => '<div class="slides">' + list.map(x =>
+    `<figure><img loading="lazy" src="${x.src}" alt="${x.cap}"><figcaption>${x.cap}</figcaption></figure>`).join('') + '</div>';
+
+  const dlg = document.createElement('dialog'); dlg.className = 'slide-view';
+  document.body.append(dlg);
+  dlg.addEventListener('click', e => { if (e.target === dlg || e.target.matches('.close')) dlg.close(); });
+  const show = spec => {
+    const list = items(spec);
+    dlg.innerHTML = `<div class="bar"><strong>${list[0].cap}${list.length > 1 ? ' – ' + list.at(-1).cap.split(' ').pop() : ''}</strong><button type="button" class="close">Close</button></div>` + grid(list);
+    dlg.showModal(); dlg.scrollTop = 0;
+  };
+
+  document.querySelectorAll('section[data-lect]').forEach(sec => {
+    // Turn "slide 27" / "Lect 3 Ex 3.5, slides 14–15" into links; the lecture defaults to the module's data-lect. Module headings are skipped.
+    const lect = sec.dataset.lect;
+    const re = /(?:Lect(?:ure)?\s*(\d)\b[^;()<]{0,25}?)?\b[Ss]lides?\s+(\d+)(?:\s*[–-]\s*(\d+))?/g;
+    const walk = document.createTreeWalker(sec, NodeFilter.SHOW_TEXT, { acceptNode: n => n.parentElement.closest('h2,a,script') ? 2 : 1 });
+    const nodes = []; while (walk.nextNode()) nodes.push(walk.currentNode);
+    nodes.forEach(node => {
+      const t = node.textContent; re.lastIndex = 0;
+      if (!re.test(t)) return;
+      const frag = document.createDocumentFragment(); let last = 0; re.lastIndex = 0;
+      for (const m of t.matchAll(re)) {
+        const start = m.index + m[0].search(/[Ss]lides?\s/);
+        frag.append(t.slice(last, start));
+        const a = document.createElement('a'); a.href = '#'; a.className = 'slide-link';
+        a.textContent = t.slice(start, m.index + m[0].length);
+        const spec = `${m[1] || lect}:${m[2]}${m[3] ? '-' + m[3] : ''}`;
+        a.onclick = e => { e.preventDefault(); show(spec); };
+        frag.append(a); last = m.index + m[0].length;
+      }
+      frag.append(t.slice(last)); node.replaceWith(frag);
+    });
+  });
+})();
+</script>
 <script>
 (() => {
   const KEY = 'ee6203-quiz2-prep-learning-v1';
