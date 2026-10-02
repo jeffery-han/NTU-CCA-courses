@@ -246,6 +246,7 @@ For an eigenvector, \(\mathbf A\mathbf v=\lambda\mathbf v\) gives \(\mathbf A^2\
 \[\dot x_1=x_2,\qquad \dot x_2=-4x_2+3(u-2x_1)=-6x_1-4x_2+3u,\]
 \[\mathbf A=\begin{bmatrix}0&1\\-6&-4\end{bmatrix},\;\mathbf B=\begin{bmatrix}0\\3\end{bmatrix},\;\mathbf C=\begin{bmatrix}1&0\end{bmatrix}.\]
 <p><em>Sanity check:</em> the block diagram's own closed-loop transfer function is \(\frac{3/(s(s+4))}{1+6/(s(s+4))}=\frac{3}{s^2+4s+6}\). The model's characteristic polynomial \(\det(s\mathbf I-\mathbf A)=s^2+4s+6\) matches.</p>
+<p class="box extra"><strong>Notation.</strong> The diagram does not say it, but the wire labels \(x_1,x_2,u\) are time signals, and each block is written with the Laplace variable \(s\) as shorthand for a differential equation: \(s\leftrightarrow d/dt\) and \(1/s\leftrightarrow\int dt\), so \(\frac{3}{s+4}\) means \(\dot x+4x=3e\). Capital \(X(s)\) below is only the transform, used for algebra. This is the standard control convention, not something the picture proves.</p>
 <details><summary>“I wrote \(\frac{3(U-2X_1)}{s+4}=X_2=sX_1\); why does the worked answer look different?”</summary>
 <p>Your equation is correct. It is the same model written in the s-domain with \(x_2\) kept as a name for the middle signal. The recipe just turns each equality into one first-order differential equation. Each “=” in your chain is one block.</p>
 <p><strong>Equality 1, the \(3/(s+4)\) block.</strong> Its output is \(X_2\) and its input is the junction output \(U-2X_1\):</p>
