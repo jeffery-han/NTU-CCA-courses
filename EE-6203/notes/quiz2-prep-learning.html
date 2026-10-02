@@ -246,6 +246,22 @@ For an eigenvector, \(\mathbf A\mathbf v=\lambda\mathbf v\) gives \(\mathbf A^2\
 \[\dot x_1=x_2,\qquad \dot x_2=-4x_2+3(u-2x_1)=-6x_1-4x_2+3u,\]
 \[\mathbf A=\begin{bmatrix}0&1\\-6&-4\end{bmatrix},\;\mathbf B=\begin{bmatrix}0\\3\end{bmatrix},\;\mathbf C=\begin{bmatrix}1&0\end{bmatrix}.\]
 <p><em>Sanity check:</em> the block diagram's own closed-loop transfer function is \(\frac{3/(s(s+4))}{1+6/(s(s+4))}=\frac{3}{s^2+4s+6}\). The model's characteristic polynomial \(\det(s\mathbf I-\mathbf A)=s^2+4s+6\) matches.</p>
+<details><summary>“I wrote \(\frac{3(U-2X_1)}{s+4}=X_2=sX_1\); why does the worked answer look different?”</summary>
+<p>Your equation is correct. It is the same model written in the s-domain with \(x_2\) kept as a name for the middle signal. The recipe just turns each equality into one first-order differential equation. Each “=” in your chain is one block.</p>
+<p><strong>Equality 1, the \(3/(s+4)\) block.</strong> Its output is \(X_2\) and its input is the junction output \(U-2X_1\):</p>
+\[X_2=\frac{3(U-2X_1)}{s+4}\;\Longrightarrow\;(s+4)X_2=3(U-2X_1).\]
+<p>Multiplying by \(s+4\) is the step that removes the fraction. Now use \(sX\leftrightarrow\dot x\) (zero initial conditions): \(sX_2+4X_2=3(U-2X_1)\) becomes</p>
+\[\dot x_2+4x_2=3(u-2x_1)\;\Longrightarrow\;\dot x_2=-4x_2+3u-6x_1.\]
+<p>The \(-4x_2\) is the \(4X_2\) moved to the right side. It belongs to \(x_2\) (the block's own output), not to \(x_1\).</p>
+<p><strong>Equality 2, the \(1/s\) block.</strong> \(X_1=X_2/s\), so \(X_2=sX_1\), which is \(\dot x_1=x_2\).</p>
+<p><strong>Cross-check by eliminating \(x_2\).</strong> Put \(X_2=sX_1\) into equality 1: \((s+4)sX_1=3U-6X_1\), so \(s^2X_1+4sX_1+6X_1=3U\), i.e. \(\ddot x_1+4\dot x_1+6x_1=3u\). With \(x_2=\dot x_1\) this is exactly the two state equations above, and the \(s^2+4s+6\) is the characteristic polynomial from the sanity check.</p>
+<p><strong>Reading off the matrices.</strong> Row 1 of \(\dot{\mathbf x}=\mathbf A\mathbf x+\mathbf B u\) is \(\dot x_1=0\cdot x_1+1\cdot x_2\). Row 2 is \(\dot x_2=-6x_1-4x_2+3u\). So \(\mathbf A=\begin{bmatrix}0&1\\-6&-4\end{bmatrix}\) and \(\mathbf B=\begin{bmatrix}0\\3\end{bmatrix}\).</p>
+<p><strong>Pitfall.</strong> Do not write \(\dot x_2=-4x_1+\dots\). In \(\dot x=-ax+ke\), the \(x\) is the output of that same block and \(e\) is its input.</p>
+</details>
+<div class="checks"><h4>Check · block diagram → state space</h4>
+<p>Same diagram, but the feedback gain is \(5\) instead of \(2\) (the junction output is \(u-5x_1\)).</p>
+<div class="q" data-id="m1-bd1" data-answer="-15"><p class="prompt">Find \(a_{21}\), the bottom-left entry of \(\mathbf A\).</p><p class="hint">\(\dot x_2=-4x_2+3(u-5x_1)\).</p><div class="explain">\(3\cdot(-5)=-15\), so \(a_{21}=-15\) and \(a_{22}=-4\) is unchanged.</div></div>
+</div>
 
 <h3>1.4 Recipe C: discrete block diagram (delays) → state space <span class="src">Lect 3 Ex 3.5, slides 14–15</span></h3>
 <p>The discrete version is the same idea with \(z^{-1}\) (a one-sample delay) in place of \(1/s\). <strong>The output of each delay is a state \(x_i(k)\), and the signal entering that delay is \(x_i(k+1)\).</strong> In LPH's Example 3.5, the first delay has feedback \(-0.2\), so \(x_1(k+1)=-0.2x_1(k)\). The second junction adds \(x_1\) and \(u\) and subtracts \(0.5x_2\), so \(x_2(k+1)=x_1(k)-0.5x_2(k)+u(k)\), with \(y=x_2\).</p>
