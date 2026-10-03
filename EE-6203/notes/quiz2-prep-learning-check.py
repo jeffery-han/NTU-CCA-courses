@@ -57,8 +57,9 @@ Acl = M([[1, 1], [-1, -1.0]])
 assert np.allclose(Acl @ Acl, 0)
 # M1
 exp['m1-1'], exp['m1-2'], exp['m1-3'] = -9 / 3, -12 / 3, 6 / 3
-A1 = M([[0.5, 0], [1, -0.25]])  # discrete diagram
+A1 = M([[-0.2, 0], [1, -0.5]])  # discrete diagram (slide 14)
 exp['m1-4'] = A1[1, 1]
+exp['m1-bd1'] = 3 * -5  # xdot2 = -4 x2 + 3(u - 5 x1)
 exp['m1-5'] = -2 * 3
 A, B, C = M([[0, 1], [-2, -3]]), M([[0], [2]]), M([[1, 0]])
 exp['m1-6'] = (C @ inv(-A) @ B).item()
