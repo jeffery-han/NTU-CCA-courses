@@ -266,20 +266,22 @@ For an eigenvector, \(\mathbf A\mathbf v=\lambda\mathbf v\) gives \(\mathbf A^2\
 
 <h3>1.4 Recipe C: discrete block diagram (delays) → state space <span class="src">Lect 3 Ex 3.5, slides 14–15</span></h3>
 <p>The discrete version is the same idea with \(z^{-1}\) (a one-sample delay) in place of \(1/s\). <strong>The output of each delay is a state \(x_i(k)\), and the signal entering that delay is \(x_i(k+1)\).</strong> In LPH's Example 3.5, the first delay has feedback \(-0.2\), so \(x_1(k+1)=-0.2x_1(k)\). The second junction adds \(x_1\) and \(u\) and subtracts \(0.5x_2\), so \(x_2(k+1)=x_1(k)-0.5x_2(k)+u(k)\), with \(y=x_2\).</p>
-<svg class="diagram" viewBox="0 0 640 170" role="img" aria-label="Discrete block diagram: u enters junction one with plus feedback 0.5 x1, through z inverse gives x1; x1 enters junction two with minus feedback 0.25 x2, through z inverse gives x2 equal to y.">
+<svg class="diagram" viewBox="0 0 640 170" role="img" aria-label="Discrete block diagram from slide 14: u(k) bypasses the first delay and enters junction two with plus. Junction one has only minus feedback 0.2 x1, through z inverse gives x1. Junction two adds x1 and u and subtracts 0.5 x2, through z inverse gives x2 equal to y.">
 <g fill="none" stroke="currentColor" stroke-width="1.6">
-<line x1="20" y1="60" x2="78" y2="60" marker-end="url(#ar)"/><circle cx="90" cy="60" r="12"/>
+<circle cx="90" cy="60" r="12"/>
 <line x1="102" y1="60" x2="148" y2="60" marker-end="url(#ar)"/><rect x="150" y="38" width="60" height="44" rx="6"/>
 <line x1="210" y1="60" x2="338" y2="60" marker-end="url(#ar)"/><circle cx="350" cy="60" r="12"/>
 <line x1="362" y1="60" x2="418" y2="60" marker-end="url(#ar)"/><rect x="420" y="38" width="60" height="44" rx="6"/>
 <line x1="480" y1="60" x2="610" y2="60" marker-end="url(#ar)"/>
+<polyline points="20,22 350,22 350,46" marker-end="url(#ar)"/>
 <polyline points="250,60 250,140 180,140" marker-end="url(#ar)"/><rect x="130" y="122" width="50" height="36" rx="6"/><polyline points="130,140 90,140 90,74" marker-end="url(#ar)"/>
 <polyline points="560,60 560,140 450,140" marker-end="url(#ar)"/><rect x="400" y="122" width="50" height="36" rx="6"/><polyline points="400,140 350,140 350,74" marker-end="url(#ar)"/>
 </g>
 <g fill="currentColor" font-size="17" font-family="serif" text-anchor="middle">
-<text x="30" y="50">u(k)</text><text x="180" y="66">z⁻¹</text><text x="450" y="66">z⁻¹</text><text x="270" y="50">x₁(k)</text><text x="535" y="50">x₂(k) = y</text>
-<text x="155" y="146">0.5</text><text x="425" y="146">0.25</text><text x="104" y="92">+</text><text x="364" y="92">−</text><text x="326" y="52">+</text>
+<text x="40" y="16">u(k)</text><text x="180" y="66">z⁻¹</text><text x="450" y="66">z⁻¹</text><text x="270" y="50">x₁(k)</text><text x="535" y="50">x₂(k) = y</text>
+<text x="155" y="146">0.2</text><text x="425" y="146">0.5</text><text x="104" y="92">−</text><text x="364" y="92">−</text><text x="326" y="52">+</text><text x="366" y="40">+</text>
 </g></svg>
+<p><strong>Why \(u\) appears as \(u(k)\), not \(u(k)z^{-1}\):</strong> \(u(k)\) joins the junction <em>before</em> the second delay, and a delay acts on the whole sum entering it. The sum is \(x_2(k+1)\); the delay turns it into \(x_2(k)\). Writing \(u(k-1)\) would only appear if you shifted the equation to read \(x_2(k)\) instead. Note that \(u\) bypasses the first delay, so \(x_1(k+1)\) has no \(u\) term. So \(\mathbf A=\begin{bmatrix}-0.2&0\\1&-0.5\end{bmatrix},\ \mathbf B=\begin{bmatrix}0\\1\end{bmatrix},\ \mathbf C=[0\;\,1]\).</p>
 
 <h3>1.5 From state space back to a transfer function <span class="src">Lect 1 §1.2, slides 18–20</span></h3>
 <p>Take Laplace transforms with \(\mathbf x(0)=\mathbf 0\): \(s\mathbf X=\mathbf A\mathbf X+\mathbf BU\), so \(\mathbf X=(s\mathbf I-\mathbf A)^{-1}\mathbf BU\). Therefore</p>
@@ -287,7 +289,7 @@ For an eigenvector, \(\mathbf A\mathbf v=\lambda\mathbf v\) gives \(\mathbf A^2\
 <p>The denominator is \(\det(s\mathbf I-\mathbf A)\), so <strong>the poles are the eigenvalues of \(\mathbf A\)</strong>. For the servo, this gives \(\Theta(s)/E(s)=\dfrac{K_T/JR_a}{s\,(s+(BR_a+K_TK_b)/JR_a)}\) (slide 24).</p>
 
 <div class="checks"><h4>Check · diagrams and transfer functions</h4>
-<div class="q" data-id="m1-4" data-answer="-0.25"><p class="prompt">Discrete diagram above (with 0.5 and 0.25): find \(a_{22}\) in \(\mathbf x(k+1)=\mathbf A\mathbf x(k)+\mathbf Bu(k)\).</p><p class="hint">The input to the second delay is \(x_1(k)-0.25x_2(k)\).</p><div class="explain">\(x_2(k+1)=x_1(k)-0.25x_2(k)\), so \(a_{22}=-0.25\) and \(a_{21}=1\). Row 1: \(x_1(k+1)=0.5x_1(k)+u(k)\). So \(\mathbf A=\begin{bmatrix}0.5&0\\1&-0.25\end{bmatrix},\;\mathbf B=\begin{bmatrix}1\\0\end{bmatrix},\;\mathbf C=[0\;\,1]\).</div></div>
+<div class="q" data-id="m1-4" data-answer="-0.5"><p class="prompt">Discrete diagram above: find \(a_{22}\) in \(\mathbf x(k+1)=\mathbf A\mathbf x(k)+\mathbf Bu(k)\).</p><p class="hint">The input to the second delay is \(x_1(k)-0.5x_2(k)+u(k)\).</p><div class="explain">\(x_2(k+1)=x_1(k)-0.5x_2(k)+u(k)\), so \(a_{22}=-0.5\) and \(a_{21}=1\). Row 1: \(x_1(k+1)=-0.2x_1(k)\). So \(\mathbf A=\begin{bmatrix}-0.2&0\\1&-0.5\end{bmatrix},\;\mathbf B=\begin{bmatrix}0\\1\end{bmatrix},\;\mathbf C=[0\;\,1]\).</div></div>
 <div class="q" data-id="m1-5" data-answer="-6"><p class="prompt">Replace the feedback gain 2 in the <em>continuous</em> diagram by 3 and the block \(3/(s+4)\) by \(2/(s+5)\). Find \(a_{21}\).</p><p class="hint">\(\dot x_2=-5x_2+2(u-3x_1)\).</p><div class="explain">\(\dot x_2=-6x_1-5x_2+2u\), so \(a_{21}=-6\).</div></div>
 <div class="q" data-id="m1-6" data-answer="1"><p class="prompt">For \(\mathbf A=\begin{bmatrix}0&1\\-2&-3\end{bmatrix},\mathbf B=\begin{bmatrix}0\\2\end{bmatrix},\mathbf C=[1\;0]\), evaluate the DC gain \(G(0)\).</p><p class="hint">\(G(s)=\mathbf C(s\mathbf I-\mathbf A)^{-1}\mathbf B\). Here \(\det(s\mathbf I-\mathbf A)=s^2+3s+2\).</p><div class="explain">\(\operatorname{adj}(s\mathbf I-\mathbf A)=\begin{bmatrix}s+3&1\\-2&s\end{bmatrix}\). Then \(\mathbf C\operatorname{adj}\mathbf B=[s+3\;\;1]\begin{bmatrix}0\\2\end{bmatrix}=2\), so \(G(s)=\dfrac{2}{s^2+3s+2}\) and \(G(0)=1\).</div></div>
 <div class="q" data-id="m1-7" data-answer="-2"><p class="prompt">Same system: what is the more negative pole?</p><p class="hint">Poles are the eigenvalues of \(\mathbf A\).</p><div class="explain">\(s^2+3s+2=(s+1)(s+2)\), so the poles are \(-1\) and \(-2\).</div></div>
