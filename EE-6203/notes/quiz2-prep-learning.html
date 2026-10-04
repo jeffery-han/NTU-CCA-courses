@@ -377,7 +377,21 @@ As \(\tau\) runs from \(kT\) to \((k+1)T\), \(\lambda\) runs from \(T\) down to 
 For small \(T\), \(\mathbf\Theta\approx\mathbf BT=[0,\;1]^{\mathsf T}\). Our second entry, 0.632, is below 1 because the \(-2\) pole leaks state away during the interval. The first entry is positive because \(x_2\) feeds \(x_1\). ✓</details>
 
 <h3>Lecture example: double integrator <span class="src">Example 1.6, slides 48–50</span></h3>
-<p>\(\mathbf\Phi(T)=\begin{bmatrix}1&T\\0&1\end{bmatrix}\) and \(\mathbf\Theta(T)=\int_0^T\begin{bmatrix}\tau\\1\end{bmatrix}d\tau=\begin{bmatrix}T^2/2\\T\end{bmatrix}\). Memorise this one: it reappears in the deadbeat example.</p>
+<p>The <strong>double integrator</strong> is the plant \(G(s)=1/s^2\): two integrators in series, so the output is the integral of the integral of the input. Physically, \(u\) is an acceleration, \(x_2\) a velocity and \(x_1\) a position. <strong>The formula for \(\mathbf\Theta\) depends on the plant, not on \(T\).</strong> Changing \(T\) only changes the numbers you substitute; changing the plant (servo \(1/(s(s+1))\) versus double integrator \(1/s^2\)) changes the formula itself, because \(\mathbf\Phi(\tau)\mathbf B\) is a different function of \(\tau\).</p>
+<details open><summary>Step 1: write \(1/s^2\) as a state-space model</summary>
+Choose \(x_1=y\) (position) and \(x_2=\dot x_1\) (velocity). Then \(\dot x_1=x_2\) and \(\dot x_2=u\), so \(\mathbf A=\begin{bmatrix}0&1\\0&0\end{bmatrix},\;\mathbf B=\begin{bmatrix}0\\1\end{bmatrix},\;\mathbf C=[1\;\,0]\).</details>
+<details open><summary>Step 2: find \(\mathbf\Phi(\tau)\) (why the series stops)</summary>
+\(\mathbf\Phi(\tau)=e^{\mathbf A\tau}=\mathbf I+\mathbf A\tau+\tfrac12\mathbf A^2\tau^2+\cdots\). Here \(\mathbf A^2=\begin{bmatrix}0&1\\0&0\end{bmatrix}\begin{bmatrix}0&1\\0&0\end{bmatrix}=\mathbf 0\), so every term after \(\mathbf A\tau\) vanishes:
+\[\mathbf\Phi(\tau)=\begin{bmatrix}1&\tau\\0&1\end{bmatrix}.\]
+(The Laplace route agrees: \((s\mathbf I-\mathbf A)^{-1}=\begin{bmatrix}1/s&1/s^2\\0&1/s\end{bmatrix}\), and \(\mathcal L^{-1}\{1/s^2\}=\tau\).) Setting \(\tau=T\) gives \(\mathbf\Phi(T)=\begin{bmatrix}1&T\\0&1\end{bmatrix}\).</details>
+<details open><summary>Step 3: multiply by \(\mathbf B\) first, then integrate (the pitfall-(1) shortcut)</summary>
+\[\mathbf\Phi(\tau)\mathbf B=\begin{bmatrix}1&\tau\\0&1\end{bmatrix}\begin{bmatrix}0\\1\end{bmatrix}=\begin{bmatrix}\tau\\1\end{bmatrix}.\]
+Integrate each entry from 0 to \(T\):
+\[\mathbf\Theta(T)=\int_0^T\begin{bmatrix}\tau\\1\end{bmatrix}d\tau=\begin{bmatrix}T^2/2\\T\end{bmatrix}.\]
+Compare the servo, where the same step gave \(\begin{bmatrix}1-e^{-\tau}\\e^{-\tau}\end{bmatrix}\) and hence \(T+e^{-T}-1\). The double integrator has no \(e^{-\tau}\) because there is no damping: velocity just keeps accumulating.</details>
+<details open><summary>Step 4: check against physics</summary>
+Start at rest and hold \(u=1\) for \(T\) seconds. The velocity becomes \(1\cdot T=T\), which is \(\Theta_2\). The distance covered is \(\tfrac12\cdot1\cdot T^2=T^2/2\), which is \(\Theta_1\). ✓ Memorise this one: it reappears in the deadbeat example.</details>
+<div class="box warn"><strong>Pitfall: reusing the previous example's \(\mathbf\Theta\).</strong> For the servo, \(\Theta_1=T+e^{-T}-1\); at \(T=0.5\) that is \(0.1065\). For the double integrator at \(T=0.5\), \(\Theta_1=T^2/2=0.125\). Read the plant first; do not carry a formula over from the last example. For small \(T\) the two agree to leading order (\(T+e^{-T}-1\approx T^2/2-T^3/6\)), which is why the wrong one looks plausible.</div>
 
 <div class="checks"><h4>Check · ZOH discretisation</h4>
 <p>Discretise \(\mathbf A=\begin{bmatrix}0&1\\0&-1\end{bmatrix},\;\mathbf B=\begin{bmatrix}0\\1\end{bmatrix}\) (the servo) with \(T=0.2\). Give 4 significant figures.</p>
@@ -385,7 +399,7 @@ For small \(T\), \(\mathbf\Theta\approx\mathbf BT=[0,\;1]^{\mathsf T}\). Our sec
 <div class="q" data-id="m3-2" data-answer="0.818731"><p class="prompt">\(\Phi_{22}(T)\)</p><p class="hint">\(e^{-T}\).</p><div class="explain">\(e^{-0.2}=0.8187\).</div></div>
 <div class="q" data-id="m3-3" data-answer="0.0187308"><p class="prompt">\(\Theta_1(T)\)</p><p class="hint">\(T+e^{-T}-1\).</p><div class="explain">\(0.2+0.81873-1=0.01873\). Compare 0.00484 at \(T=0.1\): it grows roughly like \(T^2/2\).</div></div>
 <div class="q" data-id="m3-4" data-answer="0.181269"><p class="prompt">\(\Theta_2(T)\)</p><p class="hint">\(1-e^{-T}\).</p><div class="explain">\(0.1813\).</div></div>
-<div class="q" data-id="m3-5" data-answer="0.125"><p class="prompt">For the double integrator with \(T=0.5\), find \(\Theta_1\).</p><p class="hint">\(T^2/2\).</p><div class="explain">\(0.25/2=0.125\), and \(\Theta_2=0.5\).</div></div>
+<div class="q" data-id="m3-5" data-answer="0.125"><p class="prompt">For the double integrator with \(T=0.5\), find \(\Theta_1\).</p><p class="hint">\(T^2/2\).</p><div class="explain">The plant is \(1/s^2\), so \(\mathbf\Phi(\tau)\mathbf B=[\tau,\;1]^{\mathsf T}\) and \(\Theta_1=\int_0^T\tau\,d\tau=T^2/2\). With \(T=0.5\): \(0.25/2=0.125\), and \(\Theta_2=T=0.5\). If you got \(0.1065\), you used the servo formula \(T+e^{-T}-1\); the plant selects the formula, not \(T\).</div></div>
 </div>
 </section>
 
@@ -403,7 +417,18 @@ For SISO with no cancellation, this is just the numerator of \(G(z)\).</li>
 <h3>Lecture example 1.5</h3>
 <p>\(\mathbf A=\begin{bmatrix}1.35&0.55\\-0.45&0.35\end{bmatrix},\;\mathbf B=\begin{bmatrix}0.5\\0.5\end{bmatrix},\;\mathbf C=[1\;\,-1]\). Then \(\det(z\mathbf I-\mathbf A)=z^2-1.7z+0.72=(z-0.9)(z-0.8)\), and \(G(z)=\dfrac{1}{z^2-1.7z+0.72}\): poles at 0.9 and 0.8, and no finite zeros.</p>
 <h3>Lecture example 1.6: the double integrator after ZOH</h3>
-<p>\(G(z)=\dfrac{T^2}{2}\dfrac{z+1}{(z-1)^2}\). Sampling created a zero at \(z=-1\) that the continuous \(1/s^2\) never had. Zeros are <em>not</em> mapped by \(z=e^{sT}\); only poles are.</p>
+<p>\(G(z)=\dfrac{T^2}{2}\dfrac{z+1}{(z-1)^2}\). Sampling created a zero at \(z=-1\) that the continuous \(1/s^2\) never had. Zeros are <em>not</em> mapped by \(z=e^{sT}\); only poles are. Derivation, from the discrete matrices of Module 3:</p>
+<details open><summary>Step 1: the ingredients</summary>
+\(\mathbf A=\begin{bmatrix}1&T\\0&1\end{bmatrix},\;\mathbf B=\begin{bmatrix}T^2/2\\T\end{bmatrix},\;\mathbf C=[1\;\,0],\;D=0\) (output is position). Then \(z\mathbf I-\mathbf A=\begin{bmatrix}z-1&-T\\0&z-1\end{bmatrix}\).</details>
+<details open><summary>Step 2: invert \(z\mathbf I-\mathbf A\)</summary>
+The determinant is \((z-1)^2\), so the poles are a double pole at \(z=1\) (the two integrators). For a \(2\times2\) matrix, swap the diagonal, negate the off-diagonal, divide by the determinant:
+\[(z\mathbf I-\mathbf A)^{-1}=\frac{1}{(z-1)^2}\begin{bmatrix}z-1&T\\0&z-1\end{bmatrix}.\]</details>
+<details open><summary>Step 3: multiply by \(\mathbf B\) and pick the output</summary>
+\(\mathbf C\) selects the first row, so
+\[G(z)=\frac{1}{(z-1)^2}\Big[(z-1)\tfrac{T^2}{2}+T\cdot T\Big]=\frac{(T^2/2)\,[(z-1)+2]}{(z-1)^2}=\frac{T^2}{2}\,\frac{z+1}{(z-1)^2}.\]
+Here \(T\cdot T=T^2=2\cdot\tfrac{T^2}{2}\), which is why \(-1+2=+1\) appears.</details>
+<details open><summary>Step 4: read off poles and zeros</summary>
+A <strong>zero</strong> is a root of the numerator (output forced to zero); a <strong>pole</strong> is a root of the denominator. Numerator \(z+1=0\) gives the zero \(z=-1\). Denominator \((z-1)^2=0\) gives a double pole at \(z=1\). \(T\) appears only in the gain \(T^2/2\), so the zero stays at \(-1\) for any \(T\). A zero at \(z=0\) would need a factor \(z\) in the numerator (a pure delay), and there is none.</details>
 <h3>Worked: the Module 3 system (\(T=0.5\))</h3>
 <details><summary>Show the transfer function</summary>
 \[(z\mathbf I-\mathbf A)^{-1}=\dfrac{1}{(z-1)(z-0.3679)}\begin{bmatrix}z-0.3679&0.3161\\0&z-1\end{bmatrix}.\] Multiplying by \(\mathbf C=[1\;0]\) on the left and \(\mathbf\Theta\) on the right:
@@ -414,8 +439,8 @@ Poles \(1,\;e^{-1}\) are the images \(e^{sT}\) of \(s=0,-2\). The zero is \(-0.7
 <div class="q" data-id="m4-1" data-answer="0.5"><p class="prompt">\(\mathbf A=\begin{bmatrix}0.5&1\\0&0.2\end{bmatrix}\). What is the larger pole?</p><p class="hint">The matrix is triangular.</p><div class="explain">The eigenvalues are the diagonal entries, 0.5 and 0.2.</div></div>
 <div class="q" data-id="m4-2" data-answer="0.70711"><p class="prompt">\(\mathbf A=\begin{bmatrix}0&1\\-0.5&1\end{bmatrix}\). Find the pole magnitude \(|z|\).</p><p class="hint">\(z^2-z+0.5=0\). For complex poles, \(|z|^2=\) the constant term.</p><div class="explain">\(z=0.5\pm0.5j\), so \(|z|=\sqrt{0.5}=0.7071\lt1\): stable.</div></div>
 <div class="q" data-id="m4-3" data-answer="2"><p class="prompt">Same \(\mathbf A\) with \(\mathbf B=[0\;1]^{\mathsf T},\;\mathbf C=[1\;0]\). Find the DC gain \(G(1)\).</p><p class="hint">Show \(G(z)=1/(z^2-z+0.5)\) first.</p><div class="explain">\(\operatorname{adj}(z\mathbf I-\mathbf A)=\begin{bmatrix}z-1&1\\-0.5&z\end{bmatrix}\), and \(\mathbf C\operatorname{adj}\mathbf B=1\). So \(G(1)=1/0.5=2\).</div></div>
-<div class="q" data-id="m4-4" data-answer="-0.71828"><p class="prompt">In the worked example above, give the exact zero (it equals \(2-e\)) to 4 significant figures.</p><p class="hint">\(2-2.71828\).</p><div class="explain">\(-0.7183\).</div></div>
-<div class="q" data-id="m4-5" data-answer="-1"><p class="prompt">Where is the zero of the ZOH double integrator?</p><p class="hint">Look at its numerator.</p><div class="explain">\(z+1=0\), so the zero is at \(z=-1\), for any \(T\).</div></div>
+<div class="q" data-id="m4-4" data-answer="-0.71828"><p class="prompt">In the worked example above, give the exact zero (it equals \(2-e\)) to 4 significant figures.</p><p class="hint">\(2-2.71828\).</p><div class="explain">The zero came from \(z+0.7183=0\) with \(0.7183=e-2\), so the zero is \(z=-(e-2)=2-e\). Substituting \(e\approx2.71828\): \(2-2.71828=-0.71828\), i.e. \(-0.7183\) to 4 significant figures.</div></div>
+<div class="q" data-id="m4-5" data-answer="-1"><p class="prompt">Where is the zero of the ZOH double integrator?</p><p class="hint">Look at its numerator.</p><div class="explain">From the derivation above, \(G(z)=\tfrac{T^2}{2}\dfrac{z+1}{(z-1)^2}\). Zeros are roots of the numerator: \(z+1=0\), so the zero is at \(z=-1\), for any \(T\). Not \(z=0\): that would need a factor \(z\) in the numerator. The denominator \((z-1)^2\) gives the poles, not the zero.</div></div>
 </div>
 </section>
 
