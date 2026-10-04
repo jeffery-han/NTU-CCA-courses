@@ -317,6 +317,25 @@ Why the 2×2 rule: swap the diagonal to \(s+2,\,s\), negate the off-diagonal \(-
 Check: at \(t=0\) this is \(\mathbf I\). ✓</details>
 <p>The lecture's servo (\(\mathbf A=\begin{bmatrix}0&1\\0&-1\end{bmatrix}\)) gives \(\mathbf\Phi(t)=\begin{bmatrix}1&1-e^{-t}\\0&e^{-t}\end{bmatrix}\) the same way (slide 39).</p>
 
+<details open><summary>Inverse Laplace table (use it for the checks below)</summary>
+<table>
+<tr><th>\(F(s)\)</th><th>\(f(t),\ t\ge0\)</th></tr>
+<tr><td>\(1\)</td><td>\(\delta(t)\)</td></tr>
+<tr><td>\(\dfrac1s\)</td><td>\(1\)</td></tr>
+<tr><td>\(\dfrac1{s^2}\)</td><td>\(t\)</td></tr>
+<tr><td>\(\dfrac1{s^{n+1}}\)</td><td>\(\dfrac{t^n}{n!}\)</td></tr>
+<tr><td>\(\dfrac1{s+a}\)</td><td>\(e^{-at}\)</td></tr>
+<tr><td>\(\dfrac1{(s+a)^2}\)</td><td>\(te^{-at}\)</td></tr>
+<tr><td>\(\dfrac1{s(s+a)}\)</td><td>\(\dfrac{1-e^{-at}}{a}\)</td></tr>
+<tr><td>\(\dfrac1{(s+a)(s+b)}\)</td><td>\(\dfrac{e^{-at}-e^{-bt}}{b-a}\)</td></tr>
+<tr><td>\(\dfrac{\omega}{s^2+\omega^2}\)</td><td>\(\sin\omega t\)</td></tr>
+<tr><td>\(\dfrac{s}{s^2+\omega^2}\)</td><td>\(\cos\omega t\)</td></tr>
+<tr><td>\(\dfrac{\omega}{(s+a)^2+\omega^2}\)</td><td>\(e^{-at}\sin\omega t\)</td></tr>
+<tr><td>\(\dfrac{s+a}{(s+a)^2+\omega^2}\)</td><td>\(e^{-at}\cos\omega t\)</td></tr>
+</table>
+<p>Common pairs written out here for convenience. The quiz issues LPH's own table (<code>resources/lph-transform-table-ay2018-19-s1.pdf</code>), so practise reading that one too. If \(F(s)\) is not a single row, use partial fractions first, as in Step 2.</p>
+</details>
+
 <div class="checks"><h4>Check · \(\mathbf\Phi(t)\)</h4>
 <div class="q" data-id="m2-1" data-answer="0.22313"><p class="prompt">\(\mathbf A=\begin{bmatrix}-1&0\\0&-3\end{bmatrix}\). Find \(\Phi_{22}(0.5)\) to 4 significant figures.</p><p class="hint">For a diagonal \(\mathbf A\), \(\mathbf\Phi=\operatorname{diag}(e^{-t},e^{-3t})\).</p><div class="explain">\(e^{-1.5}=0.2231\).</div></div>
 <div class="q" data-id="m2-2" data-answer="2"><p class="prompt">For the double integrator \(\mathbf A=\begin{bmatrix}0&1\\0&0\end{bmatrix}\), find \(\Phi_{12}(2)\).</p><p class="hint">\((s\mathbf I-\mathbf A)^{-1}=\begin{bmatrix}1/s&1/s^2\\0&1/s\end{bmatrix}\).</p><div class="explain">\(\mathbf\Phi(t)=\begin{bmatrix}1&t\\0&1\end{bmatrix}\), so \(\Phi_{12}(2)=2\).</div></div>
