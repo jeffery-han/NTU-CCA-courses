@@ -491,7 +491,9 @@ The \(a^2\) terms cancel, which is why a clean answer survives.</p>
 <p>where \(\tilde{\mathbf W}_C=[\mathbf B_C\;\;\mathbf A_C\mathbf B_C]\) is the controllability matrix of the CCF. <em>Why:</em> \(\mathbf W_C\) transforms as \(\tilde{\mathbf W}_C=\mathbf P^{-1}\mathbf W_C\). For the OCF, \(\mathbf w=\mathbf Q\mathbf x\) with \(\mathbf Q=\tilde{\mathbf W}_O^{-1}\mathbf W_O\) (6.15).</p>
 <details><summary>Worked (Example 2.1): \(\mathbf A=\operatorname{diag}(0.5,0.8),\;\mathbf B=[1\;1]^{\mathsf T}\)</summary>
 \(\det(z\mathbf I-\mathbf A)=z^2-1.3z+0.4\), so \(a_1=-1.3,\;a_0=0.4\).
-\(\mathbf W_C=[\mathbf B\;\mathbf{AB}]=\begin{bmatrix}1&0.5\\1&0.8\end{bmatrix}\). In the CCF, \(\mathbf A_C\mathbf B_C=[1\;\;1.3]^{\mathsf T}\), so \(\tilde{\mathbf W}_C=\begin{bmatrix}0&1\\1&1.3\end{bmatrix}\) and \(\tilde{\mathbf W}_C^{-1}=\begin{bmatrix}-1.3&1\\1&0\end{bmatrix}\).
+\(\mathbf W_C=[\mathbf B\;\mathbf{AB}]=\begin{bmatrix}1&0.5\\1&0.8\end{bmatrix}\). In the CCF, \(\mathbf A_C\mathbf B_C=[1\;\;1.3]^{\mathsf T}\). <em>Why:</em> \(\mathbf B_C=[0\;\;1]^{\mathsf T}\) picks out the <em>second column</em> of \(\mathbf A_C\), so
+\[\mathbf A_C\mathbf B_C=\begin{bmatrix}0&1\\-a_0&-a_1\end{bmatrix}\begin{bmatrix}0\\1\end{bmatrix}=\begin{bmatrix}1\\-a_1\end{bmatrix}=\begin{bmatrix}1\\1.3\end{bmatrix},\]
+and the sign flips because \(a_1=-1.3\) is already negative (\(-a_1=+1.3\)). Hence \(\tilde{\mathbf W}_C=\begin{bmatrix}0&1\\1&1.3\end{bmatrix}\), with \(\det=-1\), so \(\tilde{\mathbf W}_C^{-1}=\begin{bmatrix}-1.3&1\\1&0\end{bmatrix}\) (in general \(\begin{bmatrix}a_1&1\\1&0\end{bmatrix}\)).
 \[\mathbf P=\begin{bmatrix}1&0.5\\1&0.8\end{bmatrix}\begin{bmatrix}-1.3&1\\1&0\end{bmatrix}=\begin{bmatrix}-0.8&1\\-0.5&1\end{bmatrix}.\]
 Check: \(\mathbf P^{-1}\mathbf B=[0\;1]^{\mathsf T}\) ✓, and \(\mathbf P^{-1}\mathbf A\mathbf P=\begin{bmatrix}0&1\\-0.4&1.3\end{bmatrix}\) ✓.</details>
 
