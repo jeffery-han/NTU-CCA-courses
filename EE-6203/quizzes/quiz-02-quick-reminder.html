@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EE6203 Quiz 2 Reminder</title>
+<script>
+  window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] } };
+</script>
+<script src="vendor/mathjax/tex-mml-chtml.js" defer></script>
+<style>
+  :root { --bg:#fbfaf7; --fg:#1d1d1f; --muted:#666; --card:#fff; --line:#e3e0d8; --accent:#b4441c; --warn:#fff3e0; --warnline:#e8a33d; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#16171a; --fg:#e8e6e1; --muted:#9a9a9a; --card:#1f2024; --line:#33343a; --accent:#f08a5d; --warn:#2b2418; --warnline:#a8742a; } }
+  :root[data-theme="dark"] { --bg:#16171a; --fg:#e8e6e1; --muted:#9a9a9a; --card:#1f2024; --line:#33343a; --accent:#f08a5d; --warn:#2b2418; --warnline:#a8742a; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:15px/1.5 system-ui, -apple-system, sans-serif; }
+  main { max-width:1100px; margin:0 auto; padding:20px 16px 40px; }
+  h1 { font-size:1.4rem; margin:0 0 4px; }
+  .sub { color:var(--muted); margin:0 0 16px; font-size:.9rem; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:12px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:12px 14px; overflow-x:auto; }
+  .card h2 { font-size:1rem; margin:0 0 6px; color:var(--accent); }
+  .card ol, .card ul { margin:4px 0; padding-left:20px; }
+  .card li { margin:2px 0; }
+  .warn { background:var(--warn); border-color:var(--warnline); }
+  .wide { grid-column:1 / -1; }
+  small, .src { color:var(--muted); font-size:.8rem; }
+  @media print { body { font-size:11px; } .card { break-inside:avoid; } }
+</style>
+</head>
+<body>
+<main>
+<h1>EE6203 Quiz 2 — quick reminder</h1>
+<p class="sub">Mon 5 Oct 2026, 8:30–9:15 pm, LT2A (after the Lect 4 observer lecture). 45 min, 15%, pen and paper, all calculation, no MCQ. <strong>Closed book, no formula sheet.</strong> Transform table provided; bring your own calculator. Scope: LPH Lect 1–3, up to Ex 3.13.</p>
+
+<div class="grid">
+
+<div class="card wide warn">
+<h2>Expected shape (3 questions, 2nd-order systems; unofficial, from 3 past sittings)</h2>
+<ol>
+<li><strong>Q1 Modelling</strong>: ODE, block diagram or physical system → \(\mathbf A,\mathbf B,\mathbf C\); sometimes \(Y(s)/U(s)\).</li>
+<li><strong>Q2 ZOH discretisation</strong> at a given \(T\) → \(\mathbf\Phi(T),\mathbf\Theta(T)\); then controllability (every time), sometimes observability or the discrete TF, possibly with a parameter such as \(\beta\).</li>
+<li><strong>Q3 Discrete design/response</strong>: deadbeat \(\mathbf K\) (fractions are fine), then check \(\mathbf x(2)=\mathbf 0\) or compute \(\mathbf x(3)\); once it was a plain state transition \(\mathbf x(2)\) with given \(u(0),u(1)\).</li>
+</ol>
+</div>
+
+<div class="card">
+<h2>Q1 · Modelling recipes</h2>
+<ul>
+<li><strong>ODE</strong>: divide by the leading coefficient first. With \(x_1=y,\ x_2=\dot y\):
+\[\ddot y+a_1\dot y+a_0y=bu\ \Rightarrow\ \mathbf A=\begin{bmatrix}0&1\\-a_0&-a_1\end{bmatrix},\ \mathbf B=\begin{bmatrix}0\\b\end{bmatrix},\ \mathbf C=[1\ \ 0].\]</li>
+<li><strong>Block diagram</strong>: one state at each integrator / first-order block output. A block \(\frac{k}{s+a}\) with input \(v\) and output \(x\) gives \(\dot x=-ax+kv\). Write each block's input as a sum of states and \(u\), then read off the rows.</li>
+<li><strong>TF</strong>: \(G(s)=\mathbf C(s\mathbf I-\mathbf A)^{-1}\mathbf B+D=\dfrac{\mathbf C\,\operatorname{adj}(s\mathbf I-\mathbf A)\,\mathbf B}{\det(s\mathbf I-\mathbf A)}+D\). Cross-check against the ODE.</li>
+</ul>
+</div>
+
+<div class="card">
+<h2>Q2 · ZOH discretisation</h2>
+\[\mathbf\Phi(t)=\mathcal L^{-1}\{(s\mathbf I-\mathbf A)^{-1}\}\]
+\[\mathbf x(k+1)=\mathbf\Phi(T)\mathbf x(k)+\mathbf\Theta(T)u(k),\quad \mathbf\Theta(T)=\Big[\int_0^T\mathbf\Phi(\tau)\,d\tau\Big]\mathbf B\]
+<p>\(\mathbf C\) and \(D\) are unchanged. Discrete TF: \(G(z)=\mathbf C(z\mathbf I-\mathbf\Phi)^{-1}\mathbf\Theta+D\). Discrete poles are \(z=e^{\lambda T}\).</p>
+<p><small>Shortcut (supplementary, not on the slides): if \(\mathbf A\) is invertible, \(\mathbf\Theta=\mathbf A^{-1}(\mathbf\Phi-\mathbf I)\mathbf B\). If \(\mathbf A\) has a zero eigenvalue (a motor), integrate directly.</small></p>
+</div>
+
+<div class="card">
+<h2>Inverse Laplace pairs you will use</h2>
+\[\tfrac1s\to1,\quad \tfrac1{s^2}\to t,\quad \tfrac1{s+a}\to e^{-at}\]
+\[\tfrac1{s(s+a)}\to\tfrac{1-e^{-at}}{a},\qquad \tfrac1{(s+a)(s+b)}\to\tfrac{e^{-at}-e^{-bt}}{b-a}\]
+\[\int_0^T e^{-a\tau}d\tau=\tfrac{1-e^{-aT}}{a}\]
+<p><small>2×2 inverse: \(\begin{bmatrix}a&b\\c&d\end{bmatrix}^{-1}=\dfrac1{ad-bc}\begin{bmatrix}d&-b\\-c&a\end{bmatrix}\).</small></p>
+</div>
+
+<div class="card">
+<h2>Controllability / observability</h2>
+\[\mathbf W_C=[\mathbf B\ \ \mathbf A\mathbf B],\qquad \mathbf W_O=\begin{bmatrix}\mathbf C\\\mathbf C\mathbf A\end{bmatrix}\quad(n=2)\]
+<p>The property holds iff the rank is \(n\); for 2×2 this means \(\det\ne0\). On the discrete model, use \(\mathbf\Phi,\mathbf\Theta\), not \(\mathbf A,\mathbf B\).</p>
+<p>With a parameter: solve \(\det\mathbf W_C=0\) for the bad values and state "controllable iff \(\beta\ne\dots\)".</p>
+<p><small>Sampling an oscillator with \(\omega T=k\pi\) loses controllability/observability. A pole–zero cancellation in the TF means the realisation is uncontrollable or unobservable.</small></p>
+</div>
+
+<div class="card">
+<h2>Q3 · State transition</h2>
+\[\mathbf x(k+1)=\mathbf A\mathbf x(k)+\mathbf Bu(k)\]
+<p>Just iterate step by step; it is faster and safer than the closed form:</p>
+\[\mathbf x(k)=\mathbf A^k\mathbf x(0)+\sum_{i=0}^{k-1}\mathbf A^{k-1-i}\mathbf Bu(i)\]
+<p>With feedback \(u=-\mathbf K\mathbf x\): \(\mathbf x(k+1)=(\mathbf A-\mathbf B\mathbf K)\mathbf x(k)\).</p>
+</div>
+
+<div class="card">
+<h2>Q3 · Deadbeat / pole placement</h2>
+<p>Goal: \(\det(z\mathbf I-\mathbf A+\mathbf B\mathbf K)=\alpha_C(z)\); deadbeat means \(\alpha_C(z)=z^n\).</p>
+\[\mathbf K=[0\ \cdots\ 0\ \ 1]\,\mathbf W_C^{-1}\,\alpha_C(\mathbf A)\quad\text{(Ackermann)}\]
+\[\text{Deadbeat, }n=2:\ \ \mathbf K=[0\ \ 1]\,\mathbf W_C^{-1}\mathbf A^2\]
+<p>For \(\mathbf W_C=\begin{bmatrix}a&b\\c&d\end{bmatrix}\), the last row of \(\mathbf W_C^{-1}\) is \(\frac1{ad-bc}[-c\ \ a]\).</p>
+<p>Alternative (also accepted): coefficient matching. Expand \(\det(z\mathbf I-\mathbf A+\mathbf B\mathbf K)\) with \(\mathbf K=[k_1\ k_2]\) and set it equal to \(z^2\).</p>
+<p><strong>Check:</strong> \(\mathbf A-\mathbf B\mathbf K\) has trace 0 and det 0; then \(\mathbf x(2)=\mathbf 0\) from any \(\mathbf x(0)\).</p>
+</div>
+
+<div class="card">
+<h2>Canonical forms (Lect 2)</h2>
+<p>For \(G=\dfrac{b_1z+b_0}{z^2+a_1z+a_0}\):</p>
+\[\text{CCF: }\mathbf A=\begin{bmatrix}0&1\\-a_0&-a_1\end{bmatrix},\ \mathbf B=\begin{bmatrix}0\\1\end{bmatrix},\ \mathbf C=[b_0\ \ b_1]\]
+<p>OCF: \(\mathbf A_O=\mathbf A_C^{\mathsf T},\ \mathbf B_O=\mathbf C_C^{\mathsf T},\ \mathbf C_O=[0\ \ 1]\).</p>
+<p>In CCF, the gain is \(k_{i+1}=\alpha_i-a_i\). Similarity \(\mathbf x=\mathbf P\mathbf w\): \(\mathbf P^{-1}\mathbf A\mathbf P,\ \mathbf P^{-1}\mathbf B,\ \mathbf C\mathbf P\). State feedback does not move the zeros.</p>
+</div>
+
+<div class="card warn">
+<h2>Common mistakes</h2>
+<ul>
+<li>Not normalising the ODE (getting 8 where the answer is 2).</li>
+<li>Forgetting the \(\mathbf B\) in \(\mathbf\Theta\), or integrating \(\mathbf\Phi\) at \(t=T\) instead of over \([0,T]\).</li>
+<li>Testing controllability with the continuous \(\mathbf A,\mathbf B\) when the question asks about the sampled system.</li>
+<li>Writing \(\mathbf W_O\) as columns: it stacks rows.</li>
+<li>Using \(\mathbf A+\mathbf B\mathbf K\) when the convention is \(u=-\mathbf K\mathbf x\).</li>
+<li>Sign slips in \(\operatorname{adj}\); always verify \(\mathbf A-\mathbf B\mathbf K\) at the end.</li>
+</ul>
+</div>
+
+<div class="card">
+<h2>Time plan (45 min, ~15 min per question)</h2>
+<ul>
+<li>Write the memorised formulas in a margin first (1 min).</li>
+<li>Keep fractions exact; for \(T=\ln 2\)-type values, use \(e^{-T}=\tfrac12\).</li>
+<li>Box every final matrix; state "controllable / not controllable" in words.</li>
+<li>Spend any spare time on checks: TF vs ODE, trace/det of \(\mathbf A-\mathbf B\mathbf K\), \(\mathbf x(2)=\mathbf 0\).</li>
+</ul>
+</div>
+
+</div>
+<p class="src">Sources: <code>resources/lph-lecture-0{1,2,3}-*.pdf</code>, <code>resources/week-07-transcript.txt</code> (rules, scope), <code>quizzes/quiz-02-intel.md</code> (unofficial shape). Fuller practice: <a href="../notes/quiz2-prep-learning.html#m11">Module 11 drill</a> · <a href="quiz-02-mock-tests.html">mock tests</a>.</p>
+</main>
+</body>
+</html>
