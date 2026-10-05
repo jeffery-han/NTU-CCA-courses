@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Zero-background walkthrough of EE6203 Quiz 2 mock Q1(i): state-space model of a series RLC circuit, with step reveals and self-checks.">
+  <title>RLC State-Space Explainer</title>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+    };
+    window.mathReady = false;
+    window.mathFallback = function () {
+      if (window.mathTried) { document.getElementById('math-warning')?.removeAttribute('hidden'); return; }
+      window.mathTried = true;
+      var s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js';
+      s.async = true;
+      s.onload = function () { window.mathReady = true; document.getElementById('math-warning')?.setAttribute('hidden',''); };
+      s.onerror = function () { document.getElementById('math-warning')?.removeAttribute('hidden'); };
+      document.head.appendChild(s);
+    };
+    window.addEventListener('load', () => {
+      window.setTimeout(() => {
+        const w = document.getElementById('math-warning');
+        if (w && !window.mathReady) w.hidden = false;
+      }, 3500);
+    });
+  </script>
+  <script async src="vendor/mathjax/tex-mml-chtml.js"
+    onload="window.mathReady=true;document.getElementById('math-warning')?.setAttribute('hidden','')"
+    onerror="window.mathFallback()"></script>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f7f8fb; --surface: #ffffff; --surface-2: #eef3fb;
+      --text: #18202c; --muted: #5f6b7a; --border: #d8dee9;
+      --accent: #245ec7; --accent-soft: #e8f0ff;
+      --success: #176b45; --success-soft: #e4f5ec; --warning: #8a5700; --warning-soft: #fff3d8;
+      --danger: #a33232; --danger-soft: #fbe9e9;
+      --plot-a: #245ec7; --plot-b: #c2571a;
+      --shadow: 0 12px 32px rgba(28,39,58,.08); --radius: 14px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #10141b; --surface: #171d26; --surface-2: #202a38;
+        --text: #edf2f8; --muted: #aab4c2; --border: #344052;
+        --accent: #8bb5ff; --accent-soft: #1e3558;
+        --success: #82d4ad; --success-soft: #16352a; --warning: #ffd079; --warning-soft: #4a3514;
+        --danger: #ffaaaa; --danger-soft: #3d1c1c;
+        --plot-a: #8bb5ff; --plot-b: #ffad7a;
+        --shadow: 0 14px 34px rgba(0,0,0,.24);
+      }
+    }
+    :root[data-theme="dark"] {
+      --bg: #10141b; --surface: #171d26; --surface-2: #202a38;
+      --text: #edf2f8; --muted: #aab4c2; --border: #344052;
+      --accent: #8bb5ff; --accent-soft: #1e3558;
+      --success: #82d4ad; --success-soft: #16352a; --warning: #ffd079; --warning-soft: #4a3514;
+      --danger: #ffaaaa; --danger-soft: #3d1c1c;
+      --plot-a: #8bb5ff; --plot-b: #ffad7a;
+      --shadow: 0 14px 34px rgba(0,0,0,.24);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text);
+      font: 16px/1.62 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    .wrap { max-width: 52rem; margin: 0 auto; padding: 1.5rem 16px 5rem; }
+    h1 { font-size: 1.7rem; margin: 0 0 .35rem; }
+    h2 { font-size: 1.25rem; margin: 0 0 .6rem; }
+    .lede { color: var(--muted); margin: 0 0 1rem; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 1.1rem 1.2rem; margin: 1rem 0; box-shadow: var(--shadow); overflow-x: auto; }
+    .banner { background: var(--accent-soft); border-color: var(--accent); }
+    .warn { background: var(--warning-soft); border-color: var(--warning); }
+    .tag { display: inline-block; font-size: .75rem; font-weight: 700; letter-spacing: .06em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: .3rem; }
+    table { border-collapse: collapse; width: 100%; margin: .6rem 0; }
+    th, td { border: 1px solid var(--border); padding: .45rem .6rem; text-align: left; vertical-align: top; }
+    th { background: var(--surface-2); }
+    details { border: 1px solid var(--border); border-radius: 10px; padding: .5rem .8rem; margin: .6rem 0;
+      background: var(--surface-2); }
+    summary { cursor: pointer; font-weight: 600; }
+    .step { display: none; border-left: 3px solid var(--accent); padding: .2rem 0 .2rem .9rem; margin: .8rem 0; }
+    .step.shown { display: block; }
+    button { font: inherit; border: 1px solid var(--accent); background: var(--accent); color: #fff;
+      border-radius: 8px; padding: .4rem .9rem; cursor: pointer; }
+    button.ghost { background: transparent; color: var(--accent); }
+    button:disabled { opacity: .45; cursor: default; }
+    .check { background: var(--surface-2); border-radius: 10px; padding: .8rem 1rem; margin-top: 1rem; }
+    .check h3 { margin: 0 0 .4rem; font-size: 1rem; }
+    .opts label { display: block; padding: .25rem 0; cursor: pointer; }
+    .fb { margin-top: .5rem; padding: .45rem .7rem; border-radius: 8px; display: none; }
+    .fb.ok { display: block; background: var(--success-soft); color: var(--success); }
+    .fb.bad { display: block; background: var(--danger-soft); color: var(--danger); }
+    input[type=number] { width: 4.5rem; font: inherit; padding: .2rem .35rem; border: 1px solid var(--border);
+      border-radius: 6px; background: var(--surface); color: var(--text); }
+    .matrix-in { display: inline-grid; grid-template-columns: auto auto; gap: .3rem; vertical-align: middle;
+      border-left: 2px solid var(--text); border-right: 2px solid var(--text); padding: .2rem .4rem; margin: 0 .3rem; }
+    canvas { width: 100%; height: 260px; display: block; background: var(--surface-2); border-radius: 10px; }
+    .legend span { display: inline-block; margin-right: 1rem; font-size: .9rem; }
+    .sw { display: inline-block; width: .9rem; height: .25rem; vertical-align: middle; margin-right: .3rem; }
+    .theme-btn { position: fixed; top: .8rem; right: .8rem; padding: .25rem .6rem; font-size: .85rem; }
+    .answer { font-size: 1.05rem; }
+    @media (max-width: 560px) { .card { padding: .9rem; } th, td { padding: .35rem; font-size: .92rem; } }
+  </style>
+</head>
+<body>
+<button class="ghost theme-btn" id="theme-btn" type="button">Theme</button>
+<div class="wrap">
+  <h1>Series RLC → state-space, from zero</h1>
+  <p class="lede">EE6203 Quiz 2 mock tests, Question 1(i), 3 marks. Use this page if circuits are new to you.</p>
+
+  <div class="card warn" id="math-warning" hidden>Maths did not load. Keep this file next to its
+    <code>vendor/mathjax/</code> folder and reload.</div>
+
+  <div class="card banner">
+    <span class="tag">The question</span>
+    <p style="margin:0">A voltage source \(e(t)\) drives a series loop of a resistor \(R = 4\,\Omega\), an inductor
+      \(L = 1\) H and a capacitor \(C = \tfrac13\) F. The output is the capacitor voltage, \(y = v_C\).
+      Using the states \(x_1 = v_C\) and \(x_2 = i\) (the loop current), derive the state-space model
+      \(\dot{\mathbf x} = \mathbf A\mathbf x + \mathbf B e,\; y = \mathbf C\mathbf x\).</p>
+  </div>
+
+  <!-- ===== Part 1 ===== -->
+  <section class="card" id="p1">
+    <span class="tag">Part 1</span>
+    <h2>Voltage and current: push and flow</h2>
+    <p>Picture water in pipes:</p>
+    <ul>
+      <li><b>Voltage</b> (volts, V) is the <i>pressure</i>, the push that drives charge round.</li>
+      <li><b>Current</b> \(i\) (amperes, A) is the <i>flow</i>, the amount of charge passing per second.</li>
+      <li>A <b>voltage source</b> \(e(t)\) is a pump. It is the input we control.</li>
+    </ul>
+    <p>Every component "uses up" part of the pump's pressure. That used-up amount is the component's
+      <b>voltage drop</b>.</p>
+    <div class="check" data-quiz="p1">
+      <h3>Check</h3>
+      <p>In the water picture, which quantity is the <i>flow</i>?</p>
+      <div class="opts">
+        <label><input type="radio" name="p1" value="a"> Voltage \(v_C\)</label>
+        <label><input type="radio" name="p1" value="b"> Current \(i\)</label>
+        <label><input type="radio" name="p1" value="c"> Resistance \(R\)</label>
+      </div>
+      <div class="fb"></div>
+    </div>
+  </section>
+
+  <!-- ===== Part 2 ===== -->
+  <section class="card" id="p2">
+    <span class="tag">Part 2</span>
+    <h2>The three components and their rules</h2>
+    <table>
+      <tr><th>Part</th><th>Analogy</th><th>Rule</th><th>In words</th></tr>
+      <tr><td>Resistor \(R\)</td><td>Narrow, rough pipe</td><td>\(v_R = R\,i\)</td>
+        <td>More flow means more pressure lost to friction.</td></tr>
+      <tr><td>Inductor \(L\)</td><td>Heavy water wheel</td><td>\(v_L = L\,\dfrac{di}{dt}\)</td>
+        <td>It fights <i>changes</i> in flow. Speeding the flow up takes pressure.</td></tr>
+      <tr><td>Capacitor \(C\)</td><td>Tank filling up</td><td>\(i = C\,\dfrac{dv_C}{dt}\)</td>
+        <td>Flow into the tank raises its level (its voltage).</td></tr>
+    </table>
+    <details>
+      <summary>Why are \(v_C\) and \(i\) the states?</summary>
+      <p>A <b>state</b> is something the system <i>remembers</i>: you cannot change it instantly. A tank's
+        level cannot jump (filling takes time), so \(v_C\) is a state. A heavy wheel's speed cannot jump
+        either, so the inductor current \(i\) is a state. The resistor has no memory, so it adds no state.
+        <b>Rule of thumb:</b> one state per capacitor (its voltage) and one per inductor (its current).</p>
+    </details>
+    <details>
+      <summary>Common pitfall</summary>
+      <p>The capacitor rule gives the <i>current</i> in terms of \(dv_C/dt\). We want \(\dot v_C\) on its own,
+        so we divide by \(C\): \(\dot v_C = i / C\). Dividing by \(C = \tfrac13\) means <b>multiplying by 3</b>.</p>
+    </details>
+    <div class="check" data-quiz="p2">
+      <h3>Check</h3>
+      <p>Which component's rule involves \(\dfrac{di}{dt}\)?</p>
+      <div class="opts">
+        <label><input type="radio" name="p2" value="a"> Resistor</label>
+        <label><input type="radio" name="p2" value="b"> Capacitor</label>
+        <label><input type="radio" name="p2" value="c"> Inductor</label>
+      </div>
+      <div class="fb"></div>
+    </div>
+  </section>
+
+  <!-- ===== Part 3 ===== -->
+  <section class="card" id="p3">
+    <span class="tag">Part 3</span>
+    <h2>The loop law (KVL) and "series"</h2>
+    <p><b>Kirchhoff's Voltage Law:</b> once round a closed loop, the pressure the pump supplies equals the sum
+      of the drops. Think of it as a budget: the source supplies \(e\) volts and the parts spend all of it.</p>
+    \[ e = v_R + v_L + v_C \]
+    <p><b>Series</b> means one single path, so the <b>same current \(i\)</b> flows through all three parts.
+      That's why a single \(i\) appears in every rule.</p>
+    <div class="check" data-quiz="p3">
+      <h3>Check</h3>
+      <p>Suppose \(e = 10\) V and at some instant \(v_R = 3\) V and \(v_C = 5\) V. What is \(v_L\) (in volts)?</p>
+      <input type="number" step="any" id="p3-in"> <button type="button" data-num="p3">Check</button>
+      <div class="fb"></div>
+    </div>
+  </section>
+
+  <!-- ===== Part 4 ===== -->
+  <section class="card" id="p4">
+    <span class="tag">Part 4</span>
+    <h2>The derivation, one step at a time</h2>
+    <p><b>Goal:</b> write \(\dot x_1\) and \(\dot x_2\) using only \(x_1, x_2\) and the input \(e\), with no other
+      variables left over.</p>
+    <div id="steps">
+      <div class="step shown">
+        <p><b>Step 1: the capacitor rule gives \(\dot x_1\).</b><br>
+          Why start here? \(x_1 = v_C\), and the capacitor rule is the one that contains \(\dot v_C\).</p>
+        \[ i = C\,\dot v_C \;\Rightarrow\; \dot v_C = \frac{1}{C}\,i \;\Rightarrow\; \dot x_1 = \frac{1}{1/3}\,x_2 = 3x_2 \]
+      </div>
+      <div class="step">
+        <p><b>Step 2: KVL, with each drop replaced by its rule.</b><br>
+          Why? \(x_2 = i\), and \(\dot i\) appears only in the inductor's rule, which sits inside KVL.</p>
+        \[ e = \underbrace{R\,i}_{v_R} + \underbrace{L\,\dot i}_{v_L} + v_C \]
+      </div>
+      <div class="step">
+        <p><b>Step 3: solve for \(\dot i\).</b> Move everything except \(L\dot i\) to the left, then divide by \(L\).</p>
+        \[ \dot i = \frac{1}{L}\big(e - R\,i - v_C\big) \]
+      </div>
+      <div class="step">
+        <p><b>Step 4: plug in the numbers</b> \(R = 4\), \(L = 1\), and rename \(v_C = x_1\), \(i = x_2\).</p>
+        \[ \dot x_2 = -x_1 - 4x_2 + e \]
+      </div>
+      <div class="step">
+        <p><b>Step 5: pack both equations into matrices.</b> Each row of \(\mathbf A\) holds the coefficients of
+          \(x_1, x_2\) in one equation, and \(\mathbf B\) holds the coefficient of \(e\).</p>
+        \[ \begin{aligned}
+          \dot x_1 &= \;\;0\cdot x_1 + 3\,x_2 + 0\cdot e\\
+          \dot x_2 &= -1\cdot x_1 - 4\,x_2 + 1\cdot e
+        \end{aligned} \]
+        \[ \dot{\mathbf x} =
+          \underbrace{\begin{bmatrix} 0 & 3 \\ -1 & -4 \end{bmatrix}}_{\mathbf A}\mathbf x
+          + \underbrace{\begin{bmatrix} 0 \\ 1 \end{bmatrix}}_{\mathbf B} e,
+          \qquad
+          y = \underbrace{\begin{bmatrix} 1 & 0 \end{bmatrix}}_{\mathbf C}\mathbf x \]
+        <p>The output is \(y = v_C = x_1\), so \(\mathbf C\) just picks the first state.</p>
+      </div>
+    </div>
+    <button type="button" id="next-step">Show next step</button>
+    <button type="button" class="ghost" id="reset-steps">Hide steps</button>
+
+    <div class="check" data-quiz="p4">
+      <h3>Check: rebuild \(\mathbf A\) and \(\mathbf B\) yourself</h3>
+      <p>Hide the steps first if you want a real test.</p>
+      <p>\(\mathbf A =\)
+        <span class="matrix-in">
+          <input type="number" step="any" data-k="0"><input type="number" step="any" data-k="3">
+          <input type="number" step="any" data-k="-1"><input type="number" step="any" data-k="-4">
+        </span>
+        &nbsp; \(\mathbf B =\)
+        <span class="matrix-in" style="grid-template-columns:auto">
+          <input type="number" step="any" data-k="0"><input type="number" step="any" data-k="1">
+        </span>
+      </p>
+      <button type="button" id="p4-btn">Check</button>
+      <div class="fb"></div>
+    </div>
+  </section>
+
+  <!-- ===== Part 5 ===== -->
+  <section class="card" id="p5">
+    <span class="tag">Part 5</span>
+    <h2>Does the answer make physical sense?</h2>
+    <p><b>Steady state.</b> With a constant input \(e\), the system eventually stops changing, so both derivatives
+      are zero:</p>
+    <ul>
+      <li>\(\dot x_1 = 3x_2 = 0\) gives \(i = 0\): the current stops.</li>
+      <li>\(\dot x_2 = -x_1 - 4x_2 + e = 0\) gives \(v_C = e\): the capacitor charges to the source voltage.</li>
+    </ul>
+    <p>That's right physically: a full tank holds back the pump, so no more water flows.</p>
+    <p><b>Stability.</b> \(\det(s\mathbf I - \mathbf A) = s^2 + 4s + 3 = (s+1)(s+3)\). Both poles are negative, so the
+      system is stable. This matches the general series-RLC formula \(s^2 + \tfrac{R}{L}s + \tfrac{1}{LC}\).</p>
+
+    <p><b>See it.</b> Below, \(e\) jumps from 0 to 1 V at \(t = 0\), with \(L = 1\) and \(C = \tfrac13\). Drag \(R\):</p>
+    <p><label>\(R\) = <span id="r-val">4</span> Ω &nbsp;
+      <input type="range" id="r-slider" min="0.2" max="8" step="0.1" value="4" style="width:60%"></label></p>
+    <canvas id="plot" width="800" height="260" aria-label="Step response plot of capacitor voltage and current"></canvas>
+    <div class="legend"><span><i class="sw" style="background:var(--plot-a)"></i>\(x_1 = v_C\) (V)</span>
+      <span><i class="sw" style="background:var(--plot-b)"></i>\(x_2 = i\) (A)</span></div>
+    <p class="lede">Small \(R\) makes \(v_C\) overshoot and wobble (the wheel's momentum carries the flow past the
+      target). Large \(R\) makes it creep up slowly. Either way it settles at \(v_C = 1 = e\).</p>
+
+    <div class="check" data-quiz="p5">
+      <h3>Check</h3>
+      <p>The source is held at a constant \(e = 6\) V for a long time. What is \(v_C\) (in volts)?</p>
+      <input type="number" step="any" id="p5-in"> <button type="button" data-num="p5">Check</button>
+      <div class="fb"></div>
+    </div>
+  </section>
+
+  <!-- ===== Recap ===== -->
+  <section class="card banner">
+    <span class="tag">Recap</span>
+    <h2>Final answer</h2>
+    <p class="answer">\[ \mathbf A = \begin{bmatrix} 0 & 3 \\ -1 & -4 \end{bmatrix},\quad
+      \mathbf B = \begin{bmatrix} 0 \\ 1 \end{bmatrix},\quad
+      \mathbf C = \begin{bmatrix} 1 & 0 \end{bmatrix} \]</p>
+    <h2>Recipe for any circuit like this</h2>
+    <ol>
+      <li>States = capacitor voltages and inductor currents.</li>
+      <li>Capacitor: \(\dot v_C = i_C / C\).</li>
+      <li>Inductor: \(\dot i_L = v_L / L\), with \(v_L\) taken from KVL round the loop.</li>
+      <li>Substitute until only states and inputs remain, then read off the coefficients into \(\mathbf A\), \(\mathbf B\), \(\mathbf C\).</li>
+      <li>Check: steady state (\(\dot{\mathbf x} = 0\)) should give \(v_C = e\) and \(i = 0\).</li>
+    </ol>
+  </section>
+</div>
+
+<script>
+  // theme toggle (per-viewer convenience only)
+  (function () {
+    const root = document.documentElement;
+    try { const t = localStorage.getItem('ee6203-theme'); if (t) root.dataset.theme = t; } catch (e) {}
+    document.getElementById('theme-btn').onclick = () => {
+      const dark = root.dataset.theme ? root.dataset.theme === 'dark'
+        : matchMedia('(prefers-color-scheme: dark)').matches;
+      root.dataset.theme = dark ? 'light' : 'dark';
+      try { localStorage.setItem('ee6203-theme', root.dataset.theme); } catch (e) {}
+      drawPlot();
+    };
+  })();
+
+  function feedback(box, ok, msg) {
+    const fb = box.querySelector('.fb');
+    fb.className = 'fb ' + (ok ? 'ok' : 'bad');
+    fb.textContent = msg;
+  }
+
+  // multiple-choice checks
+  const mcq = {
+    p1: ['b', 'Right. Current is the flow; voltage is the push.', 'Not quite. Voltage is the push (pressure). The flow is current.'],
+    p2: ['c', 'Right. v_L = L di/dt, because the inductor resists changes in current.', 'Not quite. Look at the table: the derivative of current sits in the inductor rule.'],
+  };
+  for (const [id, [ans, good, bad]] of Object.entries(mcq)) {
+    const box = document.querySelector(`[data-quiz="${id}"]`);
+    box.querySelectorAll('input[type=radio]').forEach(r =>
+      r.addEventListener('change', () => feedback(box, r.value === ans, r.value === ans ? good : bad)));
+  }
+
+  // numeric checks
+  const num = {
+    p3: [2, 'Right. 10 = 3 + v_L + 5, so v_L = 2 V.', 'Use the budget: e = v_R + v_L + v_C, so v_L = 10 - 3 - 5.'],
+    p5: [6, 'Right. At steady state the current is 0, so there is no drop across R or L, and v_C = e = 6 V.', 'Hint: at steady state i = 0, so v_R = 0 and v_L = 0. KVL then leaves e = v_C.'],
+  };
+  document.querySelectorAll('[data-num]').forEach(btn => btn.addEventListener('click', () => {
+    const id = btn.dataset.num, [ans, good, bad] = num[id];
+    const v = parseFloat(document.getElementById(id + '-in').value);
+    feedback(btn.closest('.check'), Math.abs(v - ans) < 1e-9, Math.abs(v - ans) < 1e-9 ? good : bad);
+  }));
+
+  // matrix check
+  document.getElementById('p4-btn').addEventListener('click', () => {
+    const box = document.querySelector('[data-quiz="p4"]');
+    const ins = [...box.querySelectorAll('input[data-k]')];
+    const wrong = ins.filter(i => parseFloat(i.value) !== parseFloat(i.dataset.k));
+    ins.forEach(i => i.style.borderColor = wrong.includes(i) ? 'var(--danger)' : 'var(--success)');
+    if (!wrong.length) feedback(box, true, 'All correct: A = [0 3; -1 -4], B = [0; 1].');
+    else feedback(box, false, `${wrong.length} entr${wrong.length > 1 ? 'ies' : 'y'} wrong (red). ` +
+      'Remember: row 1 comes from x1-dot = 3 x2; row 2 from x2-dot = -x1 - 4 x2 + e. Dividing by C = 1/3 multiplies by 3.');
+  });
+
+  // step reveal
+  const steps = [...document.querySelectorAll('#steps .step')];
+  const nextBtn = document.getElementById('next-step');
+  const syncBtn = () => { nextBtn.disabled = steps.every(s => s.classList.contains('shown')); };
+  nextBtn.onclick = () => { steps.find(s => !s.classList.contains('shown'))?.classList.add('shown'); syncBtn(); };
+  document.getElementById('reset-steps').onclick = () => {
+    steps.forEach((s, k) => s.classList.toggle('shown', k === 0)); syncBtn();
+  };
+
+  // step-response plot: simulate x' = A x + B e with e = 1, L = 1, C = 1/3 (RK4)
+  const canvas = document.getElementById('plot'), slider = document.getElementById('r-slider');
+  function simulate(R) {
+    const L = 1, C = 1 / 3, e = 1, dt = 0.01, T = 10, out = [];
+    const f = ([v, i]) => [i / C, (e - R * i - v) / L];
+    let x = [0, 0];
+    for (let t = 0; t <= T + 1e-9; t += dt) {
+      out.push([t, x[0], x[1]]);
+      const k1 = f(x), k2 = f([x[0] + dt / 2 * k1[0], x[1] + dt / 2 * k1[1]]);
+      const k3 = f([x[0] + dt / 2 * k2[0], x[1] + dt / 2 * k2[1]]), k4 = f([x[0] + dt * k3[0], x[1] + dt * k3[1]]);
+      x = [x[0] + dt / 6 * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0]), x[1] + dt / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1])];
+    }
+    return out;
+  }
+  function drawPlot() {
+    const R = parseFloat(slider.value);
+    document.getElementById('r-val').textContent = R.toFixed(1);
+    const css = getComputedStyle(document.documentElement);
+    const dpr = window.devicePixelRatio || 1, w = canvas.clientWidth, h = canvas.clientHeight;
+    canvas.width = w * dpr; canvas.height = h * dpr;
+    const ctx = canvas.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h);
+    const data = simulate(R), pad = 34, yMin = -0.5, yMax = 2;
+    const X = t => pad + (w - pad - 10) * t / 10, Y = v => h - pad - (h - pad - 10) * (v - yMin) / (yMax - yMin);
+    ctx.strokeStyle = css.getPropertyValue('--border'); ctx.fillStyle = css.getPropertyValue('--muted');
+    ctx.font = '12px sans-serif'; ctx.lineWidth = 1;
+    for (const v of [-0.5, 0, 0.5, 1, 1.5, 2]) {
+      ctx.beginPath(); ctx.moveTo(pad, Y(v)); ctx.lineTo(w - 10, Y(v)); ctx.stroke(); ctx.fillText(v, 4, Y(v) + 4);
+    }
+    for (let t = 0; t <= 10; t += 2) ctx.fillText(t + ' s', X(t) - 8, h - 12);
+    for (const [k, col] of [[1, '--plot-a'], [2, '--plot-b']]) {
+      ctx.strokeStyle = css.getPropertyValue(col); ctx.lineWidth = 2.2; ctx.beginPath();
+      data.forEach((p, n) => n ? ctx.lineTo(X(p[0]), Y(p[k])) : ctx.moveTo(X(p[0]), Y(p[k])));
+      ctx.stroke();
+    }
+  }
+  slider.addEventListener('input', drawPlot);
+  addEventListener('resize', drawPlot);
+  drawPlot();
+
+  // ?selftest: simulated v_C settles at e=1 and i at 0 for R=4
+  if (location.search.includes('selftest')) {
+    const last = simulate(4).at(-1);
+    console.assert(Math.abs(last[1] - 1) < 1e-3 && Math.abs(last[2]) < 1e-3, 'steady state wrong', last);
+    console.log('selftest', Math.abs(last[1] - 1) < 1e-3 && Math.abs(last[2]) < 1e-3 ? 'PASS' : 'FAIL', last);
+  }
+</script>
+</body>
