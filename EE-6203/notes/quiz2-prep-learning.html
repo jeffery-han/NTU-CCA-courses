@@ -350,6 +350,8 @@ Check: at \(t=0\) this is \(\mathbf I\). ✓</details>
 <p>A computer sends \(u(kT)\) every \(T\) seconds, and the zero-order hold (ZOH) keeps it <strong>constant</strong> until the next sample. Our goal is a model that jumps straight from \(\mathbf x(kT)\) to \(\mathbf x((k+1)T)\).</p>
 <h3>Derivation (why the formula looks the way it does)</h3>
 <details open><summary>Step 1: apply (1.21) over one sampling interval</summary>
+Recall (1.21), the continuous solution from Module 2:
+\[\mathbf x(t)=\mathbf\Phi(t-t_0)\mathbf x(t_0)+\int_{t_0}^{t}\mathbf\Phi(t-\tau)\mathbf Bu(\tau)\,d\tau.\]
 Set \(t_0=kT\) and \(t=(k+1)T\):
 \[\mathbf x((k+1)T)=\mathbf\Phi(T)\mathbf x(kT)+\int_{kT}^{(k+1)T}\mathbf\Phi((k+1)T-\tau)\mathbf B\,u(\tau)\,d\tau.\]</details>
 <details><summary>Step 2: use the hold, \(u(\tau)=u(kT)\) on the interval</summary>
@@ -430,6 +432,7 @@ Here \(T\cdot T=T^2=2\cdot\tfrac{T^2}{2}\), which is why \(-1+2=+1\) appears.</d
 <details open><summary>Step 4: read off poles and zeros</summary>
 A <strong>zero</strong> is a root of the numerator (output forced to zero); a <strong>pole</strong> is a root of the denominator. Numerator \(z+1=0\) gives the zero \(z=-1\). Denominator \((z-1)^2=0\) gives a double pole at \(z=1\). \(T\) appears only in the gain \(T^2/2\), so the zero stays at \(-1\) for any \(T\). A zero at \(z=0\) would need a factor \(z\) in the numerator (a pure delay), and there is none.</details>
 <h3>Worked: the Module 3 system (\(T=0.5\))</h3>
+<p>Recall the discrete matrices from Module 3: \(\mathbf\Phi=\begin{bmatrix}1&0.3161\\0&0.3679\end{bmatrix},\;\mathbf\Theta=\begin{bmatrix}0.1839\\0.6321\end{bmatrix},\;\mathbf C=[1\;\,0]\). They play the roles of \(\mathbf A\) and \(\mathbf B\) in \(G(z)=\mathbf C(z\mathbf I-\mathbf A)^{-1}\mathbf B\).</p>
 <details><summary>Show the transfer function</summary>
 \[(z\mathbf I-\mathbf A)^{-1}=\dfrac{1}{(z-1)(z-0.3679)}\begin{bmatrix}z-0.3679&0.3161\\0&z-1\end{bmatrix}.\] Multiplying by \(\mathbf C=[1\;0]\) on the left and \(\mathbf\Theta\) on the right:
 \[G(z)=\frac{0.1839(z-0.3679)+0.3161\cdot0.6321}{(z-1)(z-0.3679)}=\frac{0.1839\,(z+0.7183)}{(z-1)(z-0.3679)}.\]
@@ -486,9 +489,9 @@ The \(a^2\) terms cancel, which is why a clean answer survives.</p>
 <p>Write the characteristic polynomial as \(z^n+a_{n-1}z^{n-1}+\dots+a_1z+a_0\) (6.3). For \(n=2\):</p>
 \[\textbf{CCF: }\mathbf A_C=\begin{bmatrix}0&1\\-a_0&-a_1\end{bmatrix},\;\mathbf B_C=\begin{bmatrix}0\\1\end{bmatrix};\qquad \textbf{OCF: }\mathbf A_O=\begin{bmatrix}0&-a_0\\1&-a_1\end{bmatrix}=\mathbf A_C^{\mathsf T},\;\mathbf C_O=[0\;\;1].\]
 <p>In the CCF, the <em>last row</em> holds the negated coefficients and \(\mathbf B\) is \([0\cdots0\;1]^{\mathsf T}\). That structure is what makes pole placement easy (Module 9).</p>
-<p><strong>Transformation to CCF</strong> (6.10), provided the controllability matrix \(\mathbf W_C\) (Module 7) is non-singular:</p>
+<p><strong>Transformation to CCF</strong> (6.10), provided the controllability matrix \(\mathbf W_C=[\mathbf B\;\;\mathbf{AB}\;\cdots\;\mathbf A^{n-1}\mathbf B]\) (derived in Module 7) is non-singular:</p>
 \[\mathbf x=\mathbf P\mathbf w,\qquad \mathbf P=\mathbf W_C\,\tilde{\mathbf W}_C^{-1},\]
-<p>where \(\tilde{\mathbf W}_C=[\mathbf B_C\;\;\mathbf A_C\mathbf B_C]\) is the controllability matrix of the CCF. <em>Why:</em> \(\mathbf W_C\) transforms as \(\tilde{\mathbf W}_C=\mathbf P^{-1}\mathbf W_C\). For the OCF, \(\mathbf w=\mathbf Q\mathbf x\) with \(\mathbf Q=\tilde{\mathbf W}_O^{-1}\mathbf W_O\) (6.15).</p>
+<p>where \(\tilde{\mathbf W}_C=[\mathbf B_C\;\;\mathbf A_C\mathbf B_C]\) is the controllability matrix of the CCF. <em>Why:</em> \(\mathbf W_C\) transforms as \(\tilde{\mathbf W}_C=\mathbf P^{-1}\mathbf W_C\). For the OCF, \(\mathbf w=\mathbf Q\mathbf x\) with \(\mathbf Q=\tilde{\mathbf W}_O^{-1}\mathbf W_O\) (6.15), where \(\mathbf W_O=\begin{bmatrix}\mathbf C\\\mathbf{CA}\\\vdots\\\mathbf{CA}^{n-1}\end{bmatrix}\) is the observability matrix (Module 8) and \(\tilde{\mathbf W}_O\) is the same matrix built from \(\mathbf A_O,\mathbf C_O\).</p>
 <details><summary>Worked (Example 2.1): \(\mathbf A=\operatorname{diag}(0.5,0.8),\;\mathbf B=[1\;1]^{\mathsf T}\)</summary>
 \(\det(z\mathbf I-\mathbf A)=z^2-1.3z+0.4\), so \(a_1=-1.3,\;a_0=0.4\).
 \(\mathbf W_C=[\mathbf B\;\mathbf{AB}]=\begin{bmatrix}1&0.5\\1&0.8\end{bmatrix}\). In the CCF, \(\mathbf A_C\mathbf B_C=[1\;\;1.3]^{\mathsf T}\). <em>Why:</em> \(\mathbf B_C=[0\;\;1]^{\mathsf T}\) picks out the <em>second column</em> of \(\mathbf A_C\), so
@@ -519,7 +522,9 @@ Check: \(\mathbf P^{-1}\mathbf B=[0\;1]^{\mathsf T}\) ✓, and \(\mathbf P^{-1}\
 <h2>7 · Controllability <span class="src">Lect 2 §7–8, slides 21–39</span></h2>
 <p>LPH's design plan (§7): (1) design state feedback \(u=-\mathbf K\mathbf x\), assuming all states are measured; (2) if they are not, design an observer to estimate them. By the separation principle the two designs are independent. Quiz 2 covers step 1. Before designing, ask whether the input <em>can</em> steer the state at all.</p>
 <h3>Where the test comes from</h3>
-<p>From (4.3) with \(N=n\) steps:</p>
+<p>Start from the recursion solution (4.3), Module 5:</p>
+\[\mathbf x(k)=\mathbf A^k\mathbf x(0)+\sum_{i=0}^{k-1}\mathbf A^{k-1-i}\mathbf B\,u(i)\quad(4.3)\]
+<p>Put \(k=n\) and move \(\mathbf A^n\mathbf x(0)\) to the left. Writing the sum out from \(i=n-1\) down to \(i=0\) gives \(\mathbf Bu(n-1)+\mathbf{AB}u(n-2)+\dots+\mathbf A^{n-1}\mathbf Bu(0)\), which is a matrix times a vector:</p>
 \[\mathbf x(n)-\mathbf A^n\mathbf x(0)=\underbrace{[\mathbf B\;\;\mathbf{AB}\;\cdots\;\mathbf A^{n-1}\mathbf B]}_{\mathbf W_C}\begin{bmatrix}u(n-1)\\u(n-2)\\\vdots\\u(0)\end{bmatrix}.\]
 <p>This is \(n\) equations in \(n\) unknown inputs. You can hit <em>any</em> target exactly when \(\mathbf W_C\) is invertible.</p>
 <div class="box good"><p><strong>Theorem.</strong> \((\mathbf A,\mathbf B)\) is controllable \(\iff\) \(\operatorname{rank}\mathbf W_C=n\), where \(\mathbf W_C=[\mathbf B\;\;\mathbf{AB}\;\cdots\;\mathbf A^{n-1}\mathbf B]\). For SISO, this means \(\det\mathbf W_C\ne0\). <strong>MEMORISE</strong></p></div>
@@ -556,7 +561,7 @@ LPH (26 Sep): “we don't need to remember the formula, we can solve this using 
 <h3>Pole-zero cancellation <span class="src">§10.1, Examples 3.4–3.5</span></h3>
 <div class="box"><p><strong>Theorem.</strong> (I) If \(G(z)\) has a pole-zero cancellation, the realisation is uncontrollable, unobservable, or both, depending on how the states are chosen. (II) With no cancellation, there is always a controllable <em>and</em> observable realisation.</p></div>
 <p>Example 3.4: \(G(z)=\dfrac{z+0.2}{(z+0.8)(z+0.2)}\). Realised in <strong>CCF</strong> it is controllable but <em>unobservable</em>: \(\mathbf W_O=\begin{bmatrix}0.2&1\\-0.16&-0.8\end{bmatrix}\), \(\det=0\). Realised in <strong>OCF</strong> it is observable but <em>uncontrollable</em>. This is no accident: the CCF is always controllable by construction, and the OCF always observable.</p>
-<p>Example 3.5 (the delay diagram from Module 1): \(\mathbf W_C=\begin{bmatrix}0&0\\1&-0.5\end{bmatrix}\) is singular, and \(G=\frac{z+0.2}{(z+0.2)(z+0.5)}\) cancels. The \(x_1\) mode is never excited by \(u\).</p>
+<p>Example 3.5 (the delay diagram from Module 1, \(\mathbf A=\begin{bmatrix}-0.2&0\\1&-0.5\end{bmatrix},\;\mathbf B=\begin{bmatrix}0\\1\end{bmatrix},\;\mathbf C=[0\;\,1]\)): \(\mathbf{AB}=[0\;\,-0.5]^{\mathsf T}\), so \(\mathbf W_C=\begin{bmatrix}0&0\\1&-0.5\end{bmatrix}\) is singular, and \(G=\frac{z+0.2}{(z+0.2)(z+0.5)}\) cancels. The \(x_1\) mode is never excited by \(u\).</p>
 
 <h3>Loss of controllability/observability by sampling <span class="src">§10.2, Examples 3.6–3.7</span></h3>
 <p>Discretisation can only lose these properties, never create them: a controllable discrete model requires a controllable continuous one. Example 3.6, the harmonic oscillator \(\omega^2/(s^2+\omega^2)\), has ZOH matrices containing \(\cos\omega T,\sin\omega T\). Both \(\mathbf W_C\) and \(\mathbf W_O\) become singular when \(\mathbf{\omega T=k\pi}\) (\(k\) an integer). Intuition: sampling every half-period sees the oscillation at the same phase, so the samples cannot tell where it is. Example 3.7 (the ZOH double integrator, \(\mathbf W_O=\begin{bmatrix}1&0\\1&T\end{bmatrix}\), \(\det\mathbf W_O=T\)) stays observable for every \(T>0\): it has no oscillatory mode to alias. Slide 18 gives \(\det\mathbf W_C=-\sin\omega T(1-\cos\omega T)\) and \(\det\mathbf W_O=\sin\omega T\) for the oscillator; both vanish at \(\omega T=q\pi\).</p>
