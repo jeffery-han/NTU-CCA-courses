@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Three unofficial EE6203 Quiz 2 (LPH part) mock tests in the recalled 3-question shape, 45 minutes each. Answer-free; submit the export for marking.">
+  <title>EE6203 Quiz 2 Mocks</title>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+    };
+    window.mathReady = false;
+    window.mathFallback = function () {
+      if (window.mathTried) { document.getElementById('math-warning')?.removeAttribute('hidden'); return; }
+      window.mathTried = true;
+      var s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js';
+      s.async = true;
+      s.onload = function () { window.mathReady = true; document.getElementById('math-warning')?.setAttribute('hidden',''); };
+      s.onerror = function () { document.getElementById('math-warning')?.removeAttribute('hidden'); };
+      document.head.appendChild(s);
+    };
+    window.addEventListener('load', () => {
+      window.setTimeout(() => {
+        const warning = document.getElementById('math-warning');
+        if (warning && !window.mathReady) warning.hidden = false;
+      }, 3500);
+    });
+  </script>
+  <script async src="vendor/mathjax/tex-mml-chtml.js"
+    onload="window.mathReady=true;document.getElementById('math-warning')?.setAttribute('hidden','')"
+    onerror="window.mathFallback()"></script>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f7f8fb; --surface: #ffffff; --surface-2: #eef3fb;
+      --text: #18202c; --muted: #5f6b7a; --border: #d8dee9;
+      --accent: #245ec7; --accent-soft: #e8f0ff;
+      --success: #176b45; --warning: #8a5700; --warning-soft: #fff3d8; --danger: #a33232;
+      --shadow: 0 12px 32px rgba(28,39,58,.08); --radius: 14px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #10141b; --surface: #171d26; --surface-2: #202a38;
+        --text: #edf2f8; --muted: #aab4c2; --border: #344052;
+        --accent: #8bb5ff; --accent-soft: #1e3558;
+        --success: #82d4ad; --warning: #ffd079; --warning-soft: #4a3514; --danger: #ffaaaa;
+        --shadow: 0 14px 34px rgba(0,0,0,.24);
+      }
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text);
+      font: 16px/1.62 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    .wrap { max-width: 56rem; margin: 0 auto; padding: 1.5rem 1rem 5rem; }
+    h1 { font-size: 1.7rem; margin: 0 0 .35rem; }
+    .lede { color: var(--muted); margin: 0 0 1rem; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 1.1rem 1.2rem; margin: 1rem 0; box-shadow: var(--shadow); }
+    .banner { background: var(--accent-soft); border-color: var(--accent); }
+    .warn { background: var(--warning-soft); border-color: var(--warning); color: var(--warning); }
+    .rules { margin: .4rem 0 0; padding-left: 1.15rem; } .rules li { margin: .25rem 0; }
+    .bar { position: sticky; top: 0; z-index: 20; display: flex; flex-wrap: wrap; gap: .5rem 1rem;
+      align-items: center; justify-content: space-between; background: var(--surface);
+      border: 1px solid var(--border); border-radius: var(--radius); padding: .7rem 1rem; box-shadow: var(--shadow); }
+    .clock { font-variant-numeric: tabular-nums; font-weight: 800; font-size: 1.3rem; min-width: 5rem; }
+    .clock.low { color: var(--warning); } .clock.out { color: var(--danger); }
+    .part { border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 11px;
+      padding: .95rem 1.1rem; margin: 1rem 0; background: var(--surface); min-width: 0; overflow-x: auto; }
+    .tag { font-size: .78rem; font-weight: 700; letter-spacing: .04em; color: var(--muted); text-transform: uppercase; }
+    .capture { display: grid; gap: .45rem; margin-top: .7rem; padding-top: .6rem; border-top: 1px dashed var(--border); }
+    .capture label { font-size: .92rem; }
+    .capture input[type=text] { font: inherit; width: 100%; padding: .4rem .6rem; border-radius: 8px;
+      border: 1px solid var(--border); background: var(--surface-2); color: var(--text); }
+    button { font: inherit; border: 1px solid var(--border); background: var(--surface-2); color: var(--text);
+      border-radius: 8px; padding: .42rem .85rem; cursor: pointer; }
+    button:hover { border-color: var(--accent); }
+    button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+    @media (prefers-color-scheme: dark) { button.primary { color: #10141b; } }
+    textarea { width: 100%; min-height: 14rem; font: .85rem/1.45 ui-monospace, Menlo, monospace;
+      background: var(--surface-2); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: .6rem; }
+    mjx-container { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+    footer { margin-top: 2.5rem; color: var(--muted); font-size: .85rem; border-top: 1px solid var(--border); padding-top: 1rem; }
+    @media print { .bar, .capture, #export, button { display: none !important; } body { background: #fff; } }
+    .picker { display: flex; gap: .5rem; margin: 1rem 0; }
+    .picker button { flex: 1; font-weight: 700; padding: .6rem; }
+    .picker button[aria-pressed=true] { background: var(--accent); border-color: var(--accent); color: #fff; }
+    @media (prefers-color-scheme: dark) { .picker button[aria-pressed=true] { color: #10141b; } }
+    .origin { color: var(--muted); }
+    .pred { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+      color: var(--warning); background: var(--warning-soft); border-radius: 6px; padding: .05rem .4rem; }
+    svg.bd { display: block; width: 100%; max-width: 580px; height: auto; margin: .6rem auto; color: var(--text); }
+    @media print { .picker, .export { display: none !important; } .test[hidden] { display: block !important; } }
+  </style>
+<body>
+<div class="wrap">
+  <h1>EE6203 Quiz 2 &mdash; three mock tests (LPH part)</h1>
+  <p class="lede"><strong>Unofficial</strong>, not the real paper. Three distinct 45-minute papers, each in the
+    3-question shape that every recalled sitting shares: Q1 modelling &rarr; Q2 ZOH discretisation + structural
+    property &rarr; Q3 discrete response / deadbeat design. The key is deliberately not on this page.</p>
+
+  <div id="math-warning" class="card warn" hidden>Equations need MathJax: keep this page beside its
+    <code>vendor/mathjax/</code> folder and reload.</div>
+
+  <section class="card banner">
+    <strong>Conditions</strong> (LPH, 26 Sep lecture, <code>resources/week-07-transcript.txt</code>)
+    <ul class="rules">
+      <li>45 minutes, written answers (no MCQ), closed book, no formula sheet, own calculator.</li>
+      <li>The transform table is supplied:
+        <a href="../resources/lph-transform-table-ay2018-19-s1.pdf">lph-transform-table-ay2018-19-s1.pdf</a>.</li>
+      <li>Scope: LPH Lectures 1&ndash;3, up to Example 3.13. Observers (Lecture 4) are out.</li>
+      <li>Marks per part are <em>estimated</em> (25 per paper); no sitting recalled the split. Show all working.</li>
+    </ul>
+  </section>
+
+  <nav class="picker" aria-label="Choose a test">
+    <button data-show="A">Test A</button><button data-show="B">Test B</button><button data-show="C">Test C</button>
+  </nav>
+
+  <!-- ===================== TEST A ===================== -->
+  <section class="test" id="A" data-name="Test A" data-marks="Q1 8, Q2 10, Q3 7">
+    <p class="origin"><strong>Test A &mdash; predicted.</strong> Shaped on the AY24/25 S2 sitting (Mar 2025):
+      physical system <em>and</em> block diagram, then discretise + controllability + TF by formula, then deadbeat.
+      Numbers are new.</p>
+    <div class="bar"><span class="clock">45:00</span><span>
+      <button class="primary start">Start</button> <button class="pause">Pause</button> <button class="reset">Reset timer</button></span></div>
+
+    <div class="part" data-part="Q1" data-marks="8" data-label="RLC + block diagram to state space; TFs">
+      <div class="tag">Question 1 &middot; 8 marks</div>
+      <p>(i) A voltage source \(e(t)\) drives a series loop of a resistor \(R=4\ \Omega\), an inductor \(L=1\) H and a
+        capacitor \(C=\tfrac13\) F. The output is the capacitor voltage, \(y=v_C\). Using the states
+        \(x_1=v_C\) and \(x_2=i\) (the loop current), derive the state-space model
+        \(\dot{\mathbf x}=\mathbf A\mathbf x+\mathbf Be,\ y=\mathbf C\mathbf x\). <em>(3)</em></p>
+      <p>(ii) Find a state-space model of the system below, with the states labelled at the block outputs. <em>(3)</em></p>
+      <svg class="bd" viewBox="0 0 580 150" role="img" aria-label="u enters a summing junction (+), minus the output y; the error drives 3/(s+4) whose output is x2; x2 drives 1/s whose output is x1 = y; y is fed back to the minus input of the junction.">
+        <defs><marker id="ahA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs>
+        <g fill="none" stroke="currentColor" stroke-width="1.6">
+          <line x1="30" y1="50" x2="86" y2="50" marker-end="url(#ahA)"/>
+          <circle cx="100" cy="50" r="14"/>
+          <line x1="114" y1="50" x2="168" y2="50" marker-end="url(#ahA)"/>
+          <rect x="170" y="28" width="110" height="44" rx="4"/>
+          <line x1="280" y1="50" x2="348" y2="50" marker-end="url(#ahA)"/>
+          <rect x="350" y="28" width="90" height="44" rx="4"/>
+          <line x1="440" y1="50" x2="560" y2="50" marker-end="url(#ahA)"/>
+          <polyline points="500,50 500,120 100,120 100,66" marker-end="url(#ahA)"/>
+        </g>
+        <g fill="currentColor" font-size="16" text-anchor="middle">
+          <text x="18" y="55">u</text><text x="80" y="42">+</text><text x="88" y="84">&minus;</text>
+          <text x="225" y="56">3 / (s + 4)</text><text x="395" y="56">1 / s</text>
+          <text x="314" y="42">x₂</text><text x="530" y="42">y = x₁</text>
+        </g>
+      </svg>
+      <p>(iii) Find \(Y(s)/E(s)\) for (i) and \(Y(s)/U(s)\) for (ii). Comment on what you find. <em>(2)</em></p>
+    </div>
+
+    <div class="part" data-part="Q2" data-marks="10" data-label="ZOH discretisation, controllability, G(z) by formula">
+      <div class="tag">Question 2 &middot; 10 marks</div>
+      <p>A continuous-time plant</p>
+      \[\dot{\mathbf x}(t)=\begin{bmatrix}-1&0\\1&-2\end{bmatrix}\mathbf x(t)+\begin{bmatrix}1\\0\end{bmatrix}u(t),\qquad
+        y(t)=\begin{bmatrix}0&1\end{bmatrix}\mathbf x(t)\]
+      <p>is preceded by a zero-order hold and sampled with \(T=0.5\) s.</p>
+      <p>(i) Find the discrete-time model \(\mathbf x(k+1)=\mathbf\Phi(T)\mathbf x(k)+\mathbf\Theta(T)u(k)\). <em>(5)</em><br>
+        (ii) Is the discrete-time model controllable? Justify. <em>(2)</em><br>
+        (iii) Find the pulse transfer function \(Y(z)/U(z)\) by formula, and state its poles. <em>(3)</em></p>
+    </div>
+
+    <div class="part" data-part="Q3" data-marks="7" data-label="deadbeat K (Ackermann) + response check">
+      <div class="tag">Question 3 &middot; 7 marks</div>
+      \[\mathbf x(k+1)=\begin{bmatrix}1&1\\0&0.5\end{bmatrix}\mathbf x(k)+\begin{bmatrix}0.5\\1\end{bmatrix}u(k)\]
+      <p>(i) Design the state-feedback gain \(\mathbf K\), with \(u(k)=-\mathbf K\mathbf x(k)\), that gives a deadbeat response. <em>(5)</em><br>
+        (ii) With \(\mathbf x(0)=[1\ \ 1]^T\), compute \(\mathbf x(1)\) and \(\mathbf x(2)\) and show that the response is deadbeat. <em>(2)</em></p>
+    </div>
+    <div class="card export"><strong>Submit Test A for marking.</strong>
+      <p>Photograph your working into <code>EE-6203/quizzes/attempts/</code>, then paste the export below into the chat with the photo paths.</p>
+      <p><button class="primary make">Build export</button> <button class="copy">Copy</button> <button class="clear">Clear Test A</button></p>
+      <textarea readonly aria-label="Test A export block"></textarea></div>
+  </section>
+
+  <!-- ===================== TEST B ===================== -->
+  <section class="test" id="B" data-name="Test B" data-marks="Q1 8, Q2 10, Q3 7">
+    <p class="origin"><strong>Test B &mdash; reconstructed from recall.</strong> The AY25/26 S1 sitting (Sep 2025),
+      using the matrices a student recalled (GitHub <code>yzmyyds/NTU_EE6203</code>). Wording is approximate.
+      Q3(ii)&ndash;(iii) are <em>added</em>: that sitting seems to have come before deadbeat was taught, and this year it is in scope.</p>
+    <div class="bar"><span class="clock">45:00</span><span>
+      <button class="primary start">Start</button> <button class="pause">Pause</button> <button class="reset">Reset timer</button></span></div>
+
+    <div class="part" data-part="Q1" data-marks="8" data-label="ODE to state space; Y(s)/U(s)">
+      <div class="tag">Question 1 &middot; 8 marks</div>
+      <p>A system is described by \(5\ddot y(t)-2\dot y(t)=2u(t)\).</p>
+      <p>(i) With \(x_1=y\) and \(x_2=\dot x_1\), write the state equations in matrix form, including the output equation. <em>(5)</em><br>
+        (ii) Find the transfer function \(Y(s)/U(s)\). <em>(3)</em></p>
+    </div>
+
+    <div class="part" data-part="Q2" data-marks="10" data-label="ZOH with parameter beta; X(z)/U(z); controllability vs beta">
+      <div class="tag">Question 2 &middot; 10 marks</div>
+      \[\dot{\mathbf x}(t)=\begin{bmatrix}1&\beta\\0&2\end{bmatrix}\mathbf x(t)+\begin{bmatrix}0\\1\end{bmatrix}u(t),\qquad
+        y(t)=\begin{bmatrix}1&0\end{bmatrix}\mathbf x(t),\qquad T=0.5\ \text{s (ZOH)}\]
+      <p>(i) Find the discrete-time state-space model, in terms of \(\beta\). <em>(5)</em><br>
+        (ii) Find \(\mathbf X(z)/U(z)\) in terms of \(\beta\). <em>(3)</em><br>
+        (iii) Discuss the controllability of the discrete-time model as \(\beta\) varies. <em>(2)</em></p>
+    </div>
+
+    <div class="part" data-part="Q3" data-marks="7" data-label="state transition x(2); deadbeat K (added)">
+      <div class="tag">Question 3 &middot; 7 marks</div>
+      \[\mathbf x(k+1)=\begin{bmatrix}1&0.5\\-0.5&-1\end{bmatrix}\mathbf x(k)+\begin{bmatrix}1\\1\end{bmatrix}u(k)\]
+      <p>(i) Given \(\mathbf x(0)=[2\ \ 2]^T\), \(u(0)=1\) and \(u(1)=-1\), find \(\mathbf x(2)\). <em>(3)</em><br>
+        (ii) <span class="pred">added</span> Find the deadbeat state-feedback gain \(\mathbf K\) (\(u(k)=-\mathbf K\mathbf x(k)\)). <em>(3)</em><br>
+        (iii) <span class="pred">added</span> Verify that the closed-loop characteristic polynomial is \(z^2\). <em>(1)</em></p>
+    </div>
+    <div class="card export"><strong>Submit Test B for marking.</strong>
+      <p>Photograph your working into <code>EE-6203/quizzes/attempts/</code>, then paste the export below into the chat with the photo paths.</p>
+      <p><button class="primary make">Build export</button> <button class="copy">Copy</button> <button class="clear">Clear Test B</button></p>
+      <textarea readonly aria-label="Test B export block"></textarea></div>
+  </section>
+
+  <!-- ===================== TEST C ===================== -->
+  <section class="test" id="C" data-name="Test C" data-marks="Q1 8, Q2 10, Q3 7">
+    <p class="origin"><strong>Test C &mdash; predicted.</strong> Shaped on the AY25/26 S2 sitting (Mar 2026):
+      block diagram, then discretise + controllability <em>and</em> observability, then a fractional deadbeat
+      \(\mathbf K\) and \(\mathbf x(3)\). Numbers are new; Q2(iii) and Q3(iii) are predicted extensions.</p>
+    <div class="bar"><span class="clock">45:00</span><span>
+      <button class="primary start">Start</button> <button class="pause">Pause</button> <button class="reset">Reset timer</button></span></div>
+
+    <div class="part" data-part="Q1" data-marks="8" data-label="block diagram to state space; Y(s)/U(s)">
+      <div class="tag">Question 1 &middot; 8 marks</div>
+      <p>(i) Find a second-order state-space model of the whole system below, using the labelled states. <em>(6)</em><br>
+        (ii) Find \(Y(s)/U(s)\) from your model. <em>(2)</em></p>
+      <svg class="bd" viewBox="0 0 580 160" role="img" aria-label="u enters a summing junction (+); the junction subtracts 2 times y. The error drives 1/(s+1) whose output is x2; x2 drives 3/(s+2) whose output is x1 = y; y is fed back through a gain of 2 to the minus input of the junction.">
+        <defs><marker id="ahC" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs>
+        <g fill="none" stroke="currentColor" stroke-width="1.6">
+          <line x1="30" y1="50" x2="86" y2="50" marker-end="url(#ahC)"/>
+          <circle cx="100" cy="50" r="14"/>
+          <line x1="114" y1="50" x2="168" y2="50" marker-end="url(#ahC)"/>
+          <rect x="170" y="28" width="110" height="44" rx="4"/>
+          <line x1="280" y1="50" x2="348" y2="50" marker-end="url(#ahC)"/>
+          <rect x="350" y="28" width="110" height="44" rx="4"/>
+          <line x1="460" y1="50" x2="560" y2="50" marker-end="url(#ahC)"/>
+          <polyline points="510,50 510,130 330,130" marker-end="url(#ahC)"/>
+          <rect x="270" y="110" width="60" height="40" rx="4"/>
+          <polyline points="270,130 100,130 100,66" marker-end="url(#ahC)"/>
+        </g>
+        <g fill="currentColor" font-size="16" text-anchor="middle">
+          <text x="18" y="55">u</text><text x="80" y="42">+</text><text x="88" y="84">&minus;</text>
+          <text x="225" y="56">1 / (s + 1)</text><text x="405" y="56">3 / (s + 2)</text><text x="300" y="136">2</text>
+          <text x="314" y="42">x₂</text><text x="535" y="42">y = x₁</text>
+        </g>
+      </svg>
+    </div>
+
+    <div class="part" data-part="Q2" data-marks="10" data-label="oscillator ZOH; controllability + observability; T where lost">
+      <div class="tag">Question 2 &middot; 10 marks</div>
+      \[\dot{\mathbf x}(t)=\begin{bmatrix}0&1\\-4&0\end{bmatrix}\mathbf x(t)+\begin{bmatrix}0\\1\end{bmatrix}u(t),\qquad
+        y(t)=\begin{bmatrix}1&0\end{bmatrix}\mathbf x(t)\]
+      <p>(i) Discretise with a ZOH and \(T=\pi/4\) s. <em>(4)</em><br>
+        (ii) Test the discrete-time model for controllability and observability. <em>(3)</em><br>
+        (iii) <span class="pred">predicted</span> For which sampling periods \(T>0\) does the discrete-time model lose controllability or observability? <em>(3)</em></p>
+    </div>
+
+    <div class="part" data-part="Q3" data-marks="7" data-label="deadbeat K; x(3); zeros under feedback">
+      <div class="tag">Question 3 &middot; 7 marks</div>
+      \[\mathbf x(k+1)=\begin{bmatrix}0.5&0\\1&1\end{bmatrix}\mathbf x(k)+\begin{bmatrix}1\\1\end{bmatrix}u(k),\qquad
+        y(k)=\begin{bmatrix}0&1\end{bmatrix}\mathbf x(k)\]
+      <p>(i) Design the deadbeat state-feedback gain \(\mathbf K\) (\(u(k)=-\mathbf K\mathbf x(k)\)). <em>(3)</em><br>
+        (ii) With that \(\mathbf K\) and \(\mathbf x(0)=[3\ \ 0]^T\), find \(\mathbf x(3)\). <em>(2)</em><br>
+        (iii) <span class="pred">predicted</span> Find \(Y(z)/U(z)\) before feedback and \(Y(z)/V(z)\) after feedback
+        (\(u=-\mathbf K\mathbf x+v\)). What happens to the zero? <em>(2)</em></p>
+    </div>
+    <div class="card export"><strong>Submit Test C for marking.</strong>
+      <p>Photograph your working into <code>EE-6203/quizzes/attempts/</code>, then paste the export below into the chat with the photo paths.</p>
+      <p><button class="primary make">Build export</button> <button class="copy">Copy</button> <button class="clear">Clear Test C</button></p>
+      <textarea readonly aria-label="Test C export block"></textarea></div>
+  </section>
+
+  <footer>Key, per-checkpoint rubric and common wrong paths: <code>quiz-02-mock-tests.md</code> (open only after you finish a test).
+    Every key is checked by <code>quiz-02-mock-tests-check.py</code>. Evidence: <code>quiz-02-intel.md</code>.
+    Sources: LPH Lect 1&ndash;3 (<code>resources/lph-lecture-0[1-3]-*.pdf</code>).</footer>
+</div>
+
+<script>
+(function () {
+  var TOTAL = 45 * 60;
+  function fmt(t) { var a = Math.abs(t); return (t < 0 ? '-' : '') + Math.floor(a / 60) + ':' + String(a % 60).padStart(2, '0'); }
+  function get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }
+  function put(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* storage unavailable */ } }
+
+  document.querySelectorAll('.test').forEach(function (sec) {
+    var id = sec.id, KEY = 'ee6203-quiz2-mock-' + id + '-v1';
+    var state = get(KEY) || {}; state.parts = state.parts || {}; if (state.left == null) state.left = TOTAL;
+    function save() { put(KEY, state); }
+
+    sec.querySelectorAll('.part').forEach(function (el) {
+      var p = el.dataset.part, s = state.parts[p] = state.parts[p] || { paper: false, final: '' };
+      var box = document.createElement('div'); box.className = 'capture';
+      box.innerHTML = '<label><input type="checkbox"> Answered on paper</label>' +
+        '<label>Final results (optional): <input type="text" autocomplete="off"></label>';
+      var cb = box.querySelector('input[type=checkbox]'), tx = box.querySelector('input[type=text]');
+      cb.checked = s.paper; tx.value = s.final;
+      cb.addEventListener('change', function () { s.paper = cb.checked; save(); });
+      tx.addEventListener('input', function () { s.final = tx.value; save(); });
+      el.appendChild(box);
+    });
+
+    var clock = sec.querySelector('.clock'), timer = null;
+    function paint() { clock.textContent = fmt(state.left); clock.className = 'clock' + (state.left <= 0 ? ' out' : state.left <= 300 ? ' low' : ''); }
+    function stop() { if (timer) { clearInterval(timer); timer = null; } }
+    sec.stop = stop;
+    sec.querySelector('.start').onclick = function () {
+      if (timer) return; state.started = state.started || new Date().toISOString();
+      timer = setInterval(function () { state.left -= 1; paint(); save(); }, 1000);
+    };
+    sec.querySelector('.pause').onclick = stop;
+    sec.querySelector('.reset').onclick = function () { stop(); state.left = TOTAL; delete state.started; paint(); save(); };
+    paint();
+
+    var out = sec.querySelector('textarea');
+    sec.querySelector('.make').onclick = function () {
+      var lines = [
+        'EE6203 Quiz 2 mock - ' + sec.dataset.name + ' (UNOFFICIAL) - attempt export',
+        'Key file: EE-6203/quizzes/quiz-02-mock-tests.md  (section ' + sec.dataset.name + '; 25 marks: ' + sec.dataset.marks + ')',
+        'Exported: ' + new Date().toISOString() + (state.started ? '   Started: ' + state.started : '   Timer not started'),
+        'Time used: ' + fmt(TOTAL - state.left) + ' of 45:00' + (state.left < 0 ? '  (OVER TIME)' : ''), ''];
+      sec.querySelectorAll('.part').forEach(function (el) {
+        var s = state.parts[el.dataset.part];
+        lines.push(el.dataset.part + ' [' + el.dataset.marks + ' marks] ' + el.dataset.label + ': ' +
+          (s.paper ? 'answered on paper' : '<blank>') + (s.final.trim() ? ' | final: ' + s.final.trim() : ''));
+      });
+      lines.push('', 'Working photos: EE-6203/quizzes/attempts/<list paths here>');
+      out.value = lines.join('\n');
+    };
+    sec.querySelector('.copy').onclick = function () {
+      out.select();
+      if (navigator.clipboard) navigator.clipboard.writeText(out.value).catch(function () { document.execCommand('copy'); });
+      else document.execCommand('copy');
+    };
+    sec.querySelector('.clear').onclick = function () { stop(); state = { parts: {}, left: TOTAL }; save(); location.reload(); };
+  });
+
+  var PICK = 'ee6203-quiz2-mock-tab';
+  function show(id) {
+    document.querySelectorAll('.test').forEach(function (s) { s.hidden = s.id !== id; if (s.hidden && s.stop) s.stop(); });
+    document.querySelectorAll('.picker button').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.show === id); });
+    put(PICK, id);
+  }
+  document.querySelectorAll('.picker button').forEach(function (b) { b.onclick = function () { show(b.dataset.show); }; });
+  show(get(PICK) || 'A');
+})();
+</script>
+</body>
+</html>
