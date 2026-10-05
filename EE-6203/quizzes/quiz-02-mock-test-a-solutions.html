@@ -114,6 +114,7 @@
     <div class="answer">\[\mathbf A=\begin{bmatrix}0&1\\-3&-4\end{bmatrix},\quad \mathbf B=\begin{bmatrix}0\\3\end{bmatrix},\quad \mathbf C=\begin{bmatrix}1&0\end{bmatrix}.\]</div>
 
     <h3>(iii) Transfer functions and comment (2 marks)</h3>
+    <p class="why">New to this? <a href="quiz-02-transfer-function-explainer.html#p2">Step-by-step: how a transfer function is derived from A, B, C, D</a>.</p>
     <p>For a \(2\times2\) matrix, \((s\mathbf I-\mathbf A)^{-1}=\dfrac{\operatorname{adj}(s\mathbf I-\mathbf A)}{\det(s\mathbf I-\mathbf A)}\), where the adjugate swaps the diagonal and negates the off-diagonal.</p>
     <p>Model (i): \(s\mathbf I-\mathbf A=\begin{bmatrix}s&-3\\1&s+4\end{bmatrix}\), \(\det=s^2+4s+3\), and \(\mathbf C\operatorname{adj}(\cdot)\mathbf B=\) (row 1, column 2 of the adjugate) \(=3\).</p>
     <p>Model (ii): \(s\mathbf I-\mathbf A=\begin{bmatrix}s&-1\\3&s+4\end{bmatrix}\), \(\det=s^2+4s+3\), and \(\mathbf C\operatorname{adj}(\cdot)\mathbf B=1\cdot3=3\).</p>
@@ -164,6 +165,7 @@
     <div class="answer">\(\det\mathbf W_C=0.3935(0.1224)-0.2387(0.0774)=0.0297\neq0\) ⇒ rank 2 ⇒ <strong>controllable</strong>.</div>
 
     <h3>(iii) \(G(z)=\mathbf C(z\mathbf I-\mathbf\Phi)^{-1}\mathbf\Theta\) (3 marks)</h3>
+    <p class="why">Both routes explained step by step: <a href="quiz-02-transfer-function-explainer.html#p5">discrete transfer function explainer</a>.</p>
     \[(z\mathbf I-\mathbf\Phi)^{-1}=\frac{1}{(z-0.6065)(z-0.3679)}\begin{bmatrix}z-0.3679&0\\0.2387&z-0.6065\end{bmatrix}.\]
     <p>\(\mathbf C=[0\ 1]\) keeps only <strong>row 2</strong> of the adjugate; multiply it by \(\mathbf\Theta\):</p>
     \[G(z)=\frac{0.2387(0.3935)+(z-0.6065)(0.0774)}{(z-0.6065)(z-0.3679)}.\]

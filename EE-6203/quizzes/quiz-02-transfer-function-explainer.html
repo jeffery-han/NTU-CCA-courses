@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Step-by-step explainer: how to compute a transfer function from a state-space model, continuous G(s)=C(sI-A)^{-1}B+D and discrete G(z)=C(zI-Phi)^{-1}Theta, worked on EE6203 Quiz 2 mock Test A.">
+  <title>Transfer Function Explainer</title>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+    };
+  </script>
+  <script async src="vendor/mathjax/tex-mml-chtml.js"></script>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f7f8fb; --surface: #ffffff; --surface-2: #eef3fb;
+      --text: #18202c; --muted: #5f6b7a; --border: #d8dee9;
+      --accent: #245ec7; --accent-soft: #e8f0ff;
+      --success: #176b45; --success-soft: #e4f5ec; --warning: #8a5700; --warning-soft: #fff3d8;
+      --danger: #a33232; --danger-soft: #fbe9e9;
+      --shadow: 0 12px 32px rgba(28,39,58,.08); --radius: 14px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #10141b; --surface: #171d26; --surface-2: #202a38;
+        --text: #edf2f8; --muted: #aab4c2; --border: #344052;
+        --accent: #8bb5ff; --accent-soft: #1e3558;
+        --success: #82d4ad; --success-soft: #16352a; --warning: #ffd079; --warning-soft: #4a3514;
+        --danger: #ffaaaa; --danger-soft: #3d1c1c;
+        --shadow: 0 14px 34px rgba(0,0,0,.24);
+      }
+    }
+    :root[data-theme="dark"] {
+      --bg: #10141b; --surface: #171d26; --surface-2: #202a38;
+      --text: #edf2f8; --muted: #aab4c2; --border: #344052;
+      --accent: #8bb5ff; --accent-soft: #1e3558;
+      --success: #82d4ad; --success-soft: #16352a; --warning: #ffd079; --warning-soft: #4a3514;
+      --danger: #ffaaaa; --danger-soft: #3d1c1c;
+      --shadow: 0 14px 34px rgba(0,0,0,.24);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text);
+      font: 16px/1.62 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    .wrap { max-width: 52rem; margin: 0 auto; padding: 1.5rem 16px 5rem; }
+    h1 { font-size: 1.7rem; margin: 0 0 .35rem; }
+    h2 { font-size: 1.3rem; margin: 0 0 .6rem; }
+    h3 { font-size: 1.05rem; margin: 1.2rem 0 .4rem; }
+    .lede { color: var(--muted); margin: 0 0 1rem; }
+    nav a { margin-right: .9rem; color: var(--accent); white-space: nowrap; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 1.1rem 1.2rem; margin: 1rem 0; box-shadow: var(--shadow); overflow-x: auto; }
+    .banner { background: var(--accent-soft); border-color: var(--accent); }
+    .why { border-left: 3px solid var(--accent); padding: .1rem 0 .1rem .8rem; color: var(--muted); }
+    .answer { background: var(--success-soft); border-left: 4px solid var(--success); border-radius: 8px; padding: .5rem .9rem; margin: .6rem 0; }
+    .pit { background: var(--warning-soft); border-left: 4px solid var(--warning); border-radius: 8px; padding: .5rem .9rem; margin: .6rem 0; }
+    .pit ul, .card ul, .card ol { margin: .3rem 0; padding-left: 1.3rem; }
+    details { margin: .5rem 0; }
+    summary { cursor: pointer; font-weight: 600; color: var(--accent); }
+    table { border-collapse: collapse; width: 100%; margin: .6rem 0; }
+    th, td { border: 1px solid var(--border); padding: .4rem .6rem; text-align: left; }
+    th { background: var(--surface-2); }
+    .check { background: var(--surface-2); border-radius: 10px; padding: .8rem 1rem; margin-top: 1rem; }
+    .check h3 { margin: 0 0 .4rem; }
+    .check label { display: block; margin: .2rem 0; cursor: pointer; }
+    .fb { margin-top: .5rem; padding: .4rem .7rem; border-radius: 8px; }
+    .fb.ok { background: var(--success-soft); color: var(--success); }
+    .fb.bad { background: var(--danger-soft); color: var(--danger); }
+    .fb:empty { display: none; }
+    button { font: inherit; padding: .3rem .8rem; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--surface); color: var(--text); cursor: pointer; }
+    input[type=text] { font: inherit; width: 7rem; padding: .25rem .4rem; border-radius: 6px;
+      border: 1px solid var(--border); background: var(--surface); color: var(--text); }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <h1>How do you calculate a transfer function?</h1>
+  <p class="lede">EE6203 Quiz 2 · from a state-space model to \(G(s)\) and \(G(z)\), worked on mock Test A
+    (<a href="quiz-02-mock-test-a-solutions.html">solutions page</a>). Each part ends with a check.</p>
+  <nav><a href="#p1">1 What a TF is</a><a href="#p2">2 The formula</a><a href="#p3">3 2×2 toolkit</a><a href="#p4">4 Worked: G(s)</a><a href="#p5">5 Discrete G(z)</a><a href="#p6">6 Recap</a></nav>
+
+  <div class="card banner">
+    <strong>English for this question.</strong> Natural phrasing: <em>"How do you derive the transfer function from the state-space model?"</em>
+    or <em>"How is \(G(s)\) obtained from \(\mathbf A,\mathbf B,\mathbf C,D\)?"</em><br>
+    Vocabulary: <em>transfer function</em> (传递函数), <em>state-space model</em> (状态空间模型), <em>determinant</em> (行列式),
+    <em>adjugate</em> (伴随矩阵), <em>characteristic polynomial</em> (特征多项式), <em>pulse transfer function</em> = the discrete-time TF \(G(z)\).
+    Use <em>"derive / obtain / compute"</em> a transfer function, not "calculate out".
+  </div>
+
+  <!-- ============ Part 1 ============ -->
+  <section class="card" id="p1">
+    <h2>1 · What a transfer function is</h2>
+    <p>A transfer function is the ratio <strong>output transform ÷ input transform</strong>, with <strong>all initial conditions set to zero</strong>:</p>
+    \[G(s)=\frac{Y(s)}{U(s)}\bigg|_{\text{zero initial conditions}}.\]
+    <p class="why">Why zero initial conditions? A TF describes how the system responds to the <em>input alone</em>. Stored initial energy would add a term that does not depend on \(U(s)\), so the ratio \(Y/U\) would not be a fixed function of \(s\).</p>
+    <p>The tool that makes this work is the Laplace transform rule</p>
+    \[\mathcal L\{\dot x(t)\}=sX(s)-x(0)\ \xrightarrow{\ x(0)=0\ }\ sX(s),\]
+    <p>so "differentiate" becomes "multiply by \(s\)", and differential equations become algebra.</p>
+    <p><strong>Simplest example.</strong> \(\dot x=-2x+u,\ y=x\). Transform: \(sX=-2X+U\Rightarrow (s+2)X=U\Rightarrow G(s)=\dfrac{1}{s+2}\).</p>
+
+    <div class="check" data-ans="b">
+      <h3>Check 1</h3>
+      <p>For \(\dot x=-5x+3u,\ y=x\), the transfer function is:</p>
+      <label><input type="radio" name="c1" value="a"> \(\dfrac{3}{s-5}\)</label>
+      <label><input type="radio" name="c1" value="b"> \(\dfrac{3}{s+5}\)</label>
+      <label><input type="radio" name="c1" value="c"> \(\dfrac{1}{s+5}\)</label>
+      <div class="fb" data-ok="Right: sX = −5X + 3U, so (s+5)X = 3U." data-bad="Not quite. Replace ẋ by sX: sX = −5X + 3U, then collect X on the left."></div>
+    </div>
+  </section>
+
+  <!-- ============ Part 2 ============ -->
+  <section class="card" id="p2">
+    <h2>2 · The general formula \(G(s)=\mathbf C(s\mathbf I-\mathbf A)^{-1}\mathbf B+D\)</h2>
+    <p>Do exactly what Part 1 did, but with vectors. Start from</p>
+    \[\dot{\mathbf x}=\mathbf A\mathbf x+\mathbf Bu,\qquad y=\mathbf C\mathbf x+Du.\]
+    <ol>
+      <li><strong>Laplace transform</strong> (zero initial state): \(s\mathbf X(s)=\mathbf A\mathbf X(s)+\mathbf BU(s)\).</li>
+      <li><strong>Collect \(\mathbf X\) on the left:</strong> \(s\mathbf X-\mathbf A\mathbf X=\mathbf BU\Rightarrow (s\mathbf I-\mathbf A)\mathbf X=\mathbf BU\).
+        <p class="why">Why \(s\mathbf I\) and not \(s\)? You cannot subtract a matrix from a scalar. Writing \(s\mathbf X=s\mathbf I\mathbf X\) lets you factor out \(\mathbf X\) on the right.</p></li>
+      <li><strong>Solve for the state:</strong> \(\mathbf X(s)=(s\mathbf I-\mathbf A)^{-1}\mathbf BU(s)\). (Multiply on the <em>left</em> by the inverse: matrix order matters.)</li>
+      <li><strong>Substitute into the output equation:</strong> \(Y=\mathbf C\mathbf X+DU=\big[\mathbf C(s\mathbf I-\mathbf A)^{-1}\mathbf B+D\big]U\).</li>
+    </ol>
+    <div class="answer">\[G(s)=\frac{Y(s)}{U(s)}=\mathbf C(s\mathbf I-\mathbf A)^{-1}\mathbf B+D=\frac{\mathbf C\,\operatorname{adj}(s\mathbf I-\mathbf A)\,\mathbf B}{\det(s\mathbf I-\mathbf A)}+D.\]</div>
+    <p class="why">Size check for a single-input single-output system with \(n\) states: \((1\times n)(n\times n)(n\times1)=1\times1\), a scalar. ✓<br>
+      The denominator \(\det(s\mathbf I-\mathbf A)\) is the <strong>characteristic polynomial</strong>, so the poles of \(G(s)\) are the eigenvalues of \(\mathbf A\) (unless a pole cancels with a zero).</p>
+
+    <div class="check" data-ans="a">
+      <h3>Check 2</h3>
+      <p>Which expression has the right order (and gives a \(1\times1\) result)?</p>
+      <label><input type="radio" name="c2" value="a"> \(\mathbf C(s\mathbf I-\mathbf A)^{-1}\mathbf B\)</label>
+      <label><input type="radio" name="c2" value="b"> \(\mathbf B(s\mathbf I-\mathbf A)^{-1}\mathbf C\)</label>
+      <label><input type="radio" name="c2" value="c"> \((s\mathbf I-\mathbf A)^{-1}\mathbf B\mathbf C\)</label>
+      <div class="fb" data-ok="Right: output matrix on the left, input matrix on the right, (1×n)(n×n)(n×1) = 1×1." data-bad="Not quite. Y = C·X and X = (sI−A)⁻¹B·U, so C sits on the left and B on the right."></div>
+    </div>
+  </section>
+
+  <!-- ============ Part 3 ============ -->
+  <section class="card" id="p3">
+    <h2>3 · The 2×2 toolkit (all you need in the quiz)</h2>
+    <p>For \(\mathbf M=\begin{bmatrix}a&b\\c&d\end{bmatrix}\):</p>
+    \[\det\mathbf M=ad-bc,\qquad \operatorname{adj}\mathbf M=\begin{bmatrix}d&-b\\-c&a\end{bmatrix}\ \ (\text{swap the diagonal, negate the off-diagonal}),\qquad \mathbf M^{-1}=\frac{\operatorname{adj}\mathbf M}{\det\mathbf M}.\]
+    <p><strong>Shortcut that saves time:</strong> \(\mathbf C\) and \(\mathbf B\) usually contain zeros, so you rarely need the whole adjugate.</p>
+    <ul>
+      <li>\(\mathbf C=[1\ \ 0]\) keeps <strong>row 1</strong> of the adjugate; \(\mathbf C=[0\ \ 1]\) keeps <strong>row 2</strong>.</li>
+      <li>\(\mathbf B=[0\ \ b]^{\mathsf T}\) keeps <strong>column 2</strong> (times \(b\)); \(\mathbf B=[b\ \ 0]^{\mathsf T}\) keeps <strong>column 1</strong>.</li>
+      <li>So \(\mathbf C=[1\ 0]\), \(\mathbf B=[0\ b]^{\mathsf T}\) means: numerator \(=b\times\) entry (1,2) of the adjugate \(=b\times(-\text{entry (1,2) of } s\mathbf I-\mathbf A)\).</li>
+    </ul>
+
+    <div class="check" data-ans="c">
+      <h3>Check 3</h3>
+      <p>\(s\mathbf I-\mathbf A=\begin{bmatrix}s&-3\\1&s+4\end{bmatrix}\). Its adjugate is:</p>
+      <label><input type="radio" name="c3" value="a"> \(\begin{bmatrix}s&3\\-1&s+4\end{bmatrix}\)</label>
+      <label><input type="radio" name="c3" value="b"> \(\begin{bmatrix}s+4&-3\\1&s\end{bmatrix}\)</label>
+      <label><input type="radio" name="c3" value="c"> \(\begin{bmatrix}s+4&3\\-1&s\end{bmatrix}\)</label>
+      <div class="fb" data-ok="Right: swap s and s+4, negate −3 → 3 and 1 → −1." data-bad="Not quite. Two moves: swap the diagonal entries AND change the sign of both off-diagonal entries."></div>
+    </div>
+  </section>
+
+  <!-- ============ Part 4 ============ -->
+  <section class="card" id="p4">
+    <h2>4 · Worked: Test A Q1(iii), continuous \(G(s)\)</h2>
+    <h3>Model (i): RLC circuit</h3>
+    \[\mathbf A=\begin{bmatrix}0&3\\-1&-4\end{bmatrix},\quad \mathbf B=\begin{bmatrix}0\\1\end{bmatrix},\quad \mathbf C=\begin{bmatrix}1&0\end{bmatrix},\quad D=0.\]
+    <ol>
+      <li>\(s\mathbf I-\mathbf A=\begin{bmatrix}s&-3\\1&s+4\end{bmatrix}\) (subtract \(\mathbf A\) from \(s\) on the diagonal, negate the rest).</li>
+      <li>\(\det(s\mathbf I-\mathbf A)=s(s+4)-(-3)(1)=s^2+4s+3=(s+1)(s+3)\).</li>
+      <li>\(\operatorname{adj}(s\mathbf I-\mathbf A)=\begin{bmatrix}s+4&3\\-1&s\end{bmatrix}\).</li>
+      <li>Numerator: \(\mathbf C\) picks row 1 \(=[s+4\ \ 3]\); times \(\mathbf B=[0\ 1]^{\mathsf T}\) picks the second entry: \(3\).</li>
+    </ol>
+    <div class="answer">\[G(s)=\frac{Y(s)}{E(s)}=\frac{3}{s^2+4s+3}=\frac{3}{(s+1)(s+3)}.\]</div>
+
+    <h3>Model (ii): block diagram</h3>
+    \[\mathbf A=\begin{bmatrix}0&1\\-3&-4\end{bmatrix},\quad \mathbf B=\begin{bmatrix}0\\3\end{bmatrix},\quad \mathbf C=\begin{bmatrix}1&0\end{bmatrix}.\]
+    <p>\(s\mathbf I-\mathbf A=\begin{bmatrix}s&-1\\3&s+4\end{bmatrix}\), \(\det=s^2+4s+3\), \(\operatorname{adj}=\begin{bmatrix}s+4&1\\-3&s\end{bmatrix}\). Row 1 \(\cdot\,[0\ 3]^{\mathsf T}=1\cdot3=3\). Same \(G(s)\).</p>
+
+    <h3>Two independent ways to check</h3>
+    <ul>
+      <li><strong>Circuit (voltage divider with impedances</strong> \(R,\ Ls,\ \tfrac1{Cs}\)): \(\dfrac{V_C}{E}=\dfrac{1/(Cs)}{R+Ls+1/(Cs)}=\dfrac{1}{LCs^2+RCs+1}=\dfrac{1}{\tfrac13s^2+\tfrac43s+1}=\dfrac{3}{s^2+4s+3}\). ✓</li>
+      <li><strong>Block algebra</strong> for unity negative feedback around \(F(s)=\dfrac{3}{s+4}\cdot\dfrac1s\): \(\dfrac{F}{1+F}=\dfrac{3}{s(s+4)+3}=\dfrac{3}{s^2+4s+3}\). ✓</li>
+      <li><strong>DC gain:</strong> \(G(0)=1\): at steady state the capacitor charges to the full source voltage. ✓</li>
+    </ul>
+
+    <div class="pit"><strong>Pitfalls</strong><ul>
+      <li>Writing \(\mathbf A-s\mathbf I\): the sign of every entry flips and the numerator sign goes wrong.</li>
+      <li>Forgetting to negate the off-diagonal in the adjugate.</li>
+      <li>Expanding the whole \(2\times2\) inverse when \(\mathbf C\) and \(\mathbf B\) only need one entry.</li>
+    </ul></div>
+
+    <div class="check" data-num="0.333333" data-tol="0.002">
+      <h3>Check 4 (new system)</h3>
+      <p>\(\mathbf A=\begin{bmatrix}0&1\\-6&-5\end{bmatrix},\ \mathbf B=\begin{bmatrix}0\\2\end{bmatrix},\ \mathbf C=[1\ \ 0],\ D=0\). Find \(G(s)\), then enter its DC gain \(G(0)\) (fraction or decimal).</p>
+      <input type="text" aria-label="G(0)"> <button type="button">Check</button>
+      <div class="fb" data-ok="Right: det = s² + 5s + 6, numerator = 2·1 = 2, so G(s) = 2/(s²+5s+6) and G(0) = 2/6 = 1/3." data-bad="Not quite. det(sI−A) = s² + 5s + 6; adjugate entry (1,2) = 1; times B's 2 gives numerator 2. Then set s = 0."></div>
+    </div>
+  </section>
+
+  <!-- ============ Part 5 ============ -->
+  <section class="card" id="p5">
+    <h2>5 · Discrete time: the pulse transfer function \(G(z)\)</h2>
+    <p>Same derivation with the z-transform. The rule \(\mathcal Z\{x(k+1)\}=zX(z)-zx(0)\) becomes \(zX(z)\) with zero initial state, so "shift forward" becomes "multiply by \(z\)":</p>
+    \[\mathbf x(k+1)=\mathbf\Phi\mathbf x(k)+\mathbf\Theta u(k)\ \Rightarrow\ z\mathbf X=\mathbf\Phi\mathbf X+\mathbf\Theta U\ \Rightarrow\ \mathbf X=(z\mathbf I-\mathbf\Phi)^{-1}\mathbf\Theta U.\]
+    <div class="answer">\[G(z)=\frac{Y(z)}{U(z)}=\mathbf C(z\mathbf I-\mathbf\Phi)^{-1}\mathbf\Theta+D.\]</div>
+    <p class="why">It is the continuous formula with \(s\to z\), \(\mathbf A\to\mathbf\Phi\), \(\mathbf B\to\mathbf\Theta\). The 2×2 toolkit of Part 3 applies unchanged.</p>
+
+    <h3>Worked: Test A Q2(iii), route 1 (formula)</h3>
+    \[\mathbf\Phi=\begin{bmatrix}0.6065&0\\0.2387&0.3679\end{bmatrix},\quad \mathbf\Theta=\begin{bmatrix}0.3935\\0.0774\end{bmatrix},\quad \mathbf C=\begin{bmatrix}0&1\end{bmatrix}.\]
+    <ol>
+      <li>\(z\mathbf I-\mathbf\Phi=\begin{bmatrix}z-0.6065&0\\-0.2387&z-0.3679\end{bmatrix}\), \(\det=(z-0.6065)(z-0.3679)\) (triangular: product of the diagonal).</li>
+      <li>\(\operatorname{adj}=\begin{bmatrix}z-0.3679&0\\0.2387&z-0.6065\end{bmatrix}\).</li>
+      <li>\(\mathbf C=[0\ 1]\) picks <strong>row 2</strong> \(=[0.2387\ \ z-0.6065]\). Dot it with \(\mathbf\Theta\) (both entries are non-zero, so both count):
+        \[0.2387(0.3935)+(z-0.6065)(0.0774)=0.0939+0.0774z-0.0469.\]</li>
+    </ol>
+    <div class="answer">\[G(z)=\frac{0.0774\,z+0.0470}{(z-0.6065)(z-0.3679)},\qquad \text{poles } e^{-0.5},\ e^{-1};\ \text{zero }\approx-0.607.\]</div>
+
+    <h3>Route 2 (transform table): \(G(z)=(1-z^{-1})\,\mathcal Z\!\left\{\dfrac{G(s)}{s}\right\}\)</h3>
+    <p>This route starts from the continuous TF. The \((1-z^{-1})\) and the \(\tfrac1s\) come from the zero-order hold: its transfer function is \(\dfrac{1-e^{-sT}}{s}\), and \(e^{-sT}\leftrightarrow z^{-1}\).</p>
+    <ol>
+      <li>Continuous TF by Part 2: \(\det(s\mathbf I-\mathbf A)=(s+1)(s+2)\); \(\mathbf C=[0\ 1]\) and \(\mathbf B=[1\ 0]^{\mathsf T}\) pick adjugate entry (2,1) \(=1\). So \(G(s)=\dfrac{1}{(s+1)(s+2)}\).</li>
+      <li>Partial fractions (cover-up): \(\dfrac{G(s)}{s}=\dfrac{1}{s(s+1)(s+2)}=\dfrac{1/2}{s}-\dfrac{1}{s+1}+\dfrac{1/2}{s+2}\).</li>
+      <li>Table \(\big(\tfrac1s\to\tfrac{z}{z-1},\ \tfrac1{s+a}\to\tfrac{z}{z-e^{-aT}}\big)\), then multiply by \(1-z^{-1}=\tfrac{z-1}{z}\):
+        \[G(z)=\tfrac12-\frac{z-1}{z-e^{-T}}+\tfrac12\,\frac{z-1}{z-e^{-2T}}.\]</li>
+      <li>Over the common denominator \((z-a)(z-b)\), \(a=e^{-0.5},\ b=e^{-1}\): the \(z^2\) terms cancel \(\big(\tfrac12-1+\tfrac12=0\big)\), the \(z\) coefficient is \(\tfrac12+\tfrac b2-a=0.0774\), and the constant is \(\tfrac{ab}{2}+\tfrac a2-b=0.0470\). Same \(G(z)\). ✓</li>
+    </ol>
+    <p class="why">Which route in the quiz? If the question says "by formula" or you already have \(\mathbf\Phi,\mathbf\Theta\), use route 1: it reuses your work and avoids partial fractions. Route 2 is a good independent check.
+      Quick check either way: \(G(1)=\dfrac{0.1244}{0.3935\times0.6321}=0.5=G(s)\big|_{s=0}\). A ZOH keeps the DC gain.</p>
+
+    <div class="pit"><strong>Pitfalls</strong><ul>
+      <li>Using \(\mathbf A,\mathbf B\) in the discrete formula: it must be \(\mathbf\Phi,\mathbf\Theta\).</li>
+      <li>Using \(\mathbf C=[1\ 0]\) out of habit: read the output equation.</li>
+      <li>Dropping one product when \(\mathbf\Theta\) has two non-zero entries.</li>
+      <li>Quoting the continuous poles \(-1,-2\) as discrete poles; discrete poles are \(e^{sT}\).</li>
+    </ul></div>
+
+    <div class="check" data-num="2.666667" data-tol="0.01">
+      <h3>Check 5 (new system)</h3>
+      <p>\(\mathbf\Phi=\begin{bmatrix}0.5&0\\1&0.25\end{bmatrix},\ \mathbf\Theta=\begin{bmatrix}1\\0\end{bmatrix},\ \mathbf C=[0\ \ 1]\). Find \(G(z)\), then enter \(G(1)\).</p>
+      <input type="text" aria-label="G(1)"> <button type="button">Check</button>
+      <div class="fb" data-ok="Right: row 2 of the adjugate is [1, z−0.5]; dotted with [1, 0] gives 1. G(z) = 1/((z−0.5)(z−0.25)), G(1) = 1/(0.5·0.75) = 8/3." data-bad="Not quite. det = (z−0.5)(z−0.25); adjugate row 2 = [1, z−0.5]; Θ = [1, 0] keeps only the 1. Then set z = 1."></div>
+    </div>
+  </section>
+
+  <!-- ============ Part 6 ============ -->
+  <section class="card" id="p6">
+    <h2>6 · Recap: the method to remember</h2>
+    <table>
+      <tr><th></th><th>Continuous</th><th>Discrete</th></tr>
+      <tr><td>Formula</td><td>\(\mathbf C(s\mathbf I-\mathbf A)^{-1}\mathbf B+D\)</td><td>\(\mathbf C(z\mathbf I-\mathbf\Phi)^{-1}\mathbf\Theta+D\)</td></tr>
+      <tr><td>Denominator</td><td>\(\det(s\mathbf I-\mathbf A)\)</td><td>\(\det(z\mathbf I-\mathbf\Phi)\)</td></tr>
+      <tr><td>Poles</td><td>eigenvalues of \(\mathbf A\)</td><td>eigenvalues of \(\mathbf\Phi\) \(=e^{\lambda T}\)</td></tr>
+      <tr><td>DC gain check</td><td>\(G(0)\)</td><td>\(G(1)\) (equals \(G(0)\) under ZOH)</td></tr>
+    </table>
+    <ol>
+      <li>Form \(s\mathbf I-\mathbf A\) (or \(z\mathbf I-\mathbf\Phi\)).</li>
+      <li>Determinant → denominator.</li>
+      <li>Adjugate: swap diagonal, negate off-diagonal.</li>
+      <li>\(\mathbf C\) picks rows, \(\mathbf B\)/\(\mathbf\Theta\) picks columns → numerator.</li>
+      <li>Add \(D\); check the DC gain or a second route.</li>
+    </ol>
+
+    <div class="check" data-ans="b">
+      <h3>Check 6</h3>
+      <p>Two different state-space models give the same \(G(s)\). This means:</p>
+      <label><input type="radio" name="c6" value="a"> one of them must be wrong</label>
+      <label><input type="radio" name="c6" value="b"> they are different realisations of the same input–output behaviour (related by a similarity transform)</label>
+      <label><input type="radio" name="c6" value="c"> they have the same \(\mathbf A\) matrix</label>
+      <div class="fb" data-ok="Right: this is exactly Test A Q1(iii). The TF is unique; the state-space realisation is not." data-bad="Not quite. Compare Test A Q1: different A and B, same G(s). The realisation is not unique."></div>
+    </div>
+  </section>
+</div>
+<script>
+  function show(box, ok) {
+    const fb = box.querySelector('.fb');
+    fb.textContent = ok ? fb.dataset.ok : fb.dataset.bad;
+    fb.className = 'fb ' + (ok ? 'ok' : 'bad');
+  }
+  function num(t) {
+    const m = String(t).trim().match(/^(-?[\d.]+)\s*\/\s*(-?[\d.]+)$/);
+    return m ? parseFloat(m[1]) / parseFloat(m[2]) : parseFloat(t);
+  }
+  document.querySelectorAll('.check[data-ans]').forEach(box =>
+    box.querySelectorAll('input[type=radio]').forEach(r =>
+      r.addEventListener('change', () => show(box, r.value === box.dataset.ans))));
+  document.querySelectorAll('.check[data-num]').forEach(box => {
+    const inp = box.querySelector('input'), go = () => {
+      const v = num(inp.value);
+      show(box, Number.isFinite(v) && Math.abs(v - +box.dataset.num) <= +box.dataset.tol);
+    };
+    box.querySelector('button').addEventListener('click', go);
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') go(); });
+  });
+</script>
+</body>
+</html>
