@@ -503,14 +503,70 @@ Check: \(\mathbf P^{-1}\mathbf B=[0\;1]^{\mathsf T}\) ✓, and \(\mathbf P^{-1}\
 <h3>6.3 Writing the CCF/OCF straight from a transfer function (by inspection)</h3>
 <p>For a strictly proper \(G(z)=\dfrac{b_{n-1}z^{n-1}+\dots+b_1z+b_0}{z^n+a_{n-1}z^{n-1}+\dots+a_0}\):</p>
 \[\mathbf C_C=[b_0\;\;b_1\;\cdots\;b_{n-1}],\qquad \mathbf B_O=[b_0\;\;b_1\;\cdots\;b_{n-1}]^{\mathsf T}.\]
+<p>The subscripts name the <em>form</em>, not a new kind of vector: \(\mathbf A_C,\mathbf B_C,\mathbf C_C,d_C\) are the four state-space matrices in <strong>C</strong>ontrollable canonical form, and \(\mathbf A_O,\mathbf B_O,\mathbf C_O,d_O\) are the same four in <strong>O</strong>bservable canonical form. Both describe the same \(G(z)\); only the choice of state differs (Module 6.1).</p>
+<details><summary>Step 0: what each matrix is, and its size</summary>
+Every model has the shape \(\mathbf x(k+1)=\mathbf A\mathbf x(k)+\mathbf Bu(k),\;\;y(k)=\mathbf C\mathbf x(k)+d\,u(k)\). With one input and one output:
+<ul>
+<li>\(\mathbf x\) is \(n\times1\): the state vector;</li>
+<li>\(\mathbf A\) is \(n\times n\): how the state updates itself;</li>
+<li>\(\mathbf B\) is \(n\times1\) (a column): where the input \(u\) enters the states;</li>
+<li>\(\mathbf C\) is \(1\times n\) (a row): how the states combine into the output \(y\);</li>
+<li>\(d\) is a scalar: the direct feedthrough from \(u\) to \(y\).</li>
+</ul>
+"By inspection" means you can read all four matrices straight off the coefficients \(a_i\) and \(b_i\), without computing any \(\mathbf P\).</details>
+<details><summary>Step 1: the full CCF for general \(n\)</summary>
+\[\mathbf A_C=\begin{bmatrix}0&1&0&\cdots&0\\0&0&1&\cdots&0\\\vdots&&&\ddots&\vdots\\0&0&0&\cdots&1\\-a_0&-a_1&-a_2&\cdots&-a_{n-1}\end{bmatrix},\quad
+\mathbf B_C=\begin{bmatrix}0\\\vdots\\0\\1\end{bmatrix},\quad
+\mathbf C_C=\begin{bmatrix}b_0&b_1&\cdots&b_{n-1}\end{bmatrix},\quad d_C=d.\]
+The pattern: 1s on the superdiagonal, the <em>negated</em> denominator coefficients in the last row, the input entering only the last state, and the numerator coefficients as the output row.</details>
+<details><summary>Step 2: why it looks like this, and why the order is \(b_0\) first</summary>
+Split \(G\) into two stages through an auxiliary signal \(w\):
+\[W(z)=\frac{U(z)}{z^n+a_{n-1}z^{n-1}+\dots+a_0},\qquad Y(z)=(b_{n-1}z^{n-1}+\dots+b_0)\,W(z).\]
+Multiplying by \(z\) means shifting one step forward, so the first stage says \(w(k+n)+a_{n-1}w(k+n-1)+\dots+a_0w(k)=u(k)\). Choose the states as successive shifts of \(w\):
+\[x_1(k)=w(k),\quad x_2(k)=w(k+1),\quad\dots,\quad x_n(k)=w(k+n-1).\]
+<ul>
+<li><strong>Superdiagonal 1s.</strong> Each state is just the next shift of the one before it: \(x_1(k+1)=w(k+1)=x_2(k)\), \(x_2(k+1)=x_3(k)\), and so on. Each of these rows of \(\mathbf A_C\) has a single 1 and nothing from \(u\).</li>
+<li><strong>Last row of \(\mathbf A_C\), and the 1 at the bottom of \(\mathbf B_C\).</strong> \(x_n(k+1)=w(k+n)=-a_0x_1-a_1x_2-\dots-a_{n-1}x_n+u\).</li>
+<li><strong>\(\mathbf C_C\).</strong> \(y(k)=b_0w(k)+b_1w(k+1)+\dots+b_{n-1}w(k+n-1)=b_0x_1+b_1x_2+\dots+b_{n-1}x_n\).</li>
+</ul>
+\(x_1\) is the <em>unshifted</em> \(w\), so it pairs with the constant terms \(a_0\) and \(b_0\). That is why both lists start from the constant end, the reverse of how you read the polynomial.</details>
+<details><summary>Step 3: OCF is the transpose of CCF</summary>
+\[\mathbf A_O=\mathbf A_C^{\mathsf T}=\begin{bmatrix}0&0&\cdots&0&-a_0\\1&0&\cdots&0&-a_1\\0&1&\cdots&0&-a_2\\\vdots&&\ddots&&\vdots\\0&0&\cdots&1&-a_{n-1}\end{bmatrix},\quad
+\mathbf B_O=\mathbf C_C^{\mathsf T}=\begin{bmatrix}b_0\\b_1\\\vdots\\b_{n-1}\end{bmatrix},\quad
+\mathbf C_O=\mathbf B_C^{\mathsf T}=\begin{bmatrix}0&\cdots&0&1\end{bmatrix},\quad d_O=d.\]
+The \(a\)'s move to the last <em>column</em> of \(\mathbf A\), and the \(b\)'s move into the input <em>column</em> \(\mathbf B\).
+<br><em>Why the transfer function is unchanged:</em> \(G\) is a \(1\times1\) scalar, so it equals its own transpose:
+\[\mathbf C(z\mathbf I-\mathbf A)^{-1}\mathbf B=\big[\mathbf C(z\mathbf I-\mathbf A)^{-1}\mathbf B\big]^{\mathsf T}=\mathbf B^{\mathsf T}(z\mathbf I-\mathbf A^{\mathsf T})^{-1}\mathbf C^{\mathsf T}.\]
+The right-hand side is exactly the OCF triple \((\mathbf A_C^{\mathsf T},\mathbf C_C^{\mathsf T},\mathbf B_C^{\mathsf T})\).</details>
+<details><summary>Step 4: verify the CCF for \(n=2\)</summary>
+Start from \(\mathbf A_C=\begin{bmatrix}0&1\\-a_0&-a_1\end{bmatrix}\), so \(z\mathbf I-\mathbf A_C=\begin{bmatrix}z&-1\\a_0&z+a_1\end{bmatrix}\) with \(\det=z^2+a_1z+a_0\). Swap the diagonal, negate the off-diagonal, and keep only the column that \(\mathbf B_C=[0\;\;1]^{\mathsf T}\) picks out (the second):
+\[(z\mathbf I-\mathbf A_C)^{-1}\mathbf B_C=\frac{1}{z^2+a_1z+a_0}\begin{bmatrix}1\\z\end{bmatrix},\qquad
+\mathbf C_C(z\mathbf I-\mathbf A_C)^{-1}\mathbf B_C=\frac{b_0+b_1z}{z^2+a_1z+a_0}\]
+This is the original strictly proper \(G(z)\) ✓.
+Note that \([1\;\;z]^{\mathsf T}\) is \([w\;\;\text{shifted }w]\) in disguise: the \(b_0\) multiplies the 1 and the \(b_1\) multiplies the \(z\).</details>
+
 <p>If the numerator has the <em>same</em> degree as the denominator, first divide: \(G=d+\)(strictly proper remainder). Example 2.2: \(\frac{-2z^3+2z^2-z+2}{z^3+z^2-z-3/4}=-2+\frac{4z^2-3z+1/2}{z^3+z^2-z-3/4}\), so \(d_C=-2\), \(\mathbf C_C=[\tfrac12\;\;-3\;\;4]\), and the last row of \(\mathbf A_C\) is \([\tfrac34\;\;1\;\;-1]\).</p>
-<p class="box warn"><strong>Pitfall.</strong> The order is reversed relative to how you read the polynomial. \(\mathbf C_C\) starts with \(b_0\) (the constant term), and the last row of \(\mathbf A_C\) starts with \(-a_0\).</p>
+<details><summary>Example 2.2 in full: the division, the coefficients, and all eight matrices</summary>
+<strong>Divide.</strong> The leading coefficients give \(d=-2/1=-2\). Then \(-2\times(z^3+z^2-z-\tfrac34)=-2z^3-2z^2+2z+\tfrac32\), and subtracting this from the numerator leaves
+\[(-2z^3+2z^2-z+2)-(-2z^3-2z^2+2z+\tfrac32)=4z^2-3z+\tfrac12.\]
+<strong>Read the coefficients</strong> (keep the signs exactly as written):
+<ul>
+<li>denominator \(z^3+1\cdot z^2-1\cdot z-\tfrac34\): \(a_2=1,\;a_1=-1,\;a_0=-\tfrac34\);</li>
+<li>remainder \(4z^2-3z+\tfrac12\): \(b_2=4,\;b_1=-3,\;b_0=\tfrac12\).</li>
+</ul>
+<strong>CCF.</strong> The last row is \([-a_0,\,-a_1,\,-a_2]=[\tfrac34,\,1,\,-1]\):
+\[\mathbf A_C=\begin{bmatrix}0&1&0\\0&0&1\\\tfrac34&1&-1\end{bmatrix},\quad\mathbf B_C=\begin{bmatrix}0\\0\\1\end{bmatrix},\quad\mathbf C_C=\begin{bmatrix}\tfrac12&-3&4\end{bmatrix},\quad d_C=-2.\]
+<strong>OCF</strong> (transpose):
+\[\mathbf A_O=\begin{bmatrix}0&0&\tfrac34\\1&0&1\\0&1&-1\end{bmatrix},\quad\mathbf B_O=\begin{bmatrix}\tfrac12\\-3\\4\end{bmatrix},\quad\mathbf C_O=\begin{bmatrix}0&0&1\end{bmatrix},\quad d_O=-2.\]
+<strong>Check.</strong> Both forms give \(\mathbf C(z\mathbf I-\mathbf A)^{-1}\mathbf B+d=G(z)\). For example, at \(z=1\): the original \(G(1)=\frac{-2+2-1+2}{1+1-1-0.75}=\frac{1}{0.25}=4\), and \(-2+\frac{4-3+0.5}{0.25}=-2+6=4\) ✓ (the second route is the value the state-space model reproduces).</details>
+<p class="box warn"><strong>Pitfall.</strong> The order is reversed relative to how you read the polynomial. \(\mathbf C_C\) starts with \(b_0\) (the constant term), and the last row of \(\mathbf A_C\) starts with \(-a_0\). Two more traps: forgetting to divide out \(d\) when the degrees are equal (the \(b\)'s must come from the <em>remainder</em>), and forgetting the minus sign on the \(a\)'s (a negative \(a_i\) becomes a positive entry).</p>
 
 <div class="checks"><h4>Check · canonical forms</h4>
 <p>\(G(z)=\dfrac{3z-1}{z^2+0.4z-0.12}\), in CCF.</p>
 <div class="q" data-id="m6-1" data-answer="0.12"><p class="prompt">Bottom-left entry of \(\mathbf A_C\)</p><p class="hint">\(-a_0\), with \(a_0=-0.12\).</p><div class="explain">\(-(-0.12)=0.12\).</div></div>
 <div class="q" data-id="m6-2" data-answer="-0.4"><p class="prompt">Bottom-right entry of \(\mathbf A_C\)</p><p class="hint">\(-a_1\).</p><div class="explain">\(-0.4\). So \(\mathbf A_C=\begin{bmatrix}0&1\\0.12&-0.4\end{bmatrix}\).</div></div>
 <div class="q" data-id="m6-3" data-answer="-1"><p class="prompt">First entry of \(\mathbf C_C\)</p><p class="hint">\(b_0\) is the numerator's constant term.</p><div class="explain">\(\mathbf C_C=[b_0\;\;b_1]=[-1\;\;3]\).</div></div>
+<div class="q" data-id="m6-7" data-answer="0.12"><p class="prompt">Same \(G(z)\), now in OCF: the top-right entry of \(\mathbf A_O\)</p><p class="hint">\(\mathbf A_O=\mathbf A_C^{\mathsf T}\), so the \(-a_i\) sit in the last column, with \(-a_0\) at the top.</p><div class="explain">\(\mathbf A_O=\begin{bmatrix}0&0.12\\1&-0.4\end{bmatrix}\), \(\mathbf B_O=[-1\;\;3]^{\mathsf T}\), \(\mathbf C_O=[0\;\;1]\). The top-right entry is \(-a_0=0.12\).</div></div>
 <div class="q" data-id="m6-4" data-answer="1.5"><p class="prompt">\(G(z)=\dfrac{z^2+2}{z^2-z+0.5}\): after dividing, find \(b_0\) of the remainder (with \(d=1\)).</p><p class="hint">\(z^2+2-(z^2-z+0.5)=z+1.5\).</p><div class="explain">Remainder \(\frac{z+1.5}{z^2-z+0.5}\), so \(\mathbf C_C=[1.5\;\;1]\) and \(d=1\).</div></div>
 <div class="q" data-id="m6-5" data-answer="-0.6"><p class="prompt">\(\mathbf A=\operatorname{diag}(0.2,0.6),\;\mathbf B=[1\;1]^{\mathsf T}\). Find \(P_{11}\) of \(\mathbf P=\mathbf W_C\tilde{\mathbf W}_C^{-1}\).</p><p class="hint">\(a_1=-0.8\). For \(n=2\), \(\tilde{\mathbf W}_C^{-1}=\begin{bmatrix}a_1&1\\1&0\end{bmatrix}\).</p><div class="explain">\(\mathbf W_C=\begin{bmatrix}1&0.2\\1&0.6\end{bmatrix}\), so \(\mathbf P=\begin{bmatrix}a_1+0.2&1\\a_1+0.6&1\end{bmatrix}=\begin{bmatrix}-0.6&1\\-0.2&1\end{bmatrix}\).</div></div>
 <div class="q" data-id="m6-6" data-choice="1"><p class="prompt">Which is <em>not</em> invariant under a similarity transformation?</p><ol class="opts"><li>the poles</li><li>the matrix \(\mathbf B\)</li><li>the transfer function</li></ol><p class="hint">\(\mathbf B_w=\mathbf P^{-1}\mathbf B\).</p><div class="explain">\(\mathbf B\) changes. The characteristic polynomial and \(G(z)\) do not.</div></div>

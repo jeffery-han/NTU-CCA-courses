@@ -98,6 +98,13 @@ xw = step(M([[0, 1], [-0.5, 1]]), M([[0], [1]]), step(M([[0, 1], [-0.5, 1]]), M(
 assert np.allclose(xw, [1.5, 0.5])
 # M6
 exp['m6-1'], exp['m6-2'], exp['m6-3'], exp['m6-4'] = 0.12, -0.4, -1, 1.5
+exp['m6-7'] = M([[0, 1], [0.12, -0.4]]).T[0, 1]
+# Example 2.2: CCF and OCF (transpose) both reproduce G(z)
+Ac, Bc, Cc = M([[0, 1, 0], [0, 0, 1], [0.75, 1, -1]]), M([[0], [0], [1]]), M([[0.5, -3, 4]])
+for z in (1.0, 2.0, -0.3 + 0.7j):
+    g = np.polyval([-2, 2, -1, 2], z) / np.polyval([1, 1, -1, -0.75], z)
+    for A_, B_, C_ in ((Ac, Bc, Cc), (Ac.T, Cc.T, Bc.T)):
+        assert np.isclose((C_ @ inv(z * np.eye(3) - A_) @ B_)[0, 0] - 2, g)
 A, B = np.diag([0.2, 0.6]), M([[1], [1]])
 a1 = -np.trace(A)
 Wc = np.hstack([B, A @ B])
