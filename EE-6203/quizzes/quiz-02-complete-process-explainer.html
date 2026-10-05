@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="EE6203 Quiz 2: one plant taken through the complete process, from continuous model, resolvent and ZOH discretisation to controllability, observability, G(z), deadbeat gain K by Ackermann, and verified closed-loop response.">
+  <title>Complete Design Process</title>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+    };
+  </script>
+  <script async src="vendor/mathjax/tex-mml-chtml.js"></script>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f7f8fb; --surface: #ffffff; --surface-2: #eef3fb;
+      --text: #18202c; --muted: #5f6b7a; --border: #d8dee9;
+      --accent: #245ec7; --accent-soft: #e8f0ff;
+      --success: #176b45; --success-soft: #e4f5ec; --warning: #8a5700; --warning-soft: #fff3d8;
+      --danger: #a33232; --danger-soft: #fbe9e9;
+      --shadow: 0 12px 32px rgba(28,39,58,.08); --radius: 14px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #10141b; --surface: #171d26; --surface-2: #202a38;
+        --text: #edf2f8; --muted: #aab4c2; --border: #344052;
+        --accent: #8bb5ff; --accent-soft: #1e3558;
+        --success: #82d4ad; --success-soft: #16352a; --warning: #ffd079; --warning-soft: #4a3514;
+        --danger: #ffaaaa; --danger-soft: #3d1c1c;
+        --shadow: 0 14px 34px rgba(0,0,0,.24);
+      }
+    }
+    :root[data-theme="dark"] {
+      --bg: #10141b; --surface: #171d26; --surface-2: #202a38;
+      --text: #edf2f8; --muted: #aab4c2; --border: #344052;
+      --accent: #8bb5ff; --accent-soft: #1e3558;
+      --success: #82d4ad; --success-soft: #16352a; --warning: #ffd079; --warning-soft: #4a3514;
+      --danger: #ffaaaa; --danger-soft: #3d1c1c;
+      --shadow: 0 14px 34px rgba(0,0,0,.24);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text);
+      font: 16px/1.62 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    .wrap { max-width: 52rem; margin: 0 auto; padding: 1.5rem 16px 5rem; }
+    h1 { font-size: 1.7rem; margin: 0 0 .35rem; }
+    h2 { font-size: 1.3rem; margin: 0 0 .6rem; }
+    h3 { font-size: 1.05rem; margin: 1.2rem 0 .4rem; }
+    .lede { color: var(--muted); margin: 0 0 1rem; }
+    nav a { margin-right: 1rem; color: var(--accent); }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 1.1rem 1.2rem; margin: 1rem 0; box-shadow: var(--shadow); overflow-x: auto; }
+    .banner { background: var(--accent-soft); border-color: var(--accent); }
+    .stem { background: var(--surface-2); border-radius: 10px; padding: .7rem 1rem; }
+    .why { border-left: 3px solid var(--accent); padding: .1rem 0 .1rem .8rem; color: var(--muted); }
+    .answer { background: var(--success-soft); border-left: 4px solid var(--success); border-radius: 8px; padding: .5rem .9rem; margin: .6rem 0; }
+    .pit { background: var(--warning-soft); border-left: 4px solid var(--warning); border-radius: 8px; padding: .5rem .9rem; margin: .6rem 0; }
+    .pit ul { margin: .3rem 0; padding-left: 1.2rem; }
+    details { margin: .5rem 0; }
+    summary { cursor: pointer; font-weight: 600; color: var(--accent); }
+    table { border-collapse: collapse; width: 100%; margin: .6rem 0; }
+    th, td { border: 1px solid var(--border); padding: .4rem .6rem; text-align: left; }
+    th { background: var(--surface-2); }
+    .check { background: var(--surface-2); border-radius: 10px; padding: .8rem 1rem; margin-top: 1rem; }
+    .check h3 { margin: 0 0 .4rem; }
+    .check label { display: block; margin: .2rem 0; cursor: pointer; }
+    .fb { margin-top: .5rem; padding: .4rem .7rem; border-radius: 8px; }
+    .fb.ok { background: var(--success-soft); color: var(--success); }
+    .fb.bad { background: var(--danger-soft); color: var(--danger); }
+    .fb:empty { display: none; }
+    button { font: inherit; padding: .3rem .8rem; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--surface); color: var(--text); cursor: pointer; }
+    input[type=text] { font: inherit; width: 6rem; padding: .25rem .4rem; border-radius: 6px;
+      border: 1px solid var(--border); background: var(--surface); color: var(--text); }
+    @media print { details { display: block; } details > * { display: block !important; } .check { display: none; } }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <h1>The complete design process, start to finish</h1>
+  <p class="lede">EE6203 · one plant taken through every Quiz 2 stage (LPH Lect 1–3): continuous model → \(\mathbf\Phi,\mathbf\Theta\) by ZOH → controllability and observability → \(G(z)\) → deadbeat gain \(\mathbf K\) → verified closed-loop response.
+    Plant: Test A Q2 from <code>quiz-02-mock-tests.html</code>, extended past Q2 into the Q3-style design. Every number was computed exactly with sympy (<code>quiz-02-complete-process-check.py</code>).</p>
+  <nav><a href="#s0">Map</a><a href="#s1">1 Model</a><a href="#s2">2 Φ(t)</a><a href="#s3">3 ZOH</a><a href="#s4">4 W<sub>C</sub>, W<sub>O</sub></a><a href="#s5">5 G(z)</a><a href="#s6">6 K</a><a href="#s7">7 Verify</a><a href="#recap">Recap</a></nav>
+
+  <section class="card banner" id="s0">
+    <h2>0 · The map: what each stage produces and why the next stage needs it</h2>
+    <p>A digital controller only sees the plant at the sampling instants \(t=kT\). So the job is to turn a continuous model into a discrete one, check that it can be controlled at all, and then pick a gain. Each stage feeds the next:</p>
+    <table>
+      <tr><th>Stage</th><th>Input</th><th>Output</th><th>Why the next stage needs it</th></tr>
+      <tr><td>1 Model</td><td>physics / diagram</td><td>\(\mathbf A,\mathbf B,\mathbf C\), \(G(s)\)</td><td>\(\mathbf A\) governs how the state evolves</td></tr>
+      <tr><td>2 Transition matrix</td><td>\(\mathbf A\)</td><td>\(\mathbf\Phi(t)=e^{\mathbf At}\)</td><td>it moves the state across one period \(T\)</td></tr>
+      <tr><td>3 ZOH discretisation</td><td>\(\mathbf\Phi(t),\mathbf B,T\)</td><td>\(\mathbf\Phi(T),\mathbf\Theta(T)\)</td><td>every discrete test and design uses these two</td></tr>
+      <tr><td>4 Structural checks</td><td>\(\mathbf\Phi,\mathbf\Theta,\mathbf C\)</td><td>\(\mathbf W_C\), \(\mathbf W_O\)</td><td>if \(\mathbf W_C\) is singular, no \(\mathbf K\) exists</td></tr>
+      <tr><td>5 Discrete TF</td><td>\(\mathbf\Phi,\mathbf\Theta,\mathbf C\)</td><td>\(G(z)\), open-loop poles</td><td>shows what the controller must move</td></tr>
+      <tr><td>6 Design</td><td>\(\mathbf\Phi,\mathbf\Theta,\mathbf W_C\), target poles</td><td>\(\mathbf K\)</td><td>the controller itself</td></tr>
+      <tr><td>7 Verify</td><td>\(\mathbf\Phi-\mathbf\Theta\mathbf K\), \(\mathbf x(0)\)</td><td>\(\mathbf x(k)\), \(u(k)\)</td><td>proves the design does what was asked</td></tr>
+    </table>
+    <p><strong>Conventions (LPH Lect 1–3).</strong> \(\mathbf x(k+1)=\mathbf\Phi\mathbf x(k)+\mathbf\Theta u(k)\), \(y(k)=\mathbf C\mathbf x(k)\), state feedback \(u(k)=-\mathbf K\mathbf x(k)\). Bold = matrix or vector; \(n=2\) states throughout.</p>
+    <div class="stem"><strong>The plant.</strong>
+      \[\dot{\mathbf x}=\underbrace{\begin{bmatrix}-1&0\\1&-2\end{bmatrix}}_{\mathbf A}\mathbf x+\underbrace{\begin{bmatrix}1\\0\end{bmatrix}}_{\mathbf B}u,\qquad y=\underbrace{\begin{bmatrix}0&1\end{bmatrix}}_{\mathbf C}\mathbf x,\qquad T=0.5\text{ s, ZOH}.\]
+      <strong>Goal:</strong> a digital state-feedback gain that drives any initial state to zero as fast as possible (deadbeat), checked from \(\mathbf x(0)=[1\ \ 1]^{\mathsf T}\).</div>
+    <div class="check" data-ans="b">
+      <h3>Check: read the plant</h3>
+      <p>Which state does the sensor measure?</p>
+      <label><input type="radio" name="c0" value="a"> \(x_1\)</label>
+      <label><input type="radio" name="c0" value="b"> \(x_2\)</label>
+      <label><input type="radio" name="c0" value="c"> both</label>
+      <div class="fb" data-ok="Right: C = [0 1] picks out x₂. Remember this in Stage 5." data-bad="Look at C = [0 1]: y = 0·x₁ + 1·x₂."></div>
+    </div>
+  </section>
+
+  <section class="card" id="s1">
+    <h2>1 · Read the model and its transfer function \(G(s)\)</h2>
+    <p>Write \(\dot{\mathbf x}=\mathbf A\mathbf x+\mathbf Bu\) out row by row. Each row is one first-order ODE:</p>
+    \[\dot x_1=-x_1+u,\qquad \dot x_2=x_1-2x_2.\]
+    <p class="why">So \(u\) pushes \(x_1\), and \(x_1\) in turn pushes \(x_2\). It is a chain of two first-order lags, and we measure the end of the chain.</p>
+    <details><summary>Step: \(G(s)=\mathbf C(s\mathbf I-\mathbf A)^{-1}\mathbf B\)</summary>
+      <p>\(s\mathbf I-\mathbf A=\begin{bmatrix}s+1&0\\-1&s+2\end{bmatrix}\), \(\det=(s+1)(s+2)\). The \(2\times2\) inverse is the adjugate (swap the diagonal, negate the off-diagonal) over the determinant:</p>
+      \[(s\mathbf I-\mathbf A)^{-1}=\frac{1}{(s+1)(s+2)}\begin{bmatrix}s+2&0\\1&s+1\end{bmatrix}.\]
+      <p>\(\mathbf C=[0\ 1]\) keeps row 2; \(\mathbf B=[1\ 0]^{\mathsf T}\) keeps column 1. The (2,1) entry of the adjugate is \(1\), so</p>
+      \[G(s)=\frac{1}{(s+1)(s+2)},\qquad \text{poles } s=-1,\,-2\ (=\text{eigenvalues of }\mathbf A),\qquad G(0)=\tfrac12.\]
+      <p>Block-diagram check: \(\frac1{s+1}\) feeding \(\frac1{s+2}\) in series gives the same product. ✓ Deeper walkthrough: <a href="quiz-02-transfer-function-explainer.html">transfer-function explainer</a>.</p>
+    </details>
+    <div class="pit"><strong>Pitfall.</strong> \(\mathbf A\) is lower-triangular, so its eigenvalues are simply the diagonal entries \(-1,-2\). Don't expand a determinant you can read off.</div>
+    <div class="check" data-num="0.5" data-tol="0.001">
+      <h3>Check: DC gain</h3>
+      <p>Hold \(u=1\) forever. What value does \(y\) settle to? (Hint: \(G(0)\) from \(G(s)=\frac1{(s+1)(s+2)}\).)</p>
+      <input type="text" inputmode="decimal"> <button>Check</button>
+      <div class="fb" data-ok="Yes: G(0) = 1/(1·2) = 0.5. Stage 5 must give the same DC gain." data-bad="Set s = 0 in 1/((s+1)(s+2))."></div>
+    </div>
+  </section>
+
+  <section class="card" id="s2">
+    <h2>2 · The state transition matrix \(\mathbf\Phi(t)=e^{\mathbf At}\)</h2>
+    <p><strong>What it is.</strong> With \(u=0\), the solution of \(\dot{\mathbf x}=\mathbf A\mathbf x\) is \(\mathbf x(t)=\mathbf\Phi(t)\mathbf x(0)\). So \(\mathbf\Phi(t)\) is the matrix that "moves the state forward by time \(t\)". LPH computes it as the inverse Laplace transform of the resolvent (Lect 1):</p>
+    \[\mathbf\Phi(t)=\mathcal L^{-1}\big\{(s\mathbf I-\mathbf A)^{-1}\big\}.\]
+    <p class="why">Why this works: taking Laplace transforms of \(\dot{\mathbf x}=\mathbf A\mathbf x\) gives \(s\mathbf X-\mathbf x(0)=\mathbf A\mathbf X\), so \(\mathbf X(s)=(s\mathbf I-\mathbf A)^{-1}\mathbf x(0)\).</p>
+    <details><summary>Step 1: partial fractions for every entry</summary>
+      <p>Reuse the resolvent from Stage 1:</p>
+      \[(s\mathbf I-\mathbf A)^{-1}=\begin{bmatrix}\dfrac1{s+1}&0\\[2mm]\dfrac1{(s+1)(s+2)}&\dfrac1{s+2}\end{bmatrix},\qquad \frac1{(s+1)(s+2)}=\frac1{s+1}-\frac1{s+2}.\]
+      <p class="why">The cover-up rule gives this: at \(s=-1\) the residue is \(\frac1{-1+2}=1\), and at \(s=-2\) it is \(\frac1{-2+1}=-1\).</p>
+    </details>
+    <details><summary>Step 2: invert entry by entry with \(\frac1{s+a}\leftrightarrow e^{-at}\)</summary>
+      \[\mathbf\Phi(t)=\begin{bmatrix}e^{-t}&0\\e^{-t}-e^{-2t}&e^{-2t}\end{bmatrix}.\]
+      <p>Sanity check: \(\mathbf\Phi(0)=\begin{bmatrix}1&0\\0&1\end{bmatrix}=\mathbf I\). ✓ (Moving forward by zero time changes nothing.)</p>
+    </details>
+    <div class="pit"><strong>Pitfall.</strong> \(e^{\mathbf At}\) is <em>not</em> the matrix of \(e^{a_{ij}t}\) entry by entry. Here the (2,1) entry of \(\mathbf A\) is \(1\), but the (2,1) entry of \(\mathbf\Phi\) is \(e^{-t}-e^{-2t}\), not \(e^{t}\).</div>
+    <div class="check" data-ans="c">
+      <h3>Check: what is \(\Phi_{21}(0)\)?</h3>
+      <p>Using \(\Phi_{21}(t)=e^{-t}-e^{-2t}\):</p>
+      <label><input type="radio" name="c2" value="a"> \(1\)</label>
+      <label><input type="radio" name="c2" value="b"> \(e^{0}=1\) because \(A_{21}=1\)</label>
+      <label><input type="radio" name="c2" value="c"> \(0\)</label>
+      <div class="fb" data-ok="Correct: 1 − 1 = 0, consistent with Φ(0) = I." data-bad="Substitute t = 0: e⁰ − e⁰ = 0. Φ(0) must be the identity."></div>
+    </div>
+  </section>
+
+  <section class="card" id="s3">
+    <h2>3 · ZOH discretisation: \(\mathbf\Phi(T)\) and \(\mathbf\Theta(T)\)</h2>
+    <p><strong>The setup.</strong> A zero-order hold (ZOH) keeps \(u(t)=u(k)\) constant for \(kT\le t&lt;(k+1)T\). Integrate the continuous solution across one period with that constant input (Lect 1):</p>
+    \[\mathbf x(k+1)=\underbrace{\mathbf\Phi(T)}_{\text{free motion}}\mathbf x(k)+\underbrace{\int_0^T\mathbf\Phi(\eta)\,d\eta\;\mathbf B}_{\mathbf\Theta(T)}\,u(k).\]
+    <p class="why">Why an integral? The input acts during the whole period, and an input applied at time \(\eta\) before the next sample has been propagated by \(\mathbf\Phi(\eta)\). Adding up all of those contributions gives the integral.</p>
+    <details><summary>Step 1: \(\mathbf\Phi(T)\) by substituting \(T=0.5\) into \(\mathbf\Phi(t)=\begin{bmatrix}e^{-t}&0\\e^{-t}-e^{-2t}&e^{-2t}\end{bmatrix}\)</summary>
+      \[\mathbf\Phi=\begin{bmatrix}e^{-0.5}&0\\e^{-0.5}-e^{-1}&e^{-1}\end{bmatrix}=\begin{bmatrix}0.6065&0\\0.2387&0.3679\end{bmatrix}.\]
+    </details>
+    <details><summary>Step 2: \(\mathbf\Theta\). Only column 1 matters, because \(\mathbf B=[1\ 0]^{\mathsf T}\)</summary>
+      <p>\(\mathbf\Phi(\eta)\mathbf B\) picks column 1 of \(\mathbf\Phi(\eta)\): \(\begin{bmatrix}e^{-\eta}\\e^{-\eta}-e^{-2\eta}\end{bmatrix}\). Integrate each entry using \(\int_0^Te^{-a\eta}d\eta=\frac{1-e^{-aT}}a\):</p>
+      \[\mathbf\Theta=\begin{bmatrix}1-e^{-T}\\(1-e^{-T})-\tfrac12(1-e^{-2T})\end{bmatrix}=\begin{bmatrix}0.3935\\0.3935-0.3161\end{bmatrix}=\begin{bmatrix}0.3935\\0.0774\end{bmatrix}.\]
+      <p>Neat closed form for row 2: \(\tfrac12(1-e^{-T})^2\).</p>
+    </details>
+    <div class="answer">\[\mathbf x(k+1)=\begin{bmatrix}0.6065&0\\0.2387&0.3679\end{bmatrix}\mathbf x(k)+\begin{bmatrix}0.3935\\0.0774\end{bmatrix}u(k),\qquad y(k)=\begin{bmatrix}0&1\end{bmatrix}\mathbf x(k).\]</div>
+    <div class="pit"><strong>Pitfalls.</strong><ul>
+      <li>\(\mathbf\Theta\approx\mathbf BT=[0.5\ \ 0]^{\mathsf T}\) is the Euler approximation, not ZOH, and it wrongly gives \(\Theta_2=0\).</li>
+      <li>\(\mathbf C\) does <em>not</em> change under ZOH: the sensor still reads \(x_2\).</li>
+      <li>Keep 4 significant figures. Stage 6 divides by a small determinant, which magnifies rounding.</li></ul></div>
+    <div class="check" data-num="0.0774" data-tol="0.0006">
+      <h3>Check: compute \(\Theta_2\) yourself</h3>
+      <p>\(\Theta_2=\tfrac12(1-e^{-0.5})^2=\) ? (4 d.p.)</p>
+      <input type="text" inputmode="decimal"> <button>Check</button>
+      <div class="fb" data-ok="Yes: ½(0.3935)² = 0.0774." data-bad="1 − e^−0.5 = 0.3935; square it and halve it."></div>
+    </div>
+  </section>
+
+  <section class="card" id="s4">
+    <h2>4 · Can we steer it? Can we see it? \(\mathbf W_C\) and \(\mathbf W_O\)</h2>
+    <p><strong>Controllability (Lect 2).</strong> After two steps from \(\mathbf x(0)=\mathbf 0\), \(\mathbf x(2)=\mathbf\Phi\mathbf\Theta\,u(0)+\mathbf\Theta\,u(1)\). Every state is reachable exactly when the columns \(\mathbf\Theta,\ \mathbf\Phi\mathbf\Theta\) span \(\mathbb R^2\), i.e. when \(\mathbf W_C=[\mathbf\Theta\ \ \mathbf\Phi\mathbf\Theta]\) has rank 2.</p>
+    <details><summary>Step: build \(\mathbf W_C\) from \(\mathbf\Phi=\begin{bmatrix}0.6065&0\\0.2387&0.3679\end{bmatrix}\), \(\mathbf\Theta=\begin{bmatrix}0.3935\\0.0774\end{bmatrix}\)</summary>
+      \[\mathbf\Phi\mathbf\Theta=\begin{bmatrix}0.6065(0.3935)\\0.2387(0.3935)+0.3679(0.0774)\end{bmatrix}=\begin{bmatrix}0.2387\\0.1224\end{bmatrix},\qquad \mathbf W_C=\begin{bmatrix}0.3935&0.2387\\0.0774&0.1224\end{bmatrix}.\]
+      \[\det\mathbf W_C=0.3935(0.1224)-0.2387(0.0774)=0.0297\neq0\ \Rightarrow\ \text{controllable}.\]
+    </details>
+    <p><strong>Observability (Lect 3).</strong> From \(y(0)=\mathbf C\mathbf x(0)\) and \(y(1)=\mathbf C\mathbf\Phi\mathbf x(0)\) we can solve for \(\mathbf x(0)\) exactly when \(\mathbf W_O=\begin{bmatrix}\mathbf C\\\mathbf C\mathbf\Phi\end{bmatrix}\) is invertible.</p>
+    <details><summary>Step: build \(\mathbf W_O\) with \(\mathbf C=[0\ \ 1]\)</summary>
+      <p>\(\mathbf C\mathbf\Phi\) is row 2 of \(\mathbf\Phi\): \([0.2387\ \ 0.3679]\).</p>
+      \[\mathbf W_O=\begin{bmatrix}0&1\\0.2387&0.3679\end{bmatrix},\qquad \det\mathbf W_O=0(0.3679)-1(0.2387)=-0.2387\neq0\ \Rightarrow\ \text{observable}.\]
+      <p class="why">Physically: \(x_1\) is not measured, but it feeds \(x_2\) (\(\Phi_{21}\neq0\)), so its value shows up in \(y\) one step later.</p>
+    </details>
+    <div class="pit"><strong>Why this stage gates the next one.</strong> Ackermann's formula in Stage 6 contains \(\mathbf W_C^{-1}\). If \(\det\mathbf W_C=0\), stop: some poles cannot be moved. Observability does not affect \(\mathbf K\). It matters only if the state must be estimated (an observer, Lect 4, which is outside the Quiz 2 scope).</div>
+    <div class="check" data-ans="a">
+      <h3>Check: what if the sensor read \(x_1\) instead (\(\mathbf C=[1\ 0]\))?</h3>
+      <p>Then \(\mathbf W_O=\begin{bmatrix}1&0\\0.6065&0\end{bmatrix}\). The system is:</p>
+      <label><input type="radio" name="c4" value="a"> unobservable: \(x_2\) never influences \(x_1\)</label>
+      <label><input type="radio" name="c4" value="b"> still observable</label>
+      <label><input type="radio" name="c4" value="c"> uncontrollable</label>
+      <div class="fb" data-ok="Right: column 2 is all zeros, so det = 0. x₂ is invisible from x₁. Controllability is unchanged, because W_C does not involve C." data-bad="Compute det [1 0; 0.6065 0]. And note that W_C does not involve C at all."></div>
+    </div>
+  </section>
+
+  <section class="card" id="s5">
+    <h2>5 · The discrete transfer function \(G(z)=\mathbf C(z\mathbf I-\mathbf\Phi)^{-1}\mathbf\Theta\)</h2>
+    <p>This is the same derivation as \(G(s)\) in Stage 1, with \(s\to z\), \(\mathbf A\to\mathbf\Phi\) and \(\mathbf B\to\mathbf\Theta\). It shows where the open-loop poles sit, which are the poles Stage 6 must move.</p>
+    <details><summary>Step: adjugate of \(z\mathbf I-\mathbf\Phi=\begin{bmatrix}z-0.6065&0\\-0.2387&z-0.3679\end{bmatrix}\)</summary>
+      \[(z\mathbf I-\mathbf\Phi)^{-1}=\frac1{(z-0.6065)(z-0.3679)}\begin{bmatrix}z-0.3679&0\\0.2387&z-0.6065\end{bmatrix}.\]
+      <p>\(\mathbf C=[0\ 1]\) keeps row 2 of the adjugate, \([0.2387\ \ z-0.6065]\). Multiply it by \(\mathbf\Theta=[0.3935\ \ 0.0774]^{\mathsf T}\):</p>
+      \[G(z)=\frac{0.2387(0.3935)+(z-0.6065)(0.0774)}{(z-0.6065)(z-0.3679)}=\frac{0.0774\,z+0.0470}{(z-0.6065)(z-0.3679)}.\]
+    </details>
+    <div class="answer">Poles \(z=0.6065=e^{-1\cdot T}\) and \(z=0.3679=e^{-2\cdot T}\): the continuous poles \(s=-1,-2\) mapped by \(z=e^{sT}\). Zero at \(z\approx-0.607\).<br>
+      DC check: \(G(1)=\frac{0.1244}{0.3935\times0.6321}=0.5=G(0)\) from Stage 1. ✓ A ZOH preserves DC gain.</div>
+    <p class="why">The characteristic polynomial is the denominator, expanded: \(\det(z\mathbf I-\mathbf\Phi)=z^2-0.9744z+0.2231\). Stage 6 replaces it with the polynomial we want.</p>
+    <p>More detail, including the table route \((1-z^{-1})\mathcal Z\{G(s)/s\}\): <a href="quiz-02-transfer-function-explainer.html">transfer-function explainer</a>.</p>
+    <div class="check" data-ans="b">
+      <h3>Check: pole mapping</h3>
+      <p>If \(T\) were \(1\) s instead, the discrete pole coming from \(s=-1\) would be at:</p>
+      <label><input type="radio" name="c5" value="a"> \(z=-1\)</label>
+      <label><input type="radio" name="c5" value="b"> \(z=e^{-1}=0.3679\)</label>
+      <label><input type="radio" name="c5" value="c"> \(z=0.6065\)</label>
+      <div class="fb" data-ok="Yes: z = e^{sT} = e^{−1}." data-bad="Use z = e^{sT} with s = −1 and T = 1."></div>
+    </div>
+  </section>
+
+  <section class="card" id="s6">
+    <h2>6 · Design: the deadbeat gain \(\mathbf K\)</h2>
+    <p><strong>Closed loop.</strong> Substitute \(u(k)=-\mathbf K\mathbf x(k)\) into \(\mathbf x(k+1)=\mathbf\Phi\mathbf x(k)+\mathbf\Theta u(k)\):</p>
+    \[\mathbf x(k+1)=(\mathbf\Phi-\mathbf\Theta\mathbf K)\,\mathbf x(k).\]
+    <p>The design choice is the closed-loop characteristic polynomial \(\alpha_C(z)=\det(z\mathbf I-\mathbf\Phi+\mathbf\Theta\mathbf K)\). <strong>Deadbeat</strong> puts both poles at \(z=0\), so \(\alpha_C(z)=z^2\). By Cayley–Hamilton, \((\mathbf\Phi-\mathbf\Theta\mathbf K)^2=\mathbf 0\), and every state is wiped out in \(n=2\) steps (Lect 3).</p>
+    <p><strong>Ackermann (Lect 3):</strong> \(\mathbf K=[0\ \ 1]\,\mathbf W_C^{-1}\,\alpha_C(\mathbf\Phi)\), where \(\alpha_C(\mathbf\Phi)=\mathbf\Phi^2\) for deadbeat.</p>
+    <details><summary>Step 1: \(\mathbf W_C^{-1}\), but only its last row is needed</summary>
+      <p>From Stage 4, \(\mathbf W_C=\begin{bmatrix}0.3935&0.2387\\0.0774&0.1224\end{bmatrix}\) and \(\det\mathbf W_C=0.02968\). Swap the diagonal, negate the off-diagonal, divide by det:</p>
+      \[\mathbf W_C^{-1}=\frac1{0.02968}\begin{bmatrix}0.1224&-0.2387\\-0.0774&0.3935\end{bmatrix}=\begin{bmatrix}4.123&-8.041\\-2.608&13.258\end{bmatrix},\qquad [0\ \ 1]\mathbf W_C^{-1}=[-2.608\ \ 13.258].\]
+      <p class="why">Why the last row? \([0\ 1]\) times a matrix selects its row 2. Ackermann's formula is built so that the gain lands in the last component of the controllable canonical form.</p>
+    </details>
+    <details><summary>Step 2: \(\alpha_C(\mathbf\Phi)=\mathbf\Phi^2\)</summary>
+      \[\mathbf\Phi^2=\begin{bmatrix}0.6065&0\\0.2387&0.3679\end{bmatrix}^2=\begin{bmatrix}0.3679&0\\0.2387(0.6065)+0.3679(0.2387)&0.1353\end{bmatrix}=\begin{bmatrix}0.3679&0\\0.2325&0.1353\end{bmatrix}.\]
+    </details>
+    <details><summary>Step 3: multiply \([-2.608\ \ 13.258]\,\mathbf\Phi^2\)</summary>
+      \[k_1=-2.608(0.3679)+13.258(0.2325)=-0.9595+3.0830=2.1235,\qquad k_2=13.258(0.1353)=1.7942.\]
+    </details>
+    <div class="answer">\[\mathbf K\approx\begin{bmatrix}2.123&1.794\end{bmatrix}.\]</div>
+    <details><summary>Cross-check by matching coefficients (no inverse needed)</summary>
+      <p>For a \(2\times2\) matrix \(\mathbf M\), \(\det(z\mathbf I-\mathbf M)=z^2-(\operatorname{tr}\mathbf M)z+\det\mathbf M\). With \(\mathbf M=\mathbf\Phi-\mathbf\Theta\mathbf K\), deadbeat requires trace \(=0\) and det \(=0\). Expanding with the Stage-3 numbers:</p>
+      \[\operatorname{tr}\mathbf M=0.9744-0.3935k_1-0.0774k_2=0,\qquad \det\mathbf M=0.2231-0.1447k_1+0.0470k_2=0.\]
+      <p>Solving these two linear equations gives \(k_1=2.123\), \(k_2=1.794\): the same \(\mathbf K\). ✓ (Note the constants \(0.9744\) and \(0.2231\): they are the open-loop polynomial \(z^2-0.9744z+0.2231\) from Stage 5.)</p>
+    </details>
+    <div class="pit"><strong>Pitfalls.</strong><ul>
+      <li>Using the <em>first</em> row of \(\mathbf W_C^{-1}\).</li>
+      <li>\(\alpha_C\) evaluated at \(\mathbf\Phi\), not at \(\mathbf A\) and not at \(z\). It is a matrix.</li>
+      <li>A non-integer \(\mathbf K\) is normal. Past sitters reported fractional gains in this question (see <code>quiz-02-intel.md</code>).</li></ul></div>
+    <div class="check" data-ans="c">
+      <h3>Check: a non-deadbeat target</h3>
+      <p>To place both poles at \(z=0.5\) instead, what replaces \(\mathbf\Phi^2\) in Ackermann's formula?</p>
+      <label><input type="radio" name="c6" value="a"> \((\mathbf\Phi-0.5)^2\) computed entry by entry</label>
+      <label><input type="radio" name="c6" value="b"> \(\mathbf\Phi^2-\mathbf\Phi+0.25\)</label>
+      <label><input type="radio" name="c6" value="c"> \(\mathbf\Phi^2-\mathbf\Phi+0.25\,\mathbf I\)</label>
+      <div class="fb" data-ok="Right: α_C(z) = (z−0.5)² = z² − z + 0.25, and the constant term becomes 0.25·I. Try it with the sliders in Stage 7." data-bad="Expand (z−0.5)² first, then substitute Φ. A constant term c becomes c·I."></div>
+    </div>
+  </section>
+
+  <section class="card" id="s7">
+    <h2>7 · Verify: run the closed loop from \(\mathbf x(0)=[1\ \ 1]^{\mathsf T}\)</h2>
+    <details><summary>Step 1: the closed-loop matrix \(\mathbf\Phi-\mathbf\Theta\mathbf K\)</summary>
+      \[\mathbf\Theta\mathbf K=\begin{bmatrix}0.3935\\0.0774\end{bmatrix}\begin{bmatrix}2.123&1.794\end{bmatrix}=\begin{bmatrix}0.8355&0.7060\\0.1644&0.1389\end{bmatrix},\qquad
+        \mathbf\Phi-\mathbf\Theta\mathbf K=\begin{bmatrix}-0.2290&-0.7060\\0.0743&0.2290\end{bmatrix}.\]
+      <p>Trace \(=0\); det \(=-0.2290(0.2290)+0.7060(0.0743)=-0.0524+0.0524=0\). ✓ Both poles are at \(z=0\).</p>
+    </details>
+    <details><summary>Step 2: iterate \(\mathbf x(k+1)=(\mathbf\Phi-\mathbf\Theta\mathbf K)\mathbf x(k)\) and \(u(k)=-\mathbf K\mathbf x(k)\)</summary>
+      <table>
+        <tr><th>\(k\)</th><th>\(\mathbf x(k)\)</th><th>\(u(k)=-\mathbf K\mathbf x(k)\)</th><th>\(y(k)=x_2(k)\)</th></tr>
+        <tr><td>0</td><td>\([1\ \ 1]^{\mathsf T}\)</td><td>\(-3.918\)</td><td>\(1\)</td></tr>
+        <tr><td>1</td><td>\([-0.935\ \ 0.303]^{\mathsf T}\)</td><td>\(1.441\)</td><td>\(0.303\)</td></tr>
+        <tr><td>2</td><td>\([0\ \ 0]^{\mathsf T}\)</td><td>\(0\)</td><td>\(0\)</td></tr>
+      </table>
+      <p>\(\mathbf x(2)=\mathbf 0\) exactly when computed with the exact values. With 4-d.p. numbers you get about \(\pm10^{-4}\), which is rounding, not a design error. After that, \(\mathbf x(k)=\mathbf 0\) forever, since \(\mathbf M\mathbf 0=\mathbf 0\).</p>
+    </details>
+    <p class="why">The price of deadbeat is input effort. \(u(0)\approx-3.9\) is large compared with the size of the state, and it grows quickly as \(T\) shrinks. Slower poles trade speed for gentler inputs. Try it:</p>
+
+    <div class="stem" id="lab">
+      <strong>Pole-placement lab</strong> (same \(\mathbf\Phi,\mathbf\Theta\); Ackermann computed live)<br>
+      \(p_1\) <input type="range" id="p1" min="-0.9" max="0.9" step="0.05" value="0"> <span id="p1v"></span>
+      &nbsp; \(p_2\) <input type="range" id="p2" min="-0.9" max="0.9" step="0.05" value="0"> <span id="p2v"></span>
+      <button id="db">Deadbeat (0, 0)</button>
+      <p id="kout" style="margin:.4rem 0"></p>
+      <svg id="plot" viewBox="0 0 520 220" width="100%" role="img" aria-label="Closed-loop state and input sequences"></svg>
+      <p style="margin:.2rem 0;color:var(--muted)"><span style="color:var(--accent)">●</span> \(x_1(k)\) &nbsp; <span style="color:var(--success)">●</span> \(x_2(k)=y(k)\) &nbsp; <span style="color:var(--warning)">●</span> \(u(k)\), for \(k=0\ldots12\)</p>
+    </div>
+
+    <div class="check" data-ans="c">
+      <h3>Check: order and steps</h3>
+      <p>A third-order controllable plant with deadbeat feedback is guaranteed to have \(\mathbf x(k)=\mathbf 0\) from:</p>
+      <label><input type="radio" name="c7" value="a"> \(k=1\)</label>
+      <label><input type="radio" name="c7" value="b"> \(k=2\)</label>
+      <label><input type="radio" name="c7" value="c"> \(k=3\)</label>
+      <div class="fb" data-ok="Yes: α_C(z) = z³, so M³ = 0. It takes n steps." data-bad="Deadbeat gives Mⁿ = 0 with n = number of states."></div>
+    </div>
+  </section>
+
+  <section class="card" id="recap">
+    <h2>Recap: the method to remember</h2>
+    <ol>
+      <li><strong>Model.</strong> Read \(\mathbf A,\mathbf B,\mathbf C\). Optionally get \(G(s)=\mathbf C(s\mathbf I-\mathbf A)^{-1}\mathbf B\) and note \(G(0)\).</li>
+      <li><strong>\(\mathbf\Phi(t)\).</strong> \(\mathcal L^{-1}\{(s\mathbf I-\mathbf A)^{-1}\}\) entry by entry; check \(\mathbf\Phi(0)=\mathbf I\).</li>
+      <li><strong>ZOH.</strong> \(\mathbf\Phi=\mathbf\Phi(T)\), \(\mathbf\Theta=\int_0^T\mathbf\Phi(\eta)d\eta\,\mathbf B\). Integrate only the columns that \(\mathbf B\) selects.</li>
+      <li><strong>Gate.</strong> \(\det[\mathbf\Theta\ \ \mathbf\Phi\mathbf\Theta]\neq0\) (controllable); \(\det\begin{bmatrix}\mathbf C\\\mathbf C\mathbf\Phi\end{bmatrix}\neq0\) (observable).</li>
+      <li><strong>\(G(z)\).</strong> \(\mathbf C(z\mathbf I-\mathbf\Phi)^{-1}\mathbf\Theta\); poles \(=e^{sT}\); check \(G(1)=G(0)\).</li>
+      <li><strong>\(\mathbf K\).</strong> Choose \(\alpha_C(z)\) (deadbeat: \(z^n\)); \(\mathbf K=[0\ \cdots\ 1]\mathbf W_C^{-1}\alpha_C(\mathbf\Phi)\). Cross-check with trace/det.</li>
+      <li><strong>Verify.</strong> \(\mathbf\Phi-\mathbf\Theta\mathbf K\) has the chosen trace and det; iterate from \(\mathbf x(0)\); deadbeat reaches \(\mathbf 0\) in \(n\) steps.</li>
+    </ol>
+    <table>
+      <tr><th>Built-in check</th><th>Value here</th></tr>
+      <tr><td>\(\mathbf\Phi(0)=\mathbf I\)</td><td>✓</td></tr>
+      <tr><td>\(G(1)=G(0)\)</td><td>\(0.5=0.5\)</td></tr>
+      <tr><td>discrete poles \(=e^{sT}\)</td><td>\(0.6065, 0.3679\)</td></tr>
+      <tr><td>closed-loop trace, det</td><td>\(0, 0\)</td></tr>
+      <tr><td>\(\mathbf x(n)\)</td><td>\(\mathbf 0\) at \(k=2\)</td></tr>
+    </table>
+    <p><strong>Saying it in English.</strong> "The plant is <em>discretised with a zero-order hold</em> (零阶保持离散化)." "The pair \((\mathbf\Phi,\mathbf\Theta)\) is <em>controllable</em> because the controllability matrix has <em>full rank</em> (满秩)." "We <em>place the closed-loop poles at the origin</em> to obtain a <em>deadbeat response</em> (无差拍响应)."</p>
+    <p style="color:var(--muted)">Sources: LPH Lect 1 (state transition matrix, ZOH \(\mathbf\Phi,\mathbf\Theta\)), Lect 2 (controllability, \(G(z)\)), Lect 3 (observability, pole placement, Ackermann, deadbeat). The plant comes from the unofficial mock Test A Q2; the observability item, the coefficient-matching cross-check, the pole lab and the input-effort remark are supplementary. Related pages: <a href="quiz-02-mock-test-a-solutions.html">Test A solutions</a> · <a href="quiz-02-mock-q1-rlc-explainer.html">RLC modelling explainer</a> · <a href="quiz-02-transfer-function-explainer.html">transfer-function explainer</a>.</p>
+  </section>
+</div>
+<script>
+  function show(box, ok) {
+    const fb = box.querySelector('.fb');
+    fb.textContent = ok ? fb.dataset.ok : fb.dataset.bad;
+    fb.className = 'fb ' + (ok ? 'ok' : 'bad');
+  }
+  document.querySelectorAll('.check[data-ans]').forEach(box =>
+    box.querySelectorAll('input[type=radio]').forEach(r =>
+      r.addEventListener('change', () => show(box, r.value === box.dataset.ans))));
+  document.querySelectorAll('.check[data-num]').forEach(box => {
+    const inp = box.querySelector('input'), go = () => {
+      const v = parseFloat(inp.value);
+      show(box, Number.isFinite(v) && Math.abs(v - +box.dataset.num) <= +box.dataset.tol);
+    };
+    box.querySelector('button').addEventListener('click', go);
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') go(); });
+  });
+
+  // Pole-placement lab: exact ZOH matrices for A=[-1 0;1 -2], B=[1;0], T=0.5
+  const a = Math.exp(-0.5);
+  const P = [[a, 0], [a - a * a, a * a]], Th = [1 - a, (1 - a) ** 2 / 2];
+  const mul = (X, Y) => [[X[0][0]*Y[0][0]+X[0][1]*Y[1][0], X[0][0]*Y[0][1]+X[0][1]*Y[1][1]],
+                         [X[1][0]*Y[0][0]+X[1][1]*Y[1][0], X[1][0]*Y[0][1]+X[1][1]*Y[1][1]]];
+  function gain(p1, p2) {
+    const c1 = -(p1 + p2), c0 = p1 * p2, P2 = mul(P, P);
+    const al = [[P2[0][0] + c1*P[0][0] + c0, P2[0][1] + c1*P[0][1]],
+                [P2[1][0] + c1*P[1][0],      P2[1][1] + c1*P[1][1] + c0]];
+    const w = [Th, [P[0][0]*Th[0] + P[0][1]*Th[1], P[1][0]*Th[0] + P[1][1]*Th[1]]]; // columns
+    const det = w[0][0]*w[1][1] - w[1][0]*w[0][1];
+    const r = [-w[0][1] / det, w[0][0] / det]; // last row of W_C^-1
+    return [r[0]*al[0][0] + r[1]*al[1][0], r[0]*al[0][1] + r[1]*al[1][1]];
+  }
+  function run(p1, p2) {
+    const K = gain(p1, p2); let x = [1, 1]; const xs = [];
+    for (let k = 0; k <= 12; k++) {
+      const u = -(K[0]*x[0] + K[1]*x[1]); xs.push([x[0], x[1], u]);
+      x = [P[0][0]*x[0] + P[0][1]*x[1] + Th[0]*u, P[1][0]*x[0] + P[1][1]*x[1] + Th[1]*u];
+    }
+    return { K, xs };
+  }
+  function draw() {
+    const p1 = +document.getElementById('p1').value, p2 = +document.getElementById('p2').value;
+    document.getElementById('p1v').textContent = p1.toFixed(2);
+    document.getElementById('p2v').textContent = p2.toFixed(2);
+    const { K, xs } = run(p1, p2);
+    document.getElementById('kout').textContent =
+      `K = [${K[0].toFixed(3)}  ${K[1].toFixed(3)}]   x(2) = [${xs[2][0].toFixed(3)}  ${xs[2][1].toFixed(3)}]   u(0) = ${xs[0][2].toFixed(2)}`;
+    const m = Math.max(1, ...xs.flat().map(Math.abs)), X = k => 30 + k * 38, Y = v => 110 - v / m * 95;
+    const css = getComputedStyle(document.documentElement);
+    const col = ['--accent', '--success', '--warning'].map(c => css.getPropertyValue(c).trim());
+    let svg = `<line x1="30" y1="110" x2="500" y2="110" stroke="${css.getPropertyValue('--muted')}" stroke-width="1"/>` +
+      `<text x="2" y="20" font-size="11" fill="${css.getPropertyValue('--muted')}">${m.toFixed(1)}</text>` +
+      `<text x="2" y="210" font-size="11" fill="${css.getPropertyValue('--muted')}">${(-m).toFixed(1)}</text>`;
+    for (let k = 0; k <= 12; k++) svg += `<text x="${X(k) - 3}" y="125" font-size="10" fill="${css.getPropertyValue('--muted')}">${k}</text>`;
+    [0, 1, 2].forEach(i => {
+      svg += `<polyline fill="none" stroke="${col[i]}" stroke-width="2" points="${xs.map((v, k) => X(k) + ',' + Y(v[i])).join(' ')}"/>`;
+      xs.forEach((v, k) => svg += `<circle cx="${X(k)}" cy="${Y(v[i])}" r="3" fill="${col[i]}"/>`);
+    });
+    document.getElementById('plot').innerHTML = svg;
+  }
+  ['p1', 'p2'].forEach(id => document.getElementById(id).addEventListener('input', draw));
+  document.getElementById('db').addEventListener('click', () => {
+    document.getElementById('p1').value = 0; document.getElementById('p2').value = 0; draw();
+  });
+  draw();
+</script>
+</body>
+</html>
