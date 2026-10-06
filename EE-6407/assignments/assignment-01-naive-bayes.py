@@ -78,7 +78,76 @@ assert [f[0] for f in far] == [91, 96, 117] and len(clean) == 114
 mle = {c: (nc, n, mu, [v * (nc - 1) / nc for v in var]) for c, (nc, n, mu, var) in model.items()}
 assert [predict(mle, x) for _, x in test] == [p for _, _, p, _ in preds]
 
+
+def figure_c_vs_d():
+    """Inline SVG: feature C vs D, train (filled) / test (hollow, predicted class), mu +/- 2 sigma ellipses."""
+    W, H, L, R, T, B = 640, 400, 52, 16, 14, 44
+    x0, x1, y0, y1 = 0, 7.5, 0, 2.8
+    sx = lambda v: L + (v - x0) / (x1 - x0) * (W - L - R)
+    sy = lambda v: H - B - (v - y0) / (y1 - y0) * (H - T - B)
+    col = {1: '#2a78d6', 2: '#eb6834', 3: '#1baf7a'}  # categorical slots 1-3, fixed order
+
+    def mark(c, x, y, fill, r=4.5):
+        px, py = sx(x), sy(y)
+        if c == 1:
+            return f'<circle cx="{px:.1f}" cy="{py:.1f}" r="{r}" fill="{fill}" stroke="{col[c]}" stroke-width="1.6"/>'
+        if c == 2:
+            s = r * 0.9
+            return f'<rect x="{px-s:.1f}" y="{py-s:.1f}" width="{2*s:.1f}" height="{2*s:.1f}" fill="{fill}" stroke="{col[c]}" stroke-width="1.6"/>'
+        s = r * 1.15
+        return f'<path d="M{px:.1f},{py-s:.1f} L{px+s:.1f},{py+s*0.8:.1f} L{px-s:.1f},{py+s*0.8:.1f} Z" fill="{fill}" stroke="{col[c]}" stroke-width="1.6"/>'
+
+    o = [f'<svg viewBox="0 0 {W} {H}" role="img" aria-labelledby="fig1cap" font-family="system-ui, sans-serif" font-size="11">',
+         f'<rect width="{W}" height="{H}" fill="#fcfcfb"/>']
+    for v in range(0, 8):  # grid + x ticks
+        o.append(f'<line x1="{sx(v):.1f}" y1="{T}" x2="{sx(v):.1f}" y2="{H-B}" stroke="#e6e5e1" stroke-width="1"/>')
+        o.append(f'<text x="{sx(v):.1f}" y="{H-B+16}" text-anchor="middle" fill="#52514e">{v}</text>')
+    for v in (0, 0.5, 1, 1.5, 2, 2.5):
+        o.append(f'<line x1="{L}" y1="{sy(v):.1f}" x2="{W-R}" y2="{sy(v):.1f}" stroke="#e6e5e1" stroke-width="1"/>')
+        o.append(f'<text x="{L-8}" y="{sy(v)+4:.1f}" text-anchor="end" fill="#52514e">{v:g}</text>')
+    o.append(f'<line x1="{L}" y1="{H-B}" x2="{W-R}" y2="{H-B}" stroke="#52514e"/>')
+    o.append(f'<text x="{(L+W-R)/2:.0f}" y="{H-8}" text-anchor="middle" fill="#0b0b0b">Feature C</text>')
+    o.append(f'<text transform="translate(14,{(T+H-B)/2:.0f}) rotate(-90)" text-anchor="middle" fill="#0b0b0b">Feature D</text>')
+    for c in CLASSES:  # axis-aligned ellipses = what naive Bayes assumes (diagonal covariance)
+        _, _, mu, var = model[c]
+        rx = 2 * math.sqrt(var[2]) / (x1 - x0) * (W - L - R)
+        ry = 2 * math.sqrt(var[3]) / (y1 - y0) * (H - T - B)
+        o.append(f'<ellipse cx="{sx(mu[2]):.1f}" cy="{sy(mu[3]):.1f}" rx="{rx:.1f}" ry="{ry:.1f}" fill="none" '
+                 f'stroke="{col[c]}" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.9"/>')
+    for n, x, y in clean:
+        o.append(f'<g>{mark(y, x[2], x[3], col[y])}<title>Train row {n}: C={x[2]}, D={x[3]}, class {y}</title></g>')
+    for n, x, p, _ in preds:
+        o.append(f'<g>{mark(p, x[2], x[3], "#ffffff", 5.5)}<title>Test {n}: C={x[2]}, D={x[3]}, predicted class {p}</title></g>')
+    for n in (11, 17):  # closest decisions
+        x = test[n - 1][1]
+        o.append(f'<text x="{sx(x[2])+9:.1f}" y="{sy(x[3])+13:.1f}" fill="#0b0b0b" font-weight="600" stroke="#fcfcfb" stroke-width="3" paint-order="stroke">test {n}</text>')
+    # outliers outside the plotted range: arrows at the edge
+    tr = {n: x for n, x, _ in train}
+    yr, xr = tr[91][3], tr[117][2]
+    o.append(f'<text x="{W-R-4}" y="{sy(yr)-8:.1f}" text-anchor="end" fill="#0b0b0b">row 91 removed: C = 16.0 →</text>')
+    o.append(f'<text x="{sx(xr)+6:.1f}" y="{T+12}" fill="#0b0b0b">↑ row 117 removed: D = 5.3</text>')
+    # legend (empty upper-left region)
+    lx, ly = L + 14, T + 14
+    o.append(f'<rect x="{lx-8}" y="{ly-10}" width="214" height="114" fill="#fcfcfb" stroke="#e6e5e1"/>')
+    for i, c in enumerate(CLASSES):
+        yy = ly + 6 + i * 18
+        o.append(mark(c, (lx + 6 - L) / (W - L - R) * (x1 - x0) + x0, y0 + (H - B - yy) / (H - T - B) * (y1 - y0), col[c]))
+        o.append(f'<text x="{lx+18}" y="{yy+4}" fill="#0b0b0b">Class {c}</text>')
+    o.append(f'<text x="{lx}" y="{ly+64}" fill="#52514e">filled = training, hollow = test</text>')
+    o.append(f'<text x="{lx}" y="{ly+80}" fill="#52514e">(test shown in predicted class)</text>')
+    o.append(f'<text x="{lx}" y="{ly+94}" fill="#52514e">dashed = μ ± 2σ of the fitted model</text>')
+    o.append('</svg>')
+    return '\n'.join(o)
+
+
+def write_figure(html_path):
+    s = html_path.read_text(encoding='utf-8')
+    a, b = '<!-- FIG1 START -->', '<!-- FIG1 END -->'
+    i, j = s.index(a) + len(a), s.index(b)
+    html_path.write_text(s[:i] + '\n' + figure_c_vs_d() + '\n' + s[j:], encoding='utf-8')
+
 if __name__ == '__main__':
+    write_figure(HERE / 'assignment-01-report-draft.html')  # keeps Figure 1 in sync with the data
     f2 = lambda v: f'{v:.2f}'
     print('missing', missing, '\nfar-out', far, '\nmild kept', mild)
     print('class sizes', {c: model[c][0] for c in CLASSES}, 'resub acc', round(acc, 4))
