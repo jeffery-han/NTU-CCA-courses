@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EE6407 Assignment 1 Draft</title>
+<style>
+  :root { --ink:#1b1b1b; --muted:#5b6170; --line:#d5d8de; --soft:#f4f5f7; --accent:#1f4e8c; --warn:#8a5a00; --warnbg:#fff6e0; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:#e9ebef; color:var(--ink); font:15px/1.55 "Times New Roman", Georgia, serif; }
+  .page { max-width: 210mm; margin: 24px auto; background:#fff; padding: 20mm 18mm; box-shadow: 0 1px 4px rgba(0,0,0,.12); }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  h2 { font-size: 18px; margin: 28px 0 8px; border-bottom: 1.5px solid var(--ink); padding-bottom: 3px; }
+  h3 { font-size: 15.5px; margin: 18px 0 6px; }
+  .meta { color: var(--muted); margin-bottom: 16px; }
+  .meta span { display:inline-block; min-width: 9em; border-bottom: 1px dotted var(--muted); }
+  table { border-collapse: collapse; width: 100%; margin: 8px 0 12px; font-size: 13.5px; }
+  th, td { border: 1px solid var(--line); padding: 3px 6px; text-align: center; }
+  thead th { background: var(--soft); }
+  .eq { margin: 10px 0; padding: 8px 12px; background: var(--soft); border-left: 3px solid var(--accent); overflow-x: auto; white-space: nowrap; }
+  .frac { display:inline-flex; flex-direction:column; vertical-align:middle; text-align:center; font-size:.92em; }
+  .frac > span:first-child { border-bottom:1px solid currentColor; padding:0 2px; }
+  ol li, ul li { margin: 3px 0; }
+  .note { font-size: 13px; color: var(--muted); }
+  .screen { background: var(--warnbg); color: var(--warn); border:1px solid #f0d58a; padding: 10px 14px; margin-bottom: 18px; font: 13.5px/1.5 system-ui, sans-serif; }
+  .todo { background: var(--warnbg); border:1px dashed #d9b34a; padding: 8px 12px; }
+  .wrap { overflow-x: auto; }
+  @media (max-width: 640px) { .page { margin:0; padding: 18px 16px; } }
+  @page { size: A4; margin: 16mm 15mm; }
+  @media print {
+    body { background:#fff; }
+    .page { margin:0; padding:0; box-shadow:none; max-width:none; }
+    .screen { display:none; }
+    h2, h3 { break-after: avoid; }
+    table, .eq { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="screen">
+  <b>Draft, not for submission yet.</b> To make the PDF, use Print → Save as PDF (A4); this yellow box is hidden in print.
+  Every number comes from <code>assignment-01-naive-bayes.py</code>, so rerun it after changing any decision.
+  Before submitting, check EE6407's rules on using AI tools, and make sure you can explain every step yourself.
+  Assignment 2 still has to be added (see the end).
+</div>
+
+<h1>EE6407 Genetic Algorithms &amp; Machine Learning: Assignments 1 &amp; 2</h1>
+<div class="meta">Name: <span>&nbsp;</span> &nbsp; Matric No.: <span>&nbsp;</span> &nbsp; Submission: 19 Oct 2026</div>
+
+<h2>Assignment 1</h2>
+<p>The training set (<code>TrainingData.xlsx</code>) has 120 samples with four features <i>A–D</i> in columns A–D and a class label <i>ω</i> ∈ {1, 2, 3} in column E.
+The test set (<code>TestData.xlsx</code>) has 30 unlabelled samples. Rows are numbered by spreadsheet row; neither file has a header row.</p>
+
+<h3>(1) Missing values and outliers</h3>
+
+<p><b>Missing values: yes, three.</b> Three cells contain “?” instead of a number:</p>
+<table>
+  <thead><tr><th>Row</th><th>Feature</th><th>Class</th><th>Remaining values</th></tr></thead>
+  <tbody>
+    <tr><td>39</td><td>A</td><td>2</td><td>B = 3.3, C = 5.7, D = 2.5</td></tr>
+    <tr><td>61</td><td>A</td><td>1</td><td>B = 3.6, C = 1.0, D = 0.2</td></tr>
+    <tr><td>83</td><td>D</td><td>3</td><td>A = 5.9, B = 3.0, C = 4.2</td></tr>
+  </tbody>
+</table>
+
+<p><b>Outliers: yes, three.</b> Each class is inspected separately, because the three classes have very different ranges
+(for example, feature C is about 1.5 in class 1 but about 5.5 in class 2). For each class and feature I used Tukey's
+<i>far-out</i> rule: a value is an outlier if it lies outside</p>
+<div class="eq">[ Q<sub>1</sub> − 3·IQR , Q<sub>3</sub> + 3·IQR ], &nbsp;&nbsp; IQR = Q<sub>3</sub> − Q<sub>1</sub>,</div>
+<p>where Q<sub>1</sub> and Q<sub>3</sub> are the class's lower and upper quartiles of that feature (computed after the three incomplete rows are set aside).
+Exactly three values fall outside these fences:</p>
+<table>
+  <thead><tr><th>Row</th><th>Feature</th><th>Class</th><th>Value</th><th>Class median</th><th>Far-out fence</th></tr></thead>
+  <tbody>
+<tr><td>91</td><td>C</td><td>2</td><td>16.0</td><td>5.6</td><td>[2.70, 8.30]</td></tr>
+<tr><td>96</td><td>A</td><td>1</td><td>10.6</td><td>5.0</td><td>[3.80, 6.25]</td></tr>
+<tr><td>117</td><td>D</td><td>3</td><td>5.3</td><td>1.3</td><td>[0.30, 2.40]</td></tr>
+  </tbody>
+</table>
+<p>All three are roughly two to four times their class median, which suggests recording errors (e.g. 16.0 is likely 6.0 or 1.60) rather than natural variation.
+The milder 1.5·IQR rule also flags eight borderline values (rows 1, 26, 69, 79, 97, 98, 105, 116). These lie only slightly outside the usual range, so
+they are treated as natural spread within the class and kept.</p>
+
+<p><b>Three methods for missing values</b></p>
+<ol>
+  <li><b>Deletion.</b> Discard every sample that has a missing entry (listwise deletion). This is simple and introduces no invented values, but it loses information and can bias the data if values are not missing at random. It is acceptable here because only 3 of 120 samples are affected.</li>
+  <li><b>Mean / median imputation (class-conditional).</b> Replace the missing entry with the mean or median of that feature, computed only over samples of the same class. This keeps the sample but shrinks the feature's variance a little.</li>
+  <li><b>Model-based imputation.</b> Predict the missing entry from the other features, e.g. with <i>k</i>-nearest-neighbour imputation (average the feature over the <i>k</i> most similar complete samples) or regression on the observed features. The EM algorithm is a likelihood-based alternative. These use correlations between features (A and C are strongly correlated here), so they give more realistic values.</li>
+</ol>
+
+<p><b>Three methods for outliers</b></p>
+<ol>
+  <li><b>Detection and removal.</b> Flag values with a statistical rule (z-score beyond ±3, or the IQR fences above) and delete those samples. This is clean when the outliers are clearly errors and few in number.</li>
+  <li><b>Capping (winsorising).</b> Replace a value outside the fence with the nearest fence value, or with a chosen percentile (e.g. the 1st/99th). The sample is kept and its influence is limited.</li>
+  <li><b>Treat as missing and impute, or use robust estimates.</b> Replace the outlier with the class median or a <i>k</i>-NN estimate, as for a missing value. Alternatively, keep it but estimate parameters with robust statistics (median and MAD instead of mean and standard deviation), so a single extreme value cannot dominate.</li>
+</ol>
+
+<h3>(2) Naïve Bayes classifier design</h3>
+<p>As instructed, the 3 samples with missing values and the 3 outlier samples are removed, which leaves <b>114 training samples</b>
+(class 1: 38, class 2: 37, class 3: 39).</p>
+
+<p><b>Step 1: Bayes decision rule.</b> Assign <b>x</b> = (x<sub>1</sub>, x<sub>2</sub>, x<sub>3</sub>, x<sub>4</sub>) = (A, B, C, D) to the class with the largest posterior probability</p>
+<div class="eq">P(ω<sub>i</sub> | <b>x</b>) = <span class="frac"><span>p(<b>x</b> | ω<sub>i</sub>) P(ω<sub>i</sub>)</span><span>p(<b>x</b>)</span></span>, &nbsp;&nbsp; i = 1, 2, 3.</div>
+<p>Because p(<b>x</b>) is the same for every class, it is enough to compare p(<b>x</b> | ω<sub>i</sub>) P(ω<sub>i</sub>).</p>
+
+<p><b>Step 2: Naïve (conditional independence) assumption.</b> Given the class, the four features are assumed independent, so</p>
+<div class="eq">p(<b>x</b> | ω<sub>i</sub>) = ∏<sub>j=1</sub><sup>4</sup> p(x<sub>j</sub> | ω<sub>i</sub>).</div>
+<p>This replaces one 4-dimensional density with four 1-dimensional ones, which is far easier to estimate from 114 samples.</p>
+
+<p><b>Step 3: Model each feature as Gaussian within each class.</b> The features are continuous measurements, so</p>
+<div class="eq">p(x<sub>j</sub> | ω<sub>i</sub>) = <span class="frac"><span>1</span><span>√(2π σ<sub>ij</sub><sup>2</sup>)</span></span> exp( − <span class="frac"><span>(x<sub>j</sub> − μ<sub>ij</sub>)<sup>2</sup></span><span>2σ<sub>ij</sub><sup>2</sup></span></span> ).</div>
+
+<p><b>Step 4: Estimate the parameters from the training data.</b> Let N<sub>i</sub> be the number of class-i samples and N = 114.</p>
+<div class="eq">P(ω<sub>i</sub>) = <span class="frac"><span>N<sub>i</sub></span><span>N</span></span>, &nbsp;&nbsp;
+μ<sub>ij</sub> = <span class="frac"><span>1</span><span>N<sub>i</sub></span></span> ∑<sub>k ∈ ω<sub>i</sub></sub> x<sub>kj</sub>, &nbsp;&nbsp;
+σ<sub>ij</sub><sup>2</sup> = <span class="frac"><span>1</span><span>N<sub>i</sub> − 1</span></span> ∑<sub>k ∈ ω<sub>i</sub></sub> (x<sub>kj</sub> − μ<sub>ij</sub>)<sup>2</sup></div>
+<p class="note">The unbiased variance (N<sub>i</sub> − 1) is used. The maximum-likelihood version (divide by N<sub>i</sub>) gives exactly the same 30 test predictions.</p>
+<div class="wrap">
+<table>
+  <thead>
+    <tr><th rowspan="2">Class</th><th rowspan="2">Prior P(ω<sub>i</sub>)</th><th colspan="2">A</th><th colspan="2">B</th><th colspan="2">C</th><th colspan="2">D</th></tr>
+    <tr><th>μ</th><th>σ²</th><th>μ</th><th>σ²</th><th>μ</th><th>σ²</th><th>μ</th><th>σ²</th></tr>
+  </thead>
+  <tbody>
+<tr><th>1</th><td>38/114 = 0.3333</td><td>5.0053</td><td>0.1075</td><td>3.4079</td><td>0.1472</td><td>1.4789</td><td>0.0293</td><td>0.2553</td><td>0.0133</td></tr>
+<tr><th>2</th><td>37/114 = 0.3246</td><td>6.5541</td><td>0.4414</td><td>2.9459</td><td>0.0842</td><td>5.5514</td><td>0.3437</td><td>2.0108</td><td>0.0715</td></tr>
+<tr><th>3</th><td>39/114 = 0.3421</td><td>5.9615</td><td>0.2535</td><td>2.7821</td><td>0.0968</td><td>4.3077</td><td>0.2328</td><td>1.3436</td><td>0.0383</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p><b>Step 5: Discriminant function.</b> Taking the natural logarithm of p(<b>x</b> | ω<sub>i</sub>) P(ω<sub>i</sub>) turns the product into a sum without changing which class is largest:</p>
+<div class="eq">g<sub>i</sub>(<b>x</b>) = ln P(ω<sub>i</sub>) − ∑<sub>j=1</sub><sup>4</sup> [ ½ ln(2π σ<sub>ij</sub><sup>2</sup>) + <span class="frac"><span>(x<sub>j</sub> − μ<sub>ij</sub>)<sup>2</sup></span><span>2σ<sub>ij</sub><sup>2</sup></span></span> ], &nbsp;&nbsp; i = 1, 2, 3</div>
+<p><b>Decision rule:</b> assign <b>x</b> to ω<sub>k</sub> where k = arg max<sub>i</sub> g<sub>i</sub>(<b>x</b>).
+Each g<sub>i</sub> is quadratic in <b>x</b> with a diagonal covariance matrix, so the decision boundaries are quadratic surfaces.
+On the 114 cleaned training samples this classifier is 95.6% correct (resubstitution accuracy, an optimistic estimate).</p>
+
+<p><b>Worked example: test sample 11, <b>x</b> = (6.0, 2.2, 5.0, 1.5).</b> Per-feature penalty terms ½ ln(2πσ<sup>2</sup>) + (x − μ)<sup>2</sup>/(2σ<sup>2</sup>):</p>
+<table>
+  <thead><tr><th>Class</th><th>ln P(ω<sub>i</sub>)</th><th>A</th><th>B</th><th>C</th><th>D</th><th>g<sub>i</sub>(<b>x</b>)</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>−1.0986</td><td>4.4046</td><td>4.9158</td><td>210.9042</td><td>56.7900</td><td>−278.11</td></tr>
+    <tr><td>2</td><td>−1.1253</td><td>0.8578</td><td>2.9853</td><td>0.8272</td><td>1.4237</td><td>−7.22</td></tr>
+    <tr><td>3</td><td>−1.0726</td><td>0.2356</td><td>1.5016</td><td>1.2195</td><td>−0.3928</td><td><b>−3.64</b></td></tr>
+  </tbody>
+</table>
+<p>For example, for class 3 and feature A: ½ ln(2π × 0.2535) + (6.0 − 5.9615)<sup>2</sup>/(2 × 0.2535) = 0.2327 + 0.0029 = 0.2356.
+Then g<sub>3</sub> = −1.0726 − (0.2356 + 1.5016 + 1.2195 − 0.3928) = −3.64, the largest of the three, so sample 11 → class 3.
+(A penalty term can be negative because σ<sup>2</sup> &lt; 1/(2π) makes the log term negative.)
+Class 1 is ruled out by a wide margin, mainly because C = 5.0 is extremely far from class 1's mean of 1.48.</p>
+
+<h3>(3) Predicted class labels of the test data</h3>
+<div class="wrap">
+<table>
+  <thead><tr><th>Test #</th><th>A</th><th>B</th><th>C</th><th>D</th><th>g<sub>1</sub></th><th>g<sub>2</sub></th><th>g<sub>3</sub></th><th>Predicted</th></tr></thead>
+  <tbody>
+<tr><td>1</td><td>4.8</td><td>3.1</td><td>1.6</td><td>0.2</td><td>0.34</td><td>-50.56</td><td>-36.53</td><td><b>1</b></td></tr>
+<tr><td>2</td><td>5.1</td><td>3.5</td><td>1.4</td><td>0.3</td><td>0.97</td><td>-51.05</td><td>-37.03</td><td><b>1</b></td></tr>
+<tr><td>3</td><td>4.8</td><td>3.0</td><td>1.4</td><td>0.1</td><td>-0.55</td><td>-55.39</td><td>-41.78</td><td><b>1</b></td></tr>
+<tr><td>4</td><td>5.7</td><td>3.8</td><td>1.7</td><td>0.3</td><td>-2.45</td><td>-48.49</td><td>-34.84</td><td><b>1</b></td></tr>
+<tr><td>5</td><td>5.5</td><td>4.2</td><td>1.4</td><td>0.2</td><td>-2.27</td><td>-59.89</td><td>-46.57</td><td><b>1</b></td></tr>
+<tr><td>6</td><td>5.0</td><td>3.4</td><td>1.5</td><td>0.2</td><td>1.10</td><td>-52.06</td><td>-38.33</td><td><b>1</b></td></tr>
+<tr><td>7</td><td>4.6</td><td>3.1</td><td>1.5</td><td>0.2</td><td>0.01</td><td>-52.56</td><td>-38.71</td><td><b>1</b></td></tr>
+<tr><td>8</td><td>5.8</td><td>4.0</td><td>1.2</td><td>0.2</td><td>-4.35</td><td>-59.00</td><td>-46.06</td><td><b>1</b></td></tr>
+<tr><td>9</td><td>5.0</td><td>3.6</td><td>1.4</td><td>0.2</td><td>0.88</td><td>-54.57</td><td>-41.04</td><td><b>1</b></td></tr>
+<tr><td>10</td><td>4.6</td><td>3.4</td><td>1.4</td><td>0.3</td><td>0.28</td><td>-52.38</td><td>-38.53</td><td><b>1</b></td></tr>
+<tr><td>11</td><td>6.0</td><td>2.2</td><td>5.0</td><td>1.5</td><td>-278.11</td><td>-7.22</td><td>-3.64</td><td><b>3</b></td></tr>
+<tr><td>12</td><td>6.5</td><td>3.2</td><td>5.1</td><td>2.0</td><td>-347.27</td><td>-1.99</td><td>-8.98</td><td><b>2</b></td></tr>
+<tr><td>13</td><td>7.7</td><td>3.0</td><td>6.1</td><td>2.3</td><td>-554.42</td><td>-3.83</td><td>-25.58</td><td><b>2</b></td></tr>
+<tr><td>14</td><td>6.9</td><td>3.2</td><td>5.7</td><td>2.3</td><td>-476.52</td><td>-2.44</td><td>-19.27</td><td><b>2</b></td></tr>
+<tr><td>15</td><td>7.9</td><td>3.8</td><td>6.4</td><td>2.0</td><td>-565.89</td><td>-8.73</td><td>-28.32</td><td><b>2</b></td></tr>
+<tr><td>16</td><td>6.5</td><td>3.0</td><td>5.2</td><td>2.0</td><td>-360.23</td><td>-1.50</td><td>-8.69</td><td><b>2</b></td></tr>
+<tr><td>17</td><td>6.2</td><td>2.8</td><td>4.8</td><td>1.8</td><td>-284.42</td><td>-2.70</td><td>-3.89</td><td><b>2</b></td></tr>
+<tr><td>18</td><td>6.7</td><td>2.5</td><td>5.8</td><td>1.8</td><td>-423.21</td><td>-2.91</td><td>-9.52</td><td><b>2</b></td></tr>
+<tr><td>19</td><td>6.2</td><td>3.4</td><td>5.4</td><td>2.3</td><td>-424.60</td><td>-3.29</td><td>-17.12</td><td><b>2</b></td></tr>
+<tr><td>20</td><td>6.5</td><td>3.0</td><td>5.5</td><td>1.8</td><td>-375.26</td><td>-1.64</td><td>-7.12</td><td><b>2</b></td></tr>
+<tr><td>21</td><td>6.8</td><td>3.0</td><td>5.5</td><td>2.1</td><td>-417.93</td><td>-1.45</td><td>-12.69</td><td><b>2</b></td></tr>
+<tr><td>22</td><td>5.8</td><td>2.7</td><td>4.1</td><td>1.0</td><td>-141.53</td><td>-12.51</td><td>-2.25</td><td><b>3</b></td></tr>
+<tr><td>23</td><td>6.8</td><td>2.8</td><td>4.8</td><td>1.4</td><td>-252.47</td><td>-4.93</td><td>-2.49</td><td><b>3</b></td></tr>
+<tr><td>24</td><td>6.7</td><td>3.1</td><td>4.4</td><td>1.4</td><td>-207.27</td><td>-6.00</td><td>-2.19</td><td><b>3</b></td></tr>
+<tr><td>25</td><td>5.2</td><td>2.7</td><td>3.9</td><td>1.4</td><td>-149.85</td><td>-10.31</td><td>-2.11</td><td><b>3</b></td></tr>
+<tr><td>26</td><td>5.7</td><td>2.6</td><td>3.5</td><td>1.0</td><td>-93.78</td><td>-16.10</td><td>-3.78</td><td><b>3</b></td></tr>
+<tr><td>27</td><td>5.6</td><td>2.5</td><td>3.9</td><td>1.1</td><td>-130.06</td><td>-13.28</td><td>-2.33</td><td><b>3</b></td></tr>
+<tr><td>28</td><td>5.5</td><td>2.5</td><td>4.0</td><td>1.3</td><td>-152.15</td><td>-10.77</td><td>-1.59</td><td><b>3</b></td></tr>
+<tr><td>29</td><td>5.0</td><td>2.0</td><td>3.5</td><td>1.0</td><td>-96.05</td><td>-22.61</td><td>-8.46</td><td><b>3</b></td></tr>
+<tr><td>30</td><td>6.4</td><td>3.2</td><td>4.5</td><td>1.5</td><td>-221.88</td><td>-5.14</td><td>-2.22</td><td><b>3</b></td></tr>
+  </tbody>
+</table>
+</div>
+<p><b>Summary:</b> samples 1–10 → class 1; samples 12–21 → class 2; samples 11 and 22–30 → class 3.
+Class 1 is separated from the others by a very wide margin (mainly through features C and D). The closest decisions are sample 11
+(g<sub>3</sub> − g<sub>2</sub> = 3.58) and sample 17 (g<sub>2</sub> − g<sub>3</sub> = 1.19), which lie near the class 2 / class 3 boundary.</p>
+
+<h2>Assignment 2</h2>
+<p class="todo">To be added once Assignment 2 is released. Both assignments go into this one PDF.</p>
+
+</div>
+</body>
+</html>
