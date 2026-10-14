@@ -55,6 +55,7 @@
 | `resources/public-archive-2026-08-24/worked-lecture-examples/1.WCY_Ch1 - 6/Example4.4-v2.pdf` | 2 pages | HTML Module 5; printable Chapter 4 stability section | Chapter 4 stability section | Unofficial worked example retained only as later-course stability support, not Quiz 1 preparation. The remaining 94 example PDFs are not yet covered. |
 | `resources/lecture-notes-weeks-01-04.pdf` (Chapters 1-3 re-read for the evaluation set) | 8-20, 24-48, 49-70, 73-79, 80-93, 94-121, 122-138 | `quizzes/quiz-01-evaluation-set.html` topic groups A-J; `quizzes/quiz-01-evaluation-set-solutions.tex` sections 1.1-1.10 | not applicable (evaluation set is not a note) | Every one of the 44 items carries the page range it is drawn from. Table 2-1 (pp. 32-33), Table 3-1 (pp. 122-126) and the digital-PID derivation (pp. 130-135) were re-read page by page rather than taken from the existing notes; the five Table 3-1 configurations were re-derived independently from the starred-transform algebra and agree with the printed results. |
 | `resources/public-archive-2026-08-24/topic-explainers/{3.Table3-3的证明，3.3.7.pdf,EE6203-热门考点分析.xlsx}` | 8 PDF pages; workbook Sheet1 A1:J153 | HTML Modules 4 and 6; printable Appendix A: Archetypes 4 and 6, D4 and D7 | Quiz 1 appendix: topology and archive-backed exam checks | Supplementary student material used as topic-pattern evidence and to broaden sampler-topology practice. |
+| `resources/transcripts-raw/week-08-transcript.txt`, `week-09-transcript.txt` | 2 raw lecture transcripts | not yet covered | not yet covered | NTULearn Media Gallery machine transcripts (`26S1-EE6203-Week 8`, `-Week 9`; Week 9 = LPH "Lecture No 5", uploaded 12 Oct), downloaded 2026-10-14; raw only, no cleaned `resources/week-0N-transcript.txt` yet. |
 
 | User-supplied appshots: Xiaohongshu `NTU EE6203 quiz1` and a Quiz 1 topic summary (2026-08-31) | Two recalled parts; no authoritative page range | `quizzes/quiz-01-prediction-papers.html` Papers 1-4 and twist bank | not applicable (prediction set is not a note) | Unofficial recall evidence used only to fix the question *format*: one short-answer question, two parts, 30 minutes, part (a) restricted to a definition-only derivation, part (b) an open-loop sampler/ZOH/plant output with a final-value ruling. No recalled numbers are reproduced; every system, input, key and mark scheme is constructed here from lecture PDF pp. 21-70 and 94-143. |
 
@@ -70,6 +71,7 @@
 
 ## Pending topics and resources
 
+- **Week 8–9 transcripts are raw only** (`resources/transcripts-raw/week-08…09-transcript.txt`): clean to `resources/week-0N-transcript.txt` and mine for notes/Quiz 2.
 - The evaluation set covers Chapters 1-3 only and is scored by topic; it is a measurement instrument, not additional teaching material, and deliberately contains no derivations. Its solutions PDF holds the dependency-ordered triage and the minimum-viable study path.
 - The newly supplied Week 3 transcript and exercise/solution pair have been reviewed at Quiz 1 depth. The exercise set is mapped completely, while the notes develop representative methods rather than reproduce all 26 solution pages.
 - Later EE6203 topics (state-space design, optimal control, transfer-function design, and controller implementation beyond the Weeks 1-4 material) remain pending in both notes. Newly downloaded worked examples may provide source material, but they have not yet been checked or synthesized.
@@ -79,6 +81,7 @@
 
 ## File-organization record
 
+- 2026-10-14: added raw `resources/transcripts-raw/week-08-transcript.txt` and `week-09-transcript.txt` from the NTULearn Media Gallery via `ntulearn-organize --layout "{prefix}-{number}/resources/transcripts-raw/{slug}-transcript.txt"`. Re-downloaded Weeks 1–6 are byte-identical to the existing raw files (left unchanged). The gallery entry titled `26S1-EE6203-Week 7` is the cancelled 21 Sep session (transcript is only `Okay.`), so it was **not** filed; `week-07` stays the 26 Sep make-up recording `26S1-EE6203-C` (byte-identical re-download confirmed).
 - 2026-10-01: learner-supplied 26 Sep recording, copied (original left in Downloads): `71027 - 0_b9v7ti93 - PID 117.txt -> resources/transcripts-raw/week-07-transcript.txt`; whitespace-collapsed copy at `resources/week-07-transcript.txt`. New files `notes/quiz2-prep-learning.html` and `notes/quiz2-prep-learning-check.py`; nothing moved or renamed.
 - 2026-09-24: `~/Downloads/644.JPG -> quizzes/quiz-02-announcement-slide.jpg` (copied; original left in Downloads).
 - 2026-09-24: learner-supplied recordings, copied (originals left in Downloads): `59269 - 0_ncuiznw1 - PID 117.txt -> resources/transcripts-raw/week-04-transcript.txt`; `60496 - 0_w2uax9cg - PID 117.txt -> resources/transcripts-raw/week-05-transcript.txt`; `62335 - 0_8y0kor2z - PID 117.txt -> resources/transcripts-raw/week-06-transcript.txt`; whitespace-collapsed copies at `resources/week-0{4,5,6}-transcript.txt`. New files `quizzes/quiz-02-intel.md`, `quizzes/quiz-02-prediction-paper.html`, `quizzes/quiz-02-prediction-paper.md`, `quizzes/quiz-02-prediction-check.py`.
@@ -105,6 +108,7 @@
 
 ## Update record
 
+- 2026-10-14 transcripts: filed NTULearn Week 8–9 raw lecture transcripts; source table + pending list updated. No note content changed.
 - 2026-10-05: Added `quizzes/quiz-02-transfer-function-explainer.html` and linked it from the Test A solutions page (Q1(iii), Q2(iii)). New file only; nothing moved or renamed; no `.tex` changed.
 - 2026-10-05: Added `quizzes/quiz-02-mock-test-a-solutions.html`, an HTML walkthrough of the Test A key. New file only; nothing moved or renamed; no `.tex` changed.
 - 2026-10-05: Added `quizzes/quiz-02-quick-reminder.html`, a quick-glance reminder for Quiz 2 built from the existing Module 11 formula recall, `quiz-02-intel.md` and the 26 Sep rules. Nothing moved or renamed.

@@ -53,9 +53,11 @@
 | `resources/additional-materials/section-4.2-pick-and-place.pdf` | all pages | Section 7 (partial) | Trajectory planning (partial) | Pick-and-place trajectory example detail. |
 | `resources/additional-materials/section-4.3-illustration.pdf` | all pages | Section 7 (partial) | Trajectory planning (partial) | Illustration supporting lecture section 4.3. |
 | `resources/additional-materials/section-4.4.1-cubic-polynomials.pdf` | all pages | Section 7 (partial) | Trajectory planning (partial) | Cubic-polynomial trajectory interpolation derivation. |
+| `resources/transcripts-raw/week-05-transcript.txt` … `week-08-transcript.txt` | 4 raw lecture transcripts | not yet covered | not yet covered | NTULearn Media Gallery machine transcripts (`26S1-EE6221-Week 5`…`8`), downloaded 2026-10-14; raw only, no cleaned `resources/week-0N-transcript.txt` yet. Week 7 recording opens with quiz seating instructions. |
 
 ## Pending and unresolved
 
+- **Week 5–8 transcripts are raw only** (`resources/transcripts-raw/week-05…08-transcript.txt`): clean to `resources/week-0N-transcript.txt`, then cover in both notes.
 - Robot control, mobile-robot kinematics, and intelligent-sensor material remain pending in both notes. Course-specific public slides are now archived, but they have not yet been reviewed or synthesised.
 - The public exams and assignment files are validated and indexed in the archive `README.md`; their calculations remain unchecked.
 - Tutor deck pp. 4 and 11 both carry the label "22-23 S2" but show different robots, so the year of the p. 4 arm (Mock 5 Q4) is unresolved.
@@ -68,6 +70,7 @@
 
 ## File-organization record
 
+- 2026-10-14: added raw `resources/transcripts-raw/week-05…08-transcript.txt` from the NTULearn Media Gallery via `ntulearn-organize --layout "{prefix}-{number}/resources/transcripts-raw/{slug}-transcript.txt"`. Re-downloaded Weeks 1–4 are byte-identical to the existing raw files (left unchanged), so the existing raw files are the Media Gallery transcripts.
 - 2026-09-23: user-supplied WeChat temporary file `6221 tutor(1).pdf -> resources/ee6221-tutor-exam-review-2026.pdf` (copied, not moved; original preserved). Its slide-11 diagram was cropped into `quizzes/quiz-assets/ee6221-2022-2023-s2-q1-seven-joint-figure.png` for the practice page.
 - 2026-09-23: `resources/EE6221_Assignment_solution.pdf -> resources/exercises-kinematics-solutions.pdf` (descriptive name for the supplied three-page exercise solution; content preserved).
 - 2026-09-18 attempt filing: `~/Downloads/Scanned Document 6.pdf -> quizzes/attempts/quiz-01-mock-02-2026-09-18.pdf` (copied, not moved; the original is left in Downloads for the learner to delete). New sibling file `quizzes/quiz-01-mock-02-attempt-2026-09-18-marked.md`.
@@ -90,6 +93,7 @@
 
 ## Update record
 
+- 2026-10-14 transcripts: filed NTULearn Week 5–8 raw lecture transcripts; source table + pending list updated. No note content changed.
 - 2026-09-23: Marked Mock 5 Q2 attempt (13/20; appended to `quizzes/quiz-01-mock-05-attempt-2026-09-23-marked.md`, scan `quizzes/attempts/quiz-01-mock-05-q2-2026-09-23.jpg`). Added a "length along a joint axis is a $d$" pitfall (roll-about-link case) with $x_k\perp z_{k-1}$ and tip-walk checks to both notes. Both PDFs recompiled with XeLaTeX. No files moved or renamed.
 - 2026-09-23: Marked Mock 5 Q1 attempt (18/20; record `quizzes/quiz-01-mock-05-attempt-2026-09-23-marked.md`, scan `quizzes/attempts/quiz-01-mock-05-q1-2026-09-23.jpg`). Added the $x_k$-direction / $a_k\ge0$ rule to both notes' D--H construction steps. Both PDFs recompiled with XeLaTeX. No files moved or renamed.
 - 2026-09-23: Added Mock 5 (`quizzes/quiz-01-mock-05.html`, `.md` key, `-check.py`): every Quiz-1-scope question from tutor deck pp. 4-26, with four new figure crops (year labels and solution marks removed). The tutor's handwritten keys were re-derived rather than adopted; one sign error (seven-joint row 6) and two typos were recorded in the key. No files moved or renamed; notes unchanged, so no LaTeX compilation needed.
