@@ -1,8 +1,66 @@
-# EE6204 Quiz 2 — historical preparation context
+# EE6204 Quiz 2 — intelligence file
 
+Gathered 2026-10-14. Two layers: the **official** announcement (authoritative), then **unofficial /
+historical** evidence used only to choose practice angles.
+
+## ★ OFFICIAL (NTULearn announcements, read 2026-10-14)
+
+Source: EE6204 NTULearn course announcements — "Quiz 2" (posted 2026-10-12 15:05) and
+"*Important for Quiz*: Update the Respondus LockDown Browser" (2026-10-12 15:07), both by
+Assoc Prof Patricia Wong; and "Welcome" (2026-08-03). Paraphrased.
+
+| Item | Official statement |
+|---|---|
+| Topics | **Random Processes and Queuing Models** (Part 2, weeks 5–9) |
+| Date / time | **Friday 23 October 2026, 6:30 pm – 7:20 pm (50 min)** |
+| Venue | **LT1**, alternate seats per the seating plan, fill rows from the edge |
+| Format | **Closed-book, computerized** quiz on NTULearn in **Respondus LockDown Browser** |
+| Questions | **4 questions, do all** |
+| Marking | **Only keyed-in answers are marked**; the system string-compares with the key. A different format is marked wrong. **No backend intervention.** |
+| Answer format | Follow each question's instruction exactly — e.g. **number of decimal places (standard round-up/down)**, **fraction `a/b` in simplest form** |
+| Working paper | Provided, **not marked**. Write name + matric no. on it and hand it in |
+| Exam appendix | **Provided** (the Part 2 "Exam appendix" item = `resources/part-2/exam-appendix.pdf`). Do not write on it; return it |
+| Calculator | **Bring your own** |
+| Device | Own **notebook** with LockDown Browser — **not an iPad**. No power points: charge 100 %, disable sleep, update the OS first |
+| LockDown Browser | **Update required** (CITS: mandatory for all users from 5 Oct 2026). Test with the NTULearn **"Mock quiz"** (Assignments, Quizzes folder; 20 min, proctored) |
+| ID | Physical passport or a photocopy of it |
+| Phone / watch | Airplane mode, in the bag. Phone use = potential cheating |
+| Rules | Stay seated to the end; late-comer cut-off 10 min after start; everyone submits at the end |
+| Absence | Soft-copy MC/LOA to the TA (cc Dr Patricia) by 23 Oct |
+| Lecturer tip | Copy every keyed-in answer onto your working paper as a backup against a computer failure |
+| Weighting ("Welcome") | **Quiz 1 16 %, Quiz 2 16 %, Assignment 8 %, Exam 60 %** |
+
+### Consequences for preparation
+
+- What is tested is the **number in the right format**. Keep full precision in the calculator and
+  round once, at the end. Reduce fractions fully (`28/95`, not `56/190`).
+- 4 questions / 50 min ≈ 12 min per question → each question is probably multi-part with
+  several input boxes (inference, not stated).
+- The appendix carries the queue formulas, so effort belongs in *modelling* (state space, TPM,
+  generator, rate balance) and in calculation speed — not in memorising queue closed forms.
+
+## What the exam appendix gives (and what it does not)
+
+`resources/part-2/exam-appendix.pdf`, 2 pages, image-only. **Given:** for **M/M/1**, **M/M/1/N**,
+**M/M/m** and **Mᵇ/M/1** — ρ, π₀, πₖ, L, Q, W, D. **Not given (must know):** geometric /
+exponential / Poisson pmfs, cdfs and means; the memoryless property; superposition /
+decomposition; DTMC TPM rules, `P(n) = Pⁿ`, `π(n) = π(0)Pⁿ`, `Y = YP`, mean sojourn
+`1/(1−pᵢᵢ)`; CTMC generator rules (rows sum to 0), sojourn `EXP(−qᵢᵢ)`, `πQ = 0`, rate balance;
+birth–death product formula; Little's law `L = λW`, `Q = λD`; utilisation `U = 1 − π₀`;
+production rate `(1 − π₀)µ` or `pπ₁`.
+
+Note the appendix's M/M/1/N `W` and `D` equal `L/λ` and `Q/λ` with the **nominal** λ (as in
+lecture Eg 4.1: `W = 1.566/8`), not the effective (accepted) rate. Follow the appendix if a
+question asks for W of an M/M/1/N queue; mention the effective-rate version only if asked.
+
+---
+
+# Unofficial / historical background (method practice only)
+
+## RedNote recollections (gathered 2026-10-14 in a parallel logged-in Safari session)
 Updated 2026-10-14. Read in logged-in Safari on Xiaohongshu/RedNote, searching `EE6204 Quiz2`, `EE6204 quiz 2`, and `6204 quiz2`. These searches returned the same core reports; this is a targeted search, not an exhaustive archive.
 
-**Status: unofficial.** Student recollections and an explicitly GPT-generated reconstruction are preparation evidence, not an official paper, marking scheme, or confirmation of this semester's scope. No current Quiz 2 announcement was inspected. Do not inherit Quiz 1's lecturer, calculator rule, duration, weighting, or LockDown arrangements.
+**Status: unofficial.** Student recollections and an explicitly GPT-generated reconstruction are preparation evidence, not an official paper, marking scheme, or confirmation of this semester's scope. (When this section was written in a parallel session the official announcement had not yet been read; the ★ OFFICIAL section above now supersedes any logistics below.)
 
 ## Sources and deduplication
 
@@ -91,10 +149,60 @@ Use this as a provisional practice list, then check it against the current lectu
 
 **Classification caveat (S3 image 2/6):** hourly supermarket customer counts use discrete time and discrete state. A thermometer displaying one decimal place has discrete *reported readings*, while underlying physical temperature is ordinarily modeled continuously. Continuous observation over an interval versus sampling times also matters. S3's temperature answer assumes the reported reading is the process state and observation is continuous; do not memorize the option without defining X(t).
 
-## Still unknown / next source checks
+## Reconciliation with the official announcement and local slides (2026-10-14)
 
-- Current official scope, quiz date, duration, weighting, question count, format, open/closed-book status, calculator policy, allowed appendix, and software requirements.
-- Whether S3 reconstructs the October 2025 sitting: its topic overlap is consistent, but no explicit sitting date establishes this. Do not treat overlap as two independent verified papers.
-- Match S1's Example 5.1 and these topic patterns to the newly present `../resources/part-2/` materials before building a mock or updating canonical teaching notes. Those materials were inventoried, not read for this search.
+- **Resolved by the official announcement:** date/time/venue, 50 min, **4 questions**, closed book, **calculator allowed** (so S1's "bring a calculator" advice holds this year), appendix provided, LockDown Browser, 16 % weighting. Answers are typed in a stated number of decimal places or as simplest fractions; S3 shows six-decimal probabilities; that format is unverified for the real paper, so follow each box's instruction (the mock uses 6 d.p. in four boxes to practise it).
+- **S1's "Example 5.1" is matched:** `resources/part-2/lecture-02-queuing-models.pdf` p26–27, *Eg 5.1* — two separate M/M/1 queues (λ/2, µ each) vs one M/M/1 with 2µ vs one M/M/2 (µ each); result W(single 2µ) < W(M/M/2) < W(separate). Taught in `notes/quiz2-prep-learning.html` module 8.
+- **S1's four-page shape (concepts → DTMC → queues → CTMC) matches the official 4-question count.** The mock's Q1 therefore includes process-classification and sojourn-distribution items; still a prediction.
 
-No source file was moved or renamed. This is an intelligence-only update; canonical LaTeX notes and PDFs were not changed.
+## Archive and lecturer-sheet evidence
+
+
+**Nothing below is official.** It is used only to choose practice angles. No answer key from
+any of these sources is adopted; every mock answer is derived independently in
+`quizzes/quiz-2-prediction-check.py`.
+
+## Sources consulted
+
+| Source | Author / origin | Date | What it contains | Used for |
+|---|---|---|---|---|
+| `resources/part-2/two-questions-random-process-queue.pdf` | Dr Patricia Wong (NTULearn, "Additional notes in lecture") | 2026 | Two lecturer-set questions: (1) (s,S) PC-inventory DTMC with Poisson(1) weekly demand → state space, TPM, steady state; (2) two M/M/1 queues vs one M/M/2 → L, idle proportion, comparison | **Highest-value style evidence** — the lecturer's own question shape |
+| `resources/part-2/exercises-solution.pdf` | Lecturer | 2026 | Answers to Problems 6.2, 6.3, 9.4 | Confirms DTMC n-step, DTMC steady state, CTMC rate-balance are drilled |
+| `resources/public-archive-2026-08-24/topic-explainers/EE6204-热门考点分析.xlsx` | freshman2233 (public GitHub) | ≤2024 | Topic × year table for **final exams** 2015–2023 | Topic frequency (below) |
+| `…/past-exam-walkthroughs-2015-2023/2{1,2,3}-S1-Q{3,4}*.pdf` | same | 2021–2023 | Handwritten student walkthroughs of final-exam Q3 / Q4 | Question style (inventory DTMC with Poisson usage `e^{-0.1}`; machine CTMC with production rate; queue design with monthly profit / break-even) |
+| RedNote S1–S3 | see "RedNote recollections" above | 2025-10-24 / 07-09 | Read in a parallel logged-in Safari session 2026-10-14 | Question-shape evidence (S1); reconstruction-only extras (S3) |
+| `EE6204-26S1` WeChat group | — | — | **Not re-exported** — the `wechat-export` venv is gone; reinstalling + key extraction needs the learner | Pending |
+| Web search `EE6204 Systems Analysis NTU quiz 2 Markov chain queue` | — | 2026-10-14 | Nothing course-specific | — |
+
+## Final-exam topic frequency (same lecturer, 2015–2023; **final exam, not quiz**)
+
+From the workbook (7 papers). These are **exam** questions; do not relabel them as quiz questions.
+
+| Topic | Papers | Typical asks |
+|---|---:|---|
+| DTMC: state space + TPM | 7/7 | define `Xₙ`, list S, write every `pᵢⱼ` (often Poisson demand / usage) |
+| DTMC: steady state | 6/7 | solve `Y = YP`, Σ = 1; comment on the result |
+| DTMC: mean sojourn time | 4/7 | `E(Tᵢ) = 1/(1−pᵢᵢ)` + comment |
+| DTMC: n-step / state probs | 2/7 | "probability after 4 weeks / 3 months" |
+| CTMC: transition diagram + steady state | 5/7 | machine with setup / processing / failure / repair; rate balance |
+| CTMC: production rate R | 3/7 | `R = p·π₁`, compare two designs |
+| Queues: M/M/1, M/M/1/N, M/M/m, Mᵇ/M/1 | 4/7 | L, W, Q, D, π₀, "proportion of time idle", compare / recommend |
+| Poisson process probability | 1/7 | probability of k arrivals in an interval |
+
+**Reading for Quiz 2 (inference):** the 4 quiz questions plausibly map to (1) random-variable /
+Poisson basics, (2) a DTMC (likely inventory with Poisson demand), (3) a CTMC machine model,
+(4) a queue computation/comparison using the appendix. This is a prediction, not a fact.
+
+## Conflicts and uncertainty
+
+- **Weighting:** earlier WeChat chatter (see `quiz-1-intel.md`) said Quiz 2 = 20 %; the official
+  Welcome post says **16 %**. Official wins.
+- **Calculator:** Quiz 1 was no-calculator; **Quiz 2 explicitly allows one**. Do not carry the
+  Quiz 1 habit of avoiding `e^{-x}`.
+- **Question count per part / decimal places:** not stated beyond "follow the instructions".
+
+## Open items
+
+1. RedNote: done (S1–S3 above). A search for Feb-2026-sitting posts could still add evidence.
+2. WeChat: run `~/Projects/wechat-export/setup.sh` then export `EE6204-26S1` for 2026-09-02 → today
+   if current-cohort chatter about Quiz 2 is wanted.

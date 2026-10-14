@@ -1,0 +1,669 @@
+<!doctype html>
+<html lang="en" data-theme="system">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EE6204 Quiz 2 Prep</title>
+<meta name="description" content="Self-study companion for EE6204 Quiz 2: random variables, Poisson processes, DTMCs, CTMCs, birth-death processes and queues, built step by step with a check after every module, a steady-state solver and a queue calculator.">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']], processEscapes: true },
+    options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] },
+    startup: { typeset: true }
+  };
+</script>
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: #f6f7f9; --surface: #ffffff; --surface-2: #eef1f5; --text: #14181f; --muted: #5b6472;
+  --border: #d8dee7; --accent: #1f6feb; --accent-soft: #e5efff; --success: #17794b; --success-soft: #e2f5ec;
+  --warning: #9a6200; --warning-soft: #fdf1dc; --danger: #b32130; --danger-soft: #fdeaec;
+  --shadow: 0 1px 2px rgba(16,24,40,.05), 0 8px 24px rgba(16,24,40,.06);
+  --radius: 14px; --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1117; --surface: #161b23; --surface-2: #1d232d; --text: #e7ecf3; --muted: #99a3b3; --border: #2a323e;
+    --accent: #6ea8ff; --accent-soft: #17233a; --success: #56d39b; --success-soft: #10281f;
+    --warning: #e5b567; --warning-soft: #2b2113; --danger: #ff8189; --danger-soft: #2e1519;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 28px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1117; --surface: #161b23; --surface-2: #1d232d; --text: #e7ecf3; --muted: #99a3b3; --border: #2a323e;
+  --accent: #6ea8ff; --accent-soft: #17233a; --success: #56d39b; --success-soft: #10281f;
+  --warning: #e5b567; --warning-soft: #2b2113; --danger: #ff8189; --danger-soft: #2e1519;
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 28px rgba(0,0,0,.35);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.65; font-size: 16.5px; -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 900px; margin: 0 auto; padding: 24px 16px 120px; }
+a { color: var(--accent); }
+code { font-family: var(--mono); font-size: .9em; background: var(--surface-2); padding: .08em .35em; border-radius: 5px; }
+pre { font-family: var(--mono); font-size: .86em; background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; overflow-x: auto; line-height: 1.5; }
+h1 { font-size: 1.75rem; line-height: 1.25; margin: 0 0 .4rem; }
+h2 { font-size: 1.32rem; margin: 2.6rem 0 .5rem; padding-top: .7rem; border-top: 2px solid var(--border); }
+h3 { font-size: 1.07rem; margin: 1.6rem 0 .35rem; }
+.sub { color: var(--muted); }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 14px 18px; margin: 14px 0; }
+.notice { background: var(--warning-soft); border: 1px solid var(--border); border-radius: 12px; padding: 12px 15px; margin: 14px 0; }
+.notice.info { background: var(--accent-soft); }
+.notice.good { background: var(--success-soft); }
+.notice p:last-child, .notice ul:last-child { margin-bottom: 0; }
+.src { font-size: .8rem; color: var(--muted); }
+.why { border-left: 3px solid var(--accent); padding: 2px 0 2px 12px; margin: 10px 0; }
+.pit { border-left: 3px solid var(--danger); padding: 2px 0 2px 12px; margin: 10px 0; }
+details { border: 1px solid var(--border); border-radius: 12px; margin: 12px 0; background: var(--surface); }
+details > summary { cursor: pointer; padding: 10px 14px; font-weight: 650; }
+details .inner { padding: 2px 16px 14px; border-top: 1px solid var(--border); }
+nav.toc ol { columns: 2; column-gap: 28px; padding-left: 1.2em; margin: 6px 0; }
+@media (max-width: 600px) { nav.toc ol { columns: 1; } }
+.statusbar { position: sticky; top: 0; z-index: 20; display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 8px 14px; margin: 12px 0; box-shadow: var(--shadow); font-size: .9rem; }
+.statusbar .grow { flex: 1 1 auto; }
+.pill { display: inline-block; background: var(--surface-2); border: 1px solid var(--border); border-radius: 999px; padding: 1px 10px; font-size: .82rem; color: var(--muted); }
+.pill strong { color: var(--text); }
+select, .btn, input[type="text"], input[type="number"] { font: inherit; font-size: .92rem; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 9px; padding: 6px 11px; }
+.btn { cursor: pointer; }
+.btn:hover { border-color: var(--accent); }
+.btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 600; }
+.check { background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; padding: 12px 15px; margin: 16px 0; }
+.check .q { font-weight: 600; margin-bottom: 6px; }
+.check .tag { font-size: .75rem; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: .05em; }
+.check label.opt { display: block; padding: 5px 8px; border-radius: 8px; cursor: pointer; }
+.check label.opt:hover { background: var(--surface); }
+.check .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 6px; }
+.check input[type="text"] { width: 11em; font-family: var(--mono); }
+.fb { margin-top: 8px; padding: 8px 11px; border-radius: 9px; display: none; font-size: .95rem; }
+.fb.ok { display: block; background: var(--success-soft); }
+.fb.no { display: block; background: var(--danger-soft); }
+table.data { border-collapse: collapse; margin: 10px 0; font-size: .9rem; width: 100%; }
+table.data th, table.data td { border: 1px solid var(--border); padding: 5px 9px; text-align: left; vertical-align: top; }
+table.data th { background: var(--surface-2); }
+.tool { display: grid; gap: 8px; }
+.tool .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; }
+.tool label { font-size: .82rem; color: var(--muted); display: block; }
+.tool input { width: 100%; font-family: var(--mono); }
+.matrix { display: grid; gap: 4px; }
+.matrix input { width: 100%; text-align: center; font-family: var(--mono); }
+.out { font-family: var(--mono); font-size: .9rem; white-space: pre-wrap; background: var(--surface-2); border-radius: 9px; padding: 8px 11px; min-height: 2.4em; }
+mjx-container[display="true"] { overflow-x: auto; overflow-y: hidden; }
+svg text { fill: var(--text); font-size: 13px; font-family: inherit; }
+svg .edge { stroke: var(--muted); fill: none; stroke-width: 1.5; }
+svg .node { fill: var(--surface); stroke: var(--accent); stroke-width: 2; }
+#math-warning { display: none; }
+footer { margin-top: 46px; padding-top: 16px; border-top: 1px solid var(--border); font-size: .87rem; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>EE6204 Quiz&nbsp;2 — Random Processes &amp; Queues, built from scratch</h1>
+<p class="sub">Self-study companion · Part 2 (Dr Patricia Wong) · built 2026-10-14 for the quiz on <strong>Fri 23 Oct 2026, 6:30–7:20 pm, LT1</strong></p>
+
+<div id="math-warning" class="notice"><strong>Equations are not rendering.</strong> Keep <code>vendor/mathjax/</code> next to this file (Safari blocks loading it from a parent folder).</div>
+
+<div class="statusbar">
+  <span class="pill">Checks passed <strong><span id="score">0</span>/<span id="total">0</span></strong></span>
+  <button class="btn" id="reset">Reset checks</button>
+  <span class="grow"></span>
+  <label for="theme" class="sub">Theme</label>
+  <select id="theme"><option value="system">Auto</option><option value="light">Light</option><option value="dark">Dark</option></select>
+</div>
+
+<div class="notice info">
+  <p><strong>How this page works.</strong> Each module builds one idea on top of the previous one. Formulas
+  are <em>derived</em>, not just stated, so you can rebuild them under pressure. Every module ends with a
+  check that marks you instantly. Do not scroll past a red one. Source page numbers refer to the files in
+  <code>resources/part-2/</code>. <span class="src">Lines marked "Source" are lecture facts; everything else is
+  explanation added here.</span></p>
+</div>
+
+<nav class="toc card"><strong>Modules</strong>
+<ol>
+  <li><a href="#m0">The quiz and the answer box</a></li>
+  <li><a href="#m1">Geometric &amp; exponential: memoryless clocks</a></li>
+  <li><a href="#m2">Stochastic processes &amp; the Poisson process</a></li>
+  <li><a href="#m3">DTMC: states, TPM, n steps, sojourn</a></li>
+  <li><a href="#m4">DTMC steady state</a></li>
+  <li><a href="#m5">Building an inventory DTMC</a></li>
+  <li><a href="#m6">CTMC: rates, generator, rate balance</a></li>
+  <li><a href="#m7">Birth–death processes</a></li>
+  <li><a href="#m8">Queues: Little, M/M/1, M/M/1/N, M/M/m, Mᵇ/M/1</a></li>
+  <li><a href="#m9">Quiz-day plan &amp; final check</a></li>
+</ol>
+Tools: <a href="#tool-ss">steady-state solver</a> · <a href="#tool-q">queue calculator</a> · Practice paper: <a href="../quizzes/quiz-2-prediction.html">Quiz 2 mock</a>
+</nav>
+
+<!-- ============================================================ -->
+<h2 id="m0">0 · The quiz and the answer box</h2>
+<p><strong>Official facts</strong> (NTULearn announcement, 12 Oct 2026; full table in
+<code>quizzes/quiz-2-intel.md</code>):</p>
+<ul>
+  <li>Topics: Random Processes and Queuing Models. Weight 16&nbsp;% of the course.</li>
+  <li><strong>4 questions, do all, 50 minutes</strong>. Closed book, computerized (Respondus LockDown Browser on your <em>notebook</em>, not an iPad).</li>
+  <li><strong>Calculator allowed</strong>. The <a href="../resources/part-2/exam-appendix.pdf">exam appendix</a> (queue formulas) is handed out.</li>
+  <li><strong>Only the keyed-in answer is marked</strong>, by exact comparison. Wrong number of decimal places, or an unreduced fraction, is wrong. There is no manual review.</li>
+</ul>
+<div class="why"><strong>Why this matters for how you work.</strong> Your method is invisible to the marker. So:
+(1) keep every intermediate at full calculator precision and round <em>once</em>, at the end;
+(2) when a fraction is asked, solve with fractions (or recognise the decimal) and reduce by the greatest common divisor;
+(3) write each final answer on the paper as well (the lecturer's own tip).</div>
+<div class="pit"><strong>Pitfall — early rounding.</strong> If you round \(e^{-0.5}\) to 0.61 and then use it five times,
+the fourth decimal of your answer is noise. Use the calculator's memory or ANS key.</div>
+<div class="pit"><strong>Pitfall — "standard round up/down".</strong> 0.12345 to 4 d.p. is 0.1235 (half rounds up);
+2.5 to 0 d.p. is 3. Units also count: a box asking for <em>minutes</em> rejects an answer in hours.</div>
+
+<div class="check" data-id="m0a" data-kind="text" data-answer="0.3679">
+  <div class="tag">Check 0.1</div>
+  <div class="q">Type \(e^{-1}\) to 4 decimal places, exactly as the system would want it.</div>
+  <div class="row"><input type="text"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: 0.36787944… → 0.3679 (the 5th digit, 7, rounds the 4th up)." data-no="Expected the string 0.3679. Keep exactly four digits after the point, and check the 5th digit to decide rounding."></div>
+</div>
+<div class="check" data-id="m0b" data-kind="text" data-answer="7/17">
+  <div class="tag">Check 0.2</div>
+  <div class="q">A probability works out to \(42/102\). Type it as a fraction in simplest form.</div>
+  <div class="row"><input type="text"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: gcd(42,102)=6, so 42/102 = 7/17." data-no="Divide top and bottom by gcd(42,102)=6. The system would reject 42/102 and 21/51 alike."></div>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="m1">1 · Geometric &amp; exponential: memoryless clocks</h2>
+<p><strong>Prerequisite — conditional probability.</strong> \(P(A\mid B) = P(A\cap B)/P(B)\): restrict the world
+to the cases where \(B\) happened, then ask how often \(A\) also happened.
+<span class="src">Source: main-points-lecture-1.pdf p1.</span></p>
+
+<h3>The geometric random variable (discrete time)</h3>
+<p>Run independent trials, each a "success" (breakdown, completion…) with probability \(p\). Let \(X\) be the
+number of the trial on which the <em>first</em> success happens. For \(X = n\) we need \(n-1\) failures then a success:</p>
+\[ P(X = n) = (1-p)^{\,n-1}p,\qquad n = 1,2,\ldots \qquad P(X > m) = (1-p)^m,\qquad E(X) = \frac1p. \]
+<div class="why"><strong>Why \(P(X>m)=(1-p)^m\):</strong> "first success after trial \(m\)" means the first \(m\) trials all failed. No sum is needed.</div>
+<p><strong>Memoryless property.</strong> Divide the two survival probabilities:</p>
+\[ P(X > m+n \mid X > m) = \frac{P(X>m+n)}{P(X>m)} = \frac{(1-p)^{m+n}}{(1-p)^m} = (1-p)^n = P(X>n). \]
+<p>Having survived \(m\) trials tells you nothing: the "clock" restarts. The geometric is the <em>only</em> discrete
+distribution with this property. <span class="src">Source: lecture-01-random-processes.pdf p3–6, p12.</span></p>
+<p><strong>Worked (lecture Eg 1.1).</strong> A tool breaks on each operation with \(p = 0.01\). Mean life \(=1/0.01 = 100\) operations.
+Already lasted 10: \(P(X > 40 \mid X > 10) = P(X>30) = 0.99^{30} = 0.7397\).</p>
+
+<h3>The exponential random variable (continuous time)</h3>
+<p>The continuous analogue: a lifetime \(X\ge 0\) with rate \(\lambda\) (events per unit time):</p>
+\[ f(x) = \lambda e^{-\lambda x},\quad P(X > x) = e^{-\lambda x},\quad P(X\le x) = 1-e^{-\lambda x},\quad E(X) = \frac1\lambda. \]
+<p>Memoryless in the same way: \(P(X > x+y \mid X > x) = e^{-\lambda(x+y)}/e^{-\lambda x} = e^{-\lambda y}\).
+<span class="src">Source: lecture-01 p9–11.</span></p>
+<p><strong>Two facts that power every CTMC</strong> (lecture Problem 2.4). For independent \(X_1 = \mathrm{EXP}(\lambda_1)\), \(X_2 = \mathrm{EXP}(\lambda_2)\):</p>
+\[ \min(X_1, X_2) = \mathrm{EXP}(\lambda_1+\lambda_2), \qquad P(X_1 \lt  X_2) = \frac{\lambda_1}{\lambda_1+\lambda_2}. \]
+<div class="why"><strong>Why the minimum adds rates:</strong> \(P(\min > x) = P(X_1>x)P(X_2>x) = e^{-\lambda_1x}e^{-\lambda_2x} = e^{-(\lambda_1+\lambda_2)x}\).
+Intuitively, two independent alarm clocks ringing at rates \(\lambda_1\) and \(\lambda_2\) together ring at rate \(\lambda_1+\lambda_2\), and the share that clock 1 wins is its share of the total rate.</div>
+<div class="pit"><strong>Pitfall — rate vs mean.</strong> "Mean repair time 30 min" means \(\lambda = 2\) per hour, not 30. Convert to one time unit before anything else.</div>
+
+<div class="check" data-id="m1a" data-kind="text" data-answer="0.3679">
+  <div class="tag">Check 1.1</div>
+  <div class="q">Repair time is exponential with mean 30 minutes (lecture Problem 2.3). Given the repair has already taken 1 hour, find P(it takes at least 30 more minutes). 4 d.p.</div>
+  <div class="row"><input type="text"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right. The past hour is irrelevant (memoryless): P(X > 0.5 h) = e^{-2·0.5} = e^{-1} = 0.3679 — the lecture's printed answer too." data-no="Use memorylessness: only the extra 0.5 h matters, with rate λ = 1/(0.5 h) = 2 per hour. P = e^{-λ·0.5} = e^{-1}."></div>
+</div>
+<div class="check" data-id="m1b" data-kind="mcq" data-answer="b">
+  <div class="tag">Check 1.2</div>
+  <div class="q">A machine finishes a part at rate 4/h but fails at rate 1/h (both exponential, independent). What is the distribution of the time until it leaves the "processing" state?</div>
+  <label class="opt"><input type="radio" name="m1b" value="a"> EXP(4)</label>
+  <label class="opt"><input type="radio" name="m1b" value="b"> EXP(5)</label>
+  <label class="opt"><input type="radio" name="m1b" value="c"> EXP(4/5)</label>
+  <div class="row"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: whichever clock rings first ends the state, min of EXP(4) and EXP(1) is EXP(5); mean 12 minutes." data-no="It leaves at the first of the two events, and min(EXP(4), EXP(1)) = EXP(4+1)."></div>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="m2">2 · Stochastic processes &amp; the Poisson process</h2>
+<p>A <strong>stochastic process</strong> \(\{X(t): t\in T\}\) is a family of random variables indexed by time.
+Two independent choices classify it: is time \(T\) countable (discrete time) or an interval (continuous time)? Is the
+state space \(S\) countable (a <em>chain</em>) or a continuum? <span class="src">Source: lecture-01 p12–15; main-points-lecture-1 p2.</span></p>
+<table class="data">
+  <tr><th></th><th>discrete state (chain)</th><th>continuous state</th></tr>
+  <tr><th>discrete time</th><td>DTMC (machine checked every hour)</td><td>—</td></tr>
+  <tr><th>continuous time</th><td>CTMC, Poisson process (machine watched at all times)</td><td>robot-arm distance</td></tr>
+</table>
+<h3>The Poisson process</h3>
+<p>Let \(X(t)\) count arrivals in \([0,t]\). It is a Poisson process with rate \(\lambda\) when</p>
+\[ P\big(X(t) = k\big) = \frac{e^{-\lambda t}(\lambda t)^k}{k!},\quad k = 0,1,2,\ldots \qquad E[X(t)] = \lambda t. \]
+<p>Set \(k=0\): \(P(\text{no arrival in }[0,t]) = e^{-\lambda t}\). But "no arrival by \(t\)" is exactly "inter-arrival time \(T > t\)", so
+\(P(T>t) = e^{-\lambda t}\). <strong>Inter-arrival times are EXP(\(\lambda\))</strong>. The counting view and the clock view are the same process.
+<span class="src">Source: lecture-01 p15–17.</span></p>
+<p><strong>Superposition and decomposition</strong> (main-points-lecture-2):</p>
+<ul>
+  <li>Merging independent Poisson streams with rates \(\lambda_1,\ldots,\lambda_n\) gives a Poisson stream with rate \(\sum\lambda_i\).</li>
+  <li>Splitting a rate-\(\lambda\) stream, sending each arrival to branch \(i\) with probability \(p_i\), gives Poisson streams with rates \(p_i\lambda\).</li>
+</ul>
+<p><strong>Worked (own numbers).</strong> Parts arrive from conveyor 1 at 4/h and conveyor 2 at 2/h. Merged rate 6/h.</p>
+<ul>
+  <li>P(no part in 20 min) \(= e^{-6\cdot(1/3)} = e^{-2} = 0.1353\).</li>
+  <li>P(exactly 3 parts in 30 min): \(\lambda t = 3\), \(e^{-3}3^3/3! = 0.2240\).</li>
+  <li>P(next part is from conveyor 1) \(= 4/6 = 2/3\).</li>
+</ul>
+<div class="pit"><strong>Pitfall — the time unit inside \(\lambda t\).</strong> Rate per hour × time in hours. 30 minutes is \(t = 0.5\).</div>
+
+<div class="check" data-id="m2a" data-kind="text" data-answer="0.0498">
+  <div class="tag">Check 2.1</div>
+  <div class="q">Same conveyors (4/h and 2/h). P(no part arrives in a 30-minute interval)? 4 d.p.</div>
+  <div class="row"><input type="text"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: e^{-6·0.5} = e^{-3} = 0.049787 → 0.0498." data-no="Merged rate 6/h, t = 0.5 h, so P = e^{-3}."></div>
+</div>
+
+<div class="check" data-id="m2b" data-kind="mcq" data-answer="a">
+  <div class="tag">Check 2.2</div>
+  <div class="q">A car park records how many cars are inside at the start of every hour. Classify the process. (A past-quiz recollection says this kind of item appears.)</div>
+  <label class="opt"><input type="radio" name="m2b" value="a"> discrete time, discrete state</label>
+  <label class="opt"><input type="radio" name="m2b" value="b"> continuous time, discrete state</label>
+  <label class="opt"><input type="radio" name="m2b" value="c"> discrete time, continuous state</label>
+  <div class="row"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: the index is the countable set of hourly instants (discrete time) and the count is in {0, 1, 2, …} (discrete state). Watched continuously instead, it would be continuous time, discrete state. Decide the two axes separately." data-no="Two separate questions: is the time index countable (hourly snapshots → yes) and is the set of values countable (a car count → yes)?"></div>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="m3">3 · DTMC: states, TPM, n steps, sojourn</h2>
+<p>A <strong>discrete-time Markov chain</strong> \(\{X_n\}\) on a countable \(S\) satisfies the <strong>Markov property</strong>:
+given the present state, the future is independent of the past,</p>
+\[ P(X_n = j \mid X_{n-1} = i, X_{n-2},\ldots,X_0) = P(X_n = j\mid X_{n-1}=i) = p_{ij}. \]
+<p>"Homogeneous" means \(p_{ij}\) does not depend on \(n\). Collect them in the <strong>transition probability matrix</strong>
+\(P = [p_{ij}]\): row = <em>from</em>, column = <em>to</em>, every entry in \([0,1]\), every <strong>row sums to 1</strong> (from \(i\) you must go somewhere).
+The state transition diagram draws an arc \(i\to j\) labelled \(p_{ij}\) for every non-zero entry.
+<span class="src">Source: lecture-01 p20–22.</span></p>
+
+<h3>n-step transitions (Chapman–Kolmogorov)</h3>
+<p>To go \(i \to j\) in \(m+n\) steps you must be <em>somewhere</em> (\(k\)) after \(m\) steps. Total probability plus the Markov property give</p>
+\[ p_{ij}(m+n) = \sum_{k\in S} p_{ik}(m)\,p_{kj}(n) \;\Longrightarrow\; P(n) = P^n,\qquad \pi(n) = \pi(0)P^n, \]
+<p>where \(\pi(n) = [P(X_n=0),\,P(X_n=1),\ldots]\) is a <em>row</em> vector. <span class="src">Source: lecture-01 p34–36.</span></p>
+<div class="why"><strong>Reading \(p_{20}(2)\) by hand</strong>: row 2 of \(P\) dotted with column 0 of \(P\): \(\sum_k p_{2k}p_{k0}\). You never need the whole \(P^2\).</div>
+
+<h3>Sojourn time</h3>
+<p>Each step in state \(i\), you stay with probability \(p_{ii}\) and leave with probability \(1-p_{ii}\). So the number of steps spent in \(i\)
+per visit is <strong>geometric with success probability \(1-p_{ii}\)</strong>, and</p>
+\[ E(T_i) = \frac{1}{1-p_{ii}}\ \text{steps}\quad(p_{ii} = 0 \Rightarrow 1;\ p_{ii}=1 \Rightarrow \infty,\ \text{absorbing}). \]
+<span class="src">Source: lecture-01 p23–24.</span>
+
+<p><strong>Worked (lecture Eg 5.1 / 6.1).</strong> A machine is working (0) or under repair (1), checked hourly; it fails in an hour w.p. \(a\),
+is repaired w.p. \(b\):</p>
+\[ P = \begin{pmatrix} 1-a & a\\ b & 1-b\end{pmatrix}. \]
+<p>With \(a = 0.2,\ b = 0.3\): \(p_{00}(2) = (0.8)(0.8) + (0.2)(0.3) = 0.70\); mean up-time \(=1/a = 5\) hours. Special cases from the lecture:
+\(a=b=0\) gives \(P=I\) (never moves); \(a=b=1\) gives \(P^n = I\) for even \(n\), \(P\) for odd \(n\) (it alternates; exercise Problem 6.2 has the 3-state version).</p>
+
+<h3>A second lecture model — two machines, no repair (lecture p30–31)</h3>
+<p>State = number of failed machines, each fails in an hour w.p. \(a\), independently. From 0: none fail \((1-a)^2\), exactly one \(2a(1-a)\), both \(a^2\).
+From 2 nothing can change: \(p_{22}=1\) (absorbing). Counting "exactly one" as \(a(1-a)+(1-a)a\) is the binomial step to remember.</p>
+
+<div class="check" data-id="m3a" data-kind="text" data-answer="0.55">
+  <div class="tag">Check 3.1</div>
+  <div class="q">For \(P=\begin{pmatrix}0.8&0.2\\0.3&0.7\end{pmatrix}\), find \(p_{11}(2) = P(X_2 = 1\mid X_0 = 1)\). 2 d.p.</div>
+  <div class="row"><input type="text"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: row 1 · column 1 = p₁₀p₀₁ + p₁₁p₁₁ = 0.3·0.2 + 0.7·0.7 = 0.06 + 0.49 = 0.55." data-no="Row 1 dotted with column 1: p10·p01 + p11·p11."></div>
+</div>
+<div class="check" data-id="m3b" data-kind="text" data-answer="3.3333">
+  <div class="tag">Check 3.2</div>
+  <div class="q">Same chain. Mean sojourn time in state 1, in steps. 4 d.p.</div>
+  <div class="row"><input type="text"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: 1/(1 − 0.7) = 3.3333." data-no="E(T₁) = 1/(1 − p₁₁) with p₁₁ = 0.7."></div>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="m4">4 · DTMC steady state</h2>
+<p>For a well-behaved chain, \(\pi(n)\) settles to a limit \(Y = [y_0, y_1, \ldots]\) that does not depend on where you started. Take the limit of
+\(\pi(n) = \pi(n-1)P\) on both sides:</p>
+\[ Y = YP,\qquad \sum_j y_j = 1,\qquad y_j\ge 0. \]
+<p>\(y_j\) is the long-run fraction of steps spent in state \(j\). <span class="src">Source: lecture-01 p39–44.</span></p>
+<div class="why"><strong>Solving recipe.</strong> \(Y=YP\) is one equation per column (\(y_j = \sum_i y_i p_{ij}\)). One of them is always redundant, so
+<strong>drop one</strong> (pick the messiest) and replace it by \(\sum y_j = 1\). Express everything in terms of one unknown, then normalise.</div>
+<p><strong>Worked (two-state).</strong> Column 0: \(y_0 = (1-a)y_0 + b y_1 \Rightarrow a y_0 = b y_1\). With \(y_0+y_1 = 1\):
+\(y_0 = b/(a+b),\ y_1 = a/(a+b)\). Interpretation: flow \(0\to1\) balances flow \(1\to0\).</p>
+<p><strong>Worked (exercise Problem 6.3).</strong> \(P = \begin{pmatrix}0.6&0.2&0.2\\0.1&0.8&0.1\\0.6&0&0.4\end{pmatrix}\).
+Column 1: \(y_1 = 0.2y_0 + 0.8y_1 \Rightarrow y_1 = y_0\). Column 2: \(y_2 = 0.2y_0 + 0.1y_1 + 0.4y_2 \Rightarrow 0.6y_2 = 0.3y_0 \Rightarrow y_2 = y_0/2\).
+Normalise: \(y_0(1+1+\tfrac12) = 1 \Rightarrow Y = (0.4, 0.4, 0.2)\), matching the lecturer's answer sheet.
+<span class="src">Source: exercises-solution.pdf.</span></p>
+<div class="pit"><strong>Pitfall — rows vs columns.</strong> \(Y = YP\) multiplies a row vector on the left, so each equation uses a <em>column</em> of \(P\). Using rows gives \(\sum_j p_{ij} = 1\), which is useless.</div>
+
+<div class="card" id="tool-ss">
+  <strong>Tool — steady-state solver</strong> <span class="sub">(check your hand work; enter a DTMC TPM or a CTMC generator Q)</span>
+  <div class="tool">
+    <div class="row" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <label>Size <select id="ss-n"><option>2</option><option selected>3</option><option>4</option></select></label>
+      <label>Type <select id="ss-type"><option value="dtmc">DTMC (rows sum to 1)</option><option value="ctmc">CTMC Q (rows sum to 0)</option></select></label>
+      <button class="btn btn-primary" id="ss-go">Solve</button>
+    </div>
+    <div class="matrix" id="ss-m"></div>
+    <div class="out" id="ss-out"></div>
+  </div>
+</div>
+
+<div class="check" data-id="m4a" data-kind="text" data-answer="0.6">
+  <div class="tag">Check 4.1</div>
+  <div class="q">For \(P=\begin{pmatrix}0.8&0.2\\0.3&0.7\end{pmatrix}\) find \(y_0\). 1 d.p.</div>
+  <div class="row"><input type="text"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: y₀ = b/(a+b) = 0.3/0.5 = 0.6." data-no="Balance 0.2·y₀ = 0.3·y₁ with y₀ + y₁ = 1."></div>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="m5">5 · Building an inventory DTMC (the lecturer's favourite)</h2>
+<p>This is Question 1 of <code>two-questions-random-process-queue.pdf</code>, and a DTMC state-space + TPM question appears in all 7 archived final exams (2015–2023), several of them
+inventory models with Poisson demand or usage (spare bulbs, cans…). Learn the <em>procedure</em>.</p>
+<p><strong>Problem (lecturer's sheet).</strong> A shop stocks PCs. Weekly demands \(D_i\) are i.i.d. Poisson(\(\lambda = 1\)). \(X_t\) = PCs on hand at the end
+of week \(t\). On Saturday night: if \(X_t = 0\), order 3 (arrive Monday); otherwise order nothing.</p>
+<h3>Step 1 — state space and the update rule</h3>
+<p>End-of-week stock can be 0, 1, 2 or 3, so \(S = \{0,1,2,3\}\). Write the update in two cases, because the policy changes the stock <em>before</em> demand hits:</p>
+\[ X_{t+1} = \begin{cases} \max(3 - D_{t+1},\,0), & X_t = 0\ \ (\text{restocked to }3)\\ \max(X_t - D_{t+1},\,0), & X_t \ge 1. \end{cases} \]
+<div class="why"><strong>Why \(\max(\cdot,0)\):</strong> unmet demand is lost, and stock cannot be negative. So <em>every</em> demand ≥ current stock lands in state 0. That is a tail probability \(P(D\ge k)\), not a point probability.</div>
+<h3>Step 2 — the demand probabilities you need</h3>
+<p>\(P(D=0)=e^{-1}=0.3679\), \(P(D=1)=0.3679\), \(P(D=2)=0.1839\), \(P(D\ge 1)=0.6321\), \(P(D\ge2)=0.2642\), \(P(D\ge3)=0.0803\).</p>
+<h3>Step 3 — the TPM row by row</h3>
+<pre>            to 0     to 1     to 2     to 3
+from 0   [ 0.0803   0.1839   0.3679   0.3679 ]   start with 3: P(D≥3), P(D=2), P(D=1), P(D=0)
+from 1   [ 0.6321   0.3679   0        0      ]   start with 1
+from 2   [ 0.2642   0.3679   0.3679   0      ]   start with 2
+from 3   [ 0.0803   0.1839   0.3679   0.3679 ]   start with 3 — same as row 0</pre>
+<p>Check: every row sums to 1. Rows 0 and 3 are equal because both weeks <em>start</em> with 3 PCs.</p>
+<h3>Step 4 — steady state</h3>
+<p>Solve \(Y = YP\), \(\sum y = 1\) (use the solver above to confirm): \(Y \approx (0.2858,\ 0.2847,\ 0.2631,\ 0.1663)\).
+Interpretation: an order is placed in about 28.6&nbsp;% of weeks; mean sojourn in state 1 is \(1/(1-0.3679) = 1.582\) weeks.</p>
+<div class="pit"><strong>Pitfall — forgetting the restock.</strong> Writing row 0 as \([1,0,0,0]\) makes 0 absorbing and the whole steady state collapses to "always empty". Read the policy first.</div>
+
+<div class="check" data-id="m5a" data-kind="text" data-answer="0.6321">
+  <div class="tag">Check 5.1</div>
+  <div class="q">Same shop. Why is \(p_{10} = 0.6321\) and not \(P(D=1) = 0.3679\)? Type the value of \(p_{10}\). 4 d.p.</div>
+  <div class="row"><input type="text"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: with 1 PC on hand, any demand of 1 or more empties the shelf, so p₁₀ = P(D ≥ 1) = 1 − e^{-1}." data-no="Stock 1, lost sales: demand 1, 2, 3, … all end at 0. p₁₀ = P(D ≥ 1) = 1 − e^{-1}."></div>
+</div>
+<div class="check" data-id="m5b" data-kind="mcq" data-answer="c">
+  <div class="tag">Check 5.2</div>
+  <div class="q">The policy changes to "if stock is 0 <em>or 1</em>, top up to 3". Which rows of the TPM become identical?</div>
+  <label class="opt"><input type="radio" name="m5b" value="a"> rows 0 and 1 only</label>
+  <label class="opt"><input type="radio" name="m5b" value="b"> rows 1 and 3 only</label>
+  <label class="opt"><input type="radio" name="m5b" value="c"> rows 0, 1 and 3</label>
+  <div class="row"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: every week that starts with 3 PCs has the same next-week distribution — after states 0, 1 and 3." data-no="Ask: with what stock does each week START? From 0 and 1 you top up to 3, and from 3 you start with 3."></div>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="m6">6 · CTMC: rates, generator, rate balance</h2>
+<p>A <strong>continuous-time Markov chain</strong> obeys the same Markov property, but at every instant. Because "how long you've been here"
+cannot matter, the time spent in state \(i\) must be memoryless, so it is <strong>exponential</strong>: \(T_i = \mathrm{EXP}(\lambda_i)\)
+(\(\lambda_i = 0\): absorbing). <span class="src">Source: lecture-01 p46–49.</span></p>
+<h3>The generator (transition rate matrix) Q</h3>
+<p>For \(i\ne j\), \(q_{ij}\) is the <strong>rate</strong> of jumping \(i\to j\). The diagonal makes each row sum to zero:</p>
+\[ q_{ii} = -\sum_{j\ne i} q_{ij}\quad(\text{minus the total out-rate}),\qquad \sum_j q_{ij} = 0. \]
+<p>Sojourn in \(i\) is \(\mathrm{EXP}(-q_{ii})\) (the min of all competing exits, Module 1). The chain evolves by \(d\pi(t)/dt = \pi(t)Q\) (forward Kolmogorov,
+solution \(\pi(t) = \pi(0)e^{Qt}\)). <span class="src">Source: lecture-01 p53–57.</span></p>
+<h3>Steady state: \(\pi Q = 0\) = rate balance</h3>
+<p>In steady state \(d\pi/dt = 0\), so \(\pi Q = 0\) with \(\sum\pi_j = 1\). Column \(j\) of that equation rearranges to</p>
+\[ \pi_j \sum_{k\ne j} q_{jk} \;=\; \sum_{k\ne j}\pi_k q_{kj}\qquad \text{(rate out of } j = \text{rate into } j\text{)}. \]
+<div class="why"><strong>Read it off the diagram:</strong> for each state, (probability of being there) × (sum of arrows out) = Σ (probability of each neighbour) × (its arrow in).
+No matrix algebra is needed. <span class="src">Source: lecture-01 p58–59, eq. (65)–(67).</span></div>
+
+<h3>Worked (lecture Eg 7.1 / 9.1, resume policy)</h3>
+<p>States: 0 setup (rate \(s\)), 1 processing (rate \(p\), may fail at rate \(f\)), 2 repair (rate \(r\)); after repair, <em>resume</em> the same part (2→1).</p>
+<svg viewBox="0 0 460 150" width="100%" style="max-width:460px" role="img" aria-label="CTMC diagram: 0 to 1 at rate s; 1 to 0 at rate p; 1 to 2 at rate f; 2 to 1 at rate r">
+  <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="currentColor" style="color:var(--muted)"/></marker></defs>
+  <circle class="node" cx="60" cy="75" r="24"/><text x="60" y="80" text-anchor="middle">0</text><text x="60" y="118" text-anchor="middle">setup</text>
+  <circle class="node" cx="230" cy="75" r="24"/><text x="230" y="80" text-anchor="middle">1</text><text x="230" y="118" text-anchor="middle">processing</text>
+  <circle class="node" cx="400" cy="75" r="24"/><text x="400" y="80" text-anchor="middle">2</text><text x="400" y="118" text-anchor="middle">repair</text>
+  <path class="edge" d="M84,62 Q145,25 206,62" marker-end="url(#ar)"/><text x="145" y="32" text-anchor="middle">s</text>
+  <path class="edge" d="M206,88 Q145,125 84,88" marker-end="url(#ar)"/><text x="145" y="140" text-anchor="middle">p</text>
+  <path class="edge" d="M254,62 Q315,25 376,62" marker-end="url(#ar)"/><text x="315" y="32" text-anchor="middle">f</text>
+  <path class="edge" d="M376,88 Q315,125 254,88" marker-end="url(#ar)"/><text x="315" y="140" text-anchor="middle">r</text>
+</svg>
+\[ Q = \begin{pmatrix} -s & s & 0\\ p & -(p+f) & f\\ 0 & r & -r\end{pmatrix},\qquad
+\begin{aligned} \pi_0 s &= \pi_1 p\\ \pi_2 r &= \pi_1 f\\ \pi_0+\pi_1+\pi_2 &= 1\end{aligned}
+\;\Rightarrow\; \pi_0 = \frac{pr}{pr+rs+fs},\ \pi_1 = \frac{rs}{pr+rs+fs},\ \pi_2 = \frac{fs}{pr+rs+fs}. \]
+<p>With \(s=20,\ p=4,\ f=0.05,\ r=1\) per hour: \(\pi = (0.16,\ 0.80,\ 0.04)\). <strong>Production rate</strong> \(R = p\,\pi_1 = 3.2\) parts/h: parts finish only while processing, at rate \(p\).
+Under the <em>discard</em> policy (2→0, fresh setup) \(R\) drops to 3.08. <span class="src">Source: lecture-01 p61–67.</span></p>
+<div class="pit"><strong>Pitfall — \(R = s\pi_0\)?</strong> That counts setups completed, and some of those parts are later lost to failures (in discard models). Output is counted where the part <em>finishes</em>: \(R = p\pi_1\).</div>
+<div class="pit"><strong>Pitfall — sign of \(q_{ii}\).</strong> Diagonal entries are negative (or 0). A positive diagonal is always wrong.</div>
+<p><strong>Exercise variants the lecturer set</strong> (lecture p68–69; answer to 9.4 in <code>exercises-solution.pdf</code>): batches of \(n\) parts per setup (Problem 9.3); after a failure, rework w.p. \(q\) (back to 1) or discard w.p. \(1-q\) (back to 0), so the repair state's exits are \(qr\) and \((1-q)r\) (Problem 9.4).</p>
+
+<div class="check" data-id="m6a" data-kind="text" data-answer="14.81">
+  <div class="tag">Check 6.1</div>
+  <div class="q">In Eg 9.1 (\(p=4,\ f=0.05\) per hour), what is the mean sojourn time in state 1, in minutes? 2 d.p.</div>
+  <div class="row"><input type="text"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: −q₁₁ = p + f = 4.05/h, so mean = 60/4.05 = 14.8148 → 14.81 min." data-no="Leaving state 1 happens at the first of finish (rate p) or failure (rate f): EXP(p+f), mean 1/(p+f) hours. Convert to minutes."></div>
+</div>
+<div class="check" data-id="m6b" data-kind="mcq" data-answer="a">
+  <div class="tag">Check 6.2</div>
+  <div class="q">Rework/discard model (Problem 9.4): from repair, rework w.p. \(q\), discard w.p. \(1-q\). What is row 2 of \(Q\)?</div>
+  <label class="opt"><input type="radio" name="m6b" value="a"> \([\,(1-q)r,\ qr,\ -r\,]\)</label>
+  <label class="opt"><input type="radio" name="m6b" value="b"> \([\,1-q,\ q,\ -1\,]\)</label>
+  <label class="opt"><input type="radio" name="m6b" value="c"> \([\,(1-q)r,\ qr,\ r\,]\)</label>
+  <div class="row"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: decomposition splits the repair rate r into qr (to 1) and (1−q)r (to 0); the diagonal is −r so the row sums to 0 — matching the lecturer's exercise answer." data-no="Rates, not probabilities: the repair finishes at rate r and is then split by q (decomposition). The diagonal must make the row sum to 0."></div>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="m7">7 · Birth–death processes</h2>
+<p>A CTMC on \(\{0,1,2,\ldots\}\) that only moves one step at a time: up \(k\to k+1\) at rate \(\lambda_k\) (birth), down \(k\to k-1\) at rate \(\mu_k\) (death).
+Balancing the flow across the "cut" between \(k-1\) and \(k\) gives \(\lambda_{k-1}\pi_{k-1} = \mu_k\pi_k\). Chain these together:</p>
+\[ \pi_k = \pi_0\prod_{i=0}^{k-1}\frac{\lambda_i}{\mu_{i+1}},\qquad \pi_0 = \Big[1 + \sum_{k\ge1}\prod_{i=0}^{k-1}\frac{\lambda_i}{\mu_{i+1}}\Big]^{-1}. \]
+<p><span class="src">Source: lecture-01 p70–72, eq. (76)–(79).</span> Every queue in Module 8 is this formula with particular \(\lambda_k,\mu_k\).</p>
+<div class="why"><strong>Why the cut argument works:</strong> in the long run, the process crosses the boundary between \(k-1\) and \(k\) upward as often as downward (it cannot cross twice in a row the same way), so the two flows are equal.</div>
+<div class="check" data-id="m7a" data-kind="text" data-answer="2/5">
+  <div class="tag">Check 7.1</div>
+  <div class="q">A birth–death chain on \(\{0,1,2\}\) has \(\lambda_0 = 2,\ \lambda_1 = 1,\ \mu_1 = 2,\ \mu_2 = 2\). Find \(\pi_0\) as a fraction in simplest form.</div>
+  <div class="row"><input type="text"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: π₁ = (2/2)π₀ = π₀, π₂ = (1/2)π₁ = π₀/2, so π₀(1 + 1 + 1/2) = 1 → π₀ = 2/5." data-no="Products: π₁ = (λ₀/μ₁)π₀, π₂ = (λ₁/μ₂)π₁. Then normalise."></div>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="m8">8 · Queues</h2>
+<p><strong>Notation</strong> \(A/S/m/K/L\): arrival process / service distribution / servers / capacity / population; "M" = Markovian (Poisson arrivals or exponential service).
+Symbols (all steady state): \(L\) mean number in <em>system</em>, \(Q\) mean number in <em>queue</em>, \(W\) mean time in system, \(D\) mean time in queue,
+\(\rho\) utilisation. <span class="src">Source: lecture-02-queuing-models.pdf p4–5; queue-summary.pdf.</span></p>
+<h3>Little's result — the one law you must know (not on the appendix)</h3>
+\[ L = \lambda W,\qquad Q = \lambda D,\qquad W = D + \frac1\mu. \]
+<div class="why"><strong>Intuition:</strong> if 9 jobs arrive per hour and each stays 1/3 hour, then on average \(9\times\tfrac13 = 3\) are inside. So you only ever need one of \(L, Q, W, D\); Little gives the rest. Also: utilisation \(U = 1-\pi_0\), production rate \(=(1-\pi_0)\mu\) for one server.</div>
+
+<h3>M/M/1 (birth–death with \(\lambda_k=\lambda,\ \mu_k=\mu\))</h3>
+<p>The product formula gives \(\pi_k = \rho^k\pi_0\) with \(\rho = \lambda/\mu\). The geometric series converges only if \(\rho\lt 1\) (stability), then \(\pi_0 = 1-\rho\) and</p>
+\[ L = \frac{\rho}{1-\rho},\quad W = \frac{L}{\lambda} = \frac{1}{\mu-\lambda},\quad Q = L - \rho,\quad D = W - \frac1\mu. \]
+<p>Eg 3.1: \(\lambda=8,\ \mu=10\) → \(\rho=0.8,\ L=4,\ Q=3.2,\ W=0.5\) h, \(D=0.4\) h. Idle fraction \(=\pi_0 = 0.2\). Waiting time in system is itself EXP(\(\mu-\lambda\)).
+<span class="src">Source: lecture-02 p5–16.</span></p>
+
+<h3>M/M/1/N (room for N in total)</h3>
+<p>Arrivals are blocked when \(N\) are present (\(\lambda_k = 0\) for \(k\ge N\)). Finite chain, so <strong>stable for any \(\rho\)</strong>:
+\(\pi_k = \rho^k(1-\rho)/(1-\rho^{N+1})\). The <strong>blocking probability</strong> is \(\pi_N\) (an arrival sees the time-average state). Eg 4.1 (\(N=4,\ \rho=0.8\)): \(\pi_0 = 0.297\).
+<span class="src">Source: lecture-02 p16–20.</span></p>
+<div class="pit"><strong>Convention trap.</strong> The appendix's M/M/1/N \(W\) and \(D\) equal \(L/\lambda\) and \(Q/\lambda\) with the <em>offered</em> \(\lambda\), which is what lecture Eg 4.1 does (\(W = 1.566/8\)). Physically, Little's law uses the <em>accepted</em> rate \(\lambda(1-\pi_N)\). If a quiz box asks for W of M/M/1/N, the appendix formula is the safe choice.</div>
+
+<h3>M/M/m (m servers, one shared queue)</h3>
+<p>Deaths at rate \(k\mu\) while \(k\lt m\) servers are busy, \(m\mu\) once all are busy. With \(\rho = \lambda/(m\mu)\) (note the \(m\)!):</p>
+\[ \pi_0 = \Big[\frac{(m\rho)^m}{m!(1-\rho)} + \sum_{k=0}^{m-1}\frac{(m\rho)^k}{k!}\Big]^{-1},\qquad Q = \frac{\rho(m\rho)^m\pi_0}{m!(1-\rho)^2},\qquad L = Q + \frac\lambda\mu. \]
+<p>Average busy servers \(=\lambda/\mu\); each server's utilisation \(=\rho\), so each is idle a fraction \(1-\rho\). <span class="src">Source: lecture-02 p22–27.</span></p>
+
+<h3>Mᵇ/M/1 (batches of b)</h3>
+<p>Batches arrive at rate \(\lambda\), each with \(b\) customers: \(\rho = b\lambda/\mu\), \(L = \rho(1+b)/(2(1-\rho))\), and Little uses the <em>customer</em> rate:
+\(W = L/(\lambda b)\). Eg 6.1 (\(b=2,\ \lambda=4,\ \mu=10\)): same \(\rho = 0.8\) as Eg 3.1 but \(L = 6\) vs 4, because each part waits for its batch-mates.
+<span class="src">Source: lecture-02 p28–33.</span></p>
+
+<h3>Worked — the lecturer's Question 2 (two-questions sheet)</h3>
+<p>Two queues, arrivals 6/h and 4/h, service mean 5 min (\(\mu=12\)/h).</p>
+<ul>
+  <li>(a) Separate M/M/1s. Queue 1: \(\rho=1/2\), \(L=1\), idle \(1/2\). Queue 2: \(\rho=1/3\), \(L=1/2\), idle \(2/3\). Total in system 1.5.</li>
+  <li>(b) Pooled M/M/2, \(\lambda = 10\): \(\rho = 10/24 = 5/12\), \(m\rho = 5/6\), \(\pi_0 = 7/17\), \(Q = 125/714\), \(L = 120/119 \approx 1.008\); each server idle \(7/12\).</li>
+  <li>(c) Pooling cuts the number in system from 1.5 to 1.008 with the same servers. Assumptions: Poisson arrivals, exponential service, FIFO, steady state, customers go to any free server.</li>
+</ul>
+<p>Lecture p27 adds the other side: <em>one</em> server twice as fast (M/M/1 with \(2\mu\)) beats M/M/2 on \(W\), and M/M/2 beats two separate M/M/1 queues.</p>
+
+<div class="card" id="tool-q">
+  <strong>Tool — queue calculator</strong> <span class="sub">(appendix formulas; for checking practice work)</span>
+  <div class="tool">
+    <div class="grid">
+      <div><label for="qm">Model</label><select id="qm"><option value="mm1">M/M/1</option><option value="mm1n">M/M/1/N</option><option value="mmm">M/M/m</option><option value="mb">Mᵇ/M/1</option></select></div>
+      <div><label for="ql">λ (per unit time)</label><input id="ql" type="text" value="8"></div>
+      <div><label for="qu">µ (per server)</label><input id="qu" type="text" value="10"></div>
+      <div><label for="qx">N / m / b</label><input id="qx" type="text" value="2"></div>
+    </div>
+    <div><button class="btn btn-primary" id="q-go">Compute</button></div>
+    <div class="out" id="q-out"></div>
+  </div>
+</div>
+
+<div class="check" data-id="m8a" data-kind="text" data-answer="0.38">
+  <div class="tag">Check 8.1</div>
+  <div class="q">M/M/1 with \(\lambda = 6\)/h, \(\mu = 8\)/h. Mean waiting time in the <em>queue</em> \(D\), in hours. 2 d.p.</div>
+  <div class="row"><input type="text"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: W = 1/(8−6) = 0.5 h, D = W − 1/µ = 0.5 − 0.125 = 0.375 h → 0.38 (an exact half rounds up)." data-no="W = 1/(µ−λ), then D = W − 1/µ (or D = λ/(µ(µ−λ)))."></div>
+</div>
+<div class="check" data-id="m8b" data-kind="mcq" data-answer="b">
+  <div class="tag">Check 8.2</div>
+  <div class="q">For M/M/3 with \(\lambda = 12\)/h and \(\mu = 5\)/h per server, which \(\rho\) goes into the appendix formula?</div>
+  <label class="opt"><input type="radio" name="m8b" value="a"> 2.4</label>
+  <label class="opt"><input type="radio" name="m8b" value="b"> 0.8</label>
+  <label class="opt"><input type="radio" name="m8b" value="c"> 12/5 then divide π₀ by 3</label>
+  <div class="row"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: ρ = λ/(mµ) = 12/15 = 0.8 — and stability needs ρ < 1." data-no="The appendix defines ρ = λ/(mµ) for M/M/m. λ/µ = 2.4 is the mean number of busy servers, not ρ."></div>
+</div>
+<div class="check" data-id="m8c" data-kind="text" data-answer="4/7">
+  <div class="tag">Check 8.3</div>
+  <div class="q">M/M/1/2 with \(\rho = 2\) (arrivals faster than service — still stable!). Probability an arrival is blocked? Simplest fraction.</div>
+  <div class="row"><input type="text"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: π₂ = ρ²(1−ρ)/(1−ρ³) = 4·(−1)/(−7) = 4/7. Blocked 57 % of the time, yet the queue is stable because it is finite." data-no="π_N = ρ^N(1−ρ)/(1−ρ^{N+1}) with ρ = 2, N = 2: 4·(−1)/(1−8) = 4/7. Or directly: weights 1 : 2 : 4, so π₂ = 4/7."></div>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="m9">9 · Quiz-day plan &amp; final check</h2>
+<div class="card">
+<strong>Before 23 Oct</strong>
+<ul>
+  <li>Update Respondus LockDown Browser (required since 5 Oct) and run the NTULearn <em>Mock quiz</em> on the notebook you will bring.</li>
+  <li>Laptop: OS updated, never-sleep, 100&nbsp;% charge (no power points). Bring a physical passport (or copy) and a calculator.</li>
+  <li>Sit <a href="../quizzes/quiz-2-prediction.html">the mock</a> once, timed, with only the appendix and a calculator; have it graded.</li>
+</ul>
+<strong>In the room (≈12 min per question)</strong>
+<ol>
+  <li>Read the <em>format</em> line of every box before computing (d.p.? fraction? units?).</li>
+  <li>Model first: state space, TPM/Q or queue type, then compute. Check rows sum to 1 (TPM) or 0 (Q).</li>
+  <li>Keep full precision; round once; reduce fractions; write each keyed answer on the working paper too.</li>
+  <li>Use the appendix for queue formulas. Little's law, Poisson/exponential formulas, \(1/(1-p_{ii})\), \(\pi Q=0\) and \(R = p\pi_1\) are <strong>not</strong> on it.</li>
+</ol>
+</div>
+<table class="data">
+  <tr><th>Not on the appendix — know cold</th><th>Formula</th></tr>
+  <tr><td>Geometric</td><td>\(P(X=n)=(1-p)^{n-1}p,\ P(X>m)=(1-p)^m,\ E=1/p\)</td></tr>
+  <tr><td>Exponential</td><td>\(P(X>x)=e^{-\lambda x},\ E=1/\lambda\); \(\min\) adds rates; \(P(X_1\lt X_2)=\lambda_1/(\lambda_1+\lambda_2)\)</td></tr>
+  <tr><td>Poisson process</td><td>\(P(k\text{ in }t)=e^{-\lambda t}(\lambda t)^k/k!\); merge = add rates; split = \(p_i\lambda\)</td></tr>
+  <tr><td>DTMC</td><td>rows sum 1; \(P(n)=P^n\); \(\pi(n)=\pi(0)P^n\); \(E(T_i)=1/(1-p_{ii})\); \(Y=YP,\ \sum y=1\)</td></tr>
+  <tr><td>CTMC</td><td>rows sum 0, \(q_{ii}=-\)out-rate; \(T_i=\mathrm{EXP}(-q_{ii})\); \(\pi Q=0\) ⇔ rate out = rate in; \(R=p\pi_{\text{proc}}\)</td></tr>
+  <tr><td>Birth–death</td><td>\(\pi_k=\pi_0\prod_{i\lt k}\lambda_i/\mu_{i+1}\)</td></tr>
+  <tr><td>Queues</td><td>\(L=\lambda W,\ Q=\lambda D,\ W=D+1/\mu,\ U=1-\pi_0\)</td></tr>
+</table>
+<div class="check" data-id="m9a" data-kind="mcq" data-answer="c">
+  <div class="tag">Final check</div>
+  <div class="q">A box asks: "Mean time in system, in minutes, 2 decimal places." You compute \(W = 0.0952381\) h. What do you type?</div>
+  <label class="opt"><input type="radio" name="m9a" value="a"> 0.10</label>
+  <label class="opt"><input type="radio" name="m9a" value="b"> 5.7</label>
+  <label class="opt"><input type="radio" name="m9a" value="c"> 5.71</label>
+  <div class="row"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: 0.0952381 × 60 = 5.714286 → 5.71. Units, then decimals." data-no="Convert first (×60 = 5.714286 min), then give exactly two decimals: 5.71."></div>
+</div>
+
+<footer>
+  EE-6204 · Quiz 2 companion · Sources: <code>resources/part-2/</code> (lecture-00…02, main-points 1–3, queue-summary, exercises-solution,
+  two-questions-random-process-queue, exam-appendix) · Official logistics: <code>quizzes/quiz-2-intel.md</code> ·
+  Canonical notes: <a href="beginner-notes.pdf">beginner-notes.pdf</a>, <a href="notes.pdf">notes.pdf</a> (Part 2 not yet written into them).
+  Check progress is saved in this browser only.
+</footer>
+</div>
+
+<script>
+const KEY = 'ee6204-quiz2-prep-learning-v1';
+const store = { get() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } },
+                set(v) { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) {} } };
+let passed = store.get();
+const checks = [...document.querySelectorAll('.check')];
+document.getElementById('total').textContent = checks.length;
+const norm = s => s.trim().replace(/\s+/g, '');
+function score() { document.getElementById('score').textContent = checks.filter(c => passed[c.dataset.id]).length; }
+function mark(c, ok) {
+  const fb = c.querySelector('.fb');
+  fb.textContent = ok ? fb.dataset.ok : fb.dataset.no;
+  fb.className = 'fb ' + (ok ? 'ok' : 'no');
+  if (ok) { passed[c.dataset.id] = true; store.set(passed); }
+  score();
+}
+for (const c of checks) {
+  c.querySelector('button').addEventListener('click', () => {
+    if (c.dataset.kind === 'mcq') {
+      const sel = c.querySelector('input[type=radio]:checked');
+      if (!sel) return;
+      mark(c, sel.value === c.dataset.answer);
+    } else {
+      mark(c, norm(c.querySelector('input').value) === c.dataset.answer);
+    }
+  });
+  const inp = c.querySelector('input[type=text]');
+  if (inp) inp.addEventListener('keydown', e => { if (e.key === 'Enter') c.querySelector('button').click(); });
+  if (passed[c.dataset.id]) { const fb = c.querySelector('.fb'); fb.textContent = '✓ passed earlier. ' + fb.dataset.ok; fb.className = 'fb ok'; }
+}
+score();
+document.getElementById('reset').onclick = () => { passed = {}; store.set(passed); location.reload(); };
+
+// ---- steady-state solver (Gaussian elimination on pi(P - I) = 0 or pi Q = 0, last eq -> sum = 1)
+const ssN = document.getElementById('ss-n'), ssM = document.getElementById('ss-m');
+function drawMatrix() {
+  const n = +ssN.value; ssM.style.gridTemplateColumns = `repeat(${n}, 1fr)`; ssM.innerHTML = '';
+  const demo = { 2: [[0.8, 0.2], [0.3, 0.7]], 3: [[0.6, 0.2, 0.2], [0.1, 0.8, 0.1], [0.6, 0, 0.4]], 4: [[0.0803, 0.1839, 0.3679, 0.3679], [0.6321, 0.3679, 0, 0], [0.2642, 0.3679, 0.3679, 0], [0.0803, 0.1839, 0.3679, 0.3679]] }[n];
+  for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
+    const e = document.createElement('input'); e.type = 'text'; e.value = demo[i][j]; e.setAttribute('aria-label', `row ${i} col ${j}`); ssM.appendChild(e);
+  }
+}
+ssN.onchange = drawMatrix; drawMatrix();
+document.getElementById('ss-go').onclick = () => {
+  const n = +ssN.value, ctmc = document.getElementById('ss-type').value === 'ctmc';
+  const v = [...ssM.querySelectorAll('input')].map(e => parseFloat(e.value));
+  const out = document.getElementById('ss-out');
+  if (v.some(isNaN)) { out.textContent = 'Every cell needs a number.'; return; }
+  const M = (i, j) => v[i * n + j];
+  for (let i = 0; i < n; i++) {
+    let s = 0; for (let j = 0; j < n; j++) s += M(i, j);
+    if (Math.abs(s - (ctmc ? 0 : 1)) > 1e-3) { out.textContent = `Row ${i} sums to ${s.toFixed(4)} — a ${ctmc ? 'generator row must sum to 0' : 'TPM row must sum to 1'}.`; return; }
+  }
+  const A = [];
+  for (let j = 0; j < n; j++) { const row = []; for (let i = 0; i < n; i++) row.push(M(i, j) - (!ctmc && i === j ? 1 : 0)); row.push(0); A.push(row); }
+  A[n - 1] = Array(n).fill(1).concat([1]);
+  for (let c = 0; c < n; c++) {
+    let p = c; for (let k = c + 1; k < n; k++) if (Math.abs(A[k][c]) > Math.abs(A[p][c])) p = k;
+    [A[c], A[p]] = [A[p], A[c]];
+    if (Math.abs(A[c][c]) < 1e-12) { out.textContent = 'No unique steady state (chain is reducible or periodic in a way this solver cannot resolve).'; return; }
+    const d = A[c][c]; A[c] = A[c].map(x => x / d);
+    for (let k = 0; k < n; k++) if (k !== c) { const f = A[k][c]; A[k] = A[k].map((x, j) => x - f * A[c][j]); }
+  }
+  out.textContent = A.map((r, i) => `π${i} = ${r[n].toFixed(6)}`).join('\n');
+};
+
+// ---- queue calculator (exam appendix formulas)
+function fact(k) { let f = 1; for (let i = 2; i <= k; i++) f *= i; return f; }
+document.getElementById('q-go').onclick = () => {
+  const m = document.getElementById('qm').value, l = parseFloat(document.getElementById('ql').value),
+        u = parseFloat(document.getElementById('qu').value), x = parseFloat(document.getElementById('qx').value);
+  const out = document.getElementById('q-out'), f = v => (+v).toFixed(6);
+  if ([l, u].some(isNaN) || l <= 0 || u <= 0) { out.textContent = 'Enter positive λ and µ.'; return; }
+  let r, p0, L, Q, W, D, extra = '';
+  if (m === 'mm1') { r = l / u; if (r >= 1) { out.textContent = `ρ = ${f(r)} ≥ 1: unstable, L = Q = W = D = ∞`; return; }
+    p0 = 1 - r; L = r / (1 - r); Q = r * r / (1 - r); W = 1 / (u - l); D = l / (u * (u - l)); }
+  else if (m === 'mm1n') { const N = Math.round(x); if (!(N >= 1)) { out.textContent = 'Enter N ≥ 1.'; return; } r = l / u;
+    const pk = k => Math.abs(r - 1) < 1e-12 ? 1 / (N + 1) : Math.pow(r, k) * (1 - r) / (1 - Math.pow(r, N + 1));
+    p0 = pk(0); L = 0; for (let k = 0; k <= N; k++) L += k * pk(k); Q = L - (1 - p0); W = L / l; D = Q / l;
+    extra = `\nblocking π${N} = ${f(pk(N))}\naccepted rate λ(1−π${N}) = ${f(l * (1 - pk(N)))}\n(W, D use offered λ as in the appendix; L/λ_accepted = ${f(L / (l * (1 - pk(N))))})`; }
+  else if (m === 'mmm') { const s = Math.round(x); if (!(s >= 1)) { out.textContent = 'Enter m ≥ 1.'; return; } r = l / (s * u);
+    if (r >= 1) { out.textContent = `ρ = ${f(r)} ≥ 1: unstable`; return; }
+    let sum = 0; for (let k = 0; k < s; k++) sum += Math.pow(s * r, k) / fact(k);
+    p0 = 1 / (Math.pow(s * r, s) / (fact(s) * (1 - r)) + sum); Q = r * Math.pow(s * r, s) * p0 / (fact(s) * (1 - r) ** 2);
+    L = Q + l / u; W = L / l; D = Q / l; extra = `\nbusy servers λ/µ = ${f(l / u)}, each idle 1−ρ = ${f(1 - r)}`; }
+  else { const b = Math.round(x); if (!(b >= 1)) { out.textContent = 'Enter b ≥ 1.'; return; } r = b * l / u;
+    if (r >= 1) { out.textContent = `ρ = ${f(r)} ≥ 1: unstable`; return; }
+    p0 = 1 - r; L = r * (1 + b) / (2 * (1 - r)); Q = L - r; W = L / (l * b); D = W - 1 / u; }
+  out.textContent = `ρ = ${f(r)}\nπ0 = ${f(p0)}\nL = ${f(L)}\nQ = ${f(Q)}\nW = ${f(W)}\nD = ${f(D)}` + extra;
+};
+
+// theme + MathJax fallback
+const th = document.getElementById('theme');
+try { th.value = localStorage.getItem('ee6204-theme') || 'system'; } catch (e) {}
+document.documentElement.dataset.theme = th.value;
+th.onchange = () => { document.documentElement.dataset.theme = th.value; try { localStorage.setItem('ee6204-theme', th.value); } catch (e) {} };
+setTimeout(() => { if (!window.MathJax || !MathJax.typesetPromise) document.getElementById('math-warning').style.display = 'block'; }, 4000);
+</script>
+<script src="vendor/mathjax/tex-mml-chtml.js" async></script>
+</body>
+</html>

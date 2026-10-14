@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en" data-theme="system">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EE6204 Quiz 2 Mock</title>
+<meta name="description" content="Answer-free mock for EE6204 Quiz 2 (random processes and queuing): 4 questions, keyed answers in exact formats, 50-minute timer, autosave, and an answer-sheet export for grading.">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']], processEscapes: true },
+    options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] },
+    startup: { typeset: true }
+  };
+</script>
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: #f6f7f9; --surface: #ffffff; --surface-2: #eef1f5; --text: #14181f; --muted: #5b6472;
+  --border: #d8dee7; --accent: #1f6feb; --accent-soft: #e5efff; --success: #17794b; --success-soft: #e2f5ec;
+  --warning: #9a6200; --warning-soft: #fdf1dc; --danger: #b32130; --danger-soft: #fdeaec;
+  --shadow: 0 1px 2px rgba(16,24,40,.05), 0 8px 24px rgba(16,24,40,.06);
+  --radius: 14px; --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1117; --surface: #161b23; --surface-2: #1d232d; --text: #e7ecf3; --muted: #99a3b3; --border: #2a323e;
+    --accent: #6ea8ff; --accent-soft: #17233a; --success: #56d39b; --success-soft: #10281f;
+    --warning: #e5b567; --warning-soft: #2b2113; --danger: #ff8189; --danger-soft: #2e1519;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 28px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1117; --surface: #161b23; --surface-2: #1d232d; --text: #e7ecf3; --muted: #99a3b3; --border: #2a323e;
+  --accent: #6ea8ff; --accent-soft: #17233a; --success: #56d39b; --success-soft: #10281f;
+  --warning: #e5b567; --warning-soft: #2b2113; --danger: #ff8189; --danger-soft: #2e1519;
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 28px rgba(0,0,0,.35);
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.62; font-size: 16.5px; -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 880px; margin: 0 auto; padding: 24px 16px 120px; }
+a { color: var(--accent); }
+code { font-family: var(--mono); font-size: .9em; background: var(--surface-2); padding: .08em .35em; border-radius: 5px; }
+h1 { font-size: 1.7rem; line-height: 1.25; margin: 0 0 .5rem; }
+h2 { font-size: 1.28rem; margin: 2.2rem 0 .4rem; padding-top: .6rem; border-top: 2px solid var(--border); }
+.sub { color: var(--muted); }
+select, .btn, input[type="text"], textarea { font: inherit; font-size: .92rem; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 9px; padding: 7px 12px; }
+select, .btn { cursor: pointer; }
+.btn:hover { border-color: var(--accent); }
+.btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 600; }
+.btn-danger { color: var(--danger); }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px 18px; margin: 14px 0; }
+.notice { background: var(--warning-soft); border: 1px solid var(--border); border-radius: 12px; padding: 12px 15px; margin: 14px 0; }
+.notice.info { background: var(--accent-soft); }
+.notice h3 { margin: .2rem 0 .4rem; font-size: 1.02rem; }
+.notice p:last-child, .notice ul:last-child { margin-bottom: 0; }
+.statusbar { position: sticky; top: 0; z-index: 20; display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 9px 14px; margin: 14px 0 4px; box-shadow: var(--shadow); font-size: .9rem; }
+.statusbar .grow { flex: 1 1 auto; }
+#clock { font-family: var(--mono); font-size: 1.06rem; font-weight: 700; }
+#clock.over { color: var(--danger); }
+.pill { display: inline-block; background: var(--surface-2); border: 1px solid var(--border); border-radius: 999px; padding: 1px 10px; font-size: .82rem; color: var(--muted); }
+.pill strong { color: var(--text); }
+.marks { float: right; color: var(--muted); font-size: .85rem; font-weight: 700; }
+.part { display: grid; grid-template-columns: 2.2em 1fr 11em; gap: 6px 10px; align-items: start; padding: 10px 0; border-top: 1px dashed var(--border); }
+.part:first-of-type { border-top: 0; }
+.part .lbl { font-weight: 700; color: var(--muted); }
+.part input { width: 100%; font-family: var(--mono); }
+.part .fmt { grid-column: 3; font-size: .78rem; color: var(--muted); margin-top: -2px; }
+.part .lint { grid-column: 3; font-size: .78rem; min-height: 1em; }
+.lint.bad { color: var(--warning); }
+.lint.ok { color: var(--success); }
+@media (max-width: 600px) { .part { grid-template-columns: 2em 1fr; } .part input, .part .fmt, .part .lint { grid-column: 2; } }
+table.data { border-collapse: collapse; margin: 8px 0; font-size: .9rem; }
+table.data th, table.data td { border: 1px solid var(--border); padding: 4px 9px; }
+table.data th { background: var(--surface-2); }
+#export-out { width: 100%; min-height: 280px; font-family: var(--mono); font-size: .8rem; white-space: pre; }
+#math-warning { display: none; }
+footer { margin-top: 46px; padding-top: 16px; border-top: 1px solid var(--border); font-size: .87rem; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>EE6204 Quiz&nbsp;2 — Mock Paper</h1>
+<p class="sub">Random Processes &amp; Queuing Models &middot; 4 questions &middot; 24 answer boxes &middot; 50 minutes &middot; calculator + exam appendix allowed</p>
+
+<div id="math-warning" class="notice"><strong>Equations are not rendering.</strong> Keep the <code>vendor/mathjax/</code> folder next to this file.</div>
+
+<div class="notice">
+  <h3>Unofficial practice paper</h3>
+  <p>The <strong>shape</strong> follows the official NTULearn announcement (4 questions, keyed answers in an
+  exact format, calculator, appendix, 50&nbsp;min). The <strong>topics per question are a prediction</strong>
+  from the lecturer's sample questions and past exams. See <a href="quiz-2-intel.md">quiz-2-intel.md</a>.</p>
+</div>
+<div class="notice info">
+  <h3>How to sit it</h3>
+  <ul>
+    <li>Have <a href="../resources/part-2/exam-appendix.pdf">the exam appendix</a> printed or open, plus a calculator and scrap paper. Nothing else.</li>
+    <li>Press <strong>Start</strong>. Work on paper; type only the final answer into each box, <strong>exactly in the stated format</strong>, as on the real system.</li>
+    <li>The small line under each box checks <em>format only</em> (decimal places / fraction shape). It never tells you whether the value is right.</li>
+    <li>When done, press <strong>Build answer sheet</strong> and paste it into Claude Code for grading. The key is in <code>quiz-2-prediction.md</code>. Open it only afterwards.</li>
+  </ul>
+</div>
+
+<div class="statusbar">
+  <span id="clock">50:00</span>
+  <button class="btn" id="timer-toggle">Start</button>
+  <span class="pill">Answered <strong><span id="n-done">0</span>/24</strong></span>
+  <span class="grow"></span>
+  <label for="theme" class="sub">Theme</label>
+  <select id="theme"><option value="system">Auto</option><option value="light">Light</option><option value="dark">Dark</option></select>
+</div>
+
+<h2>Q1 — Random variables and Poisson processes <span class="marks">7</span></h2>
+<div class="card">
+  <p>A help desk receives calls on two independent lines. Calls on line A form a Poisson process with rate
+  3 per hour, and calls on line B form a Poisson process with rate 2 per hour.</p>
+  <div id="q1"></div>
+</div>
+
+<h2>Q2 — Inventory model <span class="marks">6</span></h2>
+<div class="card">
+  <p>A shop sells a spare part. Weekly demands \(D_1, D_2, \ldots\) are independent Poisson random variables
+  with mean 0.5. Let \(X_n\) be the number of parts in stock at the <strong>end</strong> of week \(n\), with
+  \(0 \le X_0 \le 2\). If the stock at the end of a week is 0, the shop orders 2 parts, which arrive before the
+  next week opens; otherwise no order is placed. Demand that cannot be met is lost. Model \(\{X_n\}\) as a DTMC
+  on \(S = \{0, 1, 2\}\).</p>
+  <div id="q2"></div>
+</div>
+
+<h2>Q3 — Machine with failures <span class="marks">5</span></h2>
+<div class="card">
+  <p>A machine repeatedly performs a <strong>setup</strong> (state 0, duration EXP(\(s\))) and then
+  <strong>processes</strong> one part (state 1, duration EXP(\(p\))), after which the next setup begins. The
+  machine can fail <strong>during setup and during processing</strong>; the time to failure is EXP(\(f\)) in
+  either state. A failed machine (state 2) is repaired in EXP(\(r\)) time; after repair the unfinished part is
+  discarded and a fresh setup starts. All durations are independent. Rates (per hour):
+  \(s = 6,\ p = 3,\ f = 0.5,\ r = 2\). Model the system as a CTMC on \(\{0, 1, 2\}\).</p>
+  <div id="q3"></div>
+</div>
+
+<h2>Q4 — Choosing a print-room design <span class="marks">6</span></h2>
+<div class="card">
+  <p>Jobs arrive at a print room as a Poisson process at 9 per hour. Service times are exponential. Use the
+  exam appendix where helpful.</p>
+  <table class="data">
+    <tr><th>System</th><th>Description</th></tr>
+    <tr><td>A</td><td>One fast printer, mean service time 5 min.</td></tr>
+    <tr><td>B</td><td>Two slow printers sharing one queue, each with mean service time 10 min.</td></tr>
+    <tr><td>C</td><td>The fast printer of A, but at most 3 jobs fit in the room (in service + waiting); jobs that arrive when it is full are turned away.</td></tr>
+    <tr><td>D</td><td>The fast printer of A, but jobs arrive in batches of 3, at 3 batches per hour (Poisson).</td></tr>
+  </table>
+  <div id="q4"></div>
+</div>
+
+<h2>Finish</h2>
+<div class="card">
+  <p><button class="btn btn-primary" id="build">Build answer sheet</button>
+     <button class="btn" id="copy">Copy</button>
+     <button class="btn btn-danger" id="reset">Clear all answers</button>
+     <span id="copy-status" class="sub"></span></p>
+  <textarea id="export-out" readonly placeholder="Press “Build answer sheet”."></textarea>
+</div>
+
+<footer>
+  EE-6204 · Quiz 2 mock built 2026-10-14 · Answer key, rubric and common wrong paths:
+  <code>quizzes/quiz-2-prediction.md</code> · Answers derived in <code>quizzes/quiz-2-prediction-check.py</code>.
+  Companion lesson: <a href="../notes/quiz2-prep-learning.html">notes/quiz2-prep-learning.html</a>.
+</footer>
+</div>
+
+<script>
+// Questions only — the key lives in quiz-2-prediction.md, never in this page.
+const PARTS = {
+  q1: [
+    ['1a', 'Probability that exactly 2 calls (in total) arrive in a 30-minute interval.', 'dp4'],
+    ['1b', 'Probability that the next call to arrive comes from line A.', 'frac'],
+    ['1c', 'No call has arrived in the last 10 minutes. Probability that no call arrives in the next 15 minutes.', 'dp4'],
+    ['1d', 'A cutting tool breaks on any single operation with probability 0.02, independently of other operations. The tool has already survived 25 operations. Probability that it survives at least 50 more operations.', 'dp4'],
+    ['1e', 'For a new tool, the mean number of operations up to and including the breakdown.', 'int'],
+    ['1f', 'Let \\(X(t)\\) be the number of customers inside a bank at time \\(t\\), observed continuously for \\(t \\ge 0\\). Classify \\(\\{X(t)\\}\\): (A) discrete time, discrete state; (B) discrete time, continuous state; (C) continuous time, discrete state; (D) continuous time, continuous state.', 'letter'],
+    ['1g', 'In a DTMC, the number of time steps spent in state \\(i\\) per visit (with \\(0 \\lt p_{ii} \\lt 1\\)) has which distribution? (A) Poisson; (B) exponential; (C) geometric; (D) uniform.', 'letter']
+  ],
+  q2: [
+    ['2a', 'One-step transition probability \\(p_{01}\\).', 'dp4'],
+    ['2b', 'One-step transition probability \\(p_{10}\\).', 'dp4'],
+    ['2c', 'Mean sojourn time in state 1, in weeks.', 'dp4'],
+    ['2d', '\\(P(X_2 = 0 \\mid X_0 = 2)\\).', 'dp6'],
+    ['2e', 'Steady-state probability of state 0.', 'dp6'],
+    ['2f', 'Long-run mean number of parts in stock at the end of a week.', 'dp4']
+  ],
+  q3: [
+    ['3a', 'The diagonal entry \\(q_{00}\\) of the transition rate matrix \\(Q\\).', 'dp1'],
+    ['3b', 'Mean sojourn time in state 1, in <strong>minutes</strong>.', 'dp2'],
+    ['3c', 'Steady-state probability \\(\\pi_0\\).', 'frac'],
+    ['3d', 'Average production rate \\(R\\), in parts per hour.', 'dp6'],
+    ['3e', 'Long-run fraction of time the machine is under repair.', 'frac']
+  ],
+  q4: [
+    ['4a', 'System A: mean time a job spends in the system, in <strong>minutes</strong>.', 'dp2'],
+    ['4b', 'System B: probability that the system is empty.', 'frac'],
+    ['4c', 'System B: mean number of jobs in the system.', 'dp4'],
+    ['4d', 'System C: probability that an arriving job is turned away.', 'frac'],
+    ['4e', 'System C: mean number of jobs in the system.', 'dp6'],
+    ['4f', 'System D: mean time a job spends in the system, in <strong>minutes</strong>.', 'dp2']
+  ]
+};
+const FMT = {
+  dp1: ['1 decimal place', /^-?\d+\.\d$/],
+  dp2: ['2 decimal places', /^-?\d+\.\d{2}$/],
+  dp4: ['4 decimal places', /^-?\d+\.\d{4}$/],
+  dp6: ['6 decimal places', /^-?\d+\.\d{6}$/],
+  frac: ['fraction a/b, simplest form', /^-?\d+\/\d+$/],
+  int: ['integer', /^-?\d+$/],
+  letter: ['one capital letter', /^[A-D]$/]
+};
+const KEY = 'ee6204-quiz2-prediction-v1';
+const store = { get() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } },
+                set(v) { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) {} } };
+let state = store.get(); state.ans = state.ans || {};
+
+function gcd(a, b) { a = Math.abs(a); b = Math.abs(b); while (b) [a, b] = [b, a % b]; return a; }
+function lint(id, fmt, v) {
+  const el = document.getElementById('lint-' + id);
+  v = v.trim();
+  if (!v) { el.textContent = ''; el.className = 'lint'; return; }
+  let ok = FMT[fmt][1].test(v), msg = ok ? 'format ok' : 'format: expected ' + FMT[fmt][0];
+  if (ok && fmt === 'frac') {
+    const [a, b] = v.replace('-', '').split('/').map(Number);
+    if (b === 0 || gcd(a, b) !== 1) { ok = false; msg = 'format: not in simplest form'; }
+  }
+  el.textContent = msg; el.className = 'lint ' + (ok ? 'ok' : 'bad');
+}
+for (const [q, parts] of Object.entries(PARTS)) {
+  const host = document.getElementById(q);
+  for (const [id, text, fmt] of parts) {
+    const row = document.createElement('div'); row.className = 'part';
+    row.innerHTML = `<span class="lbl">(${id.slice(1)})</span><div>${text}</div>
+      <input type="text" id="in-${id}" autocomplete="off" spellcheck="false" aria-label="Answer ${id}">
+      <span class="fmt">${FMT[fmt][0]}</span><span class="lint" id="lint-${id}"></span>`;
+    host.appendChild(row);
+    const inp = row.querySelector('input');
+    inp.value = state.ans[id] || '';
+    lint(id, fmt, inp.value);
+    inp.addEventListener('input', () => { state.ans[id] = inp.value; store.set(state); lint(id, fmt, inp.value); count(); });
+  }
+}
+function count() { document.getElementById('n-done').textContent = Object.values(state.ans).filter(v => v && v.trim()).length; }
+count();
+
+// 50-minute countdown that survives reloads
+const LIMIT = 50 * 60;
+let tick = null;
+function elapsed() { return (state.acc || 0) + (state.start ? (Date.now() - state.start) / 1000 : 0); }
+function draw() {
+  const left = LIMIT - elapsed(), a = Math.abs(left);
+  const c = document.getElementById('clock');
+  c.textContent = (left < 0 ? '+' : '') + String(Math.floor(a / 60)).padStart(2, '0') + ':' + String(Math.floor(a % 60)).padStart(2, '0');
+  c.classList.toggle('over', left < 0);
+}
+function run(on) {
+  const b = document.getElementById('timer-toggle');
+  if (on) { state.start = state.start || Date.now(); tick = setInterval(draw, 500); b.textContent = 'Pause'; }
+  else { if (state.start) { state.acc = elapsed(); state.start = null; } clearInterval(tick); b.textContent = state.acc ? 'Resume' : 'Start'; }
+  store.set(state); draw();
+}
+document.getElementById('timer-toggle').onclick = () => run(!state.start);
+if (state.start) run(true); else run(false);
+
+document.getElementById('build').onclick = () => {
+  const mins = (elapsed() / 60).toFixed(1);
+  const lines = ['EE6204 Quiz 2 mock — answer sheet', 'Key + rubric: EE-6204/quizzes/quiz-2-prediction.md (1 mark per box, 24 total; exact-format match)',
+    `Elapsed: ${mins} min of 50`, ''];
+  for (const [q, parts] of Object.entries(PARTS)) {
+    lines.push(q.toUpperCase());
+    for (const [id, text, fmt] of parts) {
+      const stem = text.replace(/<[^>]+>/g, '').replace(/\\\(|\\\)/g, '').slice(0, 60);
+      lines.push(`  ${id} [${FMT[fmt][0]}] ${stem}… => ${(state.ans[id] || '').trim() || '<blank>'}`);
+    }
+  }
+  document.getElementById('export-out').value = lines.join('\n');
+};
+document.getElementById('copy').onclick = async () => {
+  const t = document.getElementById('export-out'); if (!t.value) document.getElementById('build').click();
+  try { await navigator.clipboard.writeText(t.value); document.getElementById('copy-status').textContent = 'Copied.'; }
+  catch (e) { t.select(); document.getElementById('copy-status').textContent = 'Select-all is on — press ⌘C.'; }
+};
+document.getElementById('reset').onclick = () => {
+  if (!confirm('Clear every answer and the timer?')) return;
+  state = { ans: {} }; store.set(state); location.reload();
+};
+
+// theme
+const th = document.getElementById('theme');
+try { th.value = localStorage.getItem('ee6204-theme') || 'system'; } catch (e) {}
+document.documentElement.dataset.theme = th.value;
+th.onchange = () => { document.documentElement.dataset.theme = th.value; try { localStorage.setItem('ee6204-theme', th.value); } catch (e) {} };
+setTimeout(() => { if (!window.MathJax || !MathJax.typesetPromise) document.getElementById('math-warning').style.display = 'block'; }, 4000);
+</script>
+<script src="vendor/mathjax/tex-mml-chtml.js" async></script>
+</body>
+</html>
