@@ -36,6 +36,8 @@ unofficial sections below disagree, this section wins.
 
 # Unofficial background (past-paper recollection — for method practice only)
 
+**Quiz 2 follow-up (2026-10-14):** the previously identified Markov-chain/queueing GPT post is expanded, with source links and independent arithmetic checks, in [quiz-2-intel.md](quiz-2-intel.md). That file is the single preparation-context record for Quiz 2; this historical Quiz 1 log is preserved.
+
 Gathered 2026-09-02 by searching 小红书 (RedNote) for `EE6204`, `6204 quiz1`, and
 `EE6204 quiz1回顾` in a logged-in session (`type=51` notes search), plus a general web
 search and the local `resources/public-archive-2026-08-24/`.
