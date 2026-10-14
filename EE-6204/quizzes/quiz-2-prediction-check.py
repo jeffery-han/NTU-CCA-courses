@@ -110,6 +110,9 @@ rho = b * lb / muA
 WD = (1 + b) / (2 * muA * (1 - rho))
 assert WD == (rho * (1 + b) / (2 * (1 - rho))) / (lb * b)   # W = L/(lambda b)
 key['4f'] = r(WD * 60, 2)
+# A again: FIFO queueing-delay tail, P(d > t) = rho e^{-mu(1-rho)t} (lecture-02 p13-14; NOT on the appendix)
+rhoA = lam / muA
+key['4g'] = r(float(rhoA) * exp(-float(muA * (1 - rhoA)) * 10 / 60), 4)
 
 if __name__ == '__main__':
     for k, v in key.items():

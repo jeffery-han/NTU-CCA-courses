@@ -39,6 +39,18 @@ Assoc Prof Patricia Wong; and "Welcome" (2026-08-03). Paraphrased.
 - The appendix carries the queue formulas, so effort belongs in *modelling* (state space, TPM,
   generator, rate balance) and in calculation speed — not in memorising queue closed forms.
 
+## Lecturer statements in the Week 4–8 transcripts (raw machine transcripts, read 2026-10-14)
+
+Source: `resources/transcripts-raw/week-0{5,6,7,8}-transcript.txt` (Dr Patricia Wong; automatic transcription, wording approximate). Week 4 is Part 1 (Prof. Su Rong: NLP/KKT, plus "Newton method, we can ignore", final exam "very conceptual") — not Quiz 2.
+
+| Week | What she said / did | Use |
+|---|---|---|
+| 5 | Announced Quiz 2: Friday, 6:30 pm, NTULearn, **"will cover the first five weeks… of my class… random processes and queuing theory"**. Taught probability preliminaries selectively (sets, conditional probability, independence, random variables, expectation; **jumped p78 → p98 to the Poisson distribution, "used in our topic later on"**), then lecture-01 to p17 (geometric, exponential, memoryless, process classification with the stock-price examples, Poisson process). | Scope = Part 2 weeks 5–9; Poisson r.v. examinable |
+| 6 | Followed `random-process-additional-notes-p1-19.pdf` (her summary); DTMC: Markov property, TPM rows sum to 1, n-step, state probabilities, Eg 6.1 cases, introduced steady state. | — |
+| 7 | DTMC steady state finished; CTMC: homogeneity, exponential sojourn, generator, Kolmogorov; **"rate balance — don't remember the formula… outflow from state j = inflow into state j"**; Eg 9.1 resume and discard policies, solving `πQ = 0` set as practice. Stopped at p67. | Rate balance from the diagram is the expected method |
+| 8 | Birth–death; queues: notation, Little, M/M/1 — **"no need to memorize, it's in the exam appendix… we will have it in exam and also in quiz"**; **"what we need to know is… recognize that it is an M/M/1… ρ ≥ 1 → unstable"**; derived the **M/M/1 waiting-time distributions** `F_d`, `F_w` (not on the appendix). Re-announced: quiz 23 Oct, "about 45 or 50 minutes", LT, update LockDown Browser. | Appendix confirmed for the quiz; waiting-time cdfs are a gap the appendix does not fill |
+| 9 | **Not yet held (expected ~16 Oct):** "next week we'll do this queuing model, and then we'll do some questions" — M/M/1/N, M/M/m, Mᵇ/M/1 still to be taught. | **Re-sync the Week 9 transcript before the quiz**; any worked "questions" are the best style evidence available |
+
 ## What the exam appendix gives (and what it does not)
 
 `resources/part-2/exam-appendix.pdf`, 2 pages, image-only. **Given:** for **M/M/1**, **M/M/1/N**,
@@ -203,6 +215,7 @@ Poisson basics, (2) a DTMC (likely inventory with Poisson demand), (3) a CTMC ma
 
 ## Open items
 
+0. **Week 9 lecture transcript** (≈16 Oct): re-sync from NTULearn Media Gallery and mine it — it should finish the queue models and work "some questions".
 1. RedNote: done (S1–S3 above). A search for Feb-2026-sitting posts could still add evidence.
 2. WeChat: run `~/Projects/wechat-export/setup.sh` then export `EE6204-26S1` for 2026-09-02 → today
    if current-cohort chatter about Quiz 2 is wanted.

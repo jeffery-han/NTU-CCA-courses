@@ -11,7 +11,7 @@ questions and final-exam history; the actual quiz may differ.
 - All numbers are fresh: none match the lecture examples (Eg 3.1 λ=8/µ=10, Eg 9.1
   s=20/p=4/f=0.05/r=1, the PC shop with Poisson(1) demand) or `notes/quiz2-prep-learning.html`.
 
-**Marking:** 1 mark per input box, **24 marks**. A box is right only if the string matches the key
+**Marking:** 1 mark per input box, **25 marks**. A box is right only if the string matches the key
 in the stated format (the real system works this way — "no backend intervention"). When grading,
 also record *format-only* misses (right value, wrong format) separately from value errors.
 
@@ -136,7 +136,7 @@ Check state 0: `6.5·28/95 = 182/95 = 3·48/95 + 2·19/95` ✓.
 - Copying the Eg 9.1 / Problem 9.2 discard formula: that model has no failure during setup, so
   its π₀ differs.
 
-## Q4 — Queue design comparison (6 marks)
+## Q4 — Queue design comparison (7 marks)
 
 Jobs arrive at a print room as a Poisson process, λ = 9 per hour. Use the exam appendix.
 
@@ -155,6 +155,7 @@ Jobs arrive at a print room as a Poisson process, λ = 9 per hour. Use the exam 
 | (d) | C: probability an arriving job is turned away | simplest fraction | **27/175** |
 | (e) | C: mean number in system L | 6 d.p. | **1.148571** |
 | (f) | D: mean time in system W (minutes) | 2 d.p. | **40.00** |
+| (g) | A (FIFO): P(a job waits in the queue more than 10 minutes) | 4 d.p. | **0.4549** |
 
 **Derivations.**
 (a) `W = 1/(µ−λ) = 1/3 h = 20 min`.
@@ -164,6 +165,7 @@ Jobs arrive at a print room as a Poisson process, λ = 9 per hour. Use the exam 
 (e) Appendix `L = ρ[1−ρᴺ−Nρᴺ(1−ρ)]/((1−ρ)(1−ρᴺ⁺¹))` with ρ=3/4, N=3 → `201/175 = 1.148571`
 (cross-checked as `Σ kπₖ`).
 (f) `ρ = bλ/µ = 9/12 = 3/4`; `W = (1+b)/(2µ(1−ρ)) = 4/(24·1/4) = 2/3 h = 40 min`.
+(g) **Not on the appendix** — M/M/1 waiting-time distribution (lecture-02 p13–14, taught Week 8): `P(d > t) = ρ e^{−µ(1−ρ)t} = 0.75·e^{−12·0.25·(1/6)} = 0.75 e^{−0.5} = 0.454898`. Added 2026-10-14 after the Week 8 transcript showed this was derived in class.
 
 **Comparison (for discussion, not keyed):** A beats B on W (20 vs `L/λ = 24/63 h = 22.86` min),
 the same pooling lesson as lecture slide p27 (M/M/1 with 2µ beats M/M/2). C has a short queue
@@ -176,12 +178,13 @@ but loses 15.4 % of jobs. D doubles A's W because every job waits for its batch-
 - (c) reporting Q (1.9286) instead of L — the question asks for the number in **system**.
 - (d) `π₀` instead of `π_N`, or `ρ^N(1−ρ)` without the `1−ρ^{N+1}` normaliser.
 - (f) using `ρ = λ/µ = 0.25` (forgot ×b), or `W = L/λ` with λ = batches only → 120 min.
+- (g) `e^{−0.5} = 0.6065` (dropped the leading ρ — that is P(time in *system* > 10 min)), or `1 − 0.75e^{−0.5} = 0.5451` (the cdf, not the tail).
 
 ---
 
 ## Grading checklist (for the grader)
 
-1. Score each box: exact string match = 1; else 0. Report `/24`.
+1. Score each box: exact string match = 1; else 0. Report `/25`.
 2. Re-mark each miss as **format-only** (value right, form wrong), **slip** (method right,
    arithmetic/rounding wrong), or **concept** (wrong model/formula). Concept misses go to the
    notes (Stage 6); format-only misses go to the quiz-day checklist.

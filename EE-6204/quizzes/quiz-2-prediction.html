@@ -80,7 +80,7 @@ footer { margin-top: 46px; padding-top: 16px; border-top: 1px solid var(--border
 <body>
 <div class="wrap">
 <h1>EE6204 Quiz&nbsp;2 — Mock Paper</h1>
-<p class="sub">Random Processes &amp; Queuing Models &middot; 4 questions &middot; 24 answer boxes &middot; 50 minutes &middot; calculator + exam appendix allowed</p>
+<p class="sub">Random Processes &amp; Queuing Models &middot; 4 questions &middot; 25 answer boxes &middot; 50 minutes &middot; calculator + exam appendix allowed</p>
 
 <div id="math-warning" class="notice"><strong>Equations are not rendering.</strong> Keep the <code>vendor/mathjax/</code> folder next to this file.</div>
 
@@ -103,7 +103,7 @@ footer { margin-top: 46px; padding-top: 16px; border-top: 1px solid var(--border
 <div class="statusbar">
   <span id="clock">50:00</span>
   <button class="btn" id="timer-toggle">Start</button>
-  <span class="pill">Answered <strong><span id="n-done">0</span>/24</strong></span>
+  <span class="pill">Answered <strong><span id="n-done">0</span>/25</strong></span>
   <span class="grow"></span>
   <label for="theme" class="sub">Theme</label>
   <select id="theme"><option value="system">Auto</option><option value="light">Light</option><option value="dark">Dark</option></select>
@@ -137,7 +137,7 @@ footer { margin-top: 46px; padding-top: 16px; border-top: 1px solid var(--border
   <div id="q3"></div>
 </div>
 
-<h2>Q4 — Choosing a print-room design <span class="marks">6</span></h2>
+<h2>Q4 — Choosing a print-room design <span class="marks">7</span></h2>
 <div class="card">
   <p>Jobs arrive at a print room as a Poisson process at 9 per hour. Service times are exponential. Use the
   exam appendix where helpful.</p>
@@ -200,7 +200,8 @@ const PARTS = {
     ['4c', 'System B: mean number of jobs in the system.', 'dp4'],
     ['4d', 'System C: probability that an arriving job is turned away.', 'frac'],
     ['4e', 'System C: mean number of jobs in the system.', 'dp6'],
-    ['4f', 'System D: mean time a job spends in the system, in <strong>minutes</strong>.', 'dp2']
+    ['4f', 'System D: mean time a job spends in the system, in <strong>minutes</strong>.', 'dp2'],
+    ['4g', 'System A, jobs served first-in-first-out: probability that a job waits <strong>in the queue</strong> (before its service starts) for more than 10 minutes.', 'dp4']
   ]
 };
 const FMT = {
@@ -267,7 +268,7 @@ if (state.start) run(true); else run(false);
 
 document.getElementById('build').onclick = () => {
   const mins = (elapsed() / 60).toFixed(1);
-  const lines = ['EE6204 Quiz 2 mock — answer sheet', 'Key + rubric: EE-6204/quizzes/quiz-2-prediction.md (1 mark per box, 24 total; exact-format match)',
+  const lines = ['EE6204 Quiz 2 mock — answer sheet', 'Key + rubric: EE-6204/quizzes/quiz-2-prediction.md (1 mark per box, 25 total; exact-format match)',
     `Elapsed: ${mins} min of 50`, ''];
   for (const [q, parts] of Object.entries(PARTS)) {
     lines.push(q.toUpperCase());
