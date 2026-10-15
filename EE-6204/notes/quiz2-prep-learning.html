@@ -113,8 +113,8 @@ footer { margin-top: 46px; padding-top: 16px; border-top: 1px solid var(--border
 <div class="notice info">
   <p><strong>How this page works.</strong> Each module builds one idea on top of the previous one. Formulas
   are <em>derived</em>, not just stated, so you can rebuild them under pressure. Every module ends with a
-  check that marks you instantly. Do not scroll past a red one. Source page numbers refer to the files in
-  <code>resources/part-2/</code>. <span class="src">Lines marked "Source" are lecture facts; everything else is
+  check that marks you instantly. Do not scroll past a red one. Source page numbers are PDF page numbers in the files in
+  <code>resources/part-2/</code>; click a citation to open that PDF at the cited page. <span class="src">Lines marked "Source" are lecture facts; everything else is
   explanation added here.</span></p>
 </div>
 
@@ -172,7 +172,7 @@ the fourth decimal of your answer is noise. Use the calculator's memory or ANS k
 <h2 id="m1">1 · Geometric &amp; exponential: memoryless clocks</h2>
 <p><strong>Prerequisite — conditional probability.</strong> \(P(A\mid B) = P(A\cap B)/P(B)\): restrict the world
 to the cases where \(B\) happened, then ask how often \(A\) also happened.
-<span class="src">Source: main-points-lecture-1.pdf p1.</span></p>
+<span class="src">Source: <a href="../resources/part-2/main-points-lecture-1.pdf#page=1">main-points-lecture-1.pdf p1</a>.</span></p>
 
 <h3>The geometric random variable (discrete time)</h3>
 <p>Run independent trials, each a "success" (breakdown, completion…) with probability \(p\). Let \(X\) be the
@@ -182,7 +182,7 @@ number of the trial on which the <em>first</em> success happens. For \(X = n\) w
 <p><strong>Memoryless property.</strong> Divide the two survival probabilities:</p>
 \[ P(X > m+n \mid X > m) = \frac{P(X>m+n)}{P(X>m)} = \frac{(1-p)^{m+n}}{(1-p)^m} = (1-p)^n = P(X>n). \]
 <p>Having survived \(m\) trials tells you nothing: the "clock" restarts. The geometric is the <em>only</em> discrete
-distribution with this property. <span class="src">Source: lecture-01-random-processes.pdf p3–6, p12.</span></p>
+distribution with this property. <span class="src">Source: <a href="../resources/part-2/lecture-01-random-processes.pdf#page=3">lecture-01-random-processes.pdf p3–6</a>, p12.</span></p>
 <p><strong>Worked (lecture Eg 1.1).</strong> A tool breaks on each operation with \(p = 0.01\). Mean life \(=1/0.01 = 100\) operations.
 Already lasted 10: \(P(X > 40 \mid X > 10) = P(X>30) = 0.99^{30} = 0.7397\).</p>
 
@@ -190,7 +190,7 @@ Already lasted 10: \(P(X > 40 \mid X > 10) = P(X>30) = 0.99^{30} = 0.7397\).</p>
 <p>The continuous analogue: a lifetime \(X\ge 0\) with rate \(\lambda\) (events per unit time):</p>
 \[ f(x) = \lambda e^{-\lambda x},\quad P(X > x) = e^{-\lambda x},\quad P(X\le x) = 1-e^{-\lambda x},\quad E(X) = \frac1\lambda. \]
 <p>Memoryless in the same way: \(P(X > x+y \mid X > x) = e^{-\lambda(x+y)}/e^{-\lambda x} = e^{-\lambda y}\).
-<span class="src">Source: lecture-01 p9–11.</span></p>
+<span class="src">Source: <a href="../resources/part-2/lecture-01-random-processes.pdf#page=9">lecture-01 p9–11</a>.</span></p>
 <p><strong>Two facts that power every CTMC</strong> (lecture Problem 2.4). For independent \(X_1 = \mathrm{EXP}(\lambda_1)\), \(X_2 = \mathrm{EXP}(\lambda_2)\):</p>
 \[ \min(X_1, X_2) = \mathrm{EXP}(\lambda_1+\lambda_2), \qquad P(X_1 \lt  X_2) = \frac{\lambda_1}{\lambda_1+\lambda_2}. \]
 <div class="why"><strong>Why the minimum adds rates:</strong> \(P(\min > x) = P(X_1>x)P(X_2>x) = e^{-\lambda_1x}e^{-\lambda_2x} = e^{-(\lambda_1+\lambda_2)x}\).
@@ -217,14 +217,14 @@ Intuitively, two independent alarm clocks ringing at rates \(\lambda_1\) and \(\
 <h2 id="m2">2 · Stochastic processes &amp; the Poisson process</h2>
 <p>A <strong>stochastic process</strong> \(\{X(t): t\in T\}\) is a family of random variables indexed by time.
 Two independent choices classify it: is time \(T\) countable (discrete time) or an interval (continuous time)? Is the
-state space \(S\) countable (a <em>chain</em>) or a continuum? <span class="src">Source: lecture-01 p12–15; main-points-lecture-1 p2.</span></p>
+state space \(S\) countable (a <em>chain</em>) or a continuum? <span class="src">Source: <a href="../resources/part-2/lecture-01-random-processes.pdf#page=12">lecture-01 p12–15</a>; <a href="../resources/part-2/main-points-lecture-1.pdf#page=2">main-points-lecture-1 p2</a>.</span></p>
 <table class="data">
   <tr><th></th><th>discrete state (chain)</th><th>continuous state</th></tr>
   <tr><th>discrete time</th><td>DTMC (machine checked every hour)</td><td>—</td></tr>
   <tr><th>continuous time</th><td>CTMC, Poisson process (machine watched at all times)</td><td>robot-arm distance</td></tr>
 </table>
 <div class="why"><strong>The lecturer's classification convention</strong> (summary notes
-<code>random-process-additional-notes-p1-19.pdf</code> p5–8, taught Week 5). Decide the two axes separately:
+<a href="../resources/part-2/random-process-additional-notes-p1-19.pdf#page=5"><code>random-process-additional-notes-p1-19.pdf</code> p5–8</a>, taught Week 5). Decide the two axes separately:
 <em>time</em> is discrete if \(X\) is only defined at countable instants (hourly prices, "customers arriving between \(t\) and \(t+1\)" for
 \(t = 9, 10, \ldots\)); <em>state</em> is discrete if the values are countable. A <strong>stock price quoted in cents</strong>
 (\(15.80, 15.81, \ldots\)) is a <strong>discrete</strong> state; an <strong>average</strong> price or average spending over an interval
@@ -237,14 +237,14 @@ state space \(S\) countable (a <em>chain</em>) or a continuum? <span class="src"
   <li><strong>Rescale \(\lambda\) to the period asked.</strong> Lecture Example 6.2: power failures at 4.2 per year → a 4-month period has \(\lambda = 1.4\), so \(P(\text{none}) = e^{-1.4} = 0.247\); a 6-month period has \(\lambda = 2.1\), so \(P(X\le 2) = e^{-2.1}(1 + 2.1 + 2.1^2/2) = 0.650\).</li>
   <li><strong>"More than" → complement.</strong> Lecture Example 7.1 (\(\lambda = 2\) per hour): \(P(X>3) = 1 - e^{-2}(1 + 2 + 4/2 + 8/6) = 0.143\).</li>
 </ul>
-<p>The Poisson <em>process</em> below is exactly this random variable with \(\lambda\) replaced by \(\lambda t\). <span class="src">Source: lecture-00-probability-preliminaries.pdf p98–110.</span></p>
+<p>The Poisson <em>process</em> below is exactly this random variable with \(\lambda\) replaced by \(\lambda t\). <span class="src">Source: <a href="../resources/part-2/lecture-00-probability-preliminaries.pdf#page=103">lecture-00-probability-preliminaries.pdf p103–115 (printed p98–110)</a>.</span></p>
 
 <h3>The Poisson process</h3>
 <p>Let \(X(t)\) count arrivals in \([0,t]\). It is a Poisson process with rate \(\lambda\) when</p>
 \[ P\big(X(t) = k\big) = \frac{e^{-\lambda t}(\lambda t)^k}{k!},\quad k = 0,1,2,\ldots \qquad E[X(t)] = \lambda t. \]
 <p>Set \(k=0\): \(P(\text{no arrival in }[0,t]) = e^{-\lambda t}\). But "no arrival by \(t\)" is exactly "inter-arrival time \(T > t\)", so
 \(P(T>t) = e^{-\lambda t}\). <strong>Inter-arrival times are EXP(\(\lambda\))</strong>. The counting view and the clock view are the same process.
-<span class="src">Source: lecture-01 p15–17.</span></p>
+<span class="src">Source: <a href="../resources/part-2/lecture-01-random-processes.pdf#page=15">lecture-01 p15–17</a>.</span></p>
 <p><strong>Superposition and decomposition</strong> (main-points-lecture-2):</p>
 <ul>
   <li>Merging independent Poisson streams with rates \(\lambda_1,\ldots,\lambda_n\) gives a Poisson stream with rate \(\sum\lambda_i\).</li>
@@ -298,19 +298,19 @@ given the present state, the future is independent of the past,</p>
 <p>"Homogeneous" means \(p_{ij}\) does not depend on \(n\). Collect them in the <strong>transition probability matrix</strong>
 \(P = [p_{ij}]\): row = <em>from</em>, column = <em>to</em>, every entry in \([0,1]\), every <strong>row sums to 1</strong> (from \(i\) you must go somewhere).
 The state transition diagram draws an arc \(i\to j\) labelled \(p_{ij}\) for every non-zero entry.
-<span class="src">Source: lecture-01 p20–22.</span></p>
+<span class="src">Source: <a href="../resources/part-2/lecture-01-random-processes.pdf#page=20">lecture-01 p20–22</a>.</span></p>
 
 <h3>n-step transitions (Chapman–Kolmogorov)</h3>
 <p>To go \(i \to j\) in \(m+n\) steps you must be <em>somewhere</em> (\(k\)) after \(m\) steps. Total probability plus the Markov property give</p>
 \[ p_{ij}(m+n) = \sum_{k\in S} p_{ik}(m)\,p_{kj}(n) \;\Longrightarrow\; P(n) = P^n,\qquad \pi(n) = \pi(0)P^n, \]
-<p>where \(\pi(n) = [P(X_n=0),\,P(X_n=1),\ldots]\) is a <em>row</em> vector. <span class="src">Source: lecture-01 p34–36.</span></p>
+<p>where \(\pi(n) = [P(X_n=0),\,P(X_n=1),\ldots]\) is a <em>row</em> vector. <span class="src">Source: <a href="../resources/part-2/lecture-01-random-processes.pdf#page=34">lecture-01 p34–36</a>.</span></p>
 <div class="why"><strong>Reading \(p_{20}(2)\) by hand</strong>: row 2 of \(P\) dotted with column 0 of \(P\): \(\sum_k p_{2k}p_{k0}\). You never need the whole \(P^2\).</div>
 
 <h3>Sojourn time</h3>
 <p>Each step in state \(i\), you stay with probability \(p_{ii}\) and leave with probability \(1-p_{ii}\). So the number of steps spent in \(i\)
 per visit is <strong>geometric with success probability \(1-p_{ii}\)</strong>, and</p>
 \[ E(T_i) = \frac{1}{1-p_{ii}}\ \text{steps}\quad(p_{ii} = 0 \Rightarrow 1;\ p_{ii}=1 \Rightarrow \infty,\ \text{absorbing}). \]
-<span class="src">Source: lecture-01 p23–24.</span>
+<span class="src">Source: <a href="../resources/part-2/lecture-01-random-processes.pdf#page=23">lecture-01 p23–24</a>.</span>
 
 <p><strong>Worked (lecture Eg 5.1 / 6.1).</strong> A machine is working (0) or under repair (1), checked hourly; it fails in an hour w.p. \(a\),
 is repaired w.p. \(b\):</p>
@@ -340,7 +340,7 @@ From 2 nothing can change: \(p_{22}=1\) (absorbing). Counting "exactly one" as \
 <p>For a well-behaved chain, \(\pi(n)\) settles to a limit \(Y = [y_0, y_1, \ldots]\) that does not depend on where you started. Take the limit of
 \(\pi(n) = \pi(n-1)P\) on both sides:</p>
 \[ Y = YP,\qquad \sum_j y_j = 1,\qquad y_j\ge 0. \]
-<p>\(y_j\) is the long-run fraction of steps spent in state \(j\). <span class="src">Source: lecture-01 p39–44.</span></p>
+<p>\(y_j\) is the long-run fraction of steps spent in state \(j\). <span class="src">Source: <a href="../resources/part-2/lecture-01-random-processes.pdf#page=39">lecture-01 p39–44</a>.</span></p>
 <div class="why"><strong>Solving recipe.</strong> \(Y=YP\) is one equation per column (\(y_j = \sum_i y_i p_{ij}\)). One of them is always redundant, so
 <strong>drop one</strong> (pick the messiest) and replace it by \(\sum y_j = 1\). Express everything in terms of one unknown, then normalise.</div>
 <p><strong>Worked (two-state).</strong> Column 0: \(y_0 = (1-a)y_0 + b y_1 \Rightarrow a y_0 = b y_1\). With \(y_0+y_1 = 1\):
@@ -348,7 +348,7 @@ From 2 nothing can change: \(p_{22}=1\) (absorbing). Counting "exactly one" as \
 <p><strong>Worked (exercise Problem 6.3).</strong> \(P = \begin{pmatrix}0.6&0.2&0.2\\0.1&0.8&0.1\\0.6&0&0.4\end{pmatrix}\).
 Column 1: \(y_1 = 0.2y_0 + 0.8y_1 \Rightarrow y_1 = y_0\). Column 2: \(y_2 = 0.2y_0 + 0.1y_1 + 0.4y_2 \Rightarrow 0.6y_2 = 0.3y_0 \Rightarrow y_2 = y_0/2\).
 Normalise: \(y_0(1+1+\tfrac12) = 1 \Rightarrow Y = (0.4, 0.4, 0.2)\), matching the lecturer's answer sheet.
-<span class="src">Source: exercises-solution.pdf.</span></p>
+<span class="src">Source: <a href="../resources/part-2/exercises-solution.pdf">exercises-solution.pdf</a>.</span></p>
 <div class="pit"><strong>Pitfall — rows vs columns.</strong> \(Y = YP\) multiplies a row vector on the left, so each equation uses a <em>column</em> of \(P\). Using rows gives \(\sum_j p_{ij} = 1\), which is useless.</div>
 
 <div class="card" id="tool-ss">
@@ -373,7 +373,7 @@ Normalise: \(y_0(1+1+\tfrac12) = 1 \Rightarrow Y = (0.4, 0.4, 0.2)\), matching t
 
 <!-- ============================================================ -->
 <h2 id="m5">5 · Building an inventory DTMC (the lecturer's favourite)</h2>
-<p>This is Question 1 of <code>two-questions-random-process-queue.pdf</code>, and a DTMC state-space + TPM question appears in all 7 archived final exams (2015–2023), several of them
+<p>This is Question 1 of <a href="../resources/part-2/two-questions-random-process-queue.pdf"><code>two-questions-random-process-queue.pdf</code></a>, and a DTMC state-space + TPM question appears in all 7 archived final exams (2015–2023), several of them
 inventory models with Poisson demand or usage (spare bulbs, cans…). Learn the <em>procedure</em>.</p>
 <p><strong>Problem (lecturer's sheet).</strong> A shop stocks PCs. Weekly demands \(D_i\) are i.i.d. Poisson(\(\lambda = 1\)). \(X_t\) = PCs on hand at the end
 of week \(t\). On Saturday night: if \(X_t = 0\), order 3 (arrive Monday); otherwise order nothing.</p>
@@ -415,17 +415,17 @@ Interpretation: an order is placed in about 28.6&nbsp;% of weeks; mean sojourn i
 <h2 id="m6">6 · CTMC: rates, generator, rate balance</h2>
 <p>A <strong>continuous-time Markov chain</strong> obeys the same Markov property, but at every instant. Because "how long you've been here"
 cannot matter, the time spent in state \(i\) must be memoryless, so it is <strong>exponential</strong>: \(T_i = \mathrm{EXP}(\lambda_i)\)
-(\(\lambda_i = 0\): absorbing). <span class="src">Source: lecture-01 p46–49.</span></p>
+(\(\lambda_i = 0\): absorbing). <span class="src">Source: <a href="../resources/part-2/lecture-01-random-processes.pdf#page=46">lecture-01 p46–49</a>.</span></p>
 <h3>The generator (transition rate matrix) Q</h3>
 <p>For \(i\ne j\), \(q_{ij}\) is the <strong>rate</strong> of jumping \(i\to j\). The diagonal makes each row sum to zero:</p>
 \[ q_{ii} = -\sum_{j\ne i} q_{ij}\quad(\text{minus the total out-rate}),\qquad \sum_j q_{ij} = 0. \]
 <p>Sojourn in \(i\) is \(\mathrm{EXP}(-q_{ii})\) (the min of all competing exits, Module 1). The chain evolves by \(d\pi(t)/dt = \pi(t)Q\) (forward Kolmogorov,
-solution \(\pi(t) = \pi(0)e^{Qt}\)). <span class="src">Source: lecture-01 p53–57.</span></p>
+solution \(\pi(t) = \pi(0)e^{Qt}\)). <span class="src">Source: <a href="../resources/part-2/lecture-01-random-processes.pdf#page=53">lecture-01 p53–57</a>.</span></p>
 <h3>Steady state: \(\pi Q = 0\) = rate balance</h3>
 <p>In steady state \(d\pi/dt = 0\), so \(\pi Q = 0\) with \(\sum\pi_j = 1\). Column \(j\) of that equation rearranges to</p>
 \[ \pi_j \sum_{k\ne j} q_{jk} \;=\; \sum_{k\ne j}\pi_k q_{kj}\qquad \text{(rate out of } j = \text{rate into } j\text{)}. \]
 <div class="why"><strong>Read it off the diagram:</strong> for each state, (probability of being there) × (sum of arrows out) = Σ (probability of each neighbour) × (its arrow in).
-No matrix algebra is needed. <span class="src">Source: lecture-01 p58–59, eq. (65)–(67).</span></div>
+No matrix algebra is needed. <span class="src">Source: <a href="../resources/part-2/lecture-01-random-processes.pdf#page=58">lecture-01 p58–59</a>, eq. (65)–(67).</span></div>
 
 <h3>Worked (lecture Eg 7.1 / 9.1, resume policy)</h3>
 <p>States: 0 setup (rate \(s\)), 1 processing (rate \(p\), may fail at rate \(f\)), 2 repair (rate \(r\)); after repair, <em>resume</em> the same part (2→1).</p>
@@ -443,10 +443,10 @@ No matrix algebra is needed. <span class="src">Source: lecture-01 p58–59, eq. 
 \begin{aligned} \pi_0 s &= \pi_1 p\\ \pi_2 r &= \pi_1 f\\ \pi_0+\pi_1+\pi_2 &= 1\end{aligned}
 \;\Rightarrow\; \pi_0 = \frac{pr}{pr+rs+fs},\ \pi_1 = \frac{rs}{pr+rs+fs},\ \pi_2 = \frac{fs}{pr+rs+fs}. \]
 <p>With \(s=20,\ p=4,\ f=0.05,\ r=1\) per hour: \(\pi = (0.16,\ 0.80,\ 0.04)\). <strong>Production rate</strong> \(R = p\,\pi_1 = 3.2\) parts/h: parts finish only while processing, at rate \(p\).
-Under the <em>discard</em> policy (2→0, fresh setup) \(R\) drops to 3.08. <span class="src">Source: lecture-01 p61–67.</span></p>
+Under the <em>discard</em> policy (2→0, fresh setup) \(R\) drops to 3.08. <span class="src">Source: <a href="../resources/part-2/lecture-01-random-processes.pdf#page=61">lecture-01 p61–67</a>.</span></p>
 <div class="pit"><strong>Pitfall — \(R = s\pi_0\)?</strong> That counts setups completed, and some of those parts are later lost to failures (in discard models). Output is counted where the part <em>finishes</em>: \(R = p\pi_1\).</div>
 <div class="pit"><strong>Pitfall — sign of \(q_{ii}\).</strong> Diagonal entries are negative (or 0). A positive diagonal is always wrong.</div>
-<p><strong>Exercise variants the lecturer set</strong> (lecture p68–69; answer to 9.4 in <code>exercises-solution.pdf</code>): batches of \(n\) parts per setup (Problem 9.3); after a failure, rework w.p. \(q\) (back to 1) or discard w.p. \(1-q\) (back to 0), so the repair state's exits are \(qr\) and \((1-q)r\) (Problem 9.4).</p>
+<p><strong>Exercise variants the lecturer set</strong> (lecture p68–69; answer to 9.4 in <a href="../resources/part-2/exercises-solution.pdf"><code>exercises-solution.pdf</code></a>): batches of \(n\) parts per setup (Problem 9.3); after a failure, rework w.p. \(q\) (back to 1) or discard w.p. \(1-q\) (back to 0), so the repair state's exits are \(qr\) and \((1-q)r\) (Problem 9.4).</p>
 
 <div class="check" data-id="m6a" data-kind="text" data-answer="14.81">
   <div class="tag">Check 6.1</div>
@@ -469,7 +469,7 @@ Under the <em>discard</em> policy (2→0, fresh setup) \(R\) drops to 3.08. <spa
 <p>A CTMC on \(\{0,1,2,\ldots\}\) that only moves one step at a time: up \(k\to k+1\) at rate \(\lambda_k\) (birth), down \(k\to k-1\) at rate \(\mu_k\) (death).
 Balancing the flow across the "cut" between \(k-1\) and \(k\) gives \(\lambda_{k-1}\pi_{k-1} = \mu_k\pi_k\). Chain these together:</p>
 \[ \pi_k = \pi_0\prod_{i=0}^{k-1}\frac{\lambda_i}{\mu_{i+1}},\qquad \pi_0 = \Big[1 + \sum_{k\ge1}\prod_{i=0}^{k-1}\frac{\lambda_i}{\mu_{i+1}}\Big]^{-1}. \]
-<p><span class="src">Source: lecture-01 p70–72, eq. (76)–(79).</span> Every queue in Module 8 is this formula with particular \(\lambda_k,\mu_k\).</p>
+<p><span class="src">Source: <a href="../resources/part-2/lecture-01-random-processes.pdf#page=70">lecture-01 p70–72</a>, eq. (76)–(79).</span> Every queue in Module 8 is this formula with particular \(\lambda_k,\mu_k\).</p>
 <div class="why"><strong>Why the cut argument works:</strong> in the long run, the process crosses the boundary between \(k-1\) and \(k\) upward as often as downward (it cannot cross twice in a row the same way), so the two flows are equal.</div>
 <div class="check" data-id="m7a" data-kind="text" data-answer="2/5">
   <div class="tag">Check 7.1</div>
@@ -482,7 +482,7 @@ Balancing the flow across the "cut" between \(k-1\) and \(k\) gives \(\lambda_{k
 <h2 id="m8">8 · Queues</h2>
 <p><strong>Notation</strong> \(A/S/m/K/L\): arrival process / service distribution / servers / capacity / population; "M" = Markovian (Poisson arrivals or exponential service).
 Symbols (all steady state): \(L\) mean number in <em>system</em>, \(Q\) mean number in <em>queue</em>, \(W\) mean time in system, \(D\) mean time in queue,
-\(\rho\) utilisation. <span class="src">Source: lecture-02-queuing-models.pdf p4–5; queue-summary.pdf.</span></p>
+\(\rho\) utilisation. <span class="src">Source: <a href="../resources/part-2/lecture-02-queuing-models.pdf#page=4">lecture-02-queuing-models.pdf p4–5</a>; <a href="../resources/part-2/queue-summary.pdf">queue-summary.pdf</a>.</span></p>
 <h3>Little's result — the one law you must know (not on the appendix)</h3>
 \[ L = \lambda W,\qquad Q = \lambda D,\qquad W = D + \frac1\mu. \]
 <div class="why"><strong>Intuition:</strong> if 9 jobs arrive per hour and each stays 1/3 hour, then on average \(9\times\tfrac13 = 3\) are inside. So you only ever need one of \(L, Q, W, D\); Little gives the rest. Also: utilisation \(U = 1-\pi_0\), production rate \(=(1-\pi_0)\mu\) for one server.</div>
@@ -492,10 +492,10 @@ Symbols (all steady state): \(L\) mean number in <em>system</em>, \(Q\) mean num
 \[ L = \frac{\rho}{1-\rho},\quad W = \frac{L}{\lambda} = \frac{1}{\mu-\lambda},\quad Q = L - \rho,\quad D = W - \frac1\mu. \]
 <p>Eg 3.1: \(\lambda=8,\ \mu=10\) → \(\rho=0.8,\ L=4,\ Q=3.2,\ W=0.5\) h, \(D=0.4\) h. Idle fraction \(=\pi_0 = 0.2\).
 The number in system \(N\) is a <em>modified geometric</em> r.v. (\(N+1\) is geometric with parameter \(1-\rho\)), which is where \(\pi_k = \rho^k(1-\rho)\) comes from.
-<span class="src">Source: lecture-02 p5–12; queue-handwritten-notes p7.1.</span></p>
+<span class="src">Source: <a href="../resources/part-2/lecture-02-queuing-models.pdf#page=5">lecture-02 p5–12</a>; <a href="../resources/part-2/queue-handwritten-notes.pdf">queue-handwritten-notes</a> p7.1.</span></p>
 <h3>M/M/1 waiting-time <em>distributions</em> — taught in Week 8, <strong>not on the appendix</strong></h3>
 <p>Under FIFO, a customer who finds \(k\) others waits for \(k\) exponential services (an Erlang-\(k\) sum). Summing over \(\pi_k\) gives
-<span class="src">(lecture-02 p13–16)</span>:</p>
+<span class="src">(<a href="../resources/part-2/lecture-02-queuing-models.pdf#page=13">lecture-02 p13–16</a>)</span>:</p>
 \[ P(d = 0) = 1-\rho,\qquad F_d(t) = P(d\le t) = 1 - \rho\,e^{-\mu(1-\rho)t}\ (t>0),\qquad F_w(t) = P(w\le t) = 1 - e^{-(\mu-\lambda)t}. \]
 <p>So the time in <em>system</em> \(w\) is exactly EXP(\(\mu-\lambda\)) (mean \(W\)), while the time in <em>queue</em> has an atom \(1-\rho\) at zero (arrive to an empty system, no wait).
 Tail probabilities: \(P(w>t) = e^{-(\mu-\lambda)t}\), \(P(d>t) = \rho e^{-\mu(1-\rho)t}\). The means \(W, D\) do not depend on the queue discipline; these distributions assume FIFO.</p>
@@ -504,18 +504,18 @@ Tail probabilities: \(P(w>t) = e^{-(\mu-\lambda)t}\), \(P(d>t) = \rho e^{-\mu(1-
 <h3>M/M/1/N (room for N in total)</h3>
 <p>Arrivals are blocked when \(N\) are present (\(\lambda_k = 0\) for \(k\ge N\)). Finite chain, so <strong>stable for any \(\rho\)</strong>:
 \(\pi_k = \rho^k(1-\rho)/(1-\rho^{N+1})\). The <strong>blocking probability</strong> is \(\pi_N\) (an arrival sees the time-average state). Eg 4.1 (\(N=4,\ \rho=0.8\)): \(\pi_0 = 0.297\).
-<span class="src">Source: lecture-02 p16–20.</span></p>
+<span class="src">Source: <a href="../resources/part-2/lecture-02-queuing-models.pdf#page=16">lecture-02 p16–20</a>.</span></p>
 <div class="pit"><strong>Convention trap.</strong> The appendix's M/M/1/N \(W\) and \(D\) equal \(L/\lambda\) and \(Q/\lambda\) with the <em>offered</em> \(\lambda\), which is what lecture Eg 4.1 does (\(W = 1.566/8\)). Physically, Little's law uses the <em>accepted</em> rate \(\lambda(1-\pi_N)\). If a quiz box asks for W of M/M/1/N, the appendix formula is the safe choice.</div>
 
 <h3>M/M/m (m servers, one shared queue)</h3>
 <p>Deaths at rate \(k\mu\) while \(k\lt m\) servers are busy, \(m\mu\) once all are busy. With \(\rho = \lambda/(m\mu)\) (note the \(m\)!):</p>
 \[ \pi_0 = \Big[\frac{(m\rho)^m}{m!(1-\rho)} + \sum_{k=0}^{m-1}\frac{(m\rho)^k}{k!}\Big]^{-1},\qquad Q = \frac{\rho(m\rho)^m\pi_0}{m!(1-\rho)^2},\qquad L = Q + \frac\lambda\mu. \]
-<p>Average busy servers \(=\lambda/\mu\); each server's utilisation \(=\rho\), so each is idle a fraction \(1-\rho\). <span class="src">Source: lecture-02 p22–27.</span></p>
+<p>Average busy servers \(=\lambda/\mu\); each server's utilisation \(=\rho\), so each is idle a fraction \(1-\rho\). <span class="src">Source: <a href="../resources/part-2/lecture-02-queuing-models.pdf#page=22">lecture-02 p22–27</a>.</span></p>
 
 <h3>Mᵇ/M/1 (batches of b)</h3>
 <p>Batches arrive at rate \(\lambda\), each with \(b\) customers: \(\rho = b\lambda/\mu\), \(L = \rho(1+b)/(2(1-\rho))\), and Little uses the <em>customer</em> rate:
 \(W = L/(\lambda b)\). Eg 6.1 (\(b=2,\ \lambda=4,\ \mu=10\)): same \(\rho = 0.8\) as Eg 3.1 but \(L = 6\) vs 4, because each part waits for its batch-mates.
-<span class="src">Source: lecture-02 p28–33.</span></p>
+<span class="src">Source: <a href="../resources/part-2/lecture-02-queuing-models.pdf#page=28">lecture-02 p28–33</a>.</span></p>
 
 <h3>Worked — the lecturer's Question 2 (two-questions sheet)</h3>
 <p>Two queues, arrivals 6/h and 4/h, service mean 5 min (\(\mu=12\)/h).</p>
