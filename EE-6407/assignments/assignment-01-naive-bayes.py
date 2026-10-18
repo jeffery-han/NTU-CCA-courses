@@ -163,8 +163,8 @@ if __name__ == '__main__':
         print(f'<tr><th>{c}</th><td>{nc}/{n} = {nc/n:.4f}</td>{cells}</tr>')
     print('\n<!-- predictions -->')
     for n, x, p, gs in preds:
-        print(f'<tr><td>{n}</td>' + ''.join(f'<td>{v}</td>' for v in x)
-              + ''.join(f'<td>{gs[c]:.2f}</td>' for c in CLASSES) + f'<td><b>{p}</b></td></tr>')
+        print((f'<tr><td>{n}</td>' + ''.join(f'<td>{v}</td>' for v in x)
+               + ''.join(f'<td>{gs[c]:.2f}</td>' for c in CLASSES) + f'<td><b>{p}</b></td></tr>').replace('-', '−'))
     print('\n<!-- worked test 11 -->')
     x = test[10][1]
     for c in CLASSES:

@@ -139,10 +139,10 @@ if __name__ == '__main__':
     print('w  = 1e-3 *', vec(w)); print('w0 = 1e-3 *', f(w0)); print('|w| =', math.sqrt(dot(w, w)))
     print('\n<!-- SW -->')
     for r in SW:
-        print('<tr>' + ''.join(f'<td>{v:.2f}</td>' for v in r) + '</tr>')
+        print(('<tr>' + ''.join(f'<td>{v:.2f}</td>' for v in r) + '</tr>').replace('-', '−'))
     print('\n<!-- test -->')
     for n, x, gv, p in test:
-        print(f'<tr><td>{n}</td>' + ''.join(f'<td>{v:.3f}</td>' for v in x) + f'<td>{1e3 * gv:.3f}</td><td><b>{p:+d}</b></td></tr>')
+        print((f'<tr><td>{n}</td>' + ''.join(f'<td>{v:.3f}</td>' for v in x) + f'<td>{1e3 * gv:.3f}</td><td><b>{p:+d}</b></td></tr>').replace('-', '−'))
     print('\nlabels:', ' '.join(f'{p:+d}' for *_, p in test))
     print('closest:', sorted(test, key=lambda t: abs(t[2]))[:3])
     if (HERE / 'assignment-01-report-draft.html').read_text(encoding='utf-8').count('<!-- FIG2 START -->'):
