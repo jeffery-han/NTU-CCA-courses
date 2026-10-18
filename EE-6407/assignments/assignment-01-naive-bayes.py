@@ -1,7 +1,7 @@
 """EE6407 Assignment 1: data checks + Gaussian Naive Bayes, stdlib only.
 
 Run from this directory:  python3 -I assignment-01-naive-bayes.py
-Prints the numbers and HTML table fragments used in assignment-01-report-draft.html.
+Prints the numbers and HTML table fragments used in assignments-01-02-report.html.
 """
 import math, statistics as st, sys
 from decimal import Decimal as D
@@ -147,7 +147,7 @@ def write_figure(html_path):
     html_path.write_text(s[:i] + '\n' + figure_c_vs_d() + '\n' + s[j:], encoding='utf-8')
 
 if __name__ == '__main__':
-    write_figure(HERE / 'assignment-01-report-draft.html')  # keeps Figure 1 in sync with the data
+    write_figure(HERE / 'assignments-01-02-report.html')  # keeps Figure 1 in sync with the data
     f2 = lambda v: f'{v:.2f}'
     print('missing', missing, '\nfar-out', far, '\nmild kept', mild)
     print('class sizes', {c: model[c][0] for c in CLASSES}, 'resub acc', round(acc, 4))

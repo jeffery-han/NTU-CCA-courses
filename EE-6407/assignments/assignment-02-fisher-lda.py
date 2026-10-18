@@ -5,7 +5,7 @@ Follows the Week 8 lecture convention (week-08-transcript.txt):
   S_i = sum (x - m_i)(x - m_i)^T (scatter, not divided by N_i),  S_W = S_1 + S_2,
   w = S_W^-1 (m_1 - m_2),  w0 = -w^T (m_1 + m_2) / 2,  g(x) = w^T x + w0 > 0 -> class 1.
 Here class 1 = label +1 and class 2 = label -1 (the coding used in label_train.mat).
-Prints the numbers and HTML fragments used in assignment-01-report-draft.html and refreshes Figure 2 there.
+Prints the numbers and HTML fragments used in assignments-01-02-report.html and refreshes Figure 2 there.
 """
 import math, sys
 from pathlib import Path
@@ -145,5 +145,5 @@ if __name__ == '__main__':
         print((f'<tr><td>{n}</td>' + ''.join(f'<td>{v:.3f}</td>' for v in x) + f'<td>{1e3 * gv:.3f}</td><td><b>{p:+d}</b></td></tr>').replace('-', '−'))
     print('\nlabels:', ' '.join(f'{p:+d}' for *_, p in test))
     print('closest:', sorted(test, key=lambda t: abs(t[2]))[:3])
-    if (HERE / 'assignment-01-report-draft.html').read_text(encoding='utf-8').count('<!-- FIG2 START -->'):
-        write_figure(HERE / 'assignment-01-report-draft.html')
+    if (HERE / 'assignments-01-02-report.html').read_text(encoding='utf-8').count('<!-- FIG2 START -->'):
+        write_figure(HERE / 'assignments-01-02-report.html')
