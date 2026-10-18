@@ -58,7 +58,7 @@ The test set (<code>TestData.xlsx</code>) has 30 unlabelled samples. Rows are nu
 
 <h3>(1) Missing values and outliers</h3>
 
-<p><b>Missing values: yes, three.</b> Three cells contain “?” instead of a number:</p>
+<p><b>Missing values: yes, three.</b> Three cells contain "?" instead of a number:</p>
 <table>
   <thead><tr><th>Row</th><th>Feature</th><th>Class</th><th>Remaining values</th></tr></thead>
   <tbody>
@@ -82,9 +82,9 @@ Exactly three values fall outside these fences:</p>
 <tr><td>117</td><td>D</td><td>3</td><td>5.3</td><td>1.3</td><td>[0.30, 2.40]</td></tr>
   </tbody>
 </table>
-<p>All three are roughly two to four times their class median, which suggests recording errors (e.g. 16.0 is likely 6.0 or 1.60) rather than natural variation.
-The milder 1.5·IQR rule also flags eight borderline values (rows 1, 26, 69, 79, 97, 98, 105, 116). These lie only slightly outside the usual range, so
-they are treated as natural spread within the class and kept.</p>
+<p>All three are roughly two to four times their class median, which points to recording errors (16.0 was probably meant to be 6.0 or 1.60) more than natural variation.
+The milder 1.5·IQR rule also flags eight borderline values (rows 1, 26, 69, 79, 97, 98, 105, 116). They lie only slightly outside the usual range, so
+I kept them as natural spread within the class.</p>
 
 <p><b>Three methods for missing values</b></p>
 <ol>
@@ -95,8 +95,8 @@ they are treated as natural spread within the class and kept.</p>
 
 <p><b>Three methods for outliers</b></p>
 <ol>
-  <li><b>Detection and removal.</b> Flag values with a statistical rule (z-score beyond ±3, or the IQR fences above) and delete those samples. This is clean when the outliers are clearly errors and few in number.</li>
-  <li><b>Capping (winsorising).</b> Replace a value outside the fence with the nearest fence value, or with a chosen percentile (e.g. the 1st/99th). The sample is kept and its influence is limited.</li>
+  <li><b>Detection and removal.</b> Flag values with a statistical rule (z-score beyond ±3, or the IQR fences above) and delete those samples. This works well when the outliers are few and obviously errors.</li>
+  <li><b>Capping (winsorising).</b> Replace a value outside the fence with the nearest fence value, or with a chosen percentile (e.g. the 1st/99th). The sample stays in the data, but its influence is limited.</li>
   <li><b>Treat as missing and impute, or use robust estimates.</b> Replace the outlier with the class median or a <i>k</i>-NN estimate, as for a missing value. Alternatively, keep it but estimate parameters with robust statistics (median and MAD instead of mean and standard deviation), so a single extreme value cannot dominate.</li>
 </ol>
 
@@ -110,7 +110,7 @@ they are treated as natural spread within the class and kept.</p>
 
 <p><b>Step 2: Naïve (conditional independence) assumption.</b> Given the class, the four features are assumed independent, so</p>
 <div class="eq">p(<b>x</b> | ω<sub>i</sub>) = ∏<sub>j=1</sub><sup>4</sup> p(x<sub>j</sub> | ω<sub>i</sub>).</div>
-<p>This replaces one 4-dimensional density with four 1-dimensional ones, which is far easier to estimate from 114 samples.</p>
+<p>This replaces one 4-dimensional density with four 1-dimensional ones, which are much easier to estimate from 114 samples.</p>
 
 <p><b>Step 3: Model each feature as Gaussian within each class.</b> The features are continuous measurements, so</p>
 <div class="eq">p(x<sub>j</sub> | ω<sub>i</sub>) = <span class="frac"><span>1</span><span>√(2π σ<sub>ij</sub><sup>2</sup>)</span></span> exp( − <span class="frac"><span>(x<sub>j</sub> − μ<sub>ij</sub>)<sup>2</sup></span><span>2σ<sub>ij</sub><sup>2</sup></span></span> ).</div>
@@ -152,7 +152,7 @@ On the 114 cleaned training samples this classifier is 95.6% correct (resubstitu
 <p>For example, for class 3 and feature A: ½ ln(2π × 0.2535) + (6.0 − 5.9615)<sup>2</sup>/(2 × 0.2535) = 0.2327 + 0.0029 = 0.2356.
 Then g<sub>3</sub> = −1.0726 − (0.2356 + 1.5016 + 1.2195 − 0.3928) = −3.64, the largest of the three, so sample 11 → class 3.
 (A penalty term can be negative because σ<sup>2</sup> &lt; 1/(2π) makes the log term negative.)
-Class 1 is ruled out by a wide margin, mainly because C = 5.0 is extremely far from class 1's mean of 1.48.</p>
+Class 1 loses by a wide margin, mostly because C = 5.0 is far from class 1's mean of 1.48.</p>
 
 <h3>(3) Predicted class labels of the test data</h3>
 <div class="wrap">
@@ -193,7 +193,7 @@ Class 1 is ruled out by a wide margin, mainly because C = 5.0 is extremely far f
 </table>
 </div>
 <p><b>Summary:</b> samples 1–10 → class 1; samples 12–21 → class 2; samples 11 and 22–30 → class 3.
-Class 1 is separated from the others by a very wide margin (mainly through features C and D). The closest decisions are sample 11
+Class 1 is separated from the other two by a wide margin, mostly through features C and D. The closest decisions are sample 11
 (g<sub>3</sub> − g<sub>2</sub> = 3.58) and sample 17 (g<sub>2</sub> − g<sub>3</sub> = 1.19), which lie near the class 2 / class 3 boundary.</p>
 
 <figure>
@@ -431,7 +431,7 @@ and S<sub>W</sub> is the within-class scatter matrix defined in Step 2.</p>
   </tbody>
 </table>
 </div>
-<p>S<sub>W</sub> is clearly non-singular (its diagonal dominates), so it can be inverted directly without regularisation.</p>
+<p>S<sub>W</sub> is non-singular (it is strongly diagonally dominant), so it can be inverted directly without regularisation.</p>
 
 <p><b>Step 3: Weight vector.</b> Setting the gradient of J(<b>w</b>) to zero gives the generalised eigenvalue problem S<sub>B</sub><b>w</b> = λS<sub>W</sub><b>w</b>.
 Because S<sub>B</sub><b>w</b> always points along <b>m</b><sub>1</sub> − <b>m</b><sub>2</sub>, and the length of <b>w</b> does not change the decision, the solution is</p>
@@ -449,7 +449,7 @@ This orientation (<b>m</b><sub>1</sub> − <b>m</b><sub>2</sub>) places class ω
 <p><b>Decision rule:</b> if g(<b>x</b>) &gt; 0, assign <b>x</b> to ω<sub>1</sub> (label +1); if g(<b>x</b>) &lt; 0, assign <b>x</b> to ω<sub>2</sub> (label −1).
 The boundary g(<b>x</b>) = 0 is a hyperplane in the 5-dimensional feature space.
 On the 577 training samples this classifier is 93.2% correct (13 errors in ω<sub>1</sub>, 26 in ω<sub>2</sub>; resubstitution accuracy, an optimistic estimate).</p>
-<p class="note">Placing the boundary at the midpoint of the projected means is a convention, not necessarily the optimal threshold. In practice w<sub>0</sub> can be tuned on the data (here the errors are uneven, 13 vs 26).
+<p class="note">Placing the boundary at the midpoint of the projected means is a convention and need not give the lowest error. In practice w<sub>0</sub> can be tuned on the data; here the errors are uneven (13 vs 26).
 None of the test predictions below would change unless w<sub>0</sub> moved by more than 3.217 × 10<sup>−3</sup>, the smallest |g(<b>x</b>)| among the test samples.</p>
 
 <h3>(2) Predicted class labels of the test data</h3>
@@ -487,8 +487,8 @@ g(<b>x</b>) = (−12.2113 + 8.7005) × 10<sup>−3</sup> = −3.511 × 10<sup>�
 </table>
 </div>
 <p><b>Summary:</b> test samples 1–9 → label −1 (class ω<sub>2</sub>); test samples 10–23 → label +1 (class ω<sub>1</sub>).
-Every test sample has |g(<b>x</b>)| between 3.2 × 10<sup>−3</sup> and 4.4 × 10<sup>−3</sup>, so none lies on the boundary. These values are, however, inside the region where the two training
-classes overlap (Figure 2), so some of these labels could be wrong in the same way as the 6.8% of training samples that are misclassified.</p>
+Every test sample has |g(<b>x</b>)| between 3.2 × 10<sup>−3</sup> and 4.4 × 10<sup>−3</sup>, so none lies on the boundary. They do fall inside the region where the two training
+classes overlap (Figure 2), though, so some of these labels could be wrong, just as 6.8% of the training samples are misclassified.</p>
 
 <figure>
 <!-- FIG2 START -->
@@ -617,7 +617,7 @@ classes overlap (Figure 2), so some of these labels could be wrong in the same w
 <!-- FIG2 END -->
 <figcaption id="fig2cap"><b>Figure 2.</b> Training samples projected onto the Fisher direction: histograms of g(<b>x</b>) = <b>w</b><sup>T</sup><b>x</b> + w<sub>0</sub> for each class (bin width 1 × 10<sup>−3</sup>).
 The dashed line is the decision boundary g = 0. The ticks below the axis are the 23 test samples, coloured by their predicted class.
-The two classes are well separated on average (projected means at about ±8.5 × 10<sup>−3</sup>) but their tails overlap, which explains the 39 training errors.</figcaption>
+The class means are well apart (about ±8.5 × 10<sup>−3</sup>), but the tails overlap, and that overlap accounts for the 39 training errors.</figcaption>
 </figure>
 
 </div>
