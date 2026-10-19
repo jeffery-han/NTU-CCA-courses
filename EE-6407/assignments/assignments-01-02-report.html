@@ -32,6 +32,20 @@
   figure { margin: 14px 0; }
   figure svg { width: 100%; height: auto; display: block; border: 1px solid var(--line); }
   figcaption { font-size: 13px; color: var(--muted); margin-top: 6px; }
+  @media screen {
+    h2.newpage { margin-top: 58px; }
+    h2.newpage::before {
+      content: "new page starts here";
+      display: block;
+      font: 12px/1.4 system-ui, sans-serif;
+      letter-spacing: .04em;
+      color: #9aa0ab;
+      border-top: 1px dashed #c8ccd4;
+      padding-top: 8px;
+      margin: -30px 0 12px;
+      text-align: center;
+    }
+  }
   @media (max-width: 640px) { .page { margin:0; padding: 18px 16px; } }
   @page { size: A4; margin: 16mm 15mm; }
   @media print {
@@ -39,7 +53,7 @@
     .page { margin:0; padding:0; box-shadow:none; max-width:none; }
     .screen { display:none; }
     h2, h3 { break-after: avoid; }
-    h2.newpage { break-before: page; }
+    h2.newpage { break-before: page; page-break-before: always; }
     .eq, figure, .res, table.short { break-inside: avoid; }
     .eq { white-space: normal; }
     table { break-inside: auto; }
@@ -54,16 +68,13 @@
 
 <div class="screen">
   <b>Draft, not for submission yet.</b> To make the PDF, use Print → Save as PDF (A4); this yellow box is hidden in print.
-  Every number below is produced by <code>assignment-01-naive-bayes.py</code> (Assignment 1) and <code>assignment-02-fisher-lda.py</code> (Assignment 2), which also redraw Figures 1 and 2 — rerun both after changing any decision.
-  Before submitting: fill in the name and matriculation number, check EE6407's rules on AI tools, and make sure you can explain every step yourself.
+  Every number below is produced by <code>assignment-01-naive-bayes.py</code> (Assignment 1) and <code>assignment-02-fisher-lda.py</code> (Assignment 2), which also redraw Figures 1 and 2; rerun both after changing any decision.
+  Before submitting: check EE6407's rules on AI tools, and make sure you can explain every step yourself.
   Submit both assignments as this one PDF (no code) to the "Submission Portal of EE6407 Assignments 1&amp;2", due 19 Oct 2026, 11:59 PM.
 </div>
 
 <h1>EE6407 Genetic Algorithms &amp; Machine Learning: Assignments 1 and 2</h1>
-<div class="meta">Name: <span>&nbsp;</span> &nbsp; Matric No.: <span>&nbsp;</span> &nbsp; Submission: 19 Oct 2026</div>
-
-<p class="note">All calculations use unrounded parameters; displayed values are rounded (parameters to 4 decimal places, discriminant values to 2, probabilities to 1).
-The Python scripts that produce them use only the standard library and carry their own assertions, so every table in this report can be regenerated from the two data sets.</p>
+<div class="meta">Name: Han Chang &nbsp;&nbsp; Matric No.: G2602636F &nbsp;&nbsp; Submission: 19 Oct 2026</div>
 
 <h2>Assignment 1</h2>
 <p>The training set (<code>TrainingData.xlsx</code>) has 120 samples with four features <i>A–D</i> in columns A–D and a class label <i>&omega;</i> &isin; {1, 2, 3} in column E.
@@ -71,7 +82,7 @@ The test set (<code>TestData.xlsx</code>) has 30 unlabelled samples. Rows are nu
 
 <h3>(1) Missing values and outliers</h3>
 
-<p><b>Missing values: yes, three.</b> Three cells contain "?" instead of a number:</p>
+<p>The training set does contain missing values, three of them, each a "?" typed where a number should be:</p>
 <p class="cap"><b>Table 1.</b> Incomplete training rows.</p>
 <table class="short">
   <thead><tr><th>Row</th><th>Missing feature</th><th>Class</th><th class="l">Remaining values (A, B, C, D)</th></tr></thead>
@@ -82,21 +93,18 @@ The test set (<code>TestData.xlsx</code>) has 30 unlabelled samples. Rows are nu
   </tbody>
 </table>
 
-<p><b>Outliers: yes, three.</b> Each class is inspected separately, because the three classes occupy very different ranges
-(for example, feature C is about 1.5 in class 1 but about 5.5 in class 2). The screening rule is Tukey's
-<i>far-out</i> fence, applied per class and per feature: a value is flagged if it lies outside</p>
+<p>Outliers are there as well, three of them. Each class has to be inspected on its own, because the three classes occupy very
+different ranges: feature C is about 1.5 in class 1 and about 5.5 in class 2. I screened with Tukey's far-out fence, class by class
+and feature by feature, so a value is flagged when it falls outside</p>
 <div class="eq">[ Q<sub>1</sub> &minus; 3&middot;IQR , &nbsp; Q<sub>3</sub> + 3&middot;IQR ], &nbsp;&nbsp; IQR = Q<sub>3</sub> &minus; Q<sub>1</sub>,</div>
-<p>where Q<sub>1</sub> and Q<sub>3</sub> are that class's lower and upper quartiles of that feature. Quartiles use linear interpolation
-between order statistics (the convention of <code>numpy.percentile</code> and <code>statistics.quantiles(method='inclusive')</code>); since the data are recorded
-to one or two decimal places, the fences are computed in exact decimal arithmetic so that a value sitting on a fence is not flagged by
-floating-point noise. The 3&middot;IQR rule is a conservative screening criterion, not a definition of what an outlier is; the
-1.5&middot;IQR variant is discussed below. The procedure is applied in a fixed order:</p>
-<ol>
-  <li>set the three incomplete rows aside (they are neither imputed nor used in the fence calculation);</li>
-  <li>for each class and each of the four features, compute Q<sub>1</sub>, Q<sub>3</sub> and the far-out fence on the remaining rows;</li>
-  <li>flag every cell outside its fence;</li>
-  <li>remove the union of all rows containing a flagged cell.</li>
-</ol>
+<p>where Q<sub>1</sub> and Q<sub>3</sub> are that class's lower and upper quartiles of that feature. Quartiles are interpolated linearly
+between order statistics, the convention of <code>numpy.percentile</code> and <code>statistics.quantiles(method='inclusive')</code>.
+The data are recorded to one or two decimal places, so the fences are computed in exact decimal arithmetic: a value sitting exactly on
+a fence should not be flagged because of floating-point noise. The 3&middot;IQR rule is a conservative screening criterion and not a
+definition of what an outlier is, and the 1.5&middot;IQR variant is discussed below.</p>
+<p>The screening runs in a fixed order. The three incomplete rows are set aside first, not imputed and not used in the fence
+calculation. For each class and each of the four features, Q<sub>1</sub>, Q<sub>3</sub> and the far-out fence are then computed on the
+remaining rows, every cell outside its fence is flagged, and the union of all rows holding a flagged cell is removed.</p>
 <p>Three cells are flagged, in three different rows, so three cells and three samples are removed. The two counts coincide only
 because no row contains more than one flagged cell:</p>
 <p class="cap"><b>Table 2.</b> Far-out outliers. &mu; and &sigma; are the class's mean and standard deviation of that feature after the three rows are removed; <i>z</i> = (value &minus; &mu;)/&sigma;.</p>
@@ -108,56 +116,55 @@ because no row contains more than one flagged cell:</p>
     <tr><td>117</td><td class="l">(5.7, 2.9, 4.2, 5.3)</td><td>3</td><td>D = 5.3</td><td>1.344 (0.196)</td><td>20.2</td><td>[0.30, 2.40]</td></tr>
   </tbody>
 </table>
-<p>The other three features of each of these rows lie inside their own fences, so each row is a single-cell anomaly rather than a
-wholly unusual sample. The flagged values are 17 to 20 standard deviations from their class mean, far beyond anything the rest of
-the class produces. A z-score rule (|<i>z</i>| &gt; 3, using the same class statistics) flags exactly the same three cells, so the
-conclusion does not depend on which of the two standard screening rules is used. What cannot be established from the data is the
-<i>cause</i>: a value 17&sigma; out is consistent with a recording or data-entry error, but the intended value is not recoverable, so
-these rows are removed rather than corrected. Removal is a modelling decision, not a claim about what the true entry was.</p>
-<p>The milder 1.5&middot;IQR rule flags eight further borderline cells (rows 1, 26, 69, 79, 97, 98, 105, 116), whose |<i>z</i>| values
-run from 2.12 to 2.98. They sit just outside the usual range of their class, and nothing in the data indicates an error, so they are
-kept. This is a judgement rather than a finding: a different threshold would keep or drop a different set, which is why the threshold
-and the quartile convention are both stated.</p>
+<p>The other three features of each of these rows sit inside their own fences, so each row is a single-cell anomaly and not a wholly
+unusual sample. The flagged values are 17 to 20 standard deviations from their class mean, well beyond anything else the class
+produces. A z-score rule with the same class statistics (|<i>z</i>| &gt; 3) flags exactly the same three cells, so the conclusion does
+not depend on the rule chosen. Why the entry is wrong cannot be known from the data: a reading 17&sigma; out is consistent with a
+recording error, but the intended value is unrecoverable, so these rows are dropped rather than corrected.</p>
+<p>The milder 1.5&middot;IQR rule flags eight more borderline cells (rows 1, 26, 69, 79, 97, 98, 105, 116), with |<i>z</i>| between 2.12
+and 2.98. They sit just outside the usual range for their class, and nothing in the data suggests an error, so I kept them. That is a
+judgement and not a finding: a different threshold would keep or drop a different set, which is why the threshold and the quartile
+convention are stated at all.</p>
 
-<p><b>Three methods for missing values</b></p>
-<ol>
-  <li><b>Deletion.</b> Discard every sample that has a missing entry (listwise deletion). This is simple and introduces no invented values, but it loses information, and it is unbiased only if the values are missing completely at random &mdash; a condition that three missing cells cannot establish. It is defensible here because only 3 of 120 samples are affected.</li>
-  <li><b>Mean / median imputation (class-conditional).</b> Replace the missing entry with the mean or median of that feature, computed only over samples of the same class. This keeps the sample but shrinks the feature's variance a little. It requires a known class label, so it applies to labelled training data; for the unlabelled test set an unconditional mean would have to be used instead.</li>
-  <li><b>Model-based imputation.</b> Predict the missing entry from the other features, e.g. by <i>k</i>-nearest-neighbour imputation (average the feature over the <i>k</i> most similar complete samples) or by regression on the observed features; the EM algorithm is a likelihood-based alternative. These methods exploit correlations between features &mdash; A and C correlate at 0.875 here &mdash; so they can reproduce the joint pattern of the data, though not necessarily recover the true entry.</li>
-</ol>
+<p>Three methods can address the missing entries. Listwise deletion drops the incomplete samples; it invents nothing, but it is
+unbiased only when the values are missing completely at random, which three cells cannot establish. With 3 of 120 samples affected it
+is defensible here. Class-conditional imputation fills the entry with the mean or median of that feature over samples of the same
+class; it keeps the sample but shrinks the feature's variance slightly, and it needs a known label, so an unconditional mean would
+have to be used on the unlabelled test data. Model-based imputation predicts the entry from the other features, by <i>k</i>-NN
+averaging or by regression on the observed ones, with EM as the likelihood-based alternative; it exploits the correlation between
+features (A and C, 0.875) but need not recover the true entry.</p>
 
-<p><b>Three methods for outliers</b></p>
-<ol>
-  <li><b>Detection and removal.</b> Flag values with a statistical rule (z-score beyond &plusmn;3, or the IQR fences above) and delete those samples. This works well when the outliers are few and evidently erroneous; it is the rule applied here.</li>
-  <li><b>Capping (winsorising).</b> Replace a value outside the fence with the nearest fence value, or with a chosen percentile (e.g. the 1st/99th). The sample stays in the data, but its influence is limited.</li>
-  <li><b>Treat as missing and impute, or use robust estimates.</b> Replace the outlier with the class median or a <i>k</i>-NN estimate, as for a missing value. Alternatively keep it and estimate parameters with robust statistics (median and MAD instead of mean and standard deviation), so a single extreme value cannot dominate the fit.</li>
-</ol>
+<p>Three methods can address the outliers. Detection and removal flags values by a rule, a z-score beyond &plusmn;3 or the IQR
+fences above, and deletes those samples; it works when the outliers are few and evidently wrong, and it is what I applied here.
+Capping, or winsorising, replaces a value outside the fence with the nearest fence value or with a chosen percentile such as the 1st
+or 99th, keeping the sample but limiting its influence. The outlier can also be treated as missing and imputed (class median or
+<i>k</i>-NN), or kept while the parameters are estimated with robust statistics (median and MAD), so one extreme value cannot dominate
+the fit.</p>
 
 <h3>(2) Na&iuml;ve Bayes classifier design</h3>
 <p>As instructed, the 3 samples with missing values and the 3 outlier samples are removed, which leaves <b>114 training samples</b>
 (class 1: 38, class 2: 37, class 3: 39).</p>
 
-<p><b>Step 1: Bayes decision rule.</b> Assign <b>x</b> = (x<sub>1</sub>, x<sub>2</sub>, x<sub>3</sub>, x<sub>4</sub>) = (A, B, C, D) to the class with the largest posterior probability</p>
+<p>Each sample is a point <b>x</b> = (x<sub>1</sub>, x<sub>2</sub>, x<sub>3</sub>, x<sub>4</sub>) = (A, B, C, D), and the Bayes decision rule assigns it to the class with the largest posterior probability</p>
 <div class="eq">P(&omega;<sub>i</sub> | <b>x</b>) = <span class="frac"><span>p(<b>x</b> | &omega;<sub>i</sub>) P(&omega;<sub>i</sub>)</span><span>p(<b>x</b>)</span></span>, &nbsp;&nbsp; i = 1, 2, 3.</div>
 <p>Because p(<b>x</b>) is the same for every class, it is enough to compare p(<b>x</b> | &omega;<sub>i</sub>) P(&omega;<sub>i</sub>).</p>
 
-<p><b>Step 2: Na&iuml;ve (conditional independence) assumption.</b> Given the class, the four features are assumed independent, so</p>
+<p>Na&iuml;ve Bayes then assumes that, given the class, the four features are independent, so</p>
 <div class="eq">p(<b>x</b> | &omega;<sub>i</sub>) = &prod;<sub>j=1</sub><sup>4</sup> p(x<sub>j</sub> | &omega;<sub>i</sub>).</div>
-<p>This replaces one 4-dimensional density with four 1-dimensional ones, which are much easier to estimate from 114 samples. It is an
-approximation, not a property of the data: A and C correlate at 0.875 overall (0.33, 0.89 and 0.74 within the three classes), so the
-true joint density is not a product of marginals. The classifier can still be accurate, because a decision only needs the correct
-<i>ranking</i> of the three class scores, not calibrated densities &mdash; and it is, at 95.6% resubstitution accuracy below.</p>
+<p>This replaces one 4-dimensional density with four 1-dimensional ones, far easier to estimate from 114 samples. It is an
+approximation: A and C correlate at 0.875 overall, and at 0.33, 0.89 and 0.74 within the three classes, so the joint density is not a
+product of marginals. The classifier can still be accurate, because a decision only needs the ranking of the three scores.</p>
 
-<p><b>Step 3: Model each feature as Gaussian within each class.</b> The features are continuous, so a density model is needed; the
-Gaussian form is a modelling assumption chosen because it is fully specified by a mean and a variance per class-feature pair.
-Continuity alone does not make a variable Gaussian, and no normality check is attempted here:</p>
+<p>The features are continuous, so each one needs a density within each class. I took the Gaussian form because a mean and a variance
+per class-feature pair specify it completely. Continuity alone does not make a variable Gaussian, and no normality check is made
+here:</p>
 <div class="eq">p(x<sub>j</sub> | &omega;<sub>i</sub>) = <span class="frac"><span>1</span><span>&radic;(2&pi; &sigma;<sub>ij</sub><sup>2</sup>)</span></span> exp( &minus; <span class="frac"><span>(x<sub>j</sub> &minus; &mu;<sub>ij</sub>)<sup>2</sup></span><span>2&sigma;<sub>ij</sub><sup>2</sup></span></span> ).</div>
 
-<p><b>Step 4: Estimate the parameters from the training data.</b> Let N<sub>i</sub> be the number of class-i samples and N = 114.</p>
+<p>With N<sub>i</sub> the number of class-i samples and N = 114, the parameters are estimated as</p>
 <div class="eq">P(&omega;<sub>i</sub>) = N<sub>i</sub> / N,<br>
 &mu;<sub>ij</sub> = (1 / N<sub>i</sub>) &sum;<sub>k &isin; &omega;<sub>i</sub></sub> x<sub>kj</sub>,<br>
 &sigma;<sub>ij</sub><sup>2</sup> = (1 / (N<sub>i</sub> &minus; 1)) &sum;<sub>k &isin; &omega;<sub>i</sub></sub> (x<sub>kj</sub> &minus; &mu;<sub>ij</sub>)<sup>2</sup>.</div>
-<p class="note">The unbiased variance (N<sub>i</sub> &minus; 1) is used. The maximum-likelihood version (divide by N<sub>i</sub>) gives exactly the same 30 test predictions, as the script's assertion checks, so the choice affects no reported result.</p>
+<p>The unbiased variance (N<sub>i</sub> &minus; 1) is used.</p>
 <p class="cap"><b>Table 3.</b> Fitted parameters of the three class-conditional Gaussians (114 samples after cleaning).</p>
 <div class="wrap">
 <table class="short">
@@ -173,13 +180,12 @@ Continuity alone does not make a variable Gaussian, and no normality check is at
 </table>
 </div>
 
-<p><b>Step 5: Discriminant function.</b> Taking the natural logarithm of p(<b>x</b> | &omega;<sub>i</sub>) P(&omega;<sub>i</sub>) turns the product into a sum without changing which class is largest:</p>
+<p>Taking the natural logarithm of p(<b>x</b> | &omega;<sub>i</sub>) P(&omega;<sub>i</sub>) turns the product into a sum and does not change which class is largest:</p>
 <div class="eq">g<sub>i</sub>(<b>x</b>) = ln P(&omega;<sub>i</sub>) &minus; &sum;<sub>j=1</sub><sup>4</sup> [ &frac12; ln(2&pi;&sigma;<sub>ij</sub><sup>2</sup>) + <span class="frac"><span>(x<sub>j</sub> &minus; &mu;<sub>ij</sub>)<sup>2</sup></span><span>2&sigma;<sub>ij</sub><sup>2</sup></span></span> ], &nbsp;&nbsp; i = 1, 2, 3.</div>
-<p class="note">Many textbook presentations drop the term &frac12;&middot;4&middot;ln 2&pi; = 3.6758, which is identical for all three classes. Call that reduced
-discriminant g&#771;<sub>i</sub>(<b>x</b>) = ln P(&omega;<sub>i</sub>) &minus; &frac12;&sum;<sub>j</sub> [ ln &sigma;<sub>ij</sub><sup>2</sup> + (x<sub>j</sub> &minus; &mu;<sub>ij</sub>)<sup>2</sup>/&sigma;<sub>ij</sub><sup>2</sup> ]. Then g&#771;<sub>i</sub> = g<sub>i</sub> + 3.6758 for every <b>x</b>, so the two forms always rank the classes identically; only the printed numbers differ.</p>
-<p><b>Decision rule:</b> assign <b>x</b> to &omega;<sub>k</sub> where k = arg max<sub>i</sub> g<sub>i</sub>(<b>x</b>); a tie is broken towards the smaller class index (no test sample ties).
+<p>The term &frac12;&middot;4&middot;ln 2&pi; = 3.6758 is the same for all three classes, so it shifts the scores but never the ranking. The worked example below gives the score both with and without it.</p>
+<p>The rule is to assign <b>x</b> to &omega;<sub>k</sub> where k = arg max<sub>i</sub> g<sub>i</sub>(<b>x</b>), with a tie broken towards the smaller class index (no test sample ties).
 Each g<sub>i</sub> is quadratic in <b>x</b> with a diagonal covariance matrix, so the decision boundaries are quadratic surfaces in four dimensions.
-On the 114 cleaned training samples this classifier is 95.6% correct &mdash; a resubstitution figure, optimistic because every sample helped fit the parameters that classify it:</p>
+On the 114 cleaned training samples the classifier is 95.6% correct, which is a resubstitution figure and therefore optimistic, since every sample helped fit the parameters that then classify it:</p>
 <p class="cap"><b>Table 4.</b> Na&iuml;ve Bayes confusion matrix on the 114 cleaned training samples (rows = true class, columns = predicted class).</p>
 <table class="short">
   <thead><tr><th>True</th><th>&rarr; 1</th><th>&rarr; 2</th><th>&rarr; 3</th><th>Recall</th></tr></thead>
@@ -189,7 +195,7 @@ On the 114 cleaned training samples this classifier is 95.6% correct &mdash; a r
     <tr><th>3</th><td>0</td><td>2</td><td>37</td><td>37/39 = 94.9%</td></tr>
   </tbody>
 </table>
-<p>All five errors are confusions between classes 2 and 3: rows 12, 23 and 85 (class 2 &rarr; 3) and rows 56 and 89 (class 3 &rarr; 2).
+<p>All five errors are confusions between classes 2 and 3: rows 12, 23 and 85 (class 2 read as class 3) and rows 56 and 89 (class 3 read as class 2).
 Class 1 is never confused with anything, which is what its well-separated C and D values predict (Figure 1).</p>
 
 <p>Because 95.6% is measured on the samples used for fitting, a held-out estimate is also reported. Refitting the classifier
@@ -203,11 +209,11 @@ Class 1 is never confused with anything, which is what its well-separated C and 
     <tr><th>3</th><td>0</td><td>3</td><td>36</td></tr>
   </tbody>
 </table>
-<p>Only one prediction changes (row 56 becomes an error, giving 108/114 = 94.7%): with that sample held out, its neighbours supply
-slightly different variances. The 0.9-point gap is the usual resubstitution optimism, and it is small because the model has only
-2 + 12 + 12 = 26 free parameters for 114 samples.</p>
+<p>Only one prediction changes (row 56 becomes an error, giving 108/114 = 94.7%), because its neighbours then supply slightly
+different variances. The model has only 2 + 12 + 12 = 26 free parameters for 114 samples, which is why the two figures are so close.</p>
 
-<p><b>Worked example: test sample 11, <b>x</b> = (6.0, 2.2, 5.0, 1.5).</b> Per-feature penalty terms &frac12; ln(2&pi;&sigma;<sup>2</sup>) + (x &minus; &mu;)<sup>2</sup>/(2&sigma;<sup>2</sup>):</p>
+<p>As a worked example, take test sample 11, <b>x</b> = (6.0, 2.2, 5.0, 1.5). Its per-feature penalty terms
+&frac12; ln(2&pi;&sigma;<sup>2</sup>) + (x &minus; &mu;)<sup>2</sup>/(2&sigma;<sup>2</sup>) come out as follows:</p>
 <p class="cap"><b>Table 6.</b> Class scores for test sample 11. g&#771; is the reduced discriminant (without the 3.6758 constant); P is the posterior of the class.</p>
 <table class="short">
   <thead><tr><th>Class</th><th>ln P(&omega;<sub>i</sub>)</th><th>A</th><th>B</th><th>C</th><th>D</th><th>g<sub>i</sub>(<b>x</b>)</th><th>g&#771;<sub>i</sub>(<b>x</b>)</th><th>P(&omega;<sub>i</sub>|<b>x</b>)</th></tr></thead>
@@ -218,8 +224,7 @@ slightly different variances. The 0.9-point gap is the usual resubstitution opti
   </tbody>
 </table>
 <p>For example, for class 3 and feature A: &frac12; ln(2&pi; &times; 0.2535) + (6.0 &minus; 5.9615)<sup>2</sup>/(2 &times; 0.2535) = 0.2327 + 0.0029 = 0.2356.
-The four terms sum to 2.564, so g<sub>3</sub> = &minus;1.0726 &minus; 2.564 = &minus;3.64, the largest of the three scores: sample 11 &rarr; class 3.
-(A penalty term can be negative because &sigma;<sup>2</sup> &lt; 1/(2&pi;) makes the log term negative.)
+The four terms sum to 2.564, so g<sub>3</sub> = &minus;1.0726 &minus; 2.564 = &minus;3.64, the largest of the three scores: sample 11 lands in class 3.
 Class 1 loses by a wide margin, mostly because C = 5.0 is far from class 1's mean of 1.48 and its variance is small (0.0293), so the
 squared distance is divided by a small number.</p>
 
@@ -262,12 +267,13 @@ squared distance is divided by a small number.</p>
   </tbody>
 </table>
 </div>
-<div class="res"><b>Predicted labels.</b> Samples 1&ndash;10 &rarr; class 1; samples 12&ndash;21 &rarr; class 2; samples 11 and 22&ndash;30 &rarr; class 3.</div>
+<p>So the 30 test samples fall into three groups: samples 1 to 10 go to class 1, samples 12 to 21 to class 2, and sample 11 with
+samples 22 to 30 to class 3.</p>
 <p>Class 1 is separated from the other two by a wide margin, mostly through features C and D. The closest decisions are
 sample 17 (g<sub>2</sub> &minus; g<sub>3</sub> = 1.19, so P(&omega;<sub>2</sub>|<b>x</b>) = 76.6%), sample 23 (margin 2.44, P = 92.0%)
 and sample 30 (margin 2.93, P = 94.9%); the worked example, sample 11, is only the fourth closest (margin 3.58). All three of the
-closest samples lie where classes 2 and 3 overlap in C, which is visible in Figure 1. Because there are no labels for the test set,
-nothing here measures test accuracy: these are model scores, not observed correctness.</p>
+closest samples lie where classes 2 and 3 overlap in C, which is visible in Figure 1. These are model scores; with no test labels,
+nothing here measures accuracy.</p>
 
 <figure>
 <!-- FIG1 START -->
@@ -472,11 +478,7 @@ nothing here measures test accuracy: these are model scores, not observed correc
 <text x="66" y="144" fill="#52514e">✛ = class centroid (μ<tspan font-size="9">C</tspan>, μ<tspan font-size="9">D</tspan>)</text>
 </svg>
 <!-- FIG1 END -->
-<figcaption id="fig1cap"><b>Figure 1.</b> Features C and D for the 114 cleaned training samples (filled) and the 30 test samples (hollow, drawn in their predicted class).
-Dashed ellipses are the 2&sigma; density contours of each class's fitted bivariate Gaussian, ((C &minus; &mu;<sub>C</sub>)/&sigma;<sub>C</sub>)<sup>2</sup> + ((D &minus; &mu;<sub>D</sub>)/&sigma;<sub>D</sub>)<sup>2</sup> = 4; they are axis-aligned because Na&iuml;ve Bayes assumes the features are independent within a class, and under the fitted density each encloses about 86.5% of the class probability. They are contours of the model, not confidence regions and not decision boundaries. Crosses mark the class centroids.
-The classifier uses all four features, so its quadratic boundaries cannot be drawn in this two-feature view; the figure shows the separation in the two most informative features.
-Class 1 is far from the other two, while classes 2 and 3 overlap slightly &mdash; that overlap is where the closest test decisions (17, 23, 30) and the five training errors lie.
-Row 91's outlier (C = 16.0) and row 117's (D = 5.3) are outside the plotted range; row 96's outlier is in feature A, so it does not appear here.</figcaption>
+<figcaption id="fig1cap"><b>Figure 1.</b> Features C and D for the 114 cleaned training samples (filled) and the 30 test samples (hollow, drawn in their predicted class), with the 2&sigma; density contour of each fitted class Gaussian and its centroid marked by a cross. Class 1 is well separated; classes 2 and 3 overlap, and that overlap is where the closest test decisions (17, 23, 30) and the five training errors lie. Row 91's outlier (C = 16.0) and row 117's (D = 5.3) fall outside the plotted range, and row 96's outlier is in feature A.</figcaption>
 </figure>
 
 <h2 class="newpage">Assignment 2</h2>
@@ -485,20 +487,20 @@ There are 301 samples labelled +1 and 276 labelled &minus;1, and no missing valu
 Below, class &omega;<sub>1</sub> means label +1 and class &omega;<sub>2</sub> means label &minus;1.</p>
 
 <h3>(1) Fisher linear discriminant classifier</h3>
-<p><b>Idea.</b> Fisher's method looks for a direction <b>w</b> such that, after every sample is projected onto it (y = <b>w</b><sup>T</sup><b>x</b>), the two projected class means are far apart
+<p>Fisher's method looks for a direction <b>w</b> such that, once every sample is projected onto it (y = <b>w</b><sup>T</sup><b>x</b>), the two projected class means are far apart
 while each class's projected samples stay close together. It maximises the Fisher criterion</p>
 <div class="eq">J(<b>w</b>) = <span class="frac"><span>(m&#771;<sub>1</sub> &minus; m&#771;<sub>2</sub>)<sup>2</sup></span><span>s&#771;<sub>1</sub><sup>2</sup> + s&#771;<sub>2</sub><sup>2</sup></span></span>
 = <span class="frac"><span><b>w</b><sup>T</sup>S<sub>B</sub><b>w</b></span><span><b>w</b><sup>T</sup>S<sub>W</sub><b>w</b></span></span>,</div>
 <p>where m&#771;<sub>i</sub> is the projected class mean, s&#771;<sub>i</sub><sup>2</sup> = &sum;<sub>y &isin; &omega;<sub>i</sub></sub> (y &minus; m&#771;<sub>i</sub>)<sup>2</sup> is the projected within-class <i>scatter</i> (a sum of squares, not divided by a count),
 S<sub>B</sub> = (<b>m</b><sub>1</sub> &minus; <b>m</b><sub>2</sub>)(<b>m</b><sub>1</sub> &minus; <b>m</b><sub>2</sub>)<sup>T</sup> is the between-class scatter matrix,
-and S<sub>W</sub> is the within-class scatter matrix defined in Step 2.</p>
+and S<sub>W</sub> is the within-class scatter matrix defined below.</p>
 
-<p><b>Step 1: Class mean vectors.</b> <b>m</b><sub>i</sub> = (1/N<sub>i</sub>) &sum;<sub><b>x</b> &isin; &omega;<sub>i</sub></sub> <b>x</b>, with N<sub>1</sub> = 301 and N<sub>2</sub> = 276:</p>
+<p>The class mean vectors are <b>m</b><sub>i</sub> = (1/N<sub>i</sub>) &sum;<sub><b>x</b> &isin; &omega;<sub>i</sub></sub> <b>x</b>, with N<sub>1</sub> = 301 and N<sub>2</sub> = 276:</p>
 <div class="eq"><b>m</b><sub>1</sub> = (&minus;0.0418, 0.0671, &minus;0.0540, 0.0912, &minus;0.0147)<sup>T</sup>,<br>
 <b>m</b><sub>2</sub> = (1.0428, 2.0623, 0.9408, 1.2551, 1.6047)<sup>T</sup>,<br>
 <b>m</b><sub>1</sub> &minus; <b>m</b><sub>2</sub> = (&minus;1.0846, &minus;1.9952, &minus;0.9947, &minus;1.1639, &minus;1.6194)<sup>T</sup>.</div>
 
-<p><b>Step 2: Within-class scatter matrix.</b> For each class, S<sub>i</sub> = &sum;<sub><b>x</b> &isin; &omega;<sub>i</sub></sub> (<b>x</b> &minus; <b>m</b><sub>i</sub>)(<b>x</b> &minus; <b>m</b><sub>i</sub>)<sup>T</sup> (a scatter, i.e. not divided by N<sub>i</sub>), and S<sub>W</sub> = S<sub>1</sub> + S<sub>2</sub>:</p>
+<p>The within-class scatter of each class is S<sub>i</sub> = &sum;<sub><b>x</b> &isin; &omega;<sub>i</sub></sub> (<b>x</b> &minus; <b>m</b><sub>i</sub>)(<b>x</b> &minus; <b>m</b><sub>i</sub>)<sup>T</sup>, again a scatter and not divided by N<sub>i</sub>, and S<sub>W</sub> = S<sub>1</sub> + S<sub>2</sub>:</p>
 <p class="cap"><b>Table 8.</b> Within-class scatter matrix S<sub>W</sub> (5 &times; 5, symmetric).</p>
 <div class="wrap">
 <table class="short">
@@ -511,45 +513,26 @@ and S<sub>W</sub> is the within-class scatter matrix defined in Step 2.</p>
   </tbody>
 </table>
 </div>
-<p>S<sub>W</sub> is non-singular (it is strongly diagonally dominant), so the system S<sub>W</sub><b>w</b> = <b>m</b><sub>1</sub> &minus; <b>m</b><sub>2</sub> has a unique solution and can be solved directly &mdash; by Gaussian elimination in the script, without forming an explicit inverse.</p>
+<p>S<sub>W</sub> is non-singular, being strongly diagonally dominant, so the system S<sub>W</sub><b>w</b> = <b>m</b><sub>1</sub> &minus; <b>m</b><sub>2</sub> has a unique solution and can be solved directly. The script does that by Gaussian elimination, without forming an explicit inverse.</p>
 
-<p><b>Step 3: Weight vector.</b> Setting the gradient of J(<b>w</b>) to zero gives the generalised eigenvalue problem S<sub>B</sub><b>w</b> = &lambda;S<sub>W</sub><b>w</b>.
+<p>Setting the gradient of J(<b>w</b>) to zero gives the generalised eigenvalue problem S<sub>B</sub><b>w</b> = &lambda;S<sub>W</sub><b>w</b>.
 Because S<sub>B</sub><b>w</b> always points along <b>m</b><sub>1</sub> &minus; <b>m</b><sub>2</sub>, and the length of <b>w</b> does not change the decision, the solution is</p>
 <div class="eq"><b>w</b> = S<sub>W</sub><sup>&minus;1</sup>(<b>m</b><sub>1</sub> &minus; <b>m</b><sub>2</sub>) = 10<sup>&minus;3</sup> &times; (&minus;1.7860, &minus;3.4729, &minus;1.9467, &minus;1.6826, &minus;2.6581)<sup>T</sup>.</div>
-<p class="note">The entries are small only because S<sub>W</sub> is a sum over 577 samples. Scaling <b>w</b> and w<sub>0</sub> by the same positive constant gives the same decision; Table 10 lists the same direction under three common scalings.
+<p>The entries are small only because S<sub>W</sub> is a sum over 577 samples; scaling <b>w</b> and w<sub>0</sub> by the same positive constant gives the same decision.
 This orientation (<b>m</b><sub>1</sub> &minus; <b>m</b><sub>2</sub>) places class &omega;<sub>1</sub> on the positive side of the boundary. At this <b>w</b>, J(<b>w</b>) = 0.0171: the projected means are m&#771;<sub>1</sub> = &minus;0.168 &times; 10<sup>&minus;3</sup> and m&#771;<sub>2</sub> = &minus;17.233 &times; 10<sup>&minus;3</sup> (8.53 &times; 10<sup>&minus;3</sup> either side of the boundary), and the projected within-class standard deviations are 5.19 &times; 10<sup>&minus;3</sup> and 5.72 &times; 10<sup>&minus;3</sup>. The second class is the more spread out after projection, which is consistent with its larger share of the training errors (26 against 13).</p>
 
-<p><b>Step 4: Bias term.</b> Fisher's criterion fixes only the direction; the bias is a separate convention. The one used here places the boundary so that the midpoint of the two class means lies on it, i.e. g((<b>m</b><sub>1</sub> + <b>m</b><sub>2</sub>)/2) = 0:</p>
+<p>Fisher's criterion fixes only the direction, so the bias is a separate convention. The one I used puts the boundary through the midpoint of the two class means, i.e. g((<b>m</b><sub>1</sub> + <b>m</b><sub>2</sub>)/2) = 0:</p>
 <div class="eq">w<sub>0</sub> = &minus;<b>w</b><sup>T</sup> <span class="frac"><span><b>m</b><sub>1</sub> + <b>m</b><sub>2</sub></span><span>2</span></span>
 = &minus;<span class="frac"><span>(&minus;0.1678) + (&minus;17.2331)</span><span>2</span></span> &times; 10<sup>&minus;3</sup> = 8.7005 &times; 10<sup>&minus;3</sup>.</div>
-<p>The midpoint convention is equivalent to assuming equal priors and equal misclassification costs under the shared-covariance Gaussian reading of Fisher's method; the empirical class counts do not by themselves force a prior correction. Two other standard conventions move the boundary by much less than the distance from any test sample to it, so they leave all 23 predictions unchanged:</p>
-<p class="cap"><b>Table 9.</b> Three bias conventions at the same direction <b>w</b> (values &times; 10<sup>&minus;3</sup>).</p>
-<table class="short">
-  <thead><tr><th class="l">Convention</th><th>w<sub>0</sub></th><th class="l">Same 23 test labels?</th></tr></thead>
-  <tbody>
-    <tr><td class="l">midpoint of the two projected means (used here)</td><td>8.7005</td><td class="l">yes</td></tr>
-    <tr><td class="l">sample-size-weighted mean</td><td>8.3308</td><td class="l">yes</td></tr>
-    <tr><td class="l">Bayes-optimal under equal variances (prior correction)</td><td>8.8513</td><td class="l">yes</td></tr>
-  </tbody>
-</table>
-<p class="note">The third row is the 1-D Gaussian threshold for equal variances, y<sub>0</sub> = (m&#771;<sub>1</sub> + m&#771;<sub>2</sub>)/2 &minus; &sigma;<sub>p</sub><sup>2</sup> ln(N<sub>1</sub>/N<sub>2</sub>)/(m&#771;<sub>1</sub> &minus; m&#771;<sub>2</sub>), with the pooled projected variance &sigma;<sub>p</sub><sup>2</sup> = (s&#771;<sub>1</sub><sup>2</sup> + s&#771;<sub>2</sub><sup>2</sup>)/(N &minus; 2). The prior ratio ln(301/276) shifts w<sub>0</sub> by only +0.15 &times; 10<sup>&minus;3</sup>, whereas the smallest |g(<b>x</b>)| among the test samples is 3.22 &times; 10<sup>&minus;3</sup>.</p>
-<p class="cap"><b>Table 10.</b> The same discriminant under three common scalings.</p>
-<table class="short">
-  <thead><tr><th class="l">Normalisation</th><th class="l">w</th><th>w<sub>0</sub></th><th class="l">Unit of g</th></tr></thead>
-  <tbody>
-    <tr><td class="l">S<sub>W</sub> (scatter, as computed)</td><td class="l">(&minus;1.7860, &minus;3.4729, &minus;1.9467, &minus;1.6826, &minus;2.6581)</td><td>8.7005</td><td class="l">10<sup>&minus;3</sup></td></tr>
-    <tr><td class="l">&Sigma;<sub>W</sub> = S<sub>W</sub>/575 (pooled covariance)</td><td class="l">(&minus;1026.96, &minus;1996.92, &minus;1119.37, &minus;967.48, &minus;1528.39)</td><td>5002.76</td><td class="l">&mdash;</td></tr>
-    <tr><td class="l">unit vector <b>w</b>/&#8214;<b>w</b>&#8214;</td><td class="l">(&minus;0.3320, &minus;0.6456, &minus;0.3619, &minus;0.3128, &minus;0.4941)</td><td>1.6174</td><td class="l">feature units</td></tr>
-  </tbody>
-</table>
-<p class="note">Row 2 divides by N<sub>1</sub> + N<sub>2</sub> &minus; 2 = 575, the degrees of freedom of the pooled covariance; this is the scaling a statistics text would print. Row 3 gives the signed Euclidean distance from <b>x</b> to the hyperplane, |g|/&#8214;<b>w</b>&#8214;; the 23 test samples sit between 0.60 and 0.81 feature units from the boundary.</p>
+<p>The midpoint assumes equal priors and equal misclassification costs. It is a choice rather than a tuned threshold: tuning the
+bias on the training data could shrink the 26 errors against 13, and nothing here is tuned on the test set.</p>
 
-<p><b>Step 5: Discriminant function and decision rule.</b></p>
+<p>Weights and bias together then give the discriminant function</p>
 <div class="eq">g(<b>x</b>) = <b>w</b><sup>T</sup><b>x</b> + w<sub>0</sub><br>
 &nbsp;&nbsp;&nbsp;&nbsp;= 10<sup>&minus;3</sup> &times; ( &minus;1.7860 x<sub>1</sub> &minus; 3.4729 x<sub>2</sub> &minus; 1.9467 x<sub>3</sub> &minus; 1.6826 x<sub>4</sub> &minus; 2.6581 x<sub>5</sub> + 8.7005 ).</div>
-<p><b>Decision rule:</b> if g(<b>x</b>) &gt; 0, assign <b>x</b> to &omega;<sub>1</sub> (label +1); otherwise assign <b>x</b> to &omega;<sub>2</sub> (label &minus;1), so an exact tie g(<b>x</b>) = 0 goes to &omega;<sub>2</sub> &mdash; no test sample is close enough for the rule to matter.
-The boundary g(<b>x</b>) = 0 is a hyperplane in the 5-dimensional feature space. On the 577 training samples this classifier is 93.2% correct:</p>
-<p class="cap"><b>Table 11.</b> Fisher discriminant confusion matrices on the 577 training samples (rows = true label, columns = predicted label).</p>
+<p>If g(<b>x</b>) &gt; 0 the sample goes to &omega;<sub>1</sub> (label +1), otherwise to &omega;<sub>2</sub> (label &minus;1), so an exact tie g(<b>x</b>) = 0 falls to &omega;<sub>2</sub>.
+The boundary g(<b>x</b>) = 0 is a hyperplane in the 5-dimensional feature space. On the 577 training samples the classifier is 93.2% correct:</p>
+<p class="cap"><b>Table 9.</b> Fisher discriminant confusion matrices on the 577 training samples (rows = true label, columns = predicted label).</p>
 <table class="short">
   <thead><tr><th rowspan="2">True</th><th colspan="2">Resubstitution</th><th colspan="2">Leave-one-out</th></tr>
   <tr><th>+1</th><th>&minus;1</th><th>+1</th><th>&minus;1</th></tr></thead>
@@ -558,19 +541,13 @@ The boundary g(<b>x</b>) = 0 is a hyperplane in the 5-dimensional feature space.
     <tr><th>&minus;1</th><td>26</td><td>250</td><td>26</td><td>250</td></tr>
   </tbody>
 </table>
-<p>Resubstitution gives 538/577 = 93.24%; refitting without each sample in turn (leave-one-out) gives 537/577 = 93.07%. The two
-estimates agree closely because the classifier has six free parameters (five weights and a bias), and the single extra
-leave-one-out error is in class &omega;<sub>1</sub>.</p>
-<p class="note">Placing the boundary at the midpoint is a convention, not the lowest-error choice on this data: the errors are uneven (13 against 26),
-and a threshold tuned on the <i>training</i> set could reduce the minority-class errors. It is not tuned here, and nothing is
-tuned on the test set. For the fixed <b>w</b> above, every label in Table 12 remains unchanged for any perturbation of w<sub>0</sub>
-smaller than 3.217 &times; 10<sup>&minus;3</sup> in magnitude.</p>
+<p>Resubstitution gives 538/577 = 93.24% and leave-one-out 537/577 = 93.07%. With only six free parameters (five weights and a bias)
+the two agree closely, the single extra leave-one-out error being in class &omega;<sub>1</sub>.</p>
 
 <h3>(2) Predicted class labels of the test data</h3>
-<p><b>Worked example: test sample 1,</b> <b>x</b> = (0.0058, 1.5626, 0.4474, 2.0909, 0.8973)<sup>T</sup>.
-The products w<sub>j</sub>x<sub>j</sub> (&times; 10<sup>&minus;3</sup>) are &minus;0.0103, &minus;5.4267, &minus;0.8709, &minus;3.5181 and &minus;2.3852, so <b>w</b><sup>T</sup><b>x</b> = &minus;12.2113 &times; 10<sup>&minus;3</sup> and
-g(<b>x</b>) = (&minus;12.2113 + 8.7005) &times; 10<sup>&minus;3</sup> = &minus;3.511 &times; 10<sup>&minus;3</sup> &lt; 0, giving label &minus;1.</p>
-<p class="cap"><b>Table 12.</b> Discriminant values and predictions for the 23 test samples. Inputs are shown rounded to 3 decimal places; g(<b>x</b>) is computed from the unrounded data.</p>
+<p>Test sample 1, <b>x</b> = (0.0058, 1.5626, 0.4474, 2.0909, 0.8973)<sup>T</sup>, has products w<sub>j</sub>x<sub>j</sub> (&times; 10<sup>&minus;3</sup>) of &minus;0.0103, &minus;5.4267, &minus;0.8709, &minus;3.5181 and &minus;2.3852, so <b>w</b><sup>T</sup><b>x</b> = &minus;12.2113 &times; 10<sup>&minus;3</sup> and
+g(<b>x</b>) = (&minus;12.2113 + 8.7005) &times; 10<sup>&minus;3</sup> = &minus;3.511 &times; 10<sup>&minus;3</sup> &lt; 0, which gives label &minus;1.</p>
+<p class="cap"><b>Table 10.</b> Discriminant values and predictions for the 23 test samples. Inputs are shown rounded to 3 decimal places; g(<b>x</b>) is computed from the unrounded data.</p>
 <div class="wrap">
 <table>
   <thead><tr><th>Test #</th><th>x<sub>1</sub></th><th>x<sub>2</sub></th><th>x<sub>3</sub></th><th>x<sub>4</sub></th><th>x<sub>5</sub></th><th>g(<b>x</b>) &times; 10<sup>3</sup></th><th>Predicted label</th></tr></thead>
@@ -601,12 +578,10 @@ g(<b>x</b>) = (&minus;12.2113 + 8.7005) &times; 10<sup>&minus;3</sup> = &minus;3
   </tbody>
 </table>
 </div>
-<div class="res"><b>Predicted labels.</b> Test samples 1&ndash;9 &rarr; label &minus;1 (class &omega;<sub>2</sub>); test samples 10&ndash;23 &rarr; label +1 (class &omega;<sub>1</sub>).</div>
+<p>In the end test samples 1 to 9 get label &minus;1 (class &omega;<sub>2</sub>) and test samples 10 to 23 get label +1 (class &omega;<sub>1</sub>).</p>
 <p>Every test sample has |g(<b>x</b>)| between 3.2 &times; 10<sup>&minus;3</sup> and 4.4 &times; 10<sup>&minus;3</sup>, i.e. 0.60 to 0.81 feature units from
-the boundary, so none of the decisions is marginal in the geometric sense, and the three bias conventions of Table 9 leave them all
-unchanged. They do fall inside the region where the two training classes overlap (Figure 2), which is exactly where the 39 training
-errors occur. Since the test labels are unavailable, test accuracy cannot be measured; the training-set figures of 93.24%
-(resubstitution) and 93.07% (leave-one-out) are the only available estimates, and both are optimistic to some degree.</p>
+the boundary, so none of the decisions is close. They do fall where the two training classes overlap (Figure 2), which is where the
+39 training errors are. The test labels are unavailable, so the training figures are the only accuracy measure.</p>
 
 <figure>
 <!-- FIG2 START -->
@@ -614,20 +589,22 @@ errors occur. Since the test labels are unavailable, test accuracy cannot be mea
 <rect width="640" height="300" fill="#fcfcfb"/>
 <line x1="46" y1="236.0" x2="624" y2="236.0" stroke="#e6e5e1"/>
 <text x="40" y="240.0" text-anchor="end" fill="#52514e">0</text>
-<line x1="46" y1="204.3" x2="624" y2="204.3" stroke="#e6e5e1"/>
-<text x="40" y="208.3" text-anchor="end" fill="#52514e">5</text>
-<line x1="46" y1="172.6" x2="624" y2="172.6" stroke="#e6e5e1"/>
-<text x="40" y="176.6" text-anchor="end" fill="#52514e">10</text>
-<line x1="46" y1="140.9" x2="624" y2="140.9" stroke="#e6e5e1"/>
-<text x="40" y="144.9" text-anchor="end" fill="#52514e">15</text>
-<line x1="46" y1="109.1" x2="624" y2="109.1" stroke="#e6e5e1"/>
-<text x="40" y="113.1" text-anchor="end" fill="#52514e">20</text>
-<line x1="46" y1="77.4" x2="624" y2="77.4" stroke="#e6e5e1"/>
-<text x="40" y="81.4" text-anchor="end" fill="#52514e">25</text>
-<line x1="46" y1="45.7" x2="624" y2="45.7" stroke="#e6e5e1"/>
-<text x="40" y="49.7" text-anchor="end" fill="#52514e">30</text>
+<line x1="46" y1="208.2" x2="624" y2="208.2" stroke="#e6e5e1"/>
+<text x="40" y="212.2" text-anchor="end" fill="#52514e">5</text>
+<line x1="46" y1="180.5" x2="624" y2="180.5" stroke="#e6e5e1"/>
+<text x="40" y="184.5" text-anchor="end" fill="#52514e">10</text>
+<line x1="46" y1="152.8" x2="624" y2="152.8" stroke="#e6e5e1"/>
+<text x="40" y="156.8" text-anchor="end" fill="#52514e">15</text>
+<line x1="46" y1="125.0" x2="624" y2="125.0" stroke="#e6e5e1"/>
+<text x="40" y="129.0" text-anchor="end" fill="#52514e">20</text>
+<line x1="46" y1="97.2" x2="624" y2="97.2" stroke="#e6e5e1"/>
+<text x="40" y="101.2" text-anchor="end" fill="#52514e">25</text>
+<line x1="46" y1="69.5" x2="624" y2="69.5" stroke="#e6e5e1"/>
+<text x="40" y="73.5" text-anchor="end" fill="#52514e">30</text>
+<line x1="46" y1="41.8" x2="624" y2="41.8" stroke="#e6e5e1"/>
+<text x="40" y="45.8" text-anchor="end" fill="#52514e">35</text>
 <line x1="46" y1="14.0" x2="624" y2="14.0" stroke="#e6e5e1"/>
-<text x="40" y="18.0" text-anchor="end" fill="#52514e">35</text>
+<text x="40" y="18.0" text-anchor="end" fill="#52514e">40</text>
 <text x="46.0" y="252" text-anchor="middle" fill="#52514e">−25</text>
 <text x="103.8" y="252" text-anchor="middle" fill="#52514e">−20</text>
 <text x="161.6" y="252" text-anchor="middle" fill="#52514e">−15</text>
@@ -639,73 +616,73 @@ errors occur. Since the test labels are unavailable, test accuracy cannot be mea
 <text x="508.4" y="252" text-anchor="middle" fill="#52514e">15</text>
 <text x="566.2" y="252" text-anchor="middle" fill="#52514e">20</text>
 <text x="624.0" y="252" text-anchor="middle" fill="#52514e">25</text>
-<rect x="69.6" y="229.7" width="10.6" height="6.3" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
-<rect x="81.2" y="229.7" width="10.6" height="6.3" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
-<rect x="92.7" y="210.6" width="10.6" height="25.4" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
-<rect x="104.3" y="223.3" width="10.6" height="12.7" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
-<rect x="115.9" y="223.3" width="10.6" height="12.7" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
-<rect x="127.4" y="178.9" width="10.6" height="57.1" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
-<rect x="139.0" y="217.0" width="10.6" height="19.0" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
-<rect x="150.5" y="172.6" width="10.6" height="63.4" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
-<rect x="162.1" y="147.2" width="10.6" height="88.8" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
-<rect x="173.7" y="166.2" width="10.6" height="69.8" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
-<rect x="185.2" y="121.8" width="10.6" height="114.2" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
-<rect x="196.8" y="153.5" width="10.6" height="82.5" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
-<rect x="208.3" y="71.1" width="10.6" height="164.9" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
-<rect x="219.9" y="90.1" width="10.6" height="145.9" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
-<rect x="231.5" y="128.2" width="10.6" height="107.8" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
-<rect x="243.0" y="77.4" width="10.6" height="158.6" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
-<rect x="254.6" y="134.5" width="10.6" height="101.5" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
-<rect x="266.1" y="147.2" width="10.6" height="88.8" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
-<rect x="277.7" y="121.8" width="10.6" height="114.2" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
-<rect x="289.3" y="223.3" width="10.6" height="12.7" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
-<rect x="300.8" y="185.3" width="10.6" height="50.7" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
-<rect x="312.4" y="197.9" width="10.6" height="38.1" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
-<rect x="323.9" y="191.6" width="10.6" height="44.4" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
-<rect x="335.5" y="172.6" width="10.6" height="63.4" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
-<rect x="347.1" y="210.6" width="10.6" height="25.4" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
-<rect x="358.6" y="204.3" width="10.6" height="31.7" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
-<rect x="370.2" y="229.7" width="10.6" height="6.3" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
-<rect x="393.3" y="223.3" width="10.6" height="12.7" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
-<rect x="404.9" y="217.0" width="10.6" height="19.0" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
-<rect x="428.0" y="229.7" width="10.6" height="6.3" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
-<rect x="219.9" y="229.7" width="10.6" height="6.3" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
-<rect x="277.7" y="217.0" width="10.6" height="19.0" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
-<rect x="300.8" y="229.7" width="10.6" height="6.3" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
-<rect x="312.4" y="229.7" width="10.6" height="6.3" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
-<rect x="323.9" y="191.6" width="10.6" height="44.4" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
-<rect x="335.5" y="197.9" width="10.6" height="38.1" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
-<rect x="347.1" y="166.2" width="10.6" height="69.8" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
-<rect x="358.6" y="109.1" width="10.6" height="126.9" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
-<rect x="370.2" y="191.6" width="10.6" height="44.4" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
-<rect x="381.7" y="109.1" width="10.6" height="126.9" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
-<rect x="393.3" y="128.2" width="10.6" height="107.8" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
-<rect x="404.9" y="115.5" width="10.6" height="120.5" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
-<rect x="416.4" y="109.1" width="10.6" height="126.9" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
-<rect x="428.0" y="39.4" width="10.6" height="196.6" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
-<rect x="439.5" y="39.4" width="10.6" height="196.6" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
-<rect x="451.1" y="140.9" width="10.6" height="95.1" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
-<rect x="462.7" y="128.2" width="10.6" height="107.8" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
-<rect x="474.2" y="134.5" width="10.6" height="101.5" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
-<rect x="485.8" y="172.6" width="10.6" height="63.4" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
-<rect x="497.3" y="134.5" width="10.6" height="101.5" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
-<rect x="508.9" y="217.0" width="10.6" height="19.0" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
-<rect x="520.5" y="166.2" width="10.6" height="69.8" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
-<rect x="532.0" y="185.3" width="10.6" height="50.7" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
-<rect x="543.6" y="210.6" width="10.6" height="25.4" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
-<rect x="555.1" y="223.3" width="10.6" height="12.7" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
-<rect x="566.7" y="229.7" width="10.6" height="6.3" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
-<rect x="578.3" y="223.3" width="10.6" height="12.7" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
-<rect x="589.8" y="229.7" width="10.6" height="6.3" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
-<polyline points="46.0,236.0 49.2,236.0 52.4,236.0 55.6,236.0 58.8,236.0 62.1,236.0 65.3,236.0 68.5,236.0 71.7,236.0 74.9,236.0 78.1,236.0 81.3,236.0 84.5,236.0 87.7,236.0 91.0,236.0 94.2,235.9 97.4,235.9 100.6,235.9 103.8,235.9 107.0,235.9 110.2,235.9 113.4,235.8 116.6,235.8 119.9,235.7 123.1,235.7 126.3,235.6 129.5,235.5 132.7,235.4 135.9,235.3 139.1,235.2 142.3,235.1 145.5,234.9 148.8,234.7 152.0,234.5 155.2,234.2 158.4,233.9 161.6,233.5 164.8,233.1 168.0,232.7 171.2,232.2 174.4,231.6 177.7,230.9 180.9,230.2 184.1,229.3 187.3,228.4 190.5,227.3 193.7,226.1 196.9,224.9 200.1,223.4 203.3,221.9 206.6,220.2 209.8,218.3 213.0,216.3 216.2,214.0 219.4,211.7 222.6,209.1 225.8,206.4 229.0,203.4 232.2,200.3 235.5,197.0 238.7,193.5 241.9,189.8 245.1,186.0 248.3,181.9 251.5,177.8 254.7,173.5 257.9,169.0 261.1,164.5 264.4,159.8 267.6,155.1 270.8,150.4 274.0,145.6 277.2,140.9 280.4,136.1 283.6,131.5 286.8,126.9 290.0,122.5 293.3,118.2 296.5,114.1 299.7,110.2 302.9,106.6 306.1,103.2 309.3,100.2 312.5,97.5 315.7,95.1 318.9,93.1 322.2,91.5 325.4,90.3 328.6,89.5 331.8,89.1 335.0,89.2 338.2,89.7 341.4,90.5 344.6,91.8 347.8,93.5 351.1,95.6 354.3,98.0 357.5,100.8 360.7,103.9 363.9,107.3 367.1,111.0 370.3,114.9 373.5,119.1 376.7,123.4 380.0,127.8 383.2,132.4 386.4,137.1 389.6,141.8 392.8,146.6 396.0,151.4 399.2,156.1 402.4,160.8 405.6,165.4 408.9,170.0 412.1,174.4 415.3,178.7 418.5,182.8 421.7,186.8 424.9,190.6 428.1,194.2 431.3,197.7 434.5,201.0 437.8,204.0 441.0,206.9 444.2,209.6 447.4,212.2 450.6,214.5 453.8,216.7 457.0,218.7 460.2,220.5 463.4,222.2 466.7,223.7 469.9,225.1 473.1,226.4 476.3,227.5 479.5,228.6 482.7,229.5 485.9,230.3 489.1,231.0 492.3,231.7 495.6,232.3 498.8,232.8 502.0,233.2 505.2,233.6 508.4,234.0 511.6,234.3 514.8,234.5 518.0,234.7 521.2,234.9 524.5,235.1 527.7,235.2 530.9,235.4 534.1,235.5 537.3,235.6 540.5,235.6 543.7,235.7 546.9,235.7 550.1,235.8 553.4,235.8 556.6,235.9 559.8,235.9 563.0,235.9 566.2,235.9 569.4,235.9 572.6,236.0 575.8,236.0 579.0,236.0 582.3,236.0 585.5,236.0 588.7,236.0 591.9,236.0 595.1,236.0 598.3,236.0 601.5,236.0 604.7,236.0 607.9,236.0 611.2,236.0 614.4,236.0 617.6,236.0 620.8,236.0 624.0,236.0" fill="none" stroke="#2a78d6" stroke-width="1.6"/>
-<polyline points="46.0,187.4 49.2,184.2 52.4,180.8 55.6,177.4 58.8,174.0 62.1,170.4 65.3,166.9 68.5,163.3 71.7,159.7 74.9,156.1 78.1,152.5 81.3,149.0 84.5,145.6 87.7,142.2 91.0,139.0 94.2,135.8 97.4,132.9 100.6,130.0 103.8,127.4 107.0,124.9 110.2,122.7 113.4,120.7 116.6,118.9 119.9,117.4 123.1,116.1 126.3,115.2 129.5,114.5 132.7,114.0 135.9,113.9 139.1,114.1 142.3,114.5 145.5,115.2 148.8,116.2 152.0,117.5 155.2,119.1 158.4,120.8 161.6,122.9 164.8,125.1 168.0,127.6 171.2,130.3 174.4,133.1 177.7,136.1 180.9,139.2 184.1,142.5 187.3,145.9 190.5,149.3 193.7,152.8 196.9,156.4 200.1,160.0 203.3,163.6 206.6,167.1 209.8,170.7 213.0,174.2 216.2,177.7 219.4,181.1 222.6,184.4 225.8,187.7 229.0,190.8 232.2,193.9 235.5,196.8 238.7,199.6 241.9,202.3 245.1,204.9 248.3,207.3 251.5,209.6 254.7,211.8 257.9,213.8 261.1,215.8 264.4,217.6 267.6,219.2 270.8,220.8 274.0,222.3 277.2,223.6 280.4,224.8 283.6,226.0 286.8,227.0 290.0,228.0 293.3,228.8 296.5,229.6 299.7,230.3 302.9,231.0 306.1,231.6 309.3,232.1 312.5,232.6 315.7,233.0 318.9,233.4 322.2,233.7 325.4,234.0 328.6,234.3 331.8,234.5 335.0,234.7 338.2,234.9 341.4,235.0 344.6,235.2 347.8,235.3 351.1,235.4 354.3,235.5 357.5,235.6 360.7,235.6 363.9,235.7 367.1,235.7 370.3,235.8 373.5,235.8 376.7,235.8 380.0,235.9 383.2,235.9 386.4,235.9 389.6,235.9 392.8,235.9 396.0,235.9 399.2,236.0 402.4,236.0 405.6,236.0 408.9,236.0 412.1,236.0 415.3,236.0 418.5,236.0 421.7,236.0 424.9,236.0 428.1,236.0 431.3,236.0 434.5,236.0 437.8,236.0 441.0,236.0 444.2,236.0 447.4,236.0 450.6,236.0 453.8,236.0 457.0,236.0 460.2,236.0 463.4,236.0 466.7,236.0 469.9,236.0 473.1,236.0 476.3,236.0 479.5,236.0 482.7,236.0 485.9,236.0 489.1,236.0 492.3,236.0 495.6,236.0 498.8,236.0 502.0,236.0 505.2,236.0 508.4,236.0 511.6,236.0 514.8,236.0 518.0,236.0 521.2,236.0 524.5,236.0 527.7,236.0 530.9,236.0 534.1,236.0 537.3,236.0 540.5,236.0 543.7,236.0 546.9,236.0 550.1,236.0 553.4,236.0 556.6,236.0 559.8,236.0 563.0,236.0 566.2,236.0 569.4,236.0 572.6,236.0 575.8,236.0 579.0,236.0 582.3,236.0 585.5,236.0 588.7,236.0 591.9,236.0 595.1,236.0 598.3,236.0 601.5,236.0 604.7,236.0 607.9,236.0 611.2,236.0 614.4,236.0 617.6,236.0 620.8,236.0 624.0,236.0" fill="none" stroke="#eb6834" stroke-width="1.6"/>
+<rect x="69.6" y="230.4" width="10.6" height="5.6" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
+<rect x="81.2" y="230.4" width="10.6" height="5.6" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
+<rect x="92.7" y="213.8" width="10.6" height="22.2" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
+<rect x="104.3" y="224.9" width="10.6" height="11.1" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
+<rect x="115.9" y="224.9" width="10.6" height="11.1" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
+<rect x="127.4" y="186.1" width="10.6" height="49.9" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
+<rect x="139.0" y="219.3" width="10.6" height="16.7" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
+<rect x="150.5" y="180.5" width="10.6" height="55.5" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
+<rect x="162.1" y="158.3" width="10.6" height="77.7" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
+<rect x="173.7" y="174.9" width="10.6" height="61.1" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
+<rect x="185.2" y="136.1" width="10.6" height="99.9" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
+<rect x="196.8" y="163.8" width="10.6" height="72.2" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
+<rect x="208.3" y="91.7" width="10.6" height="144.3" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
+<rect x="219.9" y="108.4" width="10.6" height="127.6" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
+<rect x="231.5" y="141.7" width="10.6" height="94.3" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
+<rect x="243.0" y="97.2" width="10.6" height="138.8" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
+<rect x="254.6" y="147.2" width="10.6" height="88.8" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
+<rect x="266.1" y="158.3" width="10.6" height="77.7" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
+<rect x="277.7" y="136.1" width="10.6" height="99.9" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
+<rect x="289.3" y="224.9" width="10.6" height="11.1" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
+<rect x="300.8" y="191.6" width="10.6" height="44.4" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
+<rect x="312.4" y="202.7" width="10.6" height="33.3" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
+<rect x="323.9" y="197.2" width="10.6" height="38.8" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
+<rect x="335.5" y="180.5" width="10.6" height="55.5" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
+<rect x="347.1" y="213.8" width="10.6" height="22.2" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
+<rect x="358.6" y="208.2" width="10.6" height="27.8" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
+<rect x="370.2" y="230.4" width="10.6" height="5.6" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
+<rect x="393.3" y="224.9" width="10.6" height="11.1" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
+<rect x="404.9" y="219.3" width="10.6" height="16.7" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
+<rect x="428.0" y="230.4" width="10.6" height="5.6" fill="#eb6834" fill-opacity="0.45" stroke="#eb6834" stroke-width="1"/>
+<rect x="219.9" y="230.4" width="10.6" height="5.6" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
+<rect x="277.7" y="219.3" width="10.6" height="16.7" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
+<rect x="300.8" y="230.4" width="10.6" height="5.6" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
+<rect x="312.4" y="230.4" width="10.6" height="5.6" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
+<rect x="323.9" y="197.2" width="10.6" height="38.8" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
+<rect x="335.5" y="202.7" width="10.6" height="33.3" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
+<rect x="347.1" y="174.9" width="10.6" height="61.1" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
+<rect x="358.6" y="125.0" width="10.6" height="111.0" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
+<rect x="370.2" y="197.2" width="10.6" height="38.8" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
+<rect x="381.7" y="125.0" width="10.6" height="111.0" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
+<rect x="393.3" y="141.7" width="10.6" height="94.3" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
+<rect x="404.9" y="130.6" width="10.6" height="105.4" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
+<rect x="416.4" y="125.0" width="10.6" height="111.0" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
+<rect x="428.0" y="63.9" width="10.6" height="172.1" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
+<rect x="439.5" y="63.9" width="10.6" height="172.1" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
+<rect x="451.1" y="152.8" width="10.6" height="83.2" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
+<rect x="462.7" y="141.7" width="10.6" height="94.3" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
+<rect x="474.2" y="147.2" width="10.6" height="88.8" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
+<rect x="485.8" y="180.5" width="10.6" height="55.5" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
+<rect x="497.3" y="147.2" width="10.6" height="88.8" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
+<rect x="508.9" y="219.3" width="10.6" height="16.7" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
+<rect x="520.5" y="174.9" width="10.6" height="61.1" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
+<rect x="532.0" y="191.6" width="10.6" height="44.4" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
+<rect x="543.6" y="213.8" width="10.6" height="22.2" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
+<rect x="555.1" y="224.9" width="10.6" height="11.1" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
+<rect x="566.7" y="230.4" width="10.6" height="5.6" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
+<rect x="578.3" y="224.9" width="10.6" height="11.1" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
+<rect x="589.8" y="230.4" width="10.6" height="5.6" fill="#2a78d6" fill-opacity="0.45" stroke="#2a78d6" stroke-width="1"/>
+<polyline points="46.0,236.0 49.2,236.0 52.4,236.0 55.6,236.0 58.8,236.0 62.1,236.0 65.3,236.0 68.5,236.0 71.7,236.0 74.9,236.0 78.1,236.0 81.3,236.0 84.5,236.0 87.7,236.0 91.0,236.0 94.2,236.0 97.4,236.0 100.6,236.0 103.8,236.0 107.0,236.0 110.2,236.0 113.4,236.0 116.6,236.0 119.9,236.0 123.1,236.0 126.3,236.0 129.5,236.0 132.7,236.0 135.9,236.0 139.1,236.0 142.3,236.0 145.5,236.0 148.8,236.0 152.0,236.0 155.2,236.0 158.4,236.0 161.6,236.0 164.8,236.0 168.0,236.0 171.2,236.0 174.4,236.0 177.7,236.0 180.9,236.0 184.1,236.0 187.3,236.0 190.5,236.0 193.7,236.0 196.9,235.9 200.1,235.9 203.3,235.9 206.6,235.9 209.8,235.9 213.0,235.9 216.2,235.8 219.4,235.8 222.6,235.7 225.8,235.7 229.0,235.6 232.2,235.5 235.5,235.5 238.7,235.4 241.9,235.2 245.1,235.1 248.3,234.9 251.5,234.7 254.7,234.5 257.9,234.2 261.1,234.0 264.4,233.6 267.6,233.2 270.8,232.8 274.0,232.3 277.2,231.7 280.4,231.1 283.6,230.4 286.8,229.6 290.0,228.7 293.3,227.7 296.5,226.6 299.7,225.4 302.9,224.1 306.1,222.6 309.3,221.0 312.5,219.3 315.7,217.4 318.9,215.4 322.2,213.2 325.4,210.8 328.6,208.3 331.8,205.7 335.0,202.8 338.2,199.8 341.4,196.6 344.6,193.3 347.8,189.9 351.1,186.2 354.3,182.5 357.5,178.7 360.7,174.7 363.9,170.7 367.1,166.6 370.3,162.4 373.5,158.3 376.7,154.1 380.0,149.9 383.2,145.8 386.4,141.8 389.6,137.9 392.8,134.1 396.0,130.5 399.2,127.0 402.4,123.8 405.6,120.8 408.9,118.0 412.1,115.5 415.3,113.4 418.5,111.5 421.7,110.0 424.9,108.8 428.1,108.0 431.3,107.6 434.5,107.5 437.8,107.8 441.0,108.4 444.2,109.4 447.4,110.8 450.6,112.5 453.8,114.5 457.0,116.9 460.2,119.5 463.4,122.4 466.7,125.6 469.9,128.9 473.1,132.5 476.3,136.2 479.5,140.1 482.7,144.1 485.9,148.1 489.1,152.3 492.3,156.4 495.6,160.6 498.8,164.8 502.0,168.9 505.2,173.0 508.4,177.0 511.6,180.8 514.8,184.6 518.0,188.3 521.2,191.8 524.5,195.2 527.7,198.4 530.9,201.5 534.1,204.4 537.3,207.2 540.5,209.8 543.7,212.2 546.9,214.5 550.1,216.6 553.4,218.5 556.6,220.3 559.8,222.0 563.0,223.5 566.2,224.9 569.4,226.1 572.6,227.3 575.8,228.3 579.0,229.2 582.3,230.1 585.5,230.8 588.7,231.5 591.9,232.1 595.1,232.6 598.3,233.0 601.5,233.5 604.7,233.8 607.9,234.1 611.2,234.4 614.4,234.6 617.6,234.8 620.8,235.0 624.0,235.2" fill="none" stroke="#2a78d6" stroke-width="1.6"/>
+<polyline points="46.0,234.3 49.2,234.1 52.4,233.8 55.6,233.4 58.8,233.1 62.1,232.7 65.3,232.2 68.5,231.7 71.7,231.2 74.9,230.6 78.1,229.9 81.3,229.2 84.5,228.3 87.7,227.5 91.0,226.5 94.2,225.4 97.4,224.3 100.6,223.0 103.8,221.7 107.0,220.2 110.2,218.7 113.4,217.0 116.6,215.3 119.9,213.4 123.1,211.4 126.3,209.3 129.5,207.1 132.7,204.7 135.9,202.3 139.1,199.8 142.3,197.1 145.5,194.4 148.8,191.6 152.0,188.7 155.2,185.7 158.4,182.7 161.6,179.6 164.8,176.5 168.0,173.4 171.2,170.2 174.4,167.1 177.7,164.0 180.9,160.9 184.1,157.8 187.3,154.9 190.5,152.0 193.7,149.2 196.9,146.6 200.1,144.1 203.3,141.7 206.6,139.5 209.8,137.5 213.0,135.6 216.2,134.0 219.4,132.6 222.6,131.5 225.8,130.5 229.0,129.8 232.2,129.4 235.5,129.2 238.7,129.2 241.9,129.5 245.1,130.1 248.3,130.9 251.5,131.9 254.7,133.2 257.9,134.7 261.1,136.4 264.4,138.3 267.6,140.4 270.8,142.7 274.0,145.1 277.2,147.7 280.4,150.4 283.6,153.2 286.8,156.2 290.0,159.2 293.3,162.2 296.5,165.3 299.7,168.5 302.9,171.6 306.1,174.7 309.3,177.9 312.5,181.0 315.7,184.0 318.9,187.0 322.2,190.0 325.4,192.8 328.6,195.6 331.8,198.3 335.0,200.9 338.2,203.4 341.4,205.8 344.6,208.0 347.8,210.2 351.1,212.3 354.3,214.2 357.5,216.0 360.7,217.8 363.9,219.4 367.1,220.9 370.3,222.3 373.5,223.6 376.7,224.8 380.0,225.9 383.2,226.9 386.4,227.8 389.6,228.7 392.8,229.5 396.0,230.2 399.2,230.9 402.4,231.4 405.6,232.0 408.9,232.4 412.1,232.9 415.3,233.3 418.5,233.6 421.7,233.9 424.9,234.2 428.1,234.4 431.3,234.6 434.5,234.8 437.8,235.0 441.0,235.1 444.2,235.2 447.4,235.3 450.6,235.4 453.8,235.5 457.0,235.6 460.2,235.7 463.4,235.7 466.7,235.8 469.9,235.8 473.1,235.8 476.3,235.9 479.5,235.9 482.7,235.9 485.9,235.9 489.1,235.9 492.3,235.9 495.6,236.0 498.8,236.0 502.0,236.0 505.2,236.0 508.4,236.0 511.6,236.0 514.8,236.0 518.0,236.0 521.2,236.0 524.5,236.0 527.7,236.0 530.9,236.0 534.1,236.0 537.3,236.0 540.5,236.0 543.7,236.0 546.9,236.0 550.1,236.0 553.4,236.0 556.6,236.0 559.8,236.0 563.0,236.0 566.2,236.0 569.4,236.0 572.6,236.0 575.8,236.0 579.0,236.0 582.3,236.0 585.5,236.0 588.7,236.0 591.9,236.0 595.1,236.0 598.3,236.0 601.5,236.0 604.7,236.0 607.9,236.0 611.2,236.0 614.4,236.0 617.6,236.0 620.8,236.0 624.0,236.0" fill="none" stroke="#eb6834" stroke-width="1.6"/>
 <line x1="46" y1="236" x2="624" y2="236" stroke="#52514e"/>
 <line x1="335.0" y1="14" x2="335.0" y2="266" stroke="#0b0b0b" stroke-width="1.5" stroke-dasharray="5 4"/>
 <text x="340.0" y="24" fill="#0b0b0b">g(x) = 0</text>
-<line x1="333.1" y1="32" x2="333.1" y2="236" stroke="#2a78d6" stroke-width="1.2" stroke-dasharray="2 3"/>
-<text x="338.1" y="44" text-anchor="start" fill="#2a78d6">m̃₁ = -0.17</text>
-<line x1="135.8" y1="32" x2="135.8" y2="236" stroke="#eb6834" stroke-width="1.2" stroke-dasharray="2 3"/>
-<text x="130.8" y="44" text-anchor="end" fill="#eb6834">m̃₂ = -17.23</text>
+<line x1="433.6" y1="32" x2="433.6" y2="236" stroke="#2a78d6" stroke-width="1.2" stroke-dasharray="2 3"/>
+<text x="428.6" y="44" text-anchor="end" fill="#2a78d6">m̃₁ + w₀ = +8.53</text>
+<line x1="236.4" y1="32" x2="236.4" y2="236" stroke="#eb6834" stroke-width="1.2" stroke-dasharray="2 3"/>
+<text x="231.4" y="44" text-anchor="end" fill="#eb6834">m̃₂ + w₀ = -8.53</text>
 <g><line x1="294.4" y1="258" x2="294.4" y2="272" stroke="#eb6834" stroke-width="2"/><title>Test 1: g = -3.511×10⁻³, predicted -1</title></g>
 <g><line x1="289.8" y1="258" x2="289.8" y2="272" stroke="#eb6834" stroke-width="2"/><title>Test 2: g = -3.907×10⁻³, predicted -1</title></g>
 <g><line x1="288.7" y1="258" x2="288.7" y2="272" stroke="#eb6834" stroke-width="2"/><title>Test 3: g = -4.002×10⁻³, predicted -1</title></g>
@@ -739,19 +716,8 @@ errors occur. Since the test labels are unavailable, test accuracy cannot be mea
 <text x="492" y="49" fill="#0b0b0b">Class 2 (label −1)</text>
 </svg>
 <!-- FIG2 END -->
-<figcaption id="fig2cap"><b>Figure 2.</b> Training samples projected onto the Fisher direction: histograms of g(<b>x</b>) = <b>w</b><sup>T</sup><b>x</b> + w<sub>0</sub> for each class (bin width 1 &times; 10<sup>&minus;3</sup>), with the fitted 1-D Gaussians of the projected values drawn over them.
-The heavy dashed line is the decision boundary g = 0; the thin dotted lines mark the projected class means m&#771;<sub>1</sub> and m&#771;<sub>2</sub> at &plusmn;8.53 &times; 10<sup>&minus;3</sup>.
-The ticks below the axis are the 23 test samples, coloured by their predicted class.
-The class means are well apart, but the tails overlap, and that overlap accounts for the 39 training errors.</figcaption>
+<figcaption id="fig2cap"><b>Figure 2.</b> Training samples projected onto the Fisher direction, with a histogram of g(<b>x</b>) = <b>w</b><sup>T</sup><b>x</b> + w<sub>0</sub> per class (bin width 1 &times; 10<sup>&minus;3</sup>) and the fitted 1-D Gaussians drawn over them. The heavy dashed line is the boundary g = 0, the thin dotted lines mark the projected class means shifted by the bias, m&#771;<sub>1</sub> + w<sub>0</sub> and m&#771;<sub>2</sub> + w<sub>0</sub>, at &plusmn;8.53 &times; 10<sup>&minus;3</sup>, and the ticks below the axis are the 23 test samples.</figcaption>
 </figure>
-
-<h2>Method notes, limitations, and reproducibility</h2>
-<ul>
-  <li><b>Comparison of the two classifiers.</b> Both are linear in their parameters on the log scale, but they assume different things: Na&iuml;ve Bayes models each feature separately with its own variance per class and produces quadratic boundaries, while Fisher's method uses one shared within-class scatter and produces a single hyperplane. Their training accuracies (95.6% and 93.2%) are not directly comparable &mdash; different data, different numbers of classes and features &mdash; and both are resubstitution figures. The leave-one-out values, 94.7% and 93.1%, are the fairer summaries.</li>
-  <li><b>Assumptions that are not tested here.</b> The Gaussian form of Assignment 1 is a modelling choice, not a verified property; no normality test was run. Conditional independence is demonstrably violated (A and C correlate at 0.875), yet the classifier remains accurate because only the ranking of the scores matters. Fisher's method assumes the two classes share a within-class scatter matrix; the projected standard deviations (5.19 and 5.72 &times; 10<sup>&minus;3</sup>) suggest this is reasonable but not exact.</li>
-  <li><b>What the numbers do not say.</b> Neither accuracy figure estimates performance on the test sets, for which no labels exist. The cleaning decisions of Assignment 1 (which rows to remove) were made once, on all 120 rows, before the leave-one-out loop, so that figure is slightly optimistic; a fully nested procedure would re-derive the fences inside every fold. No threshold, variance, or parameter was tuned on any test sample.</li>
-  <li><b>Reproducibility.</b> <code>python3 -I assignment-01-naive-bayes.py</code> and <code>python3 -I assignment-02-fisher-lda.py</code>, run in <code>EE-6407/assignments/</code>, regenerate every table entry above and rewrite Figures 1 and 2 between their <code>FIG1</code>/<code>FIG2</code> markers in this file. Both scripts use only the Python standard library plus the two small readers <code>xlsx_reader.py</code> and <code>mat_reader.py</code>, and both carry assertions for the counts, parameters, and predictions quoted here, so a change in the data or in any modelling decision fails loudly rather than silently disagreeing with the report.</li>
-</ul>
 
 </div>
 </body>

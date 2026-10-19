@@ -122,7 +122,7 @@ def figure_projection():
     hist = lambda vs: [sum(1 for v in vs if lo + k * bw <= v < lo + (k + 1) * bw) for k in range(nb)]
     h1, h2 = hist(gs1), hist(gs2)
     ymax = max(h1 + h2)
-    ytop = 5 * math.ceil(ymax / 5)
+    ytop = 5 * math.ceil(ymax / 5) + 5  # headroom so the mean labels clear the tallest bar
     sx = lambda v: L + (v - lo) / (hi - lo) * (W - L - R)
     base = H - B
     sy = lambda c: base - c / ytop * (base - Tp)
@@ -143,7 +143,8 @@ def figure_projection():
                          f'fill="{col[c]}" fill-opacity="0.45" stroke="{col[c]}" stroke-width="1"/>')
     # fitted 1-D Gaussians of the projected values, drawn on the histogram scale (counts per bin)
     for cls, sc, c in ((C1, s1, 1), (C2, s2, -1)):
-        m_, sd_ = (mt1, math.sqrt(s1 / (len(C1) - 1))) if c == 1 else (mt2, math.sqrt(s2 / (len(C2) - 1)))
+        # mean of g = wTx + w0 (the plot axis), i.e. the projected mean shifted by w0 (= +/-8.53e-3)
+        m_, sd_ = (mt1 + w0, math.sqrt(s1 / (len(C1) - 1))) if c == 1 else (mt2 + w0, math.sqrt(s2 / (len(C2) - 1)))
         pts = []
         for k in range(181):
             v = lo + (hi - lo) * k / 180
@@ -154,12 +155,12 @@ def figure_projection():
     o.append(f'<line x1="{L}" y1="{base}" x2="{W-R}" y2="{base}" stroke="#52514e"/>')
     o.append(f'<line x1="{sx(0):.1f}" y1="{Tp}" x2="{sx(0):.1f}" y2="{base+30}" stroke="#0b0b0b" stroke-width="1.5" stroke-dasharray="5 4"/>')
     o.append(f'<text x="{sx(0)+5:.1f}" y="{Tp+10}" fill="#0b0b0b">g(x) = 0</text>')
-    for m_, c, tag in ((mt1, 1, 'm̃₁'), (mt2, -1, 'm̃₂')):
+    for m_, c, tag in ((mt1 + w0, 1, 'm̃₁ + w₀'), (mt2 + w0, -1, 'm̃₂ + w₀')):
         xm = sx(K * m_)
         o.append(f'<line x1="{xm:.1f}" y1="{Tp+18}" x2="{xm:.1f}" y2="{base}" stroke="{col[c]}" '
                  f'stroke-width="1.2" stroke-dasharray="2 3"/>')
-        o.append(f'<text x="{xm + (5 if c == 1 else -5):.1f}" y="{Tp+30}" '
-                 f'text-anchor="{"start" if c == 1 else "end"}" fill="{col[c]}">{tag} = {K*m_:+.2f}</text>')
+        o.append(f'<text x="{xm - 5:.1f}" y="{Tp+30}" '
+                 f'text-anchor="end" fill="{col[c]}">{tag} = {K*m_:+.2f}</text>')
     for n, x, gv, p in test:  # test samples as ticks in a strip under the axis
         o.append(f'<g><line x1="{sx(K*gv):.1f}" y1="{base+22}" x2="{sx(K*gv):.1f}" y2="{base+36}" stroke="{col[p]}" stroke-width="2"/>'
                  f'<title>Test {n}: g = {K*gv:.3f}×10⁻³, predicted {p:+d}</title></g>')
