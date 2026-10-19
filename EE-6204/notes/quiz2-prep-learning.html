@@ -218,6 +218,26 @@ Intuitively, two independent alarm clocks ringing at rates \(\lambda_1\) and \(\
   <div class="fb" data-ok="Right: whichever clock rings first ends the state, min of EXP(4) and EXP(1) is EXP(5); mean 12 minutes." data-no="It leaves at the first of the two events, and min(EXP(4), EXP(1)) = EXP(4+1)."></div>
 </div>
 
+<h3>Practice before moving on</h3>
+<div class="check" data-id="m1c" data-kind="text" data-answer="0.0096">
+  <div class="tag">Check 1.3</div>
+  <div class="q">Lecture Eg 1.1 tool (\(p=0.01\) per operation). Probability it breaks on <em>exactly</em> the 5th operation? 4 d.p.</div>
+  <div class="row"><input type="text"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: four failures then a success, 0.99⁴·0.01 = 0.0096060 → 0.0096." data-no="P(X = n) = (1−p)^{n−1}p with n = 5: 0.99⁴ × 0.01."></div>
+</div>
+<div class="check" data-id="m1d" data-kind="text" data-answer="4/5">
+  <div class="tag">Check 1.4</div>
+  <div class="q">Same machine as Check 1.2 (finishes at 4/h, fails at 1/h). Probability it finishes the part <em>before</em> failing? Simplest fraction.</div>
+  <div class="row"><input type="text"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: P(X₁ before X₂) = λ₁/(λ₁+λ₂) = 4/(4+1) = 4/5." data-no="The race between two exponential clocks is won by clock 1 with probability λ₁/(λ₁+λ₂)."></div>
+</div>
+<div class="check" data-id="m1e" data-kind="text" data-answer="0.3935">
+  <div class="tag">Check 1.5</div>
+  <div class="q">A sensor's lifetime is exponential with mean 2 hours. Probability it fails within the first hour? 4 d.p.</div>
+  <div class="row"><input type="text"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: λ = 1/2 per hour, P(X ≤ 1) = 1 − e^{-0.5} = 0.393469 → 0.3935." data-no="Mean 2 h means λ = 0.5 per hour (not 2). Then P(X ≤ 1) = 1 − e^{-λ·1}."></div>
+</div>
+
 <!-- ============================================================ -->
 <h2 id="m2">2 · Stochastic processes &amp; the Poisson process</h2>
 <p>A <strong>stochastic process</strong> \(\{X(t): t\in T\}\) is a family of random variables indexed by time.
@@ -295,6 +315,26 @@ state space \(S\) countable (a <em>chain</em>) or a continuum? <span class="src"
   <div class="fb" data-ok="Right: the index is the countable set of hourly instants (discrete time) and the count is in {0, 1, 2, …} (discrete state). Watched continuously instead, it would be continuous time, discrete state. Decide the two axes separately." data-no="Two separate questions: is the time index countable (hourly snapshots → yes) and is the set of values countable (a car count → yes)?"></div>
 </div>
 
+<h3>Practice before moving on</h3>
+<div class="check" data-id="m2e" data-kind="text" data-answer="0.4724">
+  <div class="tag">Check 2.5</div>
+  <div class="q">Customers arrive at 10/h; each independently goes to machine A with probability 0.3. P(no customer reaches A in 15 minutes)? 4 d.p.</div>
+  <div class="row"><input type="text"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: splitting gives a Poisson stream of rate 0.3·10 = 3/h; t = 0.25 h, so P = e^{-0.75} = 0.472367 → 0.4724." data-no="Decompose first: A sees rate p·λ = 3 per hour. Then P(0 in t) = e^{-3·0.25}."></div>
+</div>
+<div class="check" data-id="m2f" data-kind="text" data-answer="4.5">
+  <div class="tag">Check 2.6</div>
+  <div class="q">Merged conveyor stream from Module 2 (6/h). Expected number of parts in 45 minutes? 1 d.p.</div>
+  <div class="row"><input type="text"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: E[X(t)] = λt = 6 × 0.75 = 4.5." data-no="E[X(t)] = λt with t in hours: 45 min = 0.75 h."></div>
+</div>
+<div class="check" data-id="m2g" data-kind="text" data-answer="0.2707">
+  <div class="tag">Check 2.7</div>
+  <div class="q">Lecture Example 7.1 (\(\lambda=2\) per hour). Probability of <em>exactly</em> 2 arrivals in one hour? 4 d.p.</div>
+  <div class="row"><input type="text"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: e^{-2}·2²/2! = 2e^{-2} = 0.270671 → 0.2707." data-no="P(X = 2) = e^{-λ}λ²/2! with λ = 2."></div>
+</div>
+
 <!-- ============================================================ -->
 <h2 id="m3">3 · DTMC: states, TPM, n steps, sojourn</h2>
 <p>A <strong>discrete-time Markov chain</strong> \(\{X_n\}\) on a countable \(S\) satisfies the <strong>Markov property</strong>:
@@ -340,6 +380,29 @@ From 2 nothing can change: \(p_{22}=1\) (absorbing). Counting "exactly one" as \
   <div class="fb" data-ok="Right: 1/(1 − 0.7) = 3.3333." data-no="E(T₁) = 1/(1 − p₁₁) with p₁₁ = 0.7."></div>
 </div>
 
+<h3>Practice before moving on</h3>
+<div class="check" data-id="m3c" data-kind="text" data-answer="0.575">
+  <div class="tag">Check 3.3</div>
+  <div class="q">Same chain \(P=\begin{pmatrix}0.8&0.2\\0.3&0.7\end{pmatrix}\), started from \(\pi(0) = (0.5,\ 0.5)\). Find \(P(X_2 = 0)\). 3 d.p.</div>
+  <div class="row"><input type="text"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: π(1) = (0.5·0.8 + 0.5·0.3, …) = (0.55, 0.45); π(2)₀ = 0.55·0.8 + 0.45·0.3 = 0.44 + 0.135 = 0.575." data-no="Step the row vector twice: π(n) = π(n−1)P. Each new entry is π(n−1) dotted with a COLUMN of P."></div>
+</div>
+<div class="check" data-id="m3d" data-kind="text" data-answer="0.18">
+  <div class="tag">Check 3.4</div>
+  <div class="q">Two machines, no repair (lecture p30–31), each fails in an hour w.p. \(a = 0.1\). Find \(p_{01}\). 2 d.p.</div>
+  <div class="row"><input type="text"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: exactly one of the two fails: a(1−a) + (1−a)a = 2·0.1·0.9 = 0.18." data-no="“Exactly one fails” has two orderings: 2a(1−a)."></div>
+</div>
+<div class="check" data-id="m3e" data-kind="mcq" data-answer="b">
+  <div class="tag">Check 3.5</div>
+  <div class="q">Which matrix is a valid TPM?</div>
+  <label class="opt"><input type="radio" name="m3e" value="a"> \(\begin{pmatrix}0.5&0.5\\0.6&0.6\end{pmatrix}\)</label>
+  <label class="opt"><input type="radio" name="m3e" value="b"> \(\begin{pmatrix}0.3&0.7\\1&0\end{pmatrix}\)</label>
+  <label class="opt"><input type="radio" name="m3e" value="c"> \(\begin{pmatrix}0.3&0.3\\0.7&0.7\end{pmatrix}\)</label>
+  <div class="row"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: entries in [0,1] and each ROW sums to 1 (0.3+0.7, 1+0). A row like (1, 0) is fine: from state 1 you always go to 0." data-no="Check rows, not columns: from each state the outgoing probabilities must sum to 1. (c) has columns summing to 1, which is the wrong test."></div>
+</div>
+
 <!-- ============================================================ -->
 <h2 id="m4">4 · DTMC steady state</h2>
 <p>For a well-behaved chain, \(\pi(n)\) settles to a limit \(Y = [y_0, y_1, \ldots]\) that does not depend on where you started. Take the limit of
@@ -374,6 +437,29 @@ Normalise: \(y_0(1+1+\tfrac12) = 1 \Rightarrow Y = (0.4, 0.4, 0.2)\), matching t
   <div class="q">For \(P=\begin{pmatrix}0.8&0.2\\0.3&0.7\end{pmatrix}\) find \(y_0\). 1 d.p.</div>
   <div class="row"><input type="text"><button class="btn">Check</button></div>
   <div class="fb" data-ok="Right: y₀ = b/(a+b) = 0.3/0.5 = 0.6." data-no="Balance 0.2·y₀ = 0.3·y₁ with y₀ + y₁ = 1."></div>
+</div>
+
+<h3>Practice before moving on</h3>
+<div class="check" data-id="m4b" data-kind="text" data-answer="1/4">
+  <div class="tag">Check 4.2</div>
+  <div class="q">Find \(y_0\) for \(P=\begin{pmatrix}0.5&0.5&0\\0.25&0.5&0.25\\0&0.5&0.5\end{pmatrix}\). Simplest fraction.</div>
+  <div class="row"><input type="text"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: column 0 gives y₀ = 0.5y₀ + 0.25y₁ → y₁ = 2y₀; column 2 gives y₁ = 2y₂ → y₂ = y₀. Normalise: y₀(1+2+1) = 1, so Y = (1/4, 1/2, 1/4)." data-no="Use columns 0 and 2 (drop the messy middle one): y₁ = 2y₀ and y₂ = y₀, then y₀ + y₁ + y₂ = 1."></div>
+</div>
+<div class="check" data-id="m4c" data-kind="text" data-answer="10">
+  <div class="tag">Check 4.3</div>
+  <div class="q">A machine fails in an hour w.p. \(a = 0.1\) and is repaired in an hour w.p. \(b = 0.4\). Each hour under repair costs \$50. Long-run repair cost per hour, in dollars?</div>
+  <div class="row"><input type="text"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: fraction of hours under repair y₁ = a/(a+b) = 0.1/0.5 = 0.2, so cost = 0.2 × 50 = 10." data-no="Long-run fraction of time in a state = its steady-state probability: y₁ = a/(a+b). Multiply by the cost per hour."></div>
+</div>
+<div class="check" data-id="m4d" data-kind="mcq" data-answer="b">
+  <div class="tag">Check 4.4</div>
+  <div class="q">In \(Y = YP\), the equation for \(y_j\) uses which entries of \(P\)?</div>
+  <label class="opt"><input type="radio" name="m4d" value="a"> row j</label>
+  <label class="opt"><input type="radio" name="m4d" value="b"> column j</label>
+  <label class="opt"><input type="radio" name="m4d" value="c"> the diagonal only</label>
+  <div class="row"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: y_j = Σᵢ yᵢ p_{ij}, the flow INTO j from every i — that is column j." data-no="Y is a row vector multiplied on the left, so entry j of YP is Y · (column j of P)."></div>
 </div>
 
 <!-- ============================================================ -->
@@ -414,6 +500,29 @@ Interpretation: an order is placed in about 28.6&nbsp;% of weeks; mean sojourn i
   <label class="opt"><input type="radio" name="m5b" value="c"> rows 0, 1 and 3</label>
   <div class="row"><button class="btn">Check</button></div>
   <div class="fb" data-ok="Right: every week that starts with 3 PCs has the same next-week distribution — after states 0, 1 and 3." data-no="Ask: with what stock does each week START? From 0 and 1 you top up to 3, and from 3 you start with 3."></div>
+</div>
+
+<h3>Practice before moving on</h3>
+<div class="check" data-id="m5c" data-kind="text" data-answer="0.8647">
+  <div class="tag">Check 5.3</div>
+  <div class="q">Same shop but weekly demand is Poisson(\(\lambda = 2\)). Find the new \(p_{10}\). 4 d.p.</div>
+  <div class="row"><input type="text"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: from 1 PC, any demand ≥ 1 empties the shelf: 1 − e^{-2} = 0.864665 → 0.8647." data-no="p₁₀ = P(D ≥ 1) = 1 − P(D = 0) = 1 − e^{-λ} with the new λ = 2."></div>
+</div>
+<div class="check" data-id="m5d" data-kind="text" data-answer="0.2642">
+  <div class="tag">Check 5.4</div>
+  <div class="q">A smaller shop: \(\lambda = 1\), and if stock is 0 it orders <em>2</em> (otherwise nothing). Find \(p_{00}\). 4 d.p.</div>
+  <div class="row"><input type="text"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: from 0 the week starts with 2 PCs; it ends at 0 when D ≥ 2: 1 − e^{-1} − e^{-1} = 0.264241 → 0.2642." data-no="Read the policy: from 0 you restock to 2, so ending at 0 needs D ≥ 2 = 1 − P(D=0) − P(D=1)."></div>
+</div>
+<div class="check" data-id="m5e" data-kind="mcq" data-answer="b">
+  <div class="tag">Check 5.5</div>
+  <div class="q">If the policy is “when stock is 0, order 4”, and stock otherwise only falls, what is the state space?</div>
+  <label class="opt"><input type="radio" name="m5e" value="a"> \(\{1,2,3,4\}\)</label>
+  <label class="opt"><input type="radio" name="m5e" value="b"> \(\{0,1,2,3,4\}\)</label>
+  <label class="opt"><input type="radio" name="m5e" value="c"> \(\{0,1,2,3\}\)</label>
+  <div class="row"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: end-of-week stock ranges from 0 (sold out) up to 4 (restocked, no demand)." data-no="The state is END-of-week stock: lowest 0 (sold out), highest 4 (a restocked week with zero demand)."></div>
 </div>
 
 <!-- ============================================================ -->
@@ -469,6 +578,26 @@ Under the <em>discard</em> policy (2→0, fresh setup) \(R\) drops to 3.08. <spa
   <div class="fb" data-ok="Right: decomposition splits the repair rate r into qr (to 1) and (1−q)r (to 0); the diagonal is −r so the row sums to 0 — matching the lecturer's exercise answer." data-no="Rates, not probabilities: the repair finishes at rate r and is then split by q (decomposition). The diagonal must make the row sum to 0."></div>
 </div>
 
+<h3>Practice before moving on</h3>
+<div class="check" data-id="m6c" data-kind="text" data-answer="2.5">
+  <div class="tag">Check 6.3</div>
+  <div class="q">Resume model with \(s = 10,\ p = 5,\ f = 1,\ r = 2\) per hour. Production rate \(R\), parts per hour? 1 d.p.</div>
+  <div class="row"><input type="text"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: pr = 10, rs = 20, fs = 10, total 40, so π₁ = 20/40 = 1/2 and R = pπ₁ = 2.5." data-no="π₁ = rs/(pr + rs + fs); then R = p·π₁ (parts finish only while processing)."></div>
+</div>
+<div class="check" data-id="m6d" data-kind="text" data-answer="-6">
+  <div class="tag">Check 6.4</div>
+  <div class="q">Same numbers. What is \(q_{11}\), the diagonal entry of \(Q\) for the processing state?</div>
+  <div class="row"><input type="text"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: out-rates from 1 are p = 5 (to 0) and f = 1 (to 2), so q₁₁ = −(5 + 1) = −6." data-no="The diagonal is minus the total rate OUT of the state: −(p + f)."></div>
+</div>
+<div class="check" data-id="m6e" data-kind="text" data-answer="0.8">
+  <div class="tag">Check 6.5</div>
+  <div class="q">A machine is up (fails at rate 0.5/h) or down (repaired at rate 2/h). Long-run fraction of time it is up? 1 d.p.</div>
+  <div class="row"><input type="text"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: rate balance π_up·0.5 = π_down·2, so π_up = 2/2.5 = 0.8." data-no="Rate out of “up” = rate into “up”: 0.5·π_up = 2·π_down, then normalise."></div>
+</div>
+
 <!-- ============================================================ -->
 <h2 id="m7">7 · Birth–death processes</h2>
 <p>A CTMC on \(\{0,1,2,\ldots\}\) that only moves one step at a time: up \(k\to k+1\) at rate \(\lambda_k\) (birth), down \(k\to k-1\) at rate \(\mu_k\) (death).
@@ -481,6 +610,29 @@ Balancing the flow across the "cut" between \(k-1\) and \(k\) gives \(\lambda_{k
   <div class="q">A birth–death chain on \(\{0,1,2\}\) has \(\lambda_0 = 2,\ \lambda_1 = 1,\ \mu_1 = 2,\ \mu_2 = 2\). Find \(\pi_0\) as a fraction in simplest form.</div>
   <div class="row"><input type="text"><button class="btn">Check</button></div>
   <div class="fb" data-ok="Right: π₁ = (2/2)π₀ = π₀, π₂ = (1/2)π₁ = π₀/2, so π₀(1 + 1 + 1/2) = 1 → π₀ = 2/5." data-no="Products: π₁ = (λ₀/μ₁)π₀, π₂ = (λ₁/μ₂)π₁. Then normalise."></div>
+</div>
+
+<h3>Practice before moving on</h3>
+<div class="check" data-id="m7b" data-kind="text" data-answer="3/19">
+  <div class="tag">Check 7.2</div>
+  <div class="q">Birth–death on \(\{0,1,2,3\}\) with \(\lambda_0=\lambda_1=\lambda_2 = 2\) and \(\mu_k = k\) (\(\mu_1=1,\ \mu_2=2,\ \mu_3=3\)). Find \(\pi_0\). Simplest fraction.</div>
+  <div class="row"><input type="text"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: weights 1, 2/1 = 2, 2·(2/2) = 2, 2·(2/3) = 4/3; sum 19/3, so π₀ = 3/19." data-no="Build weights πₖ/π₀ by multiplying λ_{k−1}/μ_k: 1, 2, 2, 4/3. Then π₀ = 1/sum."></div>
+</div>
+<div class="check" data-id="m7c" data-kind="text" data-answer="30/19">
+  <div class="tag">Check 7.3</div>
+  <div class="q">Same chain. Mean number in the system \(L = \sum k\pi_k\)? Simplest fraction.</div>
+  <div class="row"><input type="text"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: (0·1 + 1·2 + 2·2 + 3·4/3)·(3/19) = 10·3/19 = 30/19." data-no="L = Σ k·πₖ with πₖ = weightₖ·(3/19) and weights 1, 2, 2, 4/3."></div>
+</div>
+<div class="check" data-id="m7d" data-kind="mcq" data-answer="b">
+  <div class="tag">Check 7.4</div>
+  <div class="q">Which equation balances the cut between states 2 and 3?</div>
+  <label class="opt"><input type="radio" name="m7d" value="a"> \(\lambda_3\pi_3 = \mu_2\pi_2\)</label>
+  <label class="opt"><input type="radio" name="m7d" value="b"> \(\lambda_2\pi_2 = \mu_3\pi_3\)</label>
+  <label class="opt"><input type="radio" name="m7d" value="c"> \(\lambda_2\pi_3 = \mu_3\pi_2\)</label>
+  <div class="row"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: up-crossings 2→3 happen at rate λ₂π₂, down-crossings 3→2 at rate μ₃π₃." data-no="Flow up = (prob in 2) × (birth rate from 2); flow down = (prob in 3) × (death rate from 3)."></div>
 </div>
 
 <!-- ============================================================ -->
@@ -571,6 +723,38 @@ Tail probabilities: \(P(w>t) = e^{-(\mu-\lambda)t}\), \(P(d>t) = \rho e^{-\mu(1-
   <div class="q">M/M/1/2 with \(\rho = 2\) (arrivals faster than service — still stable!). Probability an arrival is blocked? Simplest fraction.</div>
   <div class="row"><input type="text"><button class="btn">Check</button></div>
   <div class="fb" data-ok="Right: π₂ = ρ²(1−ρ)/(1−ρ³) = 4·(−1)/(−7) = 4/7. Blocked 57 % of the time, yet the queue is stable because it is finite." data-no="π_N = ρ^N(1−ρ)/(1−ρ^{N+1}) with ρ = 2, N = 2: 4·(−1)/(1−8) = 4/7. Or directly: weights 1 : 2 : 4, so π₂ = 4/7."></div>
+</div>
+
+<h3>Practice before moving on</h3>
+<div class="check" data-id="m8e" data-kind="text" data-answer="24">
+  <div class="tag">Check 8.5</div>
+  <div class="q">A workshop holds on average 4 jobs (in system); jobs arrive at 10/h. Mean time a job spends in the system, in minutes?</div>
+  <div class="row"><input type="text"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: Little: W = L/λ = 4/10 h = 0.4 h = 24 min. No queue model needed." data-no="Little’s law L = λW holds for any stable system: W = 4/10 h, then convert to minutes."></div>
+</div>
+<div class="check" data-id="m8f" data-kind="text" data-answer="0.3679">
+  <div class="tag">Check 8.6</div>
+  <div class="q">Eg 3.1 machine (\(\lambda=8,\ \mu=10\) per hour, FIFO). Probability a part spends more than 30 minutes in the <em>system</em>? 4 d.p.</div>
+  <div class="row"><input type="text"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: w is EXP(µ − λ) = EXP(2), so P(w > 0.5) = e^{-1} = 0.3679 — no leading ρ for time in system." data-no="Time in system is exactly exponential with rate µ − λ: P(w > t) = e^{-(µ−λ)t}, t = 0.5 h."></div>
+</div>
+<div class="check" data-id="m8g" data-kind="text" data-answer="1/4">
+  <div class="tag">Check 8.7</div>
+  <div class="q">M/M/1/3 with \(\lambda = \mu\) (\(\rho = 1\)). Blocking probability? Simplest fraction.</div>
+  <div class="row"><input type="text"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: with ρ = 1 all weights ρᵏ equal 1, so the 4 states 0…3 are equally likely: π₃ = 1/4. (The formula has 0/0 here — use the limit or the weights.)" data-no="ρ = 1 makes ρ^k(1−ρ)/(1−ρ^{N+1}) 0/0. Go back to the weights: 1 : 1 : 1 : 1 over N + 1 = 4 states."></div>
+</div>
+<div class="check" data-id="m8h" data-kind="text" data-answer="3.4286">
+  <div class="tag">Check 8.8</div>
+  <div class="q">M/M/2 with \(\lambda = 6\)/h, \(\mu = 4\)/h per server. Mean number in system \(L\)? 4 d.p.</div>
+  <div class="row"><input type="text"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: ρ = 6/8 = 0.75, mρ = 1.5, π₀ = [1.5²/(2·0.25) + 1 + 1.5]⁻¹ = 1/7, Q = 0.75·2.25·(1/7)/(2·0.0625) = 27/14, L = Q + λ/µ = 27/14 + 3/2 = 24/7 = 3.428571." data-no="ρ = λ/(mµ) = 0.75. π₀ = [(mρ)^m/(m!(1−ρ)) + 1 + mρ]⁻¹ = 1/7; Q from the appendix; then L = Q + λ/µ."></div>
+</div>
+<div class="check" data-id="m8i" data-kind="text" data-answer="30">
+  <div class="tag">Check 8.9</div>
+  <div class="q">Mᵇ/M/1 with batches of \(b = 3\) arriving at \(\lambda = 2\)/h, \(\mu = 10\)/h. Mean time in system per <em>customer</em>, in minutes?</div>
+  <div class="row"><input type="text"><button class="btn">Check</button></div>
+  <div class="fb" data-ok="Right: ρ = 3·2/10 = 0.6, L = 0.6·4/(2·0.4) = 3, W = L/(λb) = 3/6 h = 30 min." data-no="ρ = bλ/µ, L = ρ(1+b)/(2(1−ρ)), and Little uses the CUSTOMER rate λb = 6 per hour."></div>
 </div>
 
 <!-- ============================================================ -->
