@@ -106,6 +106,9 @@ svg .edge { stroke: var(--muted); fill: none; stroke-width: 1.5; }
 svg .node { fill: var(--surface); stroke: var(--accent); stroke-width: 2; }
 #math-warning { display: none; }
 footer { margin-top: 46px; padding-top: 16px; border-top: 1px solid var(--border); font-size: .87rem; color: var(--muted); }
+.sheet { display: inline-block; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; border-radius: 999px; padding: 1px 9px; vertical-align: middle; text-decoration: none !important; }
+.sheet.given { background: var(--success-soft); color: var(--success); border: 1px solid var(--success); }
+.sheet.recall { background: var(--danger-soft); color: var(--danger); border: 1px solid var(--danger); }
 a[data-pages] { text-decoration: underline dotted; text-underline-offset: 2px; cursor: zoom-in; }
 .pages { display: grid; gap: .8rem; margin-top: .6rem; }
 .pages figure { margin: 0; }
@@ -157,6 +160,7 @@ dialog.page-view .bar { display: flex; gap: .8rem; justify-content: space-betwee
   <li><strong>Calculator allowed</strong>. The <a href="../resources/part-2/exam-appendix.pdf" data-pages="exam-appendix:1-2">exam appendix</a> (queue formulas) is handed out.</li>
   <li><strong>Scope in the lecturer's words</strong> (Week 5 &amp; 8 transcripts): "the first five weeks" of Part 2 — random processes and queuing models. Week 5 covered probability preliminaries + lecture-01 to p17 (Poisson process); Week 6 DTMC; Week 7 DTMC steady state + CTMC to p67 (Eg 9.1 resume/discard); Week 8 birth–death, Little, M/M/1 incl. waiting-time distributions and stability. <strong>Week 9 (before the quiz) finishes M/M/1/N, M/M/m, Mᵇ/M/1 and "some questions"</strong> — re-sync that transcript.</li>
   <li>Queue formulas: "no need to memorize, it's in the exam appendix… we will have it in exam and also in quiz". What you must do yourself is <em>recognise</em> the model (M/M/1? M/M/m?) and check stability (\(\rho \lt 1\)).</li>
+  <li><strong>Formula badges in this page:</strong> <a class="sheet given" href="../resources/part-2/exam-appendix.pdf#page=1" data-pages="exam-appendix:1-1">On formula sheet</a> marks a formula printed on the appendix (click it to see the sheet) — know what it means and when to use it, but no need to memorise it. Only Module 8's four queue models (M/M/1, M/M/1/N, M/M/m, Mᵇ/M/1: \(\rho,\pi_0,\pi_k,L,Q,W,D\)) are on the sheet; <span class="sheet recall">Memorize</span> marks the Module 8 results that are not. <strong>Every formula in Modules 1–7 must be memorised.</strong></li>
   <li><strong>Only the keyed-in answer is marked</strong>, by exact comparison. Wrong number of decimal places, or an unreduced fraction, is wrong. There is no manual review.</li>
 </ul>
 <div class="why"><strong>Why this matters for how you work.</strong> Your method is invisible to the marker. So:
@@ -648,17 +652,18 @@ Balancing the flow across the "cut" between \(k-1\) and \(k\) gives \(\lambda_{k
 <p><strong>Notation</strong> \(A/S/m/K/L\): arrival process / service distribution / servers / capacity / population; "M" = Markovian (Poisson arrivals or exponential service).
 Symbols (all steady state): \(L\) mean number in <em>system</em>, \(Q\) mean number in <em>queue</em>, \(W\) mean time in system, \(D\) mean time in queue,
 \(\rho\) utilisation. <span class="src">Source: <a href="../resources/part-2/lecture-02-queuing-models.pdf#page=4" data-pages="lecture-02-queuing-models:4-5">lecture-02-queuing-models.pdf p4–5</a>; <a href="../resources/part-2/queue-summary.pdf" data-pages="queue-summary:1-3">queue-summary.pdf</a>.</span></p>
-<h3>Little's result — the one law you must know (not on the appendix)</h3>
+<h3>Little's result — the one law you must know (not on the appendix) <span class="sheet recall">Memorize</span></h3>
 \[ L = \lambda W,\qquad Q = \lambda D,\qquad W = D + \frac1\mu. \]
 <div class="why"><strong>Intuition:</strong> if 9 jobs arrive per hour and each stays 1/3 hour, then on average \(9\times\tfrac13 = 3\) are inside. So you only ever need one of \(L, Q, W, D\); Little gives the rest. Also: utilisation \(U = 1-\pi_0\), production rate \(=(1-\pi_0)\mu\) for one server.</div>
 
-<h3>M/M/1 (birth–death with \(\lambda_k=\lambda,\ \mu_k=\mu\))</h3>
+<h3>M/M/1 (birth–death with \(\lambda_k=\lambda,\ \mu_k=\mu\)) <a class="sheet given" href="../resources/part-2/exam-appendix.pdf#page=1" data-pages="exam-appendix:1-1">On formula sheet</a></h3>
+<p class="src">On the sheet: \(\rho,\pi_0,\pi_k,L,Q,W,D\). Not on it: the stability condition \(\rho\lt1\).</p>
 <p>The product formula gives \(\pi_k = \rho^k\pi_0\) with \(\rho = \lambda/\mu\). The geometric series converges only if \(\rho\lt 1\) (stability), then \(\pi_0 = 1-\rho\) and</p>
 \[ L = \frac{\rho}{1-\rho},\quad W = \frac{L}{\lambda} = \frac{1}{\mu-\lambda},\quad Q = L - \rho,\quad D = W - \frac1\mu. \]
 <p>Eg 3.1: \(\lambda=8,\ \mu=10\) → \(\rho=0.8,\ L=4,\ Q=3.2,\ W=0.5\) h, \(D=0.4\) h. Idle fraction \(=\pi_0 = 0.2\).
 The number in system \(N\) is a <em>modified geometric</em> r.v. (\(N+1\) is geometric with parameter \(1-\rho\)), which is where \(\pi_k = \rho^k(1-\rho)\) comes from.
 <span class="src">Source: <a href="../resources/part-2/lecture-02-queuing-models.pdf#page=5" data-pages="lecture-02-queuing-models:5-12">lecture-02 p5–12</a>; <a href="../resources/part-2/queue-handwritten-notes.pdf" data-pages="queue-handwritten-notes:1-7">queue-handwritten-notes</a> p7.1.</span></p>
-<h3>M/M/1 waiting-time <em>distributions</em> — taught in Week 8, <strong>not on the appendix</strong></h3>
+<h3>M/M/1 waiting-time <em>distributions</em> — taught in Week 8, <strong>not on the appendix</strong> <span class="sheet recall">Memorize</span></h3>
 <p>Under FIFO, a customer who finds \(k\) others waits for \(k\) exponential services (an Erlang-\(k\) sum). Summing over \(\pi_k\) gives
 <span class="src">(<a href="../resources/part-2/lecture-02-queuing-models.pdf#page=13" data-pages="lecture-02-queuing-models:13-16">lecture-02 p13–16</a>)</span>:</p>
 \[ P(d = 0) = 1-\rho,\qquad F_d(t) = P(d\le t) = 1 - \rho\,e^{-\mu(1-\rho)t}\ (t>0),\qquad F_w(t) = P(w\le t) = 1 - e^{-(\mu-\lambda)t}. \]
@@ -666,18 +671,21 @@ The number in system \(N\) is a <em>modified geometric</em> r.v. (\(N+1\) is geo
 Tail probabilities: \(P(w>t) = e^{-(\mu-\lambda)t}\), \(P(d>t) = \rho e^{-\mu(1-\rho)t}\). The means \(W, D\) do not depend on the queue discipline; these distributions assume FIFO.</p>
 <div class="pit"><strong>Pitfall.</strong> \(P(d>t)\) has the factor \(\rho\) in front; dropping it treats every customer as waiting. And \(\mu(1-\rho) = \mu-\lambda\): both exponents use the same rate.</div>
 
-<h3>M/M/1/N (room for N in total)</h3>
+<h3>M/M/1/N (room for N in total) <a class="sheet given" href="../resources/part-2/exam-appendix.pdf#page=1" data-pages="exam-appendix:1-1">On formula sheet</a></h3>
+<p class="src">On the sheet: \(\rho,\pi_0,\pi_k,L,Q,W,D\). Not on it: that the blocking probability is \(\pi_N\), and the accepted rate \(\lambda(1-\pi_N)\).</p>
 <p>Arrivals are blocked when \(N\) are present (\(\lambda_k = 0\) for \(k\ge N\)). Finite chain, so <strong>stable for any \(\rho\)</strong>:
 \(\pi_k = \rho^k(1-\rho)/(1-\rho^{N+1})\). The <strong>blocking probability</strong> is \(\pi_N\) (an arrival sees the time-average state). Eg 4.1 (\(N=4,\ \rho=0.8\)): \(\pi_0 = 0.297\).
 <span class="src">Source: <a href="../resources/part-2/lecture-02-queuing-models.pdf#page=16" data-pages="lecture-02-queuing-models:16-20">lecture-02 p16–20</a>.</span></p>
 <div class="pit"><strong>Convention trap.</strong> The appendix's M/M/1/N \(W\) and \(D\) equal \(L/\lambda\) and \(Q/\lambda\) with the <em>offered</em> \(\lambda\), which is what lecture Eg 4.1 does (\(W = 1.566/8\)). Physically, Little's law uses the <em>accepted</em> rate \(\lambda(1-\pi_N)\). If a quiz box asks for W of M/M/1/N, the appendix formula is the safe choice.</div>
 
-<h3>M/M/m (m servers, one shared queue)</h3>
+<h3>M/M/m (m servers, one shared queue) <a class="sheet given" href="../resources/part-2/exam-appendix.pdf#page=2" data-pages="exam-appendix:2-2">On formula sheet</a></h3>
+<p class="src">On the sheet: \(\rho=\lambda/(m\mu)\), \(\pi_0,\pi_k,L,Q,W,D\). Not on it: busy servers \(=\lambda/\mu\), stability \(\rho\lt1\).</p>
 <p>Deaths at rate \(k\mu\) while \(k\lt m\) servers are busy, \(m\mu\) once all are busy. With \(\rho = \lambda/(m\mu)\) (note the \(m\)!):</p>
 \[ \pi_0 = \Big[\frac{(m\rho)^m}{m!(1-\rho)} + \sum_{k=0}^{m-1}\frac{(m\rho)^k}{k!}\Big]^{-1},\qquad Q = \frac{\rho(m\rho)^m\pi_0}{m!(1-\rho)^2},\qquad L = Q + \frac\lambda\mu. \]
 <p>Average busy servers \(=\lambda/\mu\); each server's utilisation \(=\rho\), so each is idle a fraction \(1-\rho\). <span class="src">Source: <a href="../resources/part-2/lecture-02-queuing-models.pdf#page=22" data-pages="lecture-02-queuing-models:22-27">lecture-02 p22–27</a>.</span></p>
 
-<h3>Mᵇ/M/1 (batches of b)</h3>
+<h3>Mᵇ/M/1 (batches of b) <a class="sheet given" href="../resources/part-2/exam-appendix.pdf#page=2" data-pages="exam-appendix:2-2">On formula sheet</a></h3>
+<p class="src">On the sheet: \(\rho=b\lambda/\mu\), \(\pi_0,\pi_k,L,Q\), \(W=L/(\lambda b)\), \(D\).</p>
 <p>Batches arrive at rate \(\lambda\), each with \(b\) customers: \(\rho = b\lambda/\mu\), \(L = \rho(1+b)/(2(1-\rho))\), and Little uses the <em>customer</em> rate:
 \(W = L/(\lambda b)\). Eg 6.1 (\(b=2,\ \lambda=4,\ \mu=10\)): same \(\rho = 0.8\) as Eg 3.1 but \(L = 6\) vs 4, because each part waits for its batch-mates.
 <span class="src">Source: <a href="../resources/part-2/lecture-02-queuing-models.pdf#page=28" data-pages="lecture-02-queuing-models:28-33">lecture-02 p28–33</a>.</span></p>
@@ -783,7 +791,7 @@ Tail probabilities: \(P(w>t) = e^{-(\mu-\lambda)t}\), \(P(d>t) = \rho e^{-\mu(1-
 </ol>
 </div>
 <table class="data">
-  <tr><th>Not on the appendix — know cold</th><th>Formula</th></tr>
+  <tr><th>Not on the appendix — know cold <span class="sheet recall">Memorize</span></th><th>Formula</th></tr>
   <tr><td>Geometric</td><td>\(P(X=n)=(1-p)^{n-1}p,\ P(X>m)=(1-p)^m,\ E=1/p\)</td></tr>
   <tr><td>Exponential</td><td>\(P(X>x)=e^{-\lambda x},\ E=1/\lambda\); \(\min\) adds rates; \(P(X_1\lt X_2)=\lambda_1/(\lambda_1+\lambda_2)\)</td></tr>
   <tr><td>Poisson process</td><td>\(P(k\text{ in }t)=e^{-\lambda t}(\lambda t)^k/k!\); merge = add rates; split = \(p_i\lambda\)</td></tr>
