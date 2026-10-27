@@ -54,9 +54,20 @@
 | `resources/additional-materials/section-4.3-illustration.pdf` | all pages | Section 7 (partial) | Trajectory planning (partial) | Illustration supporting lecture section 4.3. |
 | `resources/additional-materials/section-4.4.1-cubic-polynomials.pdf` | all pages | Section 7 (partial) | Trajectory planning (partial) | Cubic-polynomial trajectory interpolation derivation. |
 | `resources/transcripts-raw/week-05-transcript.txt` … `week-08-transcript.txt` | 4 raw lecture transcripts | not yet covered | not yet covered | NTULearn Media Gallery machine transcripts (`26S1-EE6221-Week 5`…`8`), downloaded 2026-10-14; raw only, no cleaned `resources/week-0N-transcript.txt` yet. Week 7 recording opens with quiz seating instructions. |
+| `resources/part-2/part-2-lecture-01-introduction-and-sensors.pdf` | pp. 1-42 | not yet covered | not yet covered | Part 2 (Prof. Hu Guoqiang, "HGQ") Lec 1. **Quiz #2 scope** (Weeks 8-11 = Lec 1-4). Downloaded from NTULearn 2026-10-27. |
+| `resources/part-2/part-2-lecture-02-vision-sensors-and-systems.pdf` | pp. 1-51 | not yet covered | not yet covered | HGQ Lec 2. Quiz #2 scope. |
+| `resources/part-2/part-2-lecture-03-structure-and-pose-estimation.pdf` | pp. 1-46 | not yet covered | not yet covered | HGQ Lec 3. Quiz #2 scope. |
+| `resources/part-2/part-2-lecture-04-kalman-filter-sensor-integration.pdf` | pp. 1-45 | not yet covered | not yet covered | HGQ Lec 4. Quiz #2 scope. |
+| `resources/part-2/part-2-lectures-05-06-vision-based-control-estimation.pdf` | pp. 1-42 | not yet covered | not yet covered | HGQ Lec 5-6; outside Quiz #2 (part of Lec 5 is taught 6:30 pm on quiz day). |
+| `resources/part-2/part-2-summary.pdf` | pp. 1-88 | not yet covered | not yet covered | HGQ "Summary of Part 2"; p. 1 lists per-lecture scope and depth (e.g. Lec 1 "concepts, no math"). |
+| `quizzes/quiz-02-intel.md`, `quiz-02-mock-01.{html,md}`, `quiz-02-mock-01-check.py` | Lec 1 pp. 13-38; Lec 2 pp. 17, 30-32; Lec 3 pp. 13-19, 29, 43; Lec 4 pp. 15, 29-31, 33-45 | not applicable (assessment) | not applicable | UNOFFICIAL Quiz #2 prediction, added 2026-10-27. 10 True/False-with-justification items + one 20-mark two-sensor Kalman fusion question (40 marks, split estimated). HTML is answer-free (60-min countdown, sticky TOC, autosave, export); `.md` holds key, rubric, wrong paths and slide citations; the script asserts every numeric key (sympy). Intel cites the Week 8 transcript (quiz = Lec 1-4, exam = Lec 2-4, GPS counts as both internal and external). |
+| `assignments/ca2-assignment-brief-2026.pdf` | all pages | not applicable | not applicable | CA2 individual literature-review assignment (100 marks), PDF via NTULearn, due 7 Nov 2026 23:59 (UTC+8). |
 
 ## Pending and unresolved
 
+- **Quiz #2 (official, NTULearn 26 Oct 2026):** Wed 4 Nov 2026, 8:00-9:00 pm, LT19A; topic Weeks 8-11 (HGQ Lec 1-4), short questions; paper-and-pen, closed book, **no calculator**, no phone/laptop/iPad; 15%; sit per Quiz #1 arrangement; photo ID; leave LT 7:35-7:50 pm. Week 9-11 transcripts not yet on the Media Gallery (no Attachments tab, checked 2026-10-27).
+- **CA2 assignment** due Sat 7 Nov 2026 23:59 (UTC+8): see `assignments/ca2-assignment-brief-2026.pdf`.
+- Quiz #2 mock 1 built 2026-10-27 (quiz-prep stages 1-3); stages 4-6 (sit, grade, fold into notes) pending the learner. Part 2 material is not yet in either LaTeX note. RedNote re-check blocked (logged out).
 - **Week 5–8 transcripts are raw only** (`resources/transcripts-raw/week-05…08-transcript.txt`): clean to `resources/week-0N-transcript.txt`, then cover in both notes.
 - Robot control, mobile-robot kinematics, and intelligent-sensor material remain pending in both notes. Course-specific public slides are now archived, but they have not yet been reviewed or synthesised.
 - The public exams and assignment files are validated and indexed in the archive `README.md`; their calculations remain unchecked.
@@ -70,6 +81,7 @@
 
 ## File-organization record
 
+- 2026-10-27 NTULearn download (moved from `~/Downloads`): `Lec 1 - Sensors (3hrs).pdf -> resources/part-2/part-2-lecture-01-introduction-and-sensors.pdf`; `Lec 2 - Vision sensors and systems (3hrs) 202403.pdf -> resources/part-2/part-2-lecture-02-vision-sensors-and-systems.pdf`; `Lec 3 - Structure and pose estimation (3hrs)(4).pdf -> resources/part-2/part-2-lecture-03-structure-and-pose-estimation.pdf`; `Lec 4 - Kalman Filter and sensor integration(2).pdf -> resources/part-2/part-2-lecture-04-kalman-filter-sensor-integration.pdf`; `Lecs 5-6  - Vision-based control and estimation(1).pdf -> resources/part-2/part-2-lectures-05-06-vision-based-control-estimation.pdf`; `EE6221 Part 2 Summary (HGQ).pdf -> resources/part-2/part-2-summary.pdf`; `EE6221 CA2-Assignment 2026.10.pdf -> assignments/ca2-assignment-brief-2026.pdf`. New directories `resources/part-2/`, `assignments/`.
 - 2026-10-14: added raw `resources/transcripts-raw/week-05…08-transcript.txt` from the NTULearn Media Gallery via `ntulearn-organize --layout "{prefix}-{number}/resources/transcripts-raw/{slug}-transcript.txt"`. Re-downloaded Weeks 1–4 are byte-identical to the existing raw files (left unchanged), so the existing raw files are the Media Gallery transcripts.
 - 2026-09-23: user-supplied WeChat temporary file `6221 tutor(1).pdf -> resources/ee6221-tutor-exam-review-2026.pdf` (copied, not moved; original preserved). Its slide-11 diagram was cropped into `quizzes/quiz-assets/ee6221-2022-2023-s2-q1-seven-joint-figure.png` for the practice page.
 - 2026-09-23: `resources/EE6221_Assignment_solution.pdf -> resources/exercises-kinematics-solutions.pdf` (descriptive name for the supplied three-page exercise solution; content preserved).
@@ -92,6 +104,8 @@
 - 2026-09-06 Quiz 1 mock: new `quizzes/` directory (canonical home for quiz practice, per `CLAUDE.md`). Added `quiz-01-intel.md`, `quiz-01-mock-01.html`, `quiz-01-mock-01.md`, and `quiz-assets/` (vendored copy of `output/self-studying/self-study-assets/` — KaTeX + `render-math.js`, duplicated in-directory so the page loads from `file://` in Safari without `..` subresource paths). No source material moved or renamed. The separate research handover at `~/Projects/output/quiz-test-prep/` now points here as the canonical location.
 
 ## Update record
+
+- 2026-10-27: NTULearn download of Part 2 (HGQ Lec 1-6 + summary) and the CA2 brief (see file-organization record); Quiz #2 intel, mock 1 (answer-free HTML), key/rubric and check script added. `python3 quizzes/quiz-02-mock-01-check.py` passes; page checked in Chrome (50 KaTeX expressions, 0 errors, TOC/tally/export work, no horizontal overflow). No `.tex` changed.
 
 - 2026-10-14 transcripts: filed NTULearn Week 5–8 raw lecture transcripts; source table + pending list updated. No note content changed.
 - 2026-09-23: Marked Mock 5 Q2 attempt (13/20; appended to `quizzes/quiz-01-mock-05-attempt-2026-09-23-marked.md`, scan `quizzes/attempts/quiz-01-mock-05-q2-2026-09-23.jpg`). Added a "length along a joint axis is a $d$" pitfall (roll-about-link case) with $x_k\perp z_{k-1}$ and tip-walk checks to both notes. Both PDFs recompiled with XeLaTeX. No files moved or renamed.

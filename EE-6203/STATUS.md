@@ -56,6 +56,8 @@
 | `resources/lecture-notes-weeks-01-04.pdf` (Chapters 1-3 re-read for the evaluation set) | 8-20, 24-48, 49-70, 73-79, 80-93, 94-121, 122-138 | `quizzes/quiz-01-evaluation-set.html` topic groups A-J; `quizzes/quiz-01-evaluation-set-solutions.tex` sections 1.1-1.10 | not applicable (evaluation set is not a note) | Every one of the 44 items carries the page range it is drawn from. Table 2-1 (pp. 32-33), Table 3-1 (pp. 122-126) and the digital-PID derivation (pp. 130-135) were re-read page by page rather than taken from the existing notes; the five Table 3-1 configurations were re-derived independently from the starred-transform algebra and agree with the printed results. |
 | `resources/public-archive-2026-08-24/topic-explainers/{3.Table3-3的证明，3.3.7.pdf,EE6203-热门考点分析.xlsx}` | 8 PDF pages; workbook Sheet1 A1:J153 | HTML Modules 4 and 6; printable Appendix A: Archetypes 4 and 6, D4 and D7 | Quiz 1 appendix: topology and archive-backed exam checks | Supplementary student material used as topic-pattern evidence and to broaden sampler-topology practice. |
 | `resources/transcripts-raw/week-08-transcript.txt`, `week-09-transcript.txt` | 2 raw lecture transcripts | not yet covered | not yet covered | NTULearn Media Gallery machine transcripts (`26S1-EE6203-Week 8`, `-Week 9`; Week 9 = LPH "Lecture No 5", uploaded 12 Oct), downloaded 2026-10-14; raw only, no cleaned `resources/week-0N-transcript.txt` yet. |
+| `resources/lecture-notes-chapters-05-06.pdf` | pp. 1-151 | not yet covered | not yet covered | C. Wen 2nd part: Ch 5 "Design of Discrete-time Controllers Based on Transfer Functions" and Ch 6. **Quiz 3 material** (scope not yet officially stated). Downloaded from NTULearn 2026-10-27. |
+| `quizzes/quiz-01-03-seating-arrangement.pdf`, `quizzes/quiz-01-03-grouping.pdf` | all pages | not applicable | not applicable | Official grouping and seating for Quiz 1 and Quiz 3. |
 
 | User-supplied appshots: Xiaohongshu `NTU EE6203 quiz1` and a Quiz 1 topic summary (2026-08-31) | Two recalled parts; no authoritative page range | `quizzes/quiz-01-prediction-papers.html` Papers 1-4 and twist bank | not applicable (prediction set is not a note) | Unofficial recall evidence used only to fix the question *format*: one short-answer question, two parts, 30 minutes, part (a) restricted to a definition-only derivation, part (b) an open-loop sampler/ZOH/plant output with a final-value ruling. No recalled numbers are reproduced; every system, input, key and mark scheme is constructed here from lecture PDF pp. 21-70 and 94-143. |
 
@@ -71,6 +73,7 @@
 
 ## Pending topics and resources
 
+- **Quiz 3 (NTULearn, 14 Oct 2026):** Sat 7 Nov 2026, 15%, C. Wen's 2nd part (`resources/lecture-notes-chapters-05-06.pdf`); time, venue and rules "to be announced later"; grouping/seating as Quiz 1. Week 10-11 recordings (Ch 5 frequency response / transfer-function design) have no transcript attachment yet (checked 2026-10-27).
 - **Week 8–9 transcripts are raw only** (`resources/transcripts-raw/week-08…09-transcript.txt`): clean to `resources/week-0N-transcript.txt` and mine for notes/Quiz 2.
 - The evaluation set covers Chapters 1-3 only and is scored by topic; it is a measurement instrument, not additional teaching material, and deliberately contains no derivations. Its solutions PDF holds the dependency-ordered triage and the minimum-viable study path.
 - The newly supplied Week 3 transcript and exercise/solution pair have been reviewed at Quiz 1 depth. The exercise set is mapped completely, while the notes develop representative methods rather than reproduce all 26 solution pages.
@@ -81,6 +84,7 @@
 
 ## File-organization record
 
+- 2026-10-27 NTULearn download (moved from `~/Downloads`): `Lecture Notes_Chap 5-6(WCY).pdf -> resources/lecture-notes-chapters-05-06.pdf`; `Seating Arrangement for Quiz 1 and Quiz 3.pdf -> quizzes/quiz-01-03-seating-arrangement.pdf`; `Grouping - EE6203.pdf -> quizzes/quiz-01-03-grouping.pdf`.
 - 2026-10-14: added raw `resources/transcripts-raw/week-08-transcript.txt` and `week-09-transcript.txt` from the NTULearn Media Gallery via `ntulearn-organize --layout "{prefix}-{number}/resources/transcripts-raw/{slug}-transcript.txt"`. Re-downloaded Weeks 1–6 are byte-identical to the existing raw files (left unchanged). The gallery entry titled `26S1-EE6203-Week 7` is the cancelled 21 Sep session (transcript is only `Okay.`), so it was **not** filed; `week-07` stays the 26 Sep make-up recording `26S1-EE6203-C` (byte-identical re-download confirmed).
 - 2026-10-01: learner-supplied 26 Sep recording, copied (original left in Downloads): `71027 - 0_b9v7ti93 - PID 117.txt -> resources/transcripts-raw/week-07-transcript.txt`; whitespace-collapsed copy at `resources/week-07-transcript.txt`. New files `notes/quiz2-prep-learning.html` and `notes/quiz2-prep-learning-check.py`; nothing moved or renamed.
 - 2026-09-24: `~/Downloads/644.JPG -> quizzes/quiz-02-announcement-slide.jpg` (copied; original left in Downloads).
@@ -107,6 +111,8 @@
 - `notes.pdf -> notes/quiz1-prep-reviewing-pre-rename-2026-08-24.pdf` (superseded review build preserved; current output remains `notes/quiz1-prep-reviewing.pdf`)
 
 ## Update record
+
+- 2026-10-27: NTULearn download of C. Wen's Chapter 5-6 notes and the Quiz 1/3 grouping and seating PDFs (see file-organization record); Quiz 3 arrangement recorded under Pending. No note content changed; Quiz 3 prep not yet started.
 
 - 2026-10-14 transcripts: filed NTULearn Week 8–9 raw lecture transcripts; source table + pending list updated. No note content changed.
 - 2026-10-05: Added `quizzes/quiz-02-transfer-function-explainer.html` and linked it from the Test A solutions page (Q1(iii), Q2(iii)). New file only; nothing moved or renamed; no `.tex` changed.

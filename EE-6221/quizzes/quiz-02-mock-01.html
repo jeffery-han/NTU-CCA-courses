@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EE6221 Quiz 2 Mock 1</title>
+<link rel="stylesheet" href="quiz-assets/katex/katex.min.css">
+<style>
+:root { --ink:#172334; --muted:#435366; --bg:#eef2f5; --card:#fff; --line:#c8d2dc; --pill:#f3f6f9; --accent:#205d87; --ok:#1d7a46; --warn:#b47412; --warnbg:#fff5e1;
+        font: 17px/1.55 system-ui,sans-serif; color: var(--ink); background: var(--bg); }
+@media (prefers-color-scheme: dark) { :root { --ink:#dfe7ef; --muted:#9fb0c2; --bg:#11181f; --card:#18222c; --line:#34475a; --pill:#1f2c38; --accent:#6fb3e0; --ok:#5fc48a; --warn:#e0a54a; --warnbg:#2b2416; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); }
+.app { display: grid; grid-template-columns: 270px minmax(0,1fr); }
+nav { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 20px 16px 5rem; border-right: 1px solid var(--line); background: var(--card); font-size: .9rem; }
+nav h2 { font-size: 1rem; margin: 0 0 .6rem; } nav a { color: var(--ink); text-decoration: none; }
+nav ol { list-style: none; padding: 0; margin: 0; } nav li { display: flex; justify-content: space-between; gap: .5em; padding: .25em .4em; border-radius: 6px; }
+nav li:hover { background: var(--pill); } nav .sc { color: var(--muted); font-variant-numeric: tabular-nums; } nav .sc.done { color: var(--ok); font-weight: 600; }
+nav .tools { margin-top: 1rem; border-top: 1px solid var(--line); padding-top: .7rem; color: var(--muted); }
+main { min-width: 0; max-width: 880px; margin: 24px auto; padding: 34px 46px 6rem; background: var(--card); box-shadow: 0 2px 18px #14263a19; }
+h1 { margin: 0; line-height: 1.2; } h2.sec { margin: 2.2rem 0 .5rem; border-top: 2px solid var(--accent); padding-top: 1rem; }
+h3 { margin: 1.8rem 0 .3rem; } p,li { max-width: 76ch; }
+.meta { color: var(--muted); } .notice { border-left: 4px solid var(--warn); background: var(--warnbg); padding: .65rem 1rem; }
+.marks { float: right; color: var(--muted); font-size: .92rem; }
+.tf { display: flex; gap: 1.2em; margin: .5em 0; } .tf label { display: flex; gap: .35em; align-items: center; cursor: pointer; }
+.katex-display { overflow-x: auto; overflow-y: hidden; }
+.answered-toggle { display: flex; align-items: center; gap: .55em; margin: .6em 0 .2em; font-size: .92rem; padding: .45em .7em; border: 1px dashed var(--line); border-radius: 8px; background: var(--pill); }
+textarea.work { width: 100%; min-height: 2.6em; font: 14px ui-monospace, monospace; padding: .6em; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); resize: vertical; }
+#bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 5; background: var(--card); border-top: 1px solid var(--line); padding: .55em 1rem; display: flex; gap: .7em; align-items: center; justify-content: center; flex-wrap: wrap; font-size: .92rem; }
+#timer { font: 600 1.05rem ui-monospace, monospace; } #timer.over { color: #c0392b; }
+button { font: inherit; padding: .4em .85em; border: 1px solid var(--line); border-radius: 8px; background: var(--pill); color: var(--ink); cursor: pointer; }
+dialog { max-width: 46rem; width: 92%; border: 1px solid var(--line); border-radius: 12px; background: var(--card); color: var(--ink); }
+dialog textarea { width: 100%; min-height: 20em; font: 12px ui-monospace, monospace; background: var(--bg); color: var(--ink); }
+@media (max-width: 860px) { .app { display: block; } nav { position: static; height: auto; padding-bottom: 1rem; border-right: 0; border-bottom: 1px solid var(--line); }
+  nav ol { display: grid; grid-template-columns: 1fr 1fr; gap: 0 .6em; } main { margin: 0; padding: 20px 16px 6rem; box-shadow: none; } }
+@media print { #bar, nav, .answered-toggle, textarea.work { display: none; } .app { display: block; } main { margin: 0; padding: 0; box-shadow: none; max-width: none; } }
+</style>
+<script defer src="quiz-assets/katex/katex.min.js"></script>
+<script defer src="quiz-assets/katex/contrib/auto-render.min.js"></script>
+<script defer src="quiz-assets/render-math.js"></script>
+</head>
+<body><div class="app">
+<nav><h2>Quiz 2 · Mock 1</h2><ol id="toc"></ol>
+<div class="tools">Answered: <span id="tally">0</span><br>Key (after attempting): <code>quiz-02-mock-01.md</code><br>Intel: <code>quiz-02-intel.md</code></div></nav>
+<main>
+<h1>EE6221 · Quiz #2 (Part 2, Lec 1–4) · Mock 1</h1>
+<p class="meta">40 marks · 60 minutes · closed book · <strong>no calculator</strong> · paper and pen</p>
+<p class="notice"><strong>Unofficial prediction.</strong> The official notice says only "short questions" on the four lectures of Weeks 8–11, 60 minutes, no calculator. The format used here comes from an unofficial student report: about 10 True/False items with a justification each, plus one short-answer question. The mark split is estimated. Sit it cold. Write the justifications and Section B on paper, and click only the True/False choices.</p>
+
+<h2 class="sec" id="secA">Section A · True or False? Justify in one or two lines <span class="marks">20 marks</span></h2>
+<p>Each item: 1 mark for the correct verdict, 1 mark for the justification.</p>
+
+<div data-item="A1"><h3>A1 <span class="marks">2</span></h3>
+<p>Calibrating a sensor removes its random errors.</p></div>
+
+<div data-item="A2"><h3>A2 <span class="marks">2</span></h3>
+<p>An ultrasonic range sensor receives the echo of its pulse 30 ms after transmission. Take the speed of sound as 340 m/s. Then the object is 5.1 m from the sensor.</p></div>
+
+<div data-item="A3"><h3>A3 <span class="marks">2</span></h3>
+<p>The main benefit of fusing <em>complementary</em> sensors is a reduction in the uncertainty of a feature that each sensor can already perceive by itself.</p></div>
+
+<div data-item="A4"><h3>A4 <span class="marks">2</span></h3>
+<p>A camera has an intrinsic calibration matrix with \(f\sigma_x = f\sigma_y = 500\) pixels, skew \(\alpha = 0\), and principal point \((u_0, v_0) = (320, 240)\). A feature point has camera-frame coordinates \(\bar m = [0.2,\ -0.1,\ 2]^T\) m. Its pixel coordinates are \((u, v) = (370, 215)\).</p></div>
+
+<div data-item="A5"><h3>A5 <span class="marks">2</span></h3>
+<p>If the pixel coordinates \(p\) of a feature point and the intrinsic matrix \(A\) are known, then the point's Euclidean coordinates in the camera frame are \(\bar m = A^{-1}p\).</p></div>
+
+<div data-item="A6"><h3>A6 <span class="marks">2</span></h3>
+<p>Take eight or more matched feature points in two views, not all coplanar. The essential matrix \(E = [x]_\times R\) estimated from them gives the rotation \(R\) and the translation \(x\), including the magnitude of \(x\).</p></div>
+
+<div data-item="A7"><h3>A7 <span class="marks">2</span></h3>
+<p>Every essential matrix \(E = [x]_\times R\) with \(x \neq 0\) has two equal non-zero singular values and one zero singular value.</p></div>
+
+<div data-item="A8"><h3>A8 <span class="marks">2</span></h3>
+<p>The four-point (homography) method cannot be used when all the matched feature points lie on one plane.</p></div>
+
+<div data-item="A9"><h3>A9 <span class="marks">2</span></h3>
+<p>If random variables \(X\) and \(Y\) are uncorrelated, then \(V(X - Y) = V(X) - V(Y)\).</p></div>
+
+<div data-item="A10"><h3>A10 <span class="marks">2</span></h3>
+<p>Consider the scalar Kalman filter with \(A = H = 1\). As the measurement-noise variance \(R \to \infty\), the Kalman gain \(K \to 0\), so the update effectively ignores the new measurement.</p></div>
+
+<h2 class="sec" id="secB">Section B · Short answer <span class="marks">20 marks</span></h2>
+<div data-item="B" data-paper><h3>B · Fusing two sensors <span class="marks">20</span></h3>
+<p>Two sensors \(S_1\) and \(S_2\) measure a constant scalar state \(x\), so \(x_{k+1} = x_k\):</p>
+\[ z_1 = x + v_1, \qquad z_2 = x + v_2 , \]
+<p>where \(v_1\) and \(v_2\) are independent, zero-mean Gaussian noises with variances \(\sigma_1^2\) and \(\sigma_2^2\). Let \(\hat x_k\) be the current estimate, with estimation error \(\tilde x_k = x - \hat x_k\), \(E[\tilde x_k] = 0\) and \(P_k = E[\tilde x_k^2]\). Assume \(\tilde x_k\), \(v_1\) and \(v_2\) are mutually uncorrelated.</p>
+<ol type="a">
+<li>The two measurements arrive together and are fused by
+\[ \hat x_{k+1} = \hat x_k + K_1(z_1 - \hat x_k) + K_2(z_2 - \hat x_k). \]
+Show that \(P_{k+1} = (1 - K_1 - K_2)^2 P_k + K_1^2\sigma_1^2 + K_2^2\sigma_2^2\). <span class="marks">(4)</span></li>
+<li>Find the gains \(K_1\) and \(K_2\) that minimise \(P_{k+1}\). Explain in one sentence which sensor receives the larger gain. <span class="marks">(6)</span></li>
+<li>Now the measurements arrive one after the other. \(S_1\) reads \(z_1 = 10\) with \(\sigma_1^2 = 1\); use this as the prior, \(\hat x_0 = z_1\), \(P_0 = \sigma_1^2\). Then \(S_2\) reads \(z_2 = 15\) with \(\sigma_2^2 = 4\). Compute the Kalman gain, the fused estimate \(\hat x\), and its error variance. <span class="marks">(6)</span></li>
+<li>A third sensor, with noise variance 4 and independent of the other two, is then fused in the same way. Find the new error variance. Give one reason fusion lowers the variance, and one situation in which this benefit would fail. <span class="marks">(4)</span></li>
+</ol></div>
+<p class="meta">End of paper.</p>
+</main></div>
+
+<div id="bar"><span id="timer">60:00</span><button id="start">Start</button><button id="pause">Pause</button><button id="reset">Reset</button><button id="export">Export</button><button id="wipe">Clear saved</button></div>
+<dialog id="dlg"><p>Copy this into a new chat with your photographed working for grading.</p><textarea id="out" readonly></textarea>
+<p><button id="copy">Copy</button> <button id="dl">Download .txt</button> <button id="close">Close</button></p></dialog>
+
+<script>
+(function () {
+  var KEY = "ee6221-quiz2-mock1-v1", LIMIT = 3600, st = {};
+  try { st = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { st = {}; }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
+  var items = Array.prototype.slice.call(document.querySelectorAll("[data-item]")), toc = document.getElementById("toc");
+  items.forEach(function (box) {
+    var id = box.getAttribute("data-item"), html = "";
+    if (!box.hasAttribute("data-paper")) {
+      html += '<div class="tf">' + ["True", "False"].map(function (v) {
+        return '<label><input type="radio" name="' + id + '" value="' + v + '" data-q="' + id + '"> ' + v + '</label>'; }).join("") + "</div>";
+    }
+    html += '<label class="answered-toggle"><input type="checkbox" data-q="' + id + '-paper"> Answered on paper</label>';
+    html += '<textarea class="work" data-q="' + id + '-note" placeholder="Optional typed note (handwritten working is what gets graded)"></textarea>';
+    box.insertAdjacentHTML("beforeend", html);
+    box.id = "q-" + id;
+    toc.insertAdjacentHTML("beforeend", '<li><a href="#q-' + id + '">' + id + '</a><span class="sc" id="sc-' + id + '">·</span></li>');
+  });
+  function isDone(id) { return id === "B" ? !!st["B-paper"] : !!st[id] && !!st[id + "-paper"]; }
+  function tally() {
+    var n = 0;
+    items.forEach(function (b) { var id = b.getAttribute("data-item"), d = isDone(id), s = document.getElementById("sc-" + id);
+      s.textContent = d ? "✓" : (st[id] || st[id + "-paper"] ? "½" : "·"); s.className = "sc" + (d ? " done" : ""); if (d) n++; });
+    document.getElementById("tally").textContent = n + " / " + items.length;
+  }
+  document.querySelectorAll("[data-q]").forEach(function (el) {
+    var q = el.getAttribute("data-q");
+    if (el.type === "radio") { el.checked = st[q] === el.value; el.addEventListener("change", function () { st[q] = el.value; save(); tally(); }); }
+    else if (el.type === "checkbox") { el.checked = !!st[q]; el.addEventListener("change", function () { st[q] = el.checked; save(); tally(); }); }
+    else { el.value = st[q] || ""; el.addEventListener("input", function () { st[q] = el.value; save(); }); }
+  });
+  tally();
+  var t = st.elapsed || 0, tick = null, tEl = document.getElementById("timer");
+  function fmt(s) { var r = Math.abs(LIMIT - s); return (s > LIMIT ? "+" : "") + Math.floor(r / 60) + ":" + ("0" + r % 60).slice(-2); }
+  function render() { tEl.textContent = fmt(t); tEl.className = t > LIMIT ? "over" : ""; }
+  document.getElementById("start").onclick = function () { if (!tick) tick = setInterval(function () { t++; st.elapsed = t; save(); render(); }, 1000); };
+  function pause() { clearInterval(tick); tick = null; }
+  document.getElementById("pause").onclick = pause;
+  document.getElementById("reset").onclick = function () { pause(); t = 0; st.elapsed = 0; save(); render(); };
+  document.getElementById("wipe").onclick = function () { if (confirm("Clear saved answers and timer?")) { try { localStorage.removeItem(KEY); } catch (e) {} location.reload(); } };
+  render();
+  var stems = { A1: "calibration removes random error", A2: "ultrasonic 30 ms -> 5.1 m", A3: "complementary fusion reduces uncertainty", A4: "pinhole pixel (370,215)",
+    A5: "Euclidean = A^-1 p", A6: "E gives |x|", A7: "E singular values (s,s,0)", A8: "homography fails if coplanar", A9: "V(X-Y)=V(X)-V(Y)", A10: "R->inf => K->0", B: "two-sensor fusion (a)-(d)" };
+  function build() {
+    var L = ["EE6221 Quiz #2 Mock 1 (unofficial)", "Key: EE-6221/quizzes/quiz-02-mock-01.md", "Marks: A 10x2 (verdict 1 + justification 1), B 20 (4/6/6/4) = 40",
+      "Elapsed: " + Math.floor(t / 60) + " min " + t % 60 + " s (limit 60 min)", ""];
+    items.forEach(function (b) { var id = b.getAttribute("data-item");
+      L.push(id + " [" + stems[id] + "]: " + (id === "B" ? "" : (st[id] || "<blank>") + " | ") + (st[id + "-paper"] ? "answered on paper" : "not marked on paper") +
+        (st[id + "-note"] ? " | note: " + st[id + "-note"].replace(/\s+/g, " ") : "")); });
+    L.push("", "Attach photos of the handwritten justifications and Section B.");
+    return L.join("\n");
+  }
+  var dlg = document.getElementById("dlg"), out = document.getElementById("out");
+  document.getElementById("export").onclick = function () { out.value = build(); dlg.showModal(); };
+  document.getElementById("close").onclick = function () { dlg.close(); };
+  document.getElementById("copy").onclick = function () { out.select(); try { navigator.clipboard.writeText(out.value); } catch (e) { document.execCommand("copy"); } };
+  document.getElementById("dl").onclick = function () { var a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([out.value], { type: "text/plain" })); a.download = "ee6221-quiz2-mock1-attempt.txt"; a.click(); };
+})();
+</script>
+</body>
+</html>
