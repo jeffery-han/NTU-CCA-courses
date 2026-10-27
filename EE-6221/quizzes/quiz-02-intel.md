@@ -13,6 +13,27 @@
 - **GPS:** "We include GPS in both internal and external state sensors." Resolves the Lec 1 p. 17 listing (GPS/INS/compass as proprioceptive). Do not answer "GPS is only exteroceptive".
 - In-class discussion questions (Hu: "this is not a quiz", but Q5 is "a question to help you prepare for the quiz"): (1) can a robot act intelligently with only internal sensors? (2) why use multiple sensors? (3) which of camera / LiDAR / ultrasonic are active? (4) a sensor gives the same wrong reading every time — accurate or precise? (5) why does integrating IMU data forever drift? (6) ultrasonic TOF: 10 ms at 340 m/s → 3.4 m round trip → **1.7 m**. These define the expected *style*: concept + one-line reason, small hand calculations.
 
+## Lecturer statements, Weeks 9–10 (`resources/transcripts-raw/week-09/10-transcript.txt`, machine transcripts, filed 2026-10-27)
+
+- **Lec 2 key points (Week 9):** the three coordinate types (Euclidean m̄, normalised m, pixel p) and their meanings, plus `p = A m`. For the entries of A: "don't have to remember them". Just know A is the calibration matrix, f is the focal length and (u0, v0) is the principal point. Nonlinear distortion parameters are "not the focus of this class".
+- **Week 9 in-class questions (same style as the Week 8 set):**
+  1. Benefits of vision feedback: rich data, passive, works without absolute position.
+  2. A one-eyed distance estimate of a bottle: why one image cannot fix size and distance.
+  3. Do points on the same ray share an image point? (yes)
+  4. A straight edge appears curved: distortion or defocus? (distortion changes geometry; defocus only blurs)
+  5. A 32×32 grayscale image with 8 bits per pixel: number of levels and bytes (256 levels, 1024 bytes; answer agent-derived).
+  6. A point's z doubles with x, y fixed: normalised coordinates halve.
+  7. What camera calibration needs: known target geometry plus image measurements.
+- **Lec 3 scope (Week 10), the clearest scope signal so far:** the essential-matrix and homography methods are "two of the key points for part two".
+  - **Most important:** slide 14, how to get the essential constraint (derivation from `m̄_j = R m̄_j* + x`).
+  - **Homography key points:** slide 31 (definition and derivation) and slide 32 (how to calculate H).
+  - **"Not required … will not be tested in quiz or in final exam":** slide 18 (decomposing E into R, x′) and slides 33–36 (decomposing H; all three singular-value cases).
+  - **Choosing the correct solution:** "you don't have to derive this detailed mathematics", only understand the physical constraints (positive depth).
+  - The slide 17 noise correction was demonstrated as diag(0.85, 0.96, 0.06) → diag(1, 1, 0).
+- **Impact on mock 1:** none of its items depend on slide 18 or slides 33–36, so no change is needed.
+- **Impact on the prediction:** besides the Kalman derivation, the **essential-constraint derivation (slide 14)** and the **homography derivation and its computation (slides 31–32)** are now strong candidates for the short-answer derivation. Mock 1 does not drill them.
+- Lec 4 (Kalman filter) is lectured in Week 11 (28 Oct); re-sync that transcript afterwards.
+
 ## Sources consulted
 
 | # | Source | Date | What it contains | Evidence class |
