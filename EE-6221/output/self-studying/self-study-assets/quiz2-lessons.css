@@ -1,0 +1,19 @@
+/* Quiz 2 page: sticky contents sidebar + slide pop-ups, on top of visual-lessons.css */
+.app{display:grid;grid-template-columns:270px minmax(0,1fr)}
+.content{min-width:0}
+aside{position:sticky;top:0;height:100vh;overflow-y:auto;padding:28px 18px;border-right:1px solid #d8e1dd;background:#eef3f0}
+.side-title{font-weight:700;line-height:1.35;margin:4px 0 16px}
+aside nav{display:block;padding:0;max-width:none}
+aside nav a{display:flex;justify-content:space-between;gap:8px;padding:8px 10px;margin:4px 0;border-radius:10px;background:#fff;border:1px solid #cbd8d4;text-decoration:none;font-size:.86rem}
+.score{font-variant-numeric:tabular-nums;color:#7b6a52}.score.complete{color:#287052;font-weight:700}
+.side-tools{font-size:.82rem;margin-top:18px}
+select{font:inherit;padding:6px 10px;border-radius:8px;border:1px solid #92aaa6;background:#fff}
+h3{margin-top:28px}
+.flow .katex span{flex:none;min-width:0} /* visual-lessons.css flexes every .flow span, KaTeX internals included */
+a[data-pages]{text-decoration:underline dotted;cursor:zoom-in}
+dialog.page-view{width:min(820px,96vw);max-height:92vh;padding:1rem;border:1px solid #cbd8d4;border-radius:12px}
+dialog.page-view::backdrop{background:rgb(0 0 0 / .55)}
+dialog.page-view .bar{display:flex;gap:.8rem;justify-content:space-between;align-items:center;position:sticky;top:-1rem;background:#fff;padding:.3rem 0;z-index:1;font-size:.9rem}
+dialog.page-view img{display:block;width:100%;height:auto;margin:.6rem 0;border:1px solid #d8e1dd}
+@media(max-width:860px){.app{display:block}aside{position:static;height:auto;border-right:0;border-bottom:1px solid #d8e1dd}aside nav{display:grid;grid-template-columns:1fr 1fr;gap:6px}aside nav a{margin:0}}
+@media print{aside,dialog{display:none}.app{display:block}}

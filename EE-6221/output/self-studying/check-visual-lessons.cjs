@@ -29,4 +29,24 @@ for(const m of page.matchAll(/(?:href|src)="([^"]+)"/g)) {
  if(m[1].startsWith('#')) assert.ok(ids.includes(m[1].slice(1)));
  else if(!m[1].includes('://')) assert.ok(fs.existsSync(path.resolve(__dirname,m[1])),m[1]);
 }
-console.log('PASS: numerical edge cases, 6 checks, '+count+' KaTeX expressions, IDs and local links.');
+// Quiz 2 page: helpers, IDs, links (PDF #page anchors), and every pop-up slide image.
+const Q2=require('./self-study-assets/quiz2-lessons.js');
+assert.deepEqual(Q2.tof(340,0.01),{roundTrip:3.4,range:1.7});
+assert.deepEqual(Q2.project(800,400,300,0.3,0.6,3).map(Math.round),[480,460]);
+assert.deepEqual(Q2.project(800,400,300,0.6,1.2,6),Q2.project(800,400,300,0.3,0.6,3));
+const r=Q2.fuse(20,4,26,2);near(r.x,24);near(r.P,4/3);near(r.K,2/3);
+for(const [z1,s1,z2,s2] of [[0,1,10,1],[3,.5,9,10],[20,10,10,.5]]) {
+ const q=Q2.fuse(z1,s1,z2,s2);near(q.w1+q.w2,1);assert.ok(q.P<Math.min(s1,s2));near(q.x,z1+q.K*(z2-z1));
+}
+const page2=fs.readFileSync(path.join(__dirname,'beginner-notes-quiz-2.html'),'utf8'),ids2=[...page2.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
+assert.equal(new Set(ids2).size,ids2.length,'Duplicate IDs (quiz 2)');
+for(const m of page2.matchAll(/(?:href|src)="([^"]+)"/g)) {
+ if(m[1].startsWith('#')) assert.ok(ids2.includes(m[1].slice(1)),m[1]);
+ else if(!m[1].includes('://')) assert.ok(fs.existsSync(path.resolve(__dirname,m[1].split('#')[0])),m[1]);
+}
+let pops=0;
+for(const m of page2.matchAll(/data-pages="([^:]+):(\d+)-(\d+)"/g)) for(let p=+m[2];p<=+m[3];p++,pops++)
+ assert.ok(fs.existsSync(path.join(__dirname,'quiz2-pages',m[1]+'-p'+String(p).padStart(3,'0')+'.jpg')),m[1]+' p'+p);
+assert.ok(!/Lec [1-4] pp?\. \d/.test(page2.replace(/<a [^>]*data-pages[^>]*>[^<]*<\/a>/g,'').replace(/<[^>]+>/g,'')),'Unlinked slide citation');
+const checks=(page.match(/class="check"/g)||[]).length+(page2.match(/class="check"/g)||[]).length;
+console.log('PASS: numerical edge cases, '+checks+' checks over 2 pages, '+count+' KaTeX expressions, IDs, local links, '+pops+' pop-up slide images.');

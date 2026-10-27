@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>EE6221 Robotics and Intelligent Sensors — Manipulator Kinematics (Quiz 1) — Review page</title>
+  <title>EE6221 Robotics and Intelligent Sensors — Quiz 1 (Manipulator Kinematics) and Quiz 2 (Sensors, Vision, Pose Estimation, Kalman Fusion) — Review page</title>
   <link rel="stylesheet" href="self-study-assets/katex/katex.min.css">
   <style>
     :root { color-scheme: light; font-family: system-ui, sans-serif; color: #202b36; background: #f6f7f9; }
@@ -23,11 +23,11 @@
   <script defer src="self-study-assets/render-math.js"></script>
 </head>
 <body>
-  <main><h1>EE6221 Robotics and Intelligent Sensors — Manipulator Kinematics (Quiz 1) — Review page</h1>
+  <main><h1>EE6221 Robotics and Intelligent Sensors — Quiz 1 (Manipulator Kinematics) and Quiz 2 (Sensors, Vision, Pose Estimation, Kalman Fusion) — Review page</h1>
 
 <h2>Quiz 1 logistics and scope</h2>
 
-<p>Quiz 1: ~23 Sep 2026, ~30 min, room via NTULearn. Source = class group chat + Week 3 lecture remarks, NOT an official written notice — verify. Scope = &quot;first four weeks&quot;: frames/rotations, homogeneous transforms, D–H direct kinematics + arm matrix + tool configuration vector, inverse kinematics (atan2, branches), cubic trajectory planning. OUT: Jacobian, pseudoinverse, singularities, differential motion, control, mobile robots, sensors. Drill speed on D–H table + transform multiplication + atan2 angle extraction.</p>
+<p>Quiz 1: ~23 Sep 2026, ~30 min, room via NTULearn. Source = class group chat + Week 3 lecture remarks, NOT an official written notice — verify. Scope = &quot;first four weeks&quot;: frames/rotations, homogeneous transforms, D–H direct kinematics + arm matrix + tool configuration vector, inverse kinematics (atan2, branches), cubic trajectory planning. Provisionally excluded: Jacobian, pseudoinverse, singularities, differential motion, control, mobile robots, sensors. Drill speed on D–H table + transform multiplication + atan2 angle extraction.</p>
 
 <h2>Coordinate frames and rotation matrices</h2>
 
@@ -48,6 +48,30 @@
 <h2>Trajectory planning: path vs trajectory and cubic interpolation</h2>
 
 <p>Path = spatial curve $\Gamma$; trajectory = $w(t)=\Gamma(s(t))$, $s:[0,T]\to[0,1]$, $\dot s$ = speed profile. Pick-and-place: pick → lift-off → place → set-down; lift-off $R_{\text{lift}}=R_{\text{pick}}$, $p_{\text{lift}}=p_{\text{pick}}-v\,r_3$ (retreat along $-r_3$). Cubic $w(t)=at^3+bt^2+ct+d$ on $[0,T]$ with $w(0),\dot w(0),w(T),\dot w(T)$: $d=w_0$, $c=v_0$, $a=\frac{2(w_0-w_1)+T(v_0+v_1)}{T^3}$, $b=\frac{3(w_1-w_0)-T(2v_0+v_1)}{T^2}$. Rest-to-rest: $a=-2\Delta/T^3$, $b=3\Delta/T^2$, peak speed $1.5\,\Delta/T$ at $T/2$. Chain segments with continuous velocity AND acceleration.</p>
+
+<h2>Quiz 2 logistics, scope and question style</h2>
+
+<p>Quiz #2: Wed 4 Nov 2026, 8–9 pm, LT19A, 15%, closed book, no calculator (official, NTULearn). Scope = Lec 1–4 (Weeks 8–11). Lec 1 is on the quiz but not on the final (lecturer, Week 8). Out: Lec 2 pp. 38–51 (reference reading); stereo/optic flow/depth-from-focus are outline headings without slides. Expected style (unofficial): T/F + one-line reason, one short derivation, hand-sized numbers.</p>
+
+<h2>Robot sensors: classification, fusion, characteristics and errors</h2>
+
+<p>Internal (proprioceptive: encoders, potentiometers, tachometers, gyros) vs external (exteroceptive: vision, range, touch). GPS = both (lecturer); p. 17 vs table conflict for compass. Active emits (ultrasonic, laser, IR, beacons, Doppler); passive receives (camera, potentiometer, gyro). Fusion advantages: redundancy (accuracy + reliability), complementarity (new features), timeliness, cost. Accuracy $=1-|m-v|/v$; precision = range/σ (repeatability). Systematic = modellable → calibrate; random = probabilistic → filter/fuse. Encoders/IMU/gyros drift because integration accumulates error → correct with GPS/magnetometer. TOF: $d=ct$ (round trip), object distance $ct/2$; ultrasonic cone 20–70°; dynamic range in dB $=10\log_{10}(\max/\min)$.</p>
+
+<h2>Vision sensors and the pinhole camera model</h2>
+
+<p>Imaging loses depth and size: every point on a ray hits the same pixel (fundamental drawback). $\bar m=[x,y,z]^{\mathsf T}$ → $m=[x/z,y/z,1]^{\mathsf T}$ → $p=Am$, $A=\begin{bmatrix}f\sigma_x&amp;-f\sigma_x\tan\alpha&amp;u_0\\0&amp;f\sigma_y\sec\alpha&amp;v_0\\0&amp;0&amp;1\end{bmatrix}$, $\alpha\approx0$. $m=A^{-1}p$ is recoverable; $\bar m=zm$ is not without extra information. Extrinsic $[R\ T]$ maps world → camera. Calibration: known target, many images, solve intrinsics + distortion. Radial distortion = straight lines curve (systematic → calibrate). CCD: less noise, more sensitive; CMOS: less power, cheaper. Camera is passive.</p>
+
+<h2>Structure and pose from two views: essential matrix and homography</h2>
+
+<p>Rigid body: $\bar m_j=R\bar m_j^*+x$. Essential: $m_j^{\mathsf T}Em_j^*=0$, $E=[x]_\times R$ (premultiply by $[x]_\times$ then $m_j^{\mathsf T}$). Homogeneous ⇒ up to scale. 8-point: $Me=0$, ≥8 points, not all coplanar, $x\ne0$; project to $\mathrm{diag}\{\sigma,\sigma,0\}$; 2 solutions × $\pm E$ = 4, positive depth keeps 1. Homography: $H=R+\tfrac{x}{d^*}n^{*\mathsf T}$, $m_j=\alpha_jHm_j^*$, $\alpha_j=z_j^*/z_j$; ≥4 coplanar non-collinear points (8 unknowns, 2 equations each). SVD cases: all equal = pure rotation; two equal = along normal; distinct = 4 → 2 by positive depth → 1 by third view or prior $n^*$. Output: $R$, $x/d^*$, $n^*$; metric if $d^*$ known. H more accurate (lecturer).</p>
+
+<h2>Expectation, variance and covariance for sensor fusion</h2>
+
+<p>$E(X)=\sum x_iP(x_i)$ or $\int xp(x)dx$; $E[f(X)]=\sum f(x_i)P(x_i)$. $V(X)=E[(X-EX)^2]=E[X^2]-(EX)^2$; zero mean: $V=E[X^2]$. $\mathrm{Cov}=E[XY]-EXEY$. Independent ⇒ uncorrelated (not conversely). Uncorrelated: $V(aX+bY)=a^2V(X)+b^2V(Y)$ — signs vanish, constants square. Weighted average $\sum w_ix_i/\sum w_i$ is simple; KF is statistically optimal at similar cost.</p>
+
+<h2>Kalman filter and multi-sensor fusion</h2>
+
+<p>Model $x^+=\Phi x+Bu+Gw$, $z=Hx+v$; $w,v$ white Gaussian, covariances $Q,R$. Update $\hat x(t|t)=\hat x(t|t-1)+K[z-H\hat x(t|t-1)]$, $K=PH^{\mathsf T}(HPH^{\mathsf T}+R)^{-1}$, $P(t|t)=(I-KH)P(t|t-1)$; predict $\hat x^+=\Phi\hat x+Bu$, $P^+=\Phi P\Phi^{\mathsf T}+GQG^{\mathsf T}$. Scalar predictor: $P^+=(A-KH)^2P+Q+K^2R$ → $K=AHP/(H^2P+R)$, $P^+=A^2PR/(H^2P+R)+Q$. $R\to\infty\Rightarrow K\to0$. Two sensors, constant $x$: batch $P^+=(1-K_1-K_2)^2P+K_1^2\sigma_1^2+K_2^2\sigma_2^2$, $K_1\propto P\sigma_2^2$, $K_2\propto P\sigma_1^2$. Sequential: $\hat x=\frac{\sigma_2^2z_1+\sigma_1^2z_2}{\sigma_1^2+\sigma_2^2}$, $P=\frac{\sigma_1^2\sigma_2^2}{\sigma_1^2+\sigma_2^2}&lt;\min\sigma_i^2$, $1/P=\sum1/\sigma_i^2$. Optimal only if linear + Gaussian; bias is not removed.</p>
 </main>
   <footer>Generated from notes-bank.json. Hand annotations are not merged back into the bank.</footer>
 </body>
