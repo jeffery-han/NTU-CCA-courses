@@ -65,6 +65,7 @@ page = '''<!doctype html>
 print('Built beginner-notes.html (6 modules)')
 
 # ---------------------------------------------------------------- Quiz 2
+# Each Quiz 2 visual_lesson_html is a complete authored lesson; content/examples/exercises feed the review page only.
 PDF = {1: 'part-2-lecture-01-introduction-and-sensors', 2: 'part-2-lecture-02-vision-sensors-and-systems',
        3: 'part-2-lecture-03-structure-and-pose-estimation', 4: 'part-2-lecture-04-kalman-filter-sensor-integration'}
 needed = set()
@@ -88,17 +89,10 @@ n2 = len(quiz2)
 side = ''.join(f'<a href="#q2-{i}"><span>{i+1:02d} {s["short"]}</span><span class="score" data-for="q2-{i}"></span></a>' for i, s in enumerate(quiz2))
 mods = []
 for i, s in enumerate(quiz2):
-    reference = prose(s['content'])
-    for e in s['examples']:
-        reference += f'<details><summary>Worked example · {e["provenance"]}</summary>' + prose(e['text']) + '<p class="source">' + html.escape(e['source_locator']) + '</p></details>'
-    for e in s['exercises']:
-        reference += f'<details><summary>Practice, try on paper first · {e["provenance"]}</summary>' + prose(e['text']) + '<p class="source">' + html.escape(e['source_locator']) + '</p></details>'
-    before, check = s['visual_lesson_html'].split('<fieldset', 1)
     nxt = (f'<a class="next" href="#q2-{i+1}">Continue to {quiz2[i+1]["short"]} →</a>' if i < n2 - 1 else
            '<p>Ready? <a href="../../quizzes/quiz-02-mock-01.html">Sit the timed Quiz 2 mock</a> (closed book, 60 min).</p>')
-    mods.append(cite(f'<section id="q2-{i}"><p class="eyebrow">MODULE {i+1:02d} / {n2:02d}</p><h2>{s["short"]}</h2>' + before +
-                     '<p class="source">Source: ' + html.escape(s['source_note']) + '</p>' +
-                     '<details class="reference"><summary>Full teaching text, worked examples and practice</summary>' + reference + '</details><fieldset' + check + nxt + '</section>'))
+    mods.append(cite(f'<section id="q2-{i}"><p class="eyebrow">MODULE {i+1:02d} / {n2:02d}</p><h2>{s["short"]}</h2>' + s['visual_lesson_html'] +
+                     '<p class="source">Sources: ' + html.escape(s['source_note']) + '</p>' + nxt + '</section>'))
 page2 = '''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>EE6221 Quiz 2 — Visual beginner notes</title>

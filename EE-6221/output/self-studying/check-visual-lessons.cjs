@@ -48,5 +48,21 @@ let pops=0;
 for(const m of page2.matchAll(/data-pages="([^:]+):(\d+)-(\d+)"/g)) for(let p=+m[2];p<=+m[3];p++,pops++)
  assert.ok(fs.existsSync(path.join(__dirname,'quiz2-pages',m[1]+'-p'+String(p).padStart(3,'0')+'.jpg')),m[1]+' p'+p);
 assert.ok(!/Lec [1-4] pp?\. \d/.test(page2.replace(/<a [^>]*data-pages[^>]*>[^<]*<\/a>/g,'').replace(/<[^>]+>/g,'')),'Unlinked slide citation');
+// Every numeric check's data-answer must equal an independently recomputed value; no unlisted or missing ids.
+const calc={
+ 'calc-k-gain':3/(3+1), 'calc-p-next':3*1/(3+1),
+ 'calc-three-x':(10/6+13/3+15/2)/(1/6+1/3+1/2), 'calc-three-p':1/(1/6+1/3+1/2),
+ 'calc-db':10*Math.log10(4/0.002), 'calc-precision':10/0.02, 'calc-accel-drift':0.5*0.02*10**2,
+ 'calc-echo':340*0.025/2, 'calc-laser-ps':2*0.015/3e8*1e12,
+ 'calc-bytes':100*100*3, 'calc-proj-u':600*(0.5/2.5)+320, 'calc-proj-v':500*(-0.2/2.5)+240,
+ 'calc-depth-size':800*1.8/120, 'calc-extrinsic-v':800*(0.2/(2+2))+300,
+ 'calc-homog-mx':0.4/(0.5*0.4+1),
+ 'calc-var-uniform':(0+4+16)/3-((0+2+4)/3)**2, 'calc-var-combo':0.5**2*4+(-2)**2*1, 'calc-avg-n':(1/4)**2*4*8,
+ 'calc-equal-w':0.25*4+0.25*2,
+ 'calc-batch-p':(()=>{const P=2,a=1,b=2,d=a*b+P*(a+b),K1=P*b/d,K2=P*a/d;return (1-K1-K2)**2*P+K1**2*a+K2**2*b;})(),
+};
+const found=[...page2.matchAll(/<fieldset class="check calc" id="([^"]+)" data-answer="([^"]+)"/g)];
+assert.deepEqual(found.map(m=>m[1]).sort(),Object.keys(calc).sort(),'calc ids');
+for(const m of found) assert.ok(Math.abs(+m[2]-calc[m[1]])<=1e-3*Math.max(1,Math.abs(calc[m[1]])),m[1]+': '+m[2]+' != '+calc[m[1]]);
 const checks=(page.match(/class="check"/g)||[]).length+(page2.match(/class="check"/g)||[]).length;
-console.log('PASS: numerical edge cases, '+checks+' checks over 2 pages, '+count+' KaTeX expressions, IDs, local links, '+pops+' pop-up slide images.');
+console.log('PASS: numerical edge cases, '+checks+' checks over 2 pages, '+count+' KaTeX expressions, IDs, local links, '+pops+' pop-up slide images, '+found.length+' numeric answers.');

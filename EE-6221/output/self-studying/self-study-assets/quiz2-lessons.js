@@ -50,13 +50,26 @@ if(typeof document!=='undefined') {
   const sec=$(el.dataset.for), all=sec.querySelectorAll('.check').length, done=sec.querySelectorAll('.check button[data-result=correct]').length;
   el.textContent=done+'/'+all; el.classList.toggle('complete',done===all);
  });
- document.querySelectorAll('.check button').forEach(button=>button.addEventListener('click',()=>{
+ document.querySelectorAll('.check button[data-correct]').forEach(button=>button.addEventListener('click',()=>{
   const field=button.closest('fieldset'),correct=button.dataset.correct==='true';
   field.querySelectorAll('button').forEach(b=>{delete b.dataset.result;b.removeAttribute('aria-pressed');});
   button.dataset.result=correct?'correct':'wrong';button.setAttribute('aria-pressed','true');
   field.querySelector('.feedback').textContent=(correct?'Correct. ':'Not quite. ')+button.dataset.feedback;
   tally();
  }));
+ // Numeric answers: accept a decimal or a fraction such as 4/3; tolerance is relative to max(1, |answer|).
+ document.querySelectorAll('.calc').forEach(field=>{
+  const input=field.querySelector('input'),button=field.querySelector('button'),out=field.querySelector('.feedback');
+  const go=()=>{
+   const [a,b]=input.value.replace(/\s+/g,'').split('/'),v=b===undefined?Number(a):Number(a)/Number(b),ans=Number(field.dataset.answer);
+   if(!a||!isFinite(v)){out.textContent='Enter a number or a fraction such as 4/3.';return;}
+   const ok=Math.abs(v-ans)<=Number(field.dataset.tol||0.01)*Math.max(1,Math.abs(ans));
+   button.dataset.result=ok?'correct':'wrong';
+   out.textContent=ok?'Correct. '+field.dataset.feedback:'Not yet. '+field.dataset.hint+' Open the worked solution if you are stuck.';
+   tally();
+  };
+  button.addEventListener('click',go);input.addEventListener('keydown',e=>{if(e.key==='Enter')go();});
+ });
  tally();
  const dlg=document.querySelector('dialog.page-view');
  dlg.querySelector('button').addEventListener('click',()=>dlg.close());

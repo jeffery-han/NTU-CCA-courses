@@ -17,3 +17,14 @@ dialog.page-view .bar{display:flex;gap:.8rem;justify-content:space-between;align
 dialog.page-view img{display:block;width:100%;height:auto;margin:.6rem 0;border:1px solid #d8e1dd}
 @media(max-width:860px){.app{display:block}aside{position:static;height:auto;border-right:0;border-bottom:1px solid #d8e1dd}aside nav{display:grid;grid-template-columns:1fr 1fr;gap:6px}aside nav a{margin:0}}
 @media print{aside,dialog{display:none}.app{display:block}}
+/* Lesson furniture: goals, worked examples, tips/pitfalls, step reveals, numeric checks */
+.goals{background:#f4f8f6;border-radius:12px;padding:12px 20px}.goals p{margin:.3em 0;font-weight:650}.goals ul{margin:.3em 0}
+.example{border-left:4px solid #226794;background:#f2f7fa;padding:12px 20px;margin:18px 0;border-radius:0 10px 10px 0}
+.example>p:first-child{font-weight:700;color:#1d5579;margin-top:.4em}
+.tip,.pitfall{padding:12px 20px;margin:18px 0;border-radius:0 10px 10px 0}
+.tip{border-left:4px solid #287052;background:#eff8f2}.pitfall{border-left:4px solid #b2452f;background:#fdf1ee}
+.tip>strong:first-child,.pitfall>strong:first-child{display:block}
+details.step{background:#fbfcfb}details.step>summary{font-weight:600;color:#1b4751}
+.calc input{font:inherit;width:9em;padding:8px 10px;border:1px solid #92aaa6;border-radius:8px;margin-right:8px}
+.calc details{margin-top:14px}
+.recap{background:#edf5f1;border-radius:12px;padding:12px 22px;margin-top:28px}
