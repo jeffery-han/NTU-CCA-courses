@@ -64,5 +64,13 @@ const calc={
 const found=[...page2.matchAll(/<fieldset class="check calc" id="([^"]+)" data-answer="([^"]+)"/g)];
 assert.deepEqual(found.map(m=>m[1]).sort(),Object.keys(calc).sort(),'calc ids');
 for(const m of found) assert.ok(Math.abs(+m[2]-calc[m[1]])<=1e-3*Math.max(1,Math.abs(calc[m[1]])),m[1]+': '+m[2]+' != '+calc[m[1]]);
+// progress.js keys each check by section id + legend, so those must be unique on each page.
+for(const pg of [page,page2]) {
+ assert.ok(pg.includes('progress.js')&&pg.includes('data-reset-progress'),'progress saving not wired');
+ for(const sec of pg.split(/<section id="/).slice(1)) {
+  const legends=[...sec.matchAll(/<fieldset class="check[^"]*"[^>]*><legend>([^<]*)/g)].map(m=>m[1]);
+  assert.equal(new Set(legends).size,legends.length,'Duplicate check legend in section '+sec.slice(0,12));
+ }
+}
 const q1checks=(page.match(/class="check[" ]/g)||[]).length,q2checks=(page2.match(/class="check[" ]/g)||[]).length;
 console.log('PASS: numerical edge cases, '+q1checks+' Quiz 1 + '+q2checks+' Quiz 2 checks, '+count+' KaTeX expressions, IDs, local links, '+pops+' pop-up slide images, '+found.length+' numeric answers.');

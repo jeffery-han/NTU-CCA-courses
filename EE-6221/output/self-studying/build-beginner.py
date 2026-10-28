@@ -55,9 +55,10 @@ page = '''<!doctype html>
 <script defer src="self-study-assets/katex/katex.min.js"></script>
 <script defer src="self-study-assets/katex/contrib/auto-render.min.js"></script>
 <script defer src="self-study-assets/render-math.js"></script>
-<script defer src="self-study-assets/visual-lessons.js"></script></head>
+<script defer src="self-study-assets/visual-lessons.js"></script>
+<script defer src="self-study-assets/progress.js"></script></head>
 <body><a class="skip" href="#main">Skip to lessons</a>
-<header><p class="eyebrow">EE6221 · QUIZ 1 STUDY COMPANION</p><h1>See the robot.<br>Build the mathematics.</h1><p>From coordinate frames to a moving arm, one step at a time.</p><p class="meta">6 modules · interactive diagrams · worked examples · offline</p></header>
+<header><p class="eyebrow">EE6221 · QUIZ 1 STUDY COMPANION</p><h1>See the robot.<br>Build the mathematics.</h1><p>From coordinate frames to a moving arm, one step at a time.</p><p class="meta">6 modules · interactive diagrams · worked examples · offline · answers saved in this browser <button type="button" data-reset-progress>Reset my answers</button></p></header>
 <nav aria-label="Lesson navigation">''' + nav + '''</nav><main id="main">
 <noscript><p class="notice">JavaScript is disabled. Worked explanations and expandable solutions remain available; enable JavaScript for diagrams, typeset mathematics, and feedback buttons.</p></noscript>''' + '\n'.join(sections) + '''</main>
 <footer>Supplementary teaching companion; canonical PDFs remain in notes/. Built from notes-bank.json with build-beginner.py. Diagrams use simplified stated geometry, not official quiz predictions.</footer></body></html>'''
@@ -102,10 +103,11 @@ page2 = '''<!doctype html>
 <script defer src="self-study-assets/katex/katex.min.js"></script>
 <script defer src="self-study-assets/katex/contrib/auto-render.min.js"></script>
 <script defer src="self-study-assets/render-math.js"></script>
-<script defer src="self-study-assets/quiz2-lessons.js"></script></head>
+<script defer src="self-study-assets/quiz2-lessons.js"></script>
+<script defer src="self-study-assets/progress.js"></script></head>
 <body><a class="skip" href="#main">Skip to lessons</a><div class="app">
 <aside aria-label="Contents"><p class="eyebrow">EE6221 · QUIZ 2</p><p class="side-title">Sensors, vision, pose, Kalman fusion</p><nav>''' + side + '''</nav>
-<p class="side-tools"><a href="review-page.html">Review page</a> · <a href="../../quizzes/quiz-02-mock-01.html">Timed mock</a> · <a href="beginner-notes.html">Quiz 1 notes</a></p></aside>
+<p class="side-tools"><a href="review-page.html">Review page</a> · <a href="../../quizzes/quiz-02-mock-01.html">Timed mock</a> · <a href="beginner-notes.html">Quiz 1 notes</a></p><p class="side-tools">Answers are saved in this browser. <button type="button" data-reset-progress>Reset my answers</button></p></aside>
 <div class="content"><header><p class="eyebrow">EE6221 · QUIZ 2 STUDY COMPANION</p><h1>From a sensor reading<br>to a fused estimate.</h1><p>Lec 1–4 of Part 2, one step at a time. Click any slide citation to see the slide itself.</p><p class="meta">''' + str(n2) + ''' modules · interactive diagrams · worked examples · offline</p></header>
 <main id="main"><noscript><p class="notice">JavaScript is disabled. Worked explanations and expandable solutions remain available; enable JavaScript for diagrams, typeset mathematics, slide pop-ups and feedback buttons.</p></noscript>''' + '\n'.join(mods) + '''</main>
 <footer>Supplementary teaching companion; canonical PDFs remain in notes/. Built from notes-bank.json with build-beginner.py. Generated examples are labelled; format predictions are unofficial.</footer></div></div>
