@@ -58,11 +58,11 @@ const calc={
  'calc-depth-size':800*1.8/120, 'calc-extrinsic-v':800*(0.2/(2+2))+300,
  'calc-homog-mx':0.4/(0.5*0.4+1),
  'calc-var-uniform':(0+4+16)/3-((0+2+4)/3)**2, 'calc-var-combo':0.5**2*4+(-2)**2*1, 'calc-avg-n':(1/4)**2*4*8,
- 'calc-equal-w':0.25*4+0.25*2,
+ 'calc-equal-w':0.25*4+0.25*2, 'calc-ex':1*0.5+2*0.25+6*0.25,
  'calc-batch-p':(()=>{const P=2,a=1,b=2,d=a*b+P*(a+b),K1=P*b/d,K2=P*a/d;return (1-K1-K2)**2*P+K1**2*a+K2**2*b;})(),
 };
 const found=[...page2.matchAll(/<fieldset class="check calc" id="([^"]+)" data-answer="([^"]+)"/g)];
 assert.deepEqual(found.map(m=>m[1]).sort(),Object.keys(calc).sort(),'calc ids');
 for(const m of found) assert.ok(Math.abs(+m[2]-calc[m[1]])<=1e-3*Math.max(1,Math.abs(calc[m[1]])),m[1]+': '+m[2]+' != '+calc[m[1]]);
-const checks=(page.match(/class="check"/g)||[]).length+(page2.match(/class="check"/g)||[]).length;
-console.log('PASS: numerical edge cases, '+checks+' checks over 2 pages, '+count+' KaTeX expressions, IDs, local links, '+pops+' pop-up slide images, '+found.length+' numeric answers.');
+const q1checks=(page.match(/class="check[" ]/g)||[]).length,q2checks=(page2.match(/class="check[" ]/g)||[]).length;
+console.log('PASS: numerical edge cases, '+q1checks+' Quiz 1 + '+q2checks+' Quiz 2 checks, '+count+' KaTeX expressions, IDs, local links, '+pops+' pop-up slide images, '+found.length+' numeric answers.');
