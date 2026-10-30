@@ -28,3 +28,6 @@ details.step{background:#fbfcfb}details.step>summary{font-weight:600;color:#1b47
 .calc input{font:inherit;width:9em;padding:8px 10px;border:1px solid #92aaa6;border-radius:8px;margin-right:8px}
 .calc details{margin-top:14px}
 .recap{background:#edf5f1;border-radius:12px;padding:12px 22px;margin-top:28px}
+/* Depth markers on lesson headings: what the quiz tests in full vs gist only */
+.depth{display:inline-block;margin-left:.5em;padding:1px 10px;border-radius:999px;font-size:.72rem;font-weight:650;vertical-align:middle;white-space:nowrap}
+.depth.core{background:#e3f2e9;color:#1f5f43;border:1px solid #9cc9b0}.depth.idea{background:#f1f1ee;color:#6b6b63;border:1px solid #d0d0c8}

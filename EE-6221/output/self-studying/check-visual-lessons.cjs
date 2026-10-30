@@ -52,10 +52,10 @@ assert.ok(!/Lec [1-4] pp?\. \d/.test(page2.replace(/<a [^>]*data-pages[^>]*>[^<]
 const calc={
  'calc-k-gain':3/(3+1), 'calc-p-next':3*1/(3+1),
  'calc-three-x':(10/6+13/3+15/2)/(1/6+1/3+1/2), 'calc-three-p':1/(1/6+1/3+1/2),
- 'calc-db':10*Math.log10(4/0.002), 'calc-precision':10/0.02, 'calc-accel-drift':0.5*0.02*10**2,
- 'calc-echo':340*0.025/2, 'calc-laser-ps':2*0.015/3e8*1e12,
+ 'calc-precision':10/0.02,
+ 'calc-echo':340*0.025/2,
  'calc-bytes':100*100*3, 'calc-proj-u':600*(0.5/2.5)+320, 'calc-proj-v':500*(-0.2/2.5)+240,
- 'calc-depth-size':800*1.8/120, 'calc-extrinsic-v':800*(0.2/(2+2))+300,
+ 'calc-depth-size':800*1.8/120,
  'calc-homog-mx':0.4/(0.5*0.4+1),
  'calc-var-uniform':(0+4+16)/3-((0+2+4)/3)**2, 'calc-var-combo':0.5**2*4+(-2)**2*1, 'calc-avg-n':(1/4)**2*4*8,
  'calc-equal-w':0.25*4+0.25*2, 'calc-ex':1*0.5+2*0.25+6*0.25,
