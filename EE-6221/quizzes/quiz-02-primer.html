@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EE6221 Quiz 2 Primer</title>
+<link rel="stylesheet" href="quiz-assets/katex/katex.min.css">
+<style>
+:root { --ink:#172334; --muted:#435366; --bg:#eef2f5; --card:#fff; --line:#c8d2dc; --pill:#f3f6f9; --accent:#205d87; --ok:#1d7a46; --bad:#b03a2e; --warn:#b47412; --warnbg:#fff5e1;
+        font: 17px/1.55 system-ui,sans-serif; color: var(--ink); background: var(--bg); }
+@media (prefers-color-scheme: dark) { :root { --ink:#dfe7ef; --muted:#9fb0c2; --bg:#11181f; --card:#18222c; --line:#34475a; --pill:#1f2c38; --accent:#6fb3e0; --ok:#5fc48a; --bad:#e8786c; --warn:#e0a54a; --warnbg:#2b2416; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); }
+.app { display: grid; grid-template-columns: 270px minmax(0,1fr); }
+nav { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 20px 16px 3rem; border-right: 1px solid var(--line); background: var(--card); font-size: .9rem; }
+nav h2 { font-size: 1rem; margin: 0 0 .6rem; } nav a { color: var(--ink); text-decoration: none; }
+nav ol { list-style: none; padding: 0; margin: 0; } nav li { display: flex; justify-content: space-between; gap: .5em; padding: .25em .4em; border-radius: 6px; }
+nav li:hover { background: var(--pill); } nav .sc { color: var(--muted); font-variant-numeric: tabular-nums; } nav .sc.done { color: var(--ok); font-weight: 600; }
+nav .tools { margin-top: 1rem; border-top: 1px solid var(--line); padding-top: .7rem; color: var(--muted); }
+main { min-width: 0; width: 100%; max-width: 880px; margin: 24px auto; padding: 34px 46px 4rem; background: var(--card); box-shadow: 0 2px 18px #14263a19; }
+h1 { margin: 0; line-height: 1.2; } h2.sec { margin: 2.4rem 0 .5rem; border-top: 2px solid var(--accent); padding-top: 1rem; }
+p, li { max-width: 76ch; } .meta { color: var(--muted); }
+.notice { border-left: 4px solid var(--warn); background: var(--warnbg); padding: .65rem 1rem; }
+.box { border: 1px solid var(--line); border-radius: 10px; padding: .4rem 1rem; margin: .8rem 0; background: var(--pill); }
+.box h4 { margin: .5rem 0 .2rem; font-size: .95rem; color: var(--accent); }
+.check { border: 1px dashed var(--accent); border-radius: 10px; padding: .5rem 1rem .7rem; margin: 1rem 0; }
+.check .q { font-weight: 600; } .check .q::before { content: "Check · "; color: var(--accent); }
+.check input { font: inherit; width: 6.5em; padding: .2em .4em; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--ink); }
+.fb { margin-top: .5rem; } .fb.ok { color: var(--ok); } .fb.bad { color: var(--bad); } .fb .why { color: var(--ink); display: block; margin-top: .25rem; }
+.model { display: none; margin-top: .5rem; } .model.show { display: block; }
+.katex-display { overflow-x: auto; overflow-y: hidden; }
+button { font: inherit; padding: .35em .8em; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--ink); cursor: pointer; }
+button:disabled { opacity: .55; cursor: default; }
+a.cite { color: var(--accent); }
+dialog { max-width: 60rem; width: 94%; border: 1px solid var(--line); border-radius: 12px; background: var(--card); color: var(--ink); }
+dialog img { width: 100%; border: 1px solid var(--line); margin: .4rem 0; }
+@media (max-width: 860px) { .app { display: block; } nav { position: static; height: auto; padding-bottom: 1rem; border-right: 0; border-bottom: 1px solid var(--line); }
+  nav ol { display: grid; grid-template-columns: 1fr 1fr; gap: 0 .6em; } main { margin: 0; padding: 20px 16px 4rem; box-shadow: none; } }
+</style>
+<script defer src="quiz-assets/katex/katex.min.js"></script>
+<script defer src="quiz-assets/katex/contrib/auto-render.min.js"></script>
+<script defer src="quiz-assets/render-math.js"></script>
+</head>
+<body><div class="app">
+<nav><h2>Quiz 2 · Primer</h2><ol id="toc"></ol>
+<div class="tools">Checks right first time: <span id="total">0</span><br><a href="quiz-02-mock-01.html">→ Mock 1 (sit next)</a><br><button id="reset" type="button">Reset checks</button></div></nav>
+<main>
+<h1>EE6221 · Quiz #2 primer (Lec 1–4)</h1>
+<p class="meta">About 25 minutes. Read a card, do its checks, move on. Depth comes later, from your mock mistakes.</p>
+<p class="notice">This page is a primer only. The plan is: <strong>primer (≈25 min) → Mock 1 cold, 60 min on paper → send me the attempt → go through every mistake</strong>. If you pass a card's checks first time, move on. Quiz format notes are unofficial (see <code>quiz-02-intel.md</code>). Click any slide reference to see the slide.</p>
+
+<section data-sec="s1"><h2 class="sec" id="s1">1 · Sensors (Lec 1)</h2>
+<p>Lec 1 has no maths, but it is on the quiz and not the final, so expect several T/F items. Most items test one of these distinctions, so learn them as pairs.</p>
+<div class="box">
+<h4>The pairs</h4>
+<ul>
+<li><strong>Internal</strong> (proprioceptive: encoder, potentiometer, tachometer, gyro) vs <strong>external</strong> (exteroceptive: camera, range, touch). <strong>GPS counts as both</strong> (lecturer, Week 8).</li>
+<li><strong>Active</strong> emits energy (ultrasonic, laser, IR). <strong>Passive</strong> only receives it (camera, potentiometer, gyro). <a class="cite" data-pages="L1:19-19">Lec 1 p. 19</a></li>
+<li>Fusion advantages: <strong>redundancy</strong> (same feature → less uncertainty, more reliability), <strong>complementarity</strong> (features no single sensor sees), timeliness, cost. <a class="cite" data-pages="L1:13-15">Lec 1 pp. 13–15</a></li>
+<li><strong>Accuracy</strong> $=1-|m-v|/v$ (closeness to the true value). <strong>Precision</strong> = repeatability ($\text{range}/\sigma$). <a class="cite" data-pages="L1:25-25">Lec 1 p. 25</a></li>
+<li><strong>Systematic</strong> error can be modelled, so <em>calibrate</em> it out. <strong>Random</strong> error cannot, so <em>filter, average or fuse</em>. <a class="cite" data-pages="L1:26-26">Lec 1 p. 26</a></li>
+<li>Integrating sensors (encoders, IMU, gyro) <strong>drift</strong>: small errors accumulate. Correct the drift with an absolute sensor (GPS, magnetometer).</li>
+</ul>
+<h4>Time of flight</h4>
+<p>$c\,t$ is the <em>round trip</em>, so the object distance is $d=c\,t/2$ <a class="cite" data-pages="L1:36-36">Lec 1 p. 36</a> <a class="cite" data-pages="L1:38-38">p. 38</a>.
+Example: echo after 40 ms at 340 m/s gives $340\times0.04/2=6.8$ m.<br>Accuracy example: true 50, measured 48 gives $1-2/50=0.96$.</p>
+</div>
+<div class="check" data-id="c1a" data-type="tf" data-ans="T">
+<p class="q">True or false? A sensor that gives the same wrong reading every time is precise but not accurate.</p>
+<p class="why" hidden>True. Repeating the same value is precision. Being consistently off is a systematic error, so accuracy is poor, and calibration can fix it.</p></div>
+<div class="check" data-id="c1b" data-type="num" data-ans="2.04" data-tol="0.005">
+<p class="q">An ultrasonic echo returns after 12 ms (c = 340 m/s). Distance to the object in m?</p>
+<p><input aria-label="distance in metres"> m</p>
+<p class="why" hidden>$d=c\,t/2=340\times0.012/2=2.04$ m. If you got 4.08 m, that is the round trip.</p></div>
+</section>
+
+<section data-sec="s2"><h2 class="sec" id="s2">2 · Pinhole camera (Lec 2)</h2>
+<p>The lecturer's two key points: know the three coordinate types, and know $p=Am$. You do not need to memorise the entries of $A$. Know that $f$ is the focal length and $(u_0,v_0)$ is the principal point. <a class="cite" data-pages="L2:30-30">Lec 2 p. 30</a></p>
+<div class="box">
+<h4>Three coordinates</h4>
+<p>$$\bar m=\begin{bmatrix}x\\y\\z\end{bmatrix}\ \text{(Euclidean, metres)}\ \xrightarrow{\ \div z\ }\ m=\begin{bmatrix}x/z\\y/z\\1\end{bmatrix}\ \text{(normalised)}\ \xrightarrow{\ A\ }\ p=\begin{bmatrix}u\\v\\1\end{bmatrix}\ \text{(pixels)}$$
+With $\alpha=0$: $u=f\sigma_x\,(x/z)+u_0$ and $v=f\sigma_y\,(y/z)+v_0$.</p>
+<h4>Depth is lost</h4>
+<p>Every point on one ray hits the same pixel. So $m=A^{-1}p$ can be recovered, but $\bar m=z\,m$ cannot without extra information (a known size, a second view, another sensor). <a class="cite" data-pages="L2:17-17">Lec 2 p. 17</a> <a class="cite" data-pages="L2:32-32">p. 32</a></p>
+<h4>Example</h4>
+<p>$f\sigma_x=f\sigma_y=400$, $(u_0,v_0)=(300,200)$, $\bar m=[0.3,\,0.6,\,3]^{\mathsf T}$ gives $m=[0.1,\,0.2,\,1]^{\mathsf T}$, so $p=(400\cdot0.1+300,\ 400\cdot0.2+200)=(340,\,280)$.</p>
+<p>Also: distortion bends straight lines (systematic, so calibrate it). Defocus only blurs. An 8-bit pixel has 256 levels and takes 1 byte.</p>
+</div>
+<div class="check" data-id="c2a" data-type="num2" data-ans="220,240" data-tol="0.01">
+<p class="q">Same camera, $\bar m=[-0.4,\,0.2,\,2]^{\mathsf T}$. Pixel $(u,v)$?</p>
+<p>u = <input aria-label="u"> &nbsp; v = <input aria-label="v"></p>
+<p class="why" hidden>$m=[-0.2,\,0.1,\,1]^{\mathsf T}$, so $u=400(-0.2)+300=220$ and $v=400(0.1)+200=240$. Divide by $z$ <em>before</em> scaling.</p></div>
+<div class="check" data-id="c2b" data-type="tf" data-ans="F">
+<p class="q">True or false? If a point slides along its projection ray away from the camera, its pixel coordinates change.</p>
+<p class="why" hidden>False. $x/z$ and $y/z$ stay the same along a ray, so $m$ and therefore $p$ are unchanged. That is exactly why depth is lost.</p></div>
+</section>
+
+<section data-sec="s3"><h2 class="sec" id="s3">3 · Essential matrix (Lec 3)</h2>
+<p>Two views of the same points, with frames related by rotation $R$ and translation $x$: $\bar m_j=R\,\bar m_j^{*}+x$. The lecturer called <a class="cite" data-pages="L3:14-14">slide 14</a>, how to get this constraint, the most important item. Practise writing the three lines below.</p>
+<div class="box">
+<h4>Derivation (three moves)</h4>
+<ol>
+<li>Write $\bar m=z\,m$: $\ z_j m_j=z_j^*R\,m_j^*+x$.</li>
+<li>Premultiply by $[x]_\times$, which removes $x$ because $x\times x=0$: $\ z_j[x]_\times m_j=z_j^*[x]_\times R\,m_j^*$.</li>
+<li>Premultiply by $m_j^{\mathsf T}$. The left side is 0 because $x\times m_j\perp m_j$. Divide by $z_j^*>0$:
+$$m_j^{\mathsf T}E\,m_j^*=0,\qquad E=[x]_\times R.$$</li>
+</ol>
+<h4>Consequences</h4>
+<ul>
+<li>The constraint is homogeneous, so $E$ (and $x$) are known only <strong>up to scale</strong>. <a class="cite" data-pages="L3:15-15">Lec 3 p. 15</a></li>
+<li>8-point algorithm: $Me=0$. It needs ≥ 8 points, <strong>not all coplanar</strong>, and $x\neq0$. Project noisy $E$ onto $\mathrm{diag}\{\sigma,\sigma,0\}$. <a class="cite" data-pages="L3:17-17">Lec 3 p. 17</a></li>
+<li>Four candidate solutions; <strong>positive depth</strong> keeps one. Know the idea only; the decomposition on p. 18 is not tested.</li>
+</ul>
+</div>
+<div class="check" data-id="c3a" data-type="tf" data-ans="F">
+<p class="q">True or false? If the camera only rotates between the two views, the 8-point algorithm still recovers $R$.</p>
+<p class="why" hidden>False. $x=0$ makes $E=[0]_\times R=0$, so the constraint holds for any points and contains no information. The essential method needs $x\neq0$. Use the homography instead.</p></div>
+<div class="check" data-id="c3b" data-type="self">
+<p class="q">On paper, closed notes: derive $m_j^{\mathsf T}E\,m_j^*=0$ from $\bar m_j=R\bar m_j^*+x$, giving a reason for each step.</p>
+<p><button type="button" class="show">I've written it: show model</button></p>
+<div class="model"><p>Model answer: the three moves above. Marks go to (i) substituting $z m$, (ii) $[x]_\times$ with the reason $x\times x=0$, (iii) $m_j^{\mathsf T}$ with the reason "perpendicular", (iv) identifying $E=[x]_\times R$.</p>
+<p><button type="button" data-self="1">Got all four</button> <button type="button" data-self="0">Missed something</button></p></div></div>
+</section>
+
+<section data-sec="s4"><h2 class="sec" id="s4">4 · Homography (Lec 3)</h2>
+<p>Key points: definition and derivation (<a class="cite" data-pages="L3:31-31">slide 31</a>) and how $H$ is computed (<a class="cite" data-pages="L3:32-32">slide 32</a>). Decomposing $H$ (pp. 33–36) is not tested.</p>
+<div class="box">
+<h4>Derivation</h4>
+<p>The points lie on a plane with normal $n^*$ at distance $d^*$: $n^{*\mathsf T}\bar m_j^*=d^*$, so $\dfrac{n^{*\mathsf T}\bar m_j^*}{d^*}=1$. Multiply $x$ by this 1:
+$$\bar m_j=R\bar m_j^*+x\frac{n^{*\mathsf T}\bar m_j^*}{d^*}=\underbrace{\Big(R+\frac{x}{d^*}n^{*\mathsf T}\Big)}_{H}\bar m_j^*\ \Rightarrow\ m_j=\alpha_j H m_j^*,\quad \alpha_j=\frac{z_j^*}{z_j}.$$</p>
+<h4>Computing $H$</h4>
+<p>$H$ has 9 entries but is known only up to scale, so divide by $h_{33}$: 8 unknowns $h=[h_1,\dots,h_8]^{\mathsf T}$. Eliminating $\alpha_j$ leaves <strong>2 equations per point</strong> (a $2\times8$ block $M_j$ with $M_jh=m_j$). Stack the blocks into $Mh=m$. So at least <strong>4 coplanar points, no three collinear</strong>, are needed. Output: $R$, $x/d^*$, $n^*$ (metric if $d^*$ is known).</p>
+<h4>E vs H <a class="cite" data-pages="L3:43-43">Lec 3 p. 43</a></h4>
+<p>E: ≥ 8 points, not all coplanar, needs $x\neq0$. H: ≥ 4 points, all coplanar, works for pure rotation, and needs extra information to choose between its solutions.</p>
+</div>
+<div class="check" data-id="c4a" data-type="tf" data-ans="F">
+<p class="q">True or false? Each matched point gives one equation for $H$, so at least 8 points are needed.</p>
+<p class="why" hidden>False. Each point gives 2 equations (u and v, once $\alpha_j$ is eliminated), and there are 8 unknowns, so 4 coplanar points with no three collinear are enough.</p></div>
+<div class="check" data-id="c4b" data-type="tf" data-ans="T">
+<p class="q">True or false? For a camera that only rotates, $H=R$.</p>
+<p class="why" hidden>True. $x=0$ removes the $\frac{x}{d^*}n^{*\mathsf T}$ term. This is why the homography still works where the essential matrix fails (Check 3a).</p></div>
+</section>
+
+<section data-sec="s5"><h2 class="sec" id="s5">5 · Variance rules (Lec 4)</h2>
+<div class="box">
+<p>$V(X)=E[(X-EX)^2]=E[X^2]-(EX)^2$. For uncorrelated $X,Y$:
+$$V(aX+bY)=a^2V(X)+b^2V(Y)$$
+Constants come out <strong>squared</strong>, so signs disappear: $V(X-Y)=V(X)+V(Y)$. <a class="cite" data-pages="L4:15-15">Lec 4 p. 15</a> Independent implies uncorrelated, but not the other way round.</p>
+<p>Example: $V(X)=1$, $V(Y)=2$ gives $V(2X-3Y)=4\cdot1+9\cdot2=22$.</p>
+</div>
+<div class="check" data-id="c5a" data-type="num" data-ans="7" data-tol="0.001">
+<p class="q">Uncorrelated, $V(X)=3$, $V(Y)=1$. $V(X-2Y)=$?</p>
+<p><input aria-label="variance"></p>
+<p class="why" hidden>$1^2\cdot3+(-2)^2\cdot1=3+4=7$. Getting 1 means the sign was carried through; getting 5 means the constant was not squared.</p></div>
+</section>
+
+<section data-sec="s6"><h2 class="sec" id="s6">6 · Kalman filter and fusion (Lec 4)</h2>
+<div class="box">
+<h4>Scalar update ($A=H=1$)</h4>
+<p>$$\hat x\leftarrow\hat x+K(z-\hat x),\qquad K=\frac{P}{P+R},\qquad P\leftarrow(1-K)P.$$
+As $R\to\infty$, $K\to0$ (ignore a useless sensor). As $R\to0$, $K\to1$ (trust the measurement). <a class="cite" data-pages="L4:31-31">Lec 4 p. 31</a></p>
+<h4>How the gain is found</h4>
+<p>Write the error $\tilde x=x-\hat x$, take its variance (cross terms vanish because the noises are uncorrelated), set $\partial P/\partial K=0$. Mock 1 Section B asks you to do this for two sensors, so it is not worked here. <a class="cite" data-pages="L4:40-40">Lec 4 p. 40</a></p>
+<h4>Two sensors, constant state</h4>
+<p>$$\hat x=\frac{\sigma_2^2 z_1+\sigma_1^2 z_2}{\sigma_1^2+\sigma_2^2},\qquad \frac1P=\frac1{\sigma_1^2}+\frac1{\sigma_2^2}.$$
+Each reading is weighted by the <em>other</em> sensor's variance, so the noisier sensor gets less weight. $P$ is smaller than every $\sigma_i^2$. <a class="cite" data-pages="L4:41-42">Lec 4 pp. 41–42</a></p>
+<p>Example: $z_1=20$ ($\sigma_1^2=2$), $z_2=26$ ($\sigma_2^2=4$) gives $\hat x=(4\cdot20+2\cdot26)/6=22$ and $P=8/6=4/3$.</p>
+<p>The filter is optimal only for linear models with Gaussian noise. It does not remove bias, and correlated noise breaks the fusion. <a class="cite" data-pages="L4:45-45">Lec 4 p. 45</a></p>
+</div>
+<div class="check" data-id="c6a" data-type="num2" data-ans="11,0.75" data-tol="0.01">
+<p class="q">$z_1=8$ ($\sigma_1^2=3$), $z_2=12$ ($\sigma_2^2=1$). Fused $\hat x$ and $P$?</p>
+<p>x̂ = <input aria-label="fused estimate"> &nbsp; P = <input aria-label="fused variance"></p>
+<p class="why" hidden>$\hat x=(1\cdot8+3\cdot12)/4=44/4=11$ (closer to the better sensor, $z_2$). $1/P=1/3+1=4/3$, so $P=3/4$. Getting 9 means the weights were swapped.</p></div>
+<div class="check" data-id="c6b" data-type="tf" data-ans="F">
+<p class="q">True or false? Fusing in a second, much noisier sensor can make the fused variance larger than using the good sensor alone.</p>
+<p class="why" hidden>False, provided the noises are independent and unbiased. $1/P$ gains a positive term $1/\sigma_2^2$, so $P$ can only shrink. The noisy sensor just gets a small weight.</p></div>
+</section>
+
+<section data-sec="s7"><h2 class="sec" id="s7">7 · Now sit Mock 1</h2>
+<ol>
+<li>Open <a href="quiz-02-mock-01.html">quiz-02-mock-01.html</a>. Start the 60-minute timer. Closed book, no calculator.</li>
+<li>Click the True/False choices on the page. Write the justifications and Section B on <strong>paper</strong>.</li>
+<li>Press <em>Export</em> and paste the text to me. Save photos of your paper as <code>quizzes/attempts/quiz-02-mock-01-&lt;date&gt;-*.jpg</code>.</li>
+<li>Do not open the key (<code>quiz-02-mock-01.md</code>). Grading and the mistake review come next: for every lost mark, a diagnosis, the missing idea, a one-line rule and a retry question.</li>
+</ol>
+</section>
+</main></div>
+<dialog id="pages"><p><strong id="ptitle"></strong> · <a id="plink" target="_blank">open PDF at this page</a> <button type="button" id="pclose" style="float:right">Close</button></p><div id="pimgs"></div></dialog>
+<script>
+addEventListener("DOMContentLoaded", () => {
+const STEMS = { L1: "part-2-lecture-01-introduction-and-sensors", L2: "part-2-lecture-02-vision-sensors-and-systems",
+  L3: "part-2-lecture-03-structure-and-pose-estimation", L4: "part-2-lecture-04-kalman-filter-sensor-integration" };
+const KEY = "ee6221-quiz2-primer-v1";
+let state = {};
+try { state = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} };
+
+// citations: data-pages="L1:13-15" -> PDF link + pop-up of rendered slides
+const dlg = document.getElementById("pages");
+document.querySelectorAll("a.cite").forEach(a => {
+  const [k, r] = a.dataset.pages.split(":"), [lo, hi] = r.split("-").map(Number);
+  a.href = `../resources/part-2/${STEMS[k]}.pdf#page=${lo}`;
+  a.addEventListener("click", ev => {
+    ev.preventDefault();
+    document.getElementById("ptitle").textContent = a.textContent;
+    document.getElementById("plink").href = a.href;
+    const box = document.getElementById("pimgs"); box.innerHTML = "";
+    for (let p = lo; p <= hi; p++) { const img = new Image(); img.alt = `${a.textContent}, PDF page ${p}`;
+      img.src = `quiz-02-primer-pages/${STEMS[k]}-p${String(p).padStart(3, "0")}.jpg`; box.append(img); }
+    dlg.showModal();
+  });
+});
+document.getElementById("pclose").onclick = () => dlg.close();
+
+// checks: record first-attempt result, show the reason immediately
+function show(el, ok, extra) {
+  let fb = el.querySelector(".fb");
+  if (!fb) { fb = document.createElement("p"); el.append(fb); }
+  fb.className = "fb " + (ok ? "ok" : "bad");
+  const why = el.querySelector(".why");
+  fb.innerHTML = (ok ? "✓ Correct. " : "✗ Not quite. ") + (extra || "") + (why ? `<span class="why">${why.innerHTML}</span>` : "");
+}
+function record(el, ok, extra) {
+  if (!(el.dataset.id in state)) { state[el.dataset.id] = ok; save(); }
+  show(el, ok, extra); el.querySelectorAll("button:not(.show)").forEach(b => { if (el.dataset.type === "tf" || el.dataset.type === "self") b.disabled = true; });
+  tally();
+}
+const near = (s, a, tol) => s.trim() !== "" && Math.abs(Number(s) - a) <= tol;
+document.querySelectorAll(".check").forEach(el => {
+  const t = el.dataset.type, ans = el.dataset.ans;
+  if (t === "tf") {
+    const row = document.createElement("p");
+    ["T", "F"].forEach(v => { const b = document.createElement("button"); b.type = "button"; b.textContent = v === "T" ? "True" : "False";
+      b.onclick = () => record(el, v === ans, `You chose ${b.textContent}. Now check your one-line reason against this:`); row.append(b, " "); });
+    el.querySelector(".q").after(row);
+  } else if (t === "num" || t === "num2") {
+    const b = document.createElement("button"); b.type = "button"; b.textContent = "Check";
+    const ins = el.querySelectorAll("input"), keys = ans.split(",").map(Number), tol = Number(el.dataset.tol);
+    b.onclick = () => record(el, [...ins].every((i, n) => near(i.value, keys[n], tol)));
+    ins[ins.length - 1].after(" ", b);
+  } else if (t === "self") {
+    el.querySelector(".show").onclick = () => el.querySelector(".model").classList.add("show");
+    el.querySelectorAll("[data-self]").forEach(b => b.onclick = () => record(el, b.dataset.self === "1"));
+  }
+  if (el.dataset.id in state) { if (t === "self") el.querySelector(".model").classList.add("show");
+    show(el, state[el.dataset.id], "(saved first attempt) "); }
+});
+
+// sidebar: one link per section with right-first-time / total checks
+const toc = document.getElementById("toc");
+function tally() {
+  toc.innerHTML = ""; let all = 0;
+  document.querySelectorAll("section[data-sec]").forEach(s => {
+    const cs = [...s.querySelectorAll(".check")], ok = cs.filter(c => state[c.dataset.id] === true).length;
+    const done = cs.filter(c => c.dataset.id in state).length; all += ok;
+    const li = document.createElement("li");
+    li.innerHTML = `<a href="#${s.dataset.sec}">${s.querySelector("h2").textContent}</a>` +
+      (cs.length ? `<span class="sc${done === cs.length ? " done" : ""}">${ok}/${cs.length}</span>` : "");
+    toc.append(li);
+  });
+  document.getElementById("total").textContent = `${all}/${document.querySelectorAll(".check").length}`;
+}
+document.getElementById("reset").onclick = () => { state = {}; save(); location.reload(); };
+tally();
+});
+</script>
+</body>
+</html>
