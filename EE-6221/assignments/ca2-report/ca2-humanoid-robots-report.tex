@@ -1,0 +1,458 @@
+% EE6221 CA2 -- state-of-the-art review: humanoid robots (DRAFT)
+% Compile: xelatex ca2-humanoid-robots-report.tex (twice, for references and ToC)
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=2.3cm]{geometry}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage[colorlinks=true,linkcolor=black,citecolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+\setlist{itemsep=2pt,topsep=4pt}
+\setlength{\parskip}{4pt}
+% Red bracketed text marks passages the author must rewrite in their own voice.
+\newcommand{\yours}[1]{\textcolor{red}{[#1]}}
+
+\title{\textbf{EE6221 CA2 Assignment}\\[4pt]
+\large State of the Art of General-Purpose Humanoid Robots:\\
+From Whole-Body Control to Vision-Language-Action ``Robot Brains''}
+\author{Han Chang \quad \yours{Matric No.}}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+This report reviews the current state of general-purpose humanoid robots,
+with a focus on one technology that decides whether they are useful: the
+control stack that turns camera images and a spoken instruction into
+coordinated motion of every joint.  I compare commercial platforms (Boston
+Dynamics Atlas, Figure 03, Apptronik Apollo, Unitree G1) and recent research
+on learned whole-body control and vision-language-action (VLA) models
+(GR00T N1, $\pi_0$, Gemini Robotics 1.5, Helix 02, FAST, HuGe).  I argue that
+the best current solution is a \emph{hierarchical, learned} architecture in
+which a slow reasoning model, a fast visuomotor policy, and a very fast
+whole-body controller are trained to work together, as exemplified by
+Figure's Helix 02, while Atlas is the most deployment-ready hardware.  I then
+discuss the main open challenges (data, reliability, safety certification,
+energy, and evaluation), likely future directions, and what I learned.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+%-----------------------------------------------------------------
+\section{Introduction and scope}
+
+A humanoid robot has a human-like body: two legs, a torso, two arms and, in
+most current designs, multi-fingered hands.  The case for this form is
+practical rather than aesthetic.  Factories, warehouses and homes were built
+for human bodies, so a robot with the same reach, height and hand shape can in
+principle use existing tools, shelves and doorways without redesigning the
+workplace.  The same argument explains why humanoids are hard: a body with
+50 or more actuated joints that must balance on two small feet is
+underactuated, has highly coupled dynamics, and must keep doing so while the
+hands interact with unknown objects.
+
+For many years the hardware was the bottleneck.  Today several companies can
+build reliable humanoid bodies, and the limiting factor has moved to the
+``brain'': how the robot perceives a scene, decides what to do, and converts
+that decision into stable whole-body motion.  This review therefore treats the
+overall humanoid solution but concentrates on that control stack.  It connects
+directly to EE6221: forward and inverse kinematics of redundant arms, robot
+dynamics and control, vision sensors and pose estimation, sensor fusion with
+the Kalman filter, and vision-based control all appear as layers inside a
+modern humanoid.
+
+\paragraph{Method.}
+I compared systems using public technical reports, peer-reviewed or preprint
+papers, and official company announcements.  Company announcements are
+treated as \emph{claims}; I note where results lack independent
+verification.  Each solution is judged on five criteria:
+(i)~breadth of tasks it can perform without task-specific programming,
+(ii)~length and reliability of autonomous operation,
+(iii)~data efficiency and ability to transfer across robots,
+(iv)~readiness for real deployment (hardware maturity, safety, integration),
+and (v)~openness and quality of the evidence.
+
+%-----------------------------------------------------------------
+\section{Background: the layers of a humanoid control stack}
+
+It is useful to describe any humanoid as a stack of loops running at very
+different rates.
+
+\begin{enumerate}[label=\textbf{L\arabic*}]
+  \item \textbf{Actuation and state estimation} (about 1\,kHz).  Joint torque
+  or current control, plus estimation of the floating base pose from IMU,
+  joint encoders and foot contact, typically with a Kalman-type filter.  The
+  base pose is not measured directly, so this estimate is what every higher
+  layer trusts.
+  \item \textbf{Whole-body control (WBC)} (about 50--500\,Hz).  Given a
+  desired motion of the hands, feet or centre of mass, compute joint commands
+  that achieve it while keeping balance and respecting joint and contact
+  limits.
+  \item \textbf{Visuomotor policy} (about 10--200\,Hz).  Map camera images and
+  proprioception to short-horizon targets such as hand poses, grasp
+  commands, or a reference motion for the WBC.
+  \item \textbf{Task reasoning} (about 1--10\,Hz or slower).  Interpret a
+  language instruction, break it into steps, track progress, and recover from
+  failure.
+\end{enumerate}
+
+\noindent
+Classical humanoids built L2 from models: zero-moment-point (ZMP) walking,
+model predictive control (MPC) of a simplified centroidal model, and a
+quadratic-program WBC that resolves the redundancy of the kinematic chain
+(the same null-space idea used for redundant manipulators, but with contact
+and balance constraints added).  L3 and L4 were hand-written state machines.
+The common thread of the last two years is that \emph{every layer above L1 is
+being replaced or augmented by learned models}, and the key design question is
+how those learned layers are divided and connected.
+
+%-----------------------------------------------------------------
+\section{Review of the state of the art}
+
+\subsection{Hardware platforms}
+
+\textbf{Boston Dynamics Atlas (product version).}  Unveiled at CES on
+5~January~2026, the electric Atlas is presented as a production machine
+rather than a research prototype~\cite{bd-atlas-2026}.  The company states
+56~degrees of freedom with fully rotational joints, a 50\,kg payload, 2.3\,m
+reach, water resistance and operation from $-20$ to $40\,^\circ$C.  Atlas can
+walk to a station and swap its own battery, so a low battery does not end a
+shift.  It runs autonomously, by teleoperation or from a tablet, and connects
+to factory software (MES/WMS) through Boston Dynamics' Orbit platform, which
+also lets one robot's learned task be copied across a fleet.  All 2026
+production is committed to Hyundai's Robotics Metaplant Application Center
+and to Google DeepMind, which is integrating its foundation models into Atlas.
+
+\textbf{Figure 03.}  Figure's third-generation robot, announced in October
+2025, was redesigned for volume manufacturing and for homes, with a soft
+textile and foam exterior, a new sensor suite, and hands with palm cameras
+and tactile sensing~\cite{figure-03}.  Figure has published few hard
+specifications; its significance in this review is as the body for the
+Helix~02 control model (Section~\ref{sec:vla}).
+
+\textbf{Apptronik Apollo} is a general-purpose humanoid that Google DeepMind
+uses as one of the embodiments of Gemini Robotics~1.5~\cite{gemini-15}.
+
+\textbf{Unitree G1} is a low-cost humanoid that has become a common research
+platform; for example, both HuGe~\cite{huge-2026} and
+MotionVLA~\cite{motionvla-2026} report real-robot experiments on it.  Cheap,
+widely available hardware matters because it lets university groups test
+learned controllers on a real body instead of only in simulation.
+
+\subsection{Learned whole-body control}
+
+Reinforcement learning (RL) in GPU-parallel simulation, followed by
+sim-to-real transfer, is now the dominant way to obtain robust locomotion and
+whole-body motion for humanoids.  The newest trend is the \emph{behaviour
+foundation model} (BFM): a whole-body controller pre-trained on large motion
+datasets, often retargeted human motion capture, so that it learns a general
+repertoire of skills and can be adapted to new tasks zero-shot or with little
+data.  Yuan et al.'s survey, published in IEEE TPAMI in
+2026~\cite{bfm-survey}, organises this field by pre-training approach and
+identifies its open problems: retraining cost for each new scenario, the gap
+between simulated and real dynamics, and safe adaptation.
+
+FAST (Wang et al., February 2026)~\cite{fast-2026} is a representative recent
+method.  It keeps a pre-trained tracking policy and adds a small
+\emph{residual} policy for motions outside the training distribution, with
+orthogonality (Parseval) and KL constraints so that adapting to a new motion
+does not erase old skills.  It also adds centre-of-mass observations and
+objectives, which explicitly brings a classical balance quantity back into a
+learned controller.  I find this telling: the best learned controllers are not
+ignoring model-based insight but feeding it to the network.
+
+\subsection{Vision-language-action models}\label{sec:vla}
+
+A VLA model starts from a vision-language model pre-trained on internet data
+and is trained further to output robot actions.  The key systems are:
+
+\begin{itemize}
+  \item \textbf{$\pi_0$} (Physical Intelligence, 2024)~\cite{pi0} attaches a
+  flow-matching ``action expert'' to a vision-language backbone so it can
+  produce smooth, high-rate continuous actions, and trains across many robot
+  types.  It established the general recipe that later humanoid models
+  follow.
+  \item \textbf{GR00T N1} (NVIDIA, March 2025)~\cite{groot-n1} is an open
+  humanoid foundation model with a \emph{dual-system} design: a
+  vision-language module (``System~2'') interprets the scene and the
+  instruction, and a diffusion-transformer action module (``System~1'')
+  generates fluid motor actions.  It is trained on a mixture of real robot
+  teleoperation, human videos and synthetic data, and the weights are public.
+  \item \textbf{Gemini Robotics 1.5} (Google DeepMind, October
+  2025)~\cite{gemini-15} pairs a VLA with a separate embodied-reasoning model
+  (Gemini Robotics-ER~1.5) that plans and checks progress.  The VLA can
+  ``think'' in natural language before acting, and a \emph{motion transfer}
+  mechanism lets skills learned on one robot run on ALOHA, a bi-arm Franka
+  and the Apollo humanoid without robot-specific post-training.
+  \item \textbf{Helix 02} (Figure, early 2026)~\cite{helix-02} extends
+  Figure's original upper-body Helix model to the whole body.  It adds a
+  learned whole-body controller (``System~0'') trained on over 1{,}000 hours
+  of human motion data and sim-to-real RL, beneath the existing System~1
+  visuomotor policy and System~2 reasoning model.  Figure demonstrated a
+  four-minute, uninterrupted, fully autonomous task of unloading and
+  reloading a dishwasher across a kitchen, which it describes as the longest
+  and most complex autonomous humanoid task to date, and later claimed
+  multi-hour autonomous work shifts.  These are company claims without
+  independent evaluation.
+  \item \textbf{HuGe} (Liu et al., October 2026)~\cite{huge-2026} targets the
+  main bottleneck, data.  It pre-trains humanoid VLAs on over 2{,}000 hours
+  of \emph{egocentric} human and robot video.  The VLA outputs latent motion
+  tokens for a pre-trained whole-body controller plus hand commands.  To
+  bridge the difference between a human and a robot body, it creates
+  pseudo-proprioceptive states by replaying motions in simulation and
+  re-renders the arms in the camera images during fine-tuning.  It reports
+  state-of-the-art results on the HumanoidArena benchmark, and on a real
+  Unitree G1 the egocentric data significantly improved success on a
+  pick-and-drop task.
+\end{itemize}
+
+\subsection{Comparison}
+
+Table~\ref{tab:compare} summarises the solutions against the criteria in the
+introduction.
+
+\begin{table}[h]
+\centering\small
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{2.3cm}
+  >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X
+  >{\raggedright\arraybackslash}p{2.6cm}}
+\toprule
+Solution & Architecture & Main strength & Evidence \\
+\midrule
+Atlas (product) & Industrial humanoid; DeepMind models being integrated &
+Deployment readiness: payload, environment rating, battery self-swap, fleet
+software & Company specs; first fleets in 2026 \\
+GR00T N1 & Dual-system VLA (VLM + diffusion action head) & Open weights;
+real + human-video + synthetic data & Paper; sim and real-robot tests \\
+Gemini Robotics 1.5 & VLA + separate embodied-reasoning model & Reasoning
+before acting; cross-robot motion transfer & Technical report \\
+Helix 02 + Figure 03 & Three tiers: S2 reasoning, S1 visuomotor, S0 learned
+WBC & Single learned system from pixels to whole-body action; long-horizon
+demo & Company demos only \\
+FAST & Pre-trained WBC + constrained residual adaptation & Fast adaptation
+without forgetting; CoM-aware balance & Preprint; sim and real \\
+HuGe & VLA $\rightarrow$ latent motion tokens $\rightarrow$ WBC & Scales data
+with egocentric human video & Preprint; benchmark + G1 \\
+\bottomrule
+\end{tabularx}
+\caption{Comparison of the reviewed humanoid solutions.}
+\label{tab:compare}
+\end{table}
+
+%-----------------------------------------------------------------
+\section{The best solution and why}
+
+In my view the best current solution is the \textbf{hierarchical learned
+stack}: a slow reasoning model (System~2), a fast visuomotor policy
+(System~1) and a learned whole-body controller (System~0), trained so that
+the layers share a common interface.  The most complete published example is
+\textbf{Figure's Helix~02 on Figure~03}.  For a factory buyer today,
+\textbf{Atlas} is the most deployment-ready body, and its pairing with
+DeepMind's models points to the same architecture.  I choose this solution
+for four reasons.
+
+\begin{enumerate}
+  \item \textbf{It matches the physics of the problem.}  Balance must be
+  corrected within milliseconds, grasping within tens of milliseconds, and
+  task planning within seconds.  One network running at one rate cannot
+  serve all three.  The three-tier design gives each timescale its own loop.
+  This is the same principle as the cascaded inner and outer loops we study
+  in control, applied to learned components.
+  \item \textbf{It removes the brittle hand-written boundary between walking
+  and manipulation.}  In older humanoids, locomotion and arm control were
+  separate controllers joined by a state machine, which is why many demos
+  showed a robot walking, stopping, and only then reaching.  Helix~02's
+  System~0 lets the upper layers command whole-body motion directly, so
+  walking while carrying, bending while reaching, and balancing during
+  contact become one behaviour.  The dishwasher demonstration, with dozens of
+  sequential loco-manipulation actions and no resets, is the strongest public
+  evidence of long-horizon whole-body autonomy I found.
+  \item \textbf{It scales with data rather than with engineering effort.}
+  Adding a new task means collecting demonstrations, not writing a new
+  controller.  Independent research supports this direction: GR00T~N1 and
+  HuGe show that human video and synthetic data can supplement scarce robot
+  data, and the BFM literature shows the WBC layer itself can be pre-trained
+  once and reused.
+  \item \textbf{The research community has converged on it.}  GR00T~N1's
+  dual-system design, Gemini Robotics~1.5's split between reasoning and
+  action, and HuGe's ``VLA outputs tokens for a pre-trained WBC'' interface
+  are all variants of the same hierarchy.  When independent groups arrive at
+  the same structure, that is good evidence the structure is right, even if
+  the details differ.
+\end{enumerate}
+
+\noindent
+I rank Helix~02 first as an integrated system but with a clear
+qualification: its evidence is company demonstrations, with no public
+benchmark or paper.  If openness and reproducibility are weighted more
+heavily, GR00T~N1 (open weights) and Gemini Robotics~1.5 (detailed technical
+report) are better references for how the architecture works.
+
+%-----------------------------------------------------------------
+\section{Challenges in improving humanoid robots}
+
+\begin{enumerate}
+  \item \textbf{Data scarcity and embodiment gap.}  Language models learned
+  from trillions of words; humanoid policies have thousands of hours of
+  demonstrations.  Teleoperation is slow and expensive, and human video does
+  not contain the robot's joint torques or contact forces.  HuGe's need for
+  simulation replay and arm re-rendering shows how much work is required just
+  to make human data usable.
+  \item \textbf{Reliability in the long tail.}  A demo succeeding once is
+  very different from 99.9\% success over an eight-hour shift.  Learned
+  policies can fail in surprising ways when lighting, objects or clutter
+  differ from training data, and these failures are hard to predict in
+  advance.
+  \item \textbf{Safety and certification.}  A humanoid that falls when power
+  is lost is a new hazard class.  Existing standards do not cover it:
+  ISO~10218 does not address mobility, ISO~3691-4 excludes these robots, and
+  ISO~13482 is not for industrial sites.  The dedicated standard for
+  dynamically stable industrial mobile robots, ISO~25785-1, is still in
+  development~\cite{iso-25785}.  It is also unclear how to certify a neural
+  network controller whose behaviour cannot be fully specified in advance.
+  \item \textbf{Hands and touch.}  Dexterous manipulation still lags far
+  behind locomotion.  Multi-fingered hands are fragile and costly, and
+  tactile sensing is only now being integrated into learned policies
+  (for example the palm cameras and tactile sensors of Figure~03).
+  \item \textbf{Energy, compute and cost.}  Running large VLA models on board
+  at high rates competes with the battery used for motion.  Battery
+  swapping, as on Atlas, works around limited runtime rather than solving it.
+  Unit cost must also fall far enough for a humanoid to beat a fixed
+  automation cell or a human worker on total cost.
+  \item \textbf{Evaluation.}  Much of the most impressive work is shown only
+  in company videos.  Without shared benchmarks and independent testing, it
+  is difficult to compare systems or know which advance actually caused an
+  improvement.
+\end{enumerate}
+
+%-----------------------------------------------------------------
+\section{Future directions}
+
+\begin{itemize}
+  \item \textbf{Scaling data from humans and simulation.}  Egocentric human
+  video (as in HuGe), large synthetic datasets, and world models that predict
+  future observations should reduce dependence on teleoperation.
+  \item \textbf{Learning from deployment.}  Fleets connected through software
+  such as Orbit can pool experience, so a correction learned by one robot
+  improves all of them.  Reinforcement learning on real deployment data is a
+  natural next step after imitation learning.
+  \item \textbf{Combining learning with model-based guarantees.}  FAST's
+  centre-of-mass objectives suggest a hybrid future: learned policies for
+  flexibility, wrapped by model-based safety filters (for example
+  balance or collision constraints solved as a small optimisation) that can
+  be verified and certified.
+  \item \textbf{Richer sensing.}  Tactile skins, in-hand cameras and force
+  sensing fused with vision, using the estimation tools of this course, will
+  be needed for reliable contact-rich work.
+  \item \textbf{Standards and benchmarks.}  Completing ISO~25785-1 and
+  creating shared simulation and real-world benchmarks (HumanoidArena is an
+  early example) will move the field from demos to measurable progress.
+  \item \textbf{Efficient on-board models.}  Smaller, distilled VLAs and
+  dedicated accelerators will cut power and latency so that more of the stack
+  runs locally without a network connection.
+\end{itemize}
+
+%-----------------------------------------------------------------
+\section{What I learned from this review}
+
+\yours{DRAFT --- rewrite in your own words and keep only what is true for
+you.}
+
+\begin{itemize}
+  \item The classical material in EE6221 has not been replaced by AI; it has
+  moved to a different place in the stack.  Kinematics and dynamics now
+  appear as the structure of the whole-body controller, as balance
+  quantities such as the centre of mass fed into a learned policy, and as
+  the retargeting that maps human motion onto a robot's joints.  State
+  estimation of the floating base is still a filtering problem.
+  \item The most important design decision in a modern humanoid is how to
+  split the control problem by timescale.  This is a familiar control idea
+  (cascaded loops), now applied to neural networks.
+  \item Data, not algorithms, is currently the binding constraint, which is
+  why so much recent research is really about finding new sources of data.
+  \item I learned to separate evidence types: a peer-reviewed paper, a
+  preprint and a company video support claims to very different degrees.
+  \yours{Add one or two specific things that surprised you.}
+\end{itemize}
+
+%-----------------------------------------------------------------
+\section{Effect of this assignment on my understanding and interest}
+
+\yours{This section must be your own honest answer; the points below are
+prompts only.}
+
+\begin{itemize}
+  \item \textbf{Understanding of robotics and intelligent systems:}
+  \yours{Did it increase? Which link between the lectures (kinematics,
+  dynamics and control, vision sensors, Kalman filtering, vision-based
+  control) and real humanoids became clearer?}
+  \item \textbf{Interest in a career in robotics and intelligent systems:}
+  \yours{Did it increase? Which part of the stack (control, perception,
+  learning, safety) would you want to work on, and why?}
+\end{itemize}
+
+%-----------------------------------------------------------------
+\begin{thebibliography}{99}
+
+\bibitem{bd-atlas-2026}
+Boston Dynamics, ``Boston Dynamics unveils new Atlas robot to revolutionize
+industry,'' company announcement, 5 Jan.\ 2026.
+\url{https://bostondynamics.com/blog/boston-dynamics-unveils-new-atlas-robot-to-revolutionize-industry/}
+
+\bibitem{helix-02}
+Figure AI, ``Introducing Helix 02: Full-body autonomy,'' company
+announcement, Jan.\ 2026.
+\url{https://figure.ai/news/helix-02}
+
+\bibitem{fast-2026}
+Z.~Wang \emph{et al.}, ``General humanoid whole-body control via pretraining
+and fast adaptation,'' arXiv:2602.11929, Feb.\ 2026.
+
+\bibitem{bfm-survey}
+M.~Yuan \emph{et al.}, ``A survey of behavior foundation model:
+Next-generation whole-body control system of humanoid robots,''
+\emph{IEEE Trans.\ Pattern Anal.\ Mach.\ Intell.}, vol.~48, pp.~4909--4927,
+2026, doi:10.1109/TPAMI.2025.3649177 (arXiv:2506.20487).
+
+\bibitem{huge-2026}
+Y.~Liu \emph{et al.}, ``HuGe: Scaling humanoid generalist
+vision-language-action models with egocentric experience,''
+arXiv:2610.34186, Oct.\ 2026.
+
+\bibitem{motionvla-2026}
+``MotionVLA: Vision-language-action model for humanoid motion,''
+arXiv:2606.15142, Jun.\ 2026.
+
+\bibitem{gemini-15}
+Gemini Robotics Team, Google DeepMind, ``Gemini Robotics 1.5: Pushing the
+frontier of generalist robots with advanced embodied reasoning, thinking, and
+motion transfer,'' arXiv:2510.03342, Oct.\ 2025.
+
+\bibitem{groot-n1}
+NVIDIA (J.~Bjorck \emph{et al.}), ``GR00T N1: An open foundation model for
+generalist humanoid robots,'' arXiv:2503.14734, Mar.\ 2025.
+
+\bibitem{pi0}
+K.~Black \emph{et al.}, ``$\pi_0$: A vision-language-action flow model for
+general robot control,'' arXiv:2410.24164, Oct.\ 2024.
+
+\bibitem{figure-03}
+Figure AI, ``Introducing Figure 03,'' company announcement, Oct.\ 2025.
+\url{https://figure.ai/news/introducing-figure-03}
+
+\bibitem{iso-25785}
+ISO, ISO~25785-1, Part~1 of a safety standard for industrial mobile robots
+whose stability depends on active control (including legged humanoids),
+committee draft, under development.
+\url{https://www.iso.org/standard/91469.html}
+
+\end{thebibliography}
+
+\end{document}
