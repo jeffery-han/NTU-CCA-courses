@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EE6221 Quiz 2 Guided Paper</title>
+<link rel="stylesheet" href="quiz-assets/katex/katex.min.css">
+<style>
+:root { --ink:#172334; --muted:#435366; --bg:#eef2f5; --card:#fff; --line:#c8d2dc; --pill:#f3f6f9; --accent:#205d87; --ok:#1d7a46; --bad:#b03a2e; --warn:#b47412; --warnbg:#fff5e1;
+        font: 17px/1.55 system-ui,sans-serif; color: var(--ink); background: var(--bg); }
+@media (prefers-color-scheme: dark) { :root { --ink:#dfe7ef; --muted:#9fb0c2; --bg:#11181f; --card:#18222c; --line:#34475a; --pill:#1f2c38; --accent:#6fb3e0; --ok:#5fc48a; --bad:#e8786c; --warn:#e0a54a; --warnbg:#2b2416; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); }
+.app { display: grid; grid-template-columns: 270px minmax(0,1fr); }
+nav { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 20px 16px 3rem; border-right: 1px solid var(--line); background: var(--card); font-size: .9rem; }
+nav h2 { font-size: 1rem; margin: 0 0 .6rem; } nav a { color: var(--ink); text-decoration: none; }
+nav ol { list-style: none; padding: 0; margin: 0; } nav li { display: flex; justify-content: space-between; gap: .5em; padding: .25em .4em; border-radius: 6px; }
+nav li:hover { background: var(--pill); } nav .sc { color: var(--muted); font-variant-numeric: tabular-nums; } nav .sc.done { color: var(--ok); font-weight: 600; }
+nav .tools { margin-top: 1rem; border-top: 1px solid var(--line); padding-top: .7rem; color: var(--muted); }
+main { min-width: 0; width: 100%; max-width: 880px; margin: 24px auto; padding: 34px 46px 4rem; background: var(--card); box-shadow: 0 2px 18px #14263a19; }
+h1 { margin: 0; line-height: 1.2; } h2.sec { margin: 2.4rem 0 .5rem; border-top: 2px solid var(--accent); padding-top: 1rem; }
+p, li { max-width: 76ch; } .meta { color: var(--muted); }
+.notice { border-left: 4px solid var(--warn); background: var(--warnbg); padding: .65rem 1rem; }
+.qn { border: 1px solid var(--line); border-radius: 10px; padding: .3rem 1rem .7rem; margin: 1.1rem 0; }
+.qn > .stem { font-weight: 600; } .qn > .stem b { color: var(--accent); }
+details { margin: .45rem 0; } summary { cursor: pointer; display: inline-block; padding: .25em .8em; border: 1px solid var(--line); border-radius: 8px; background: var(--pill); }
+details[open] > summary { margin-bottom: .4rem; }
+details > div { border-left: 3px solid var(--accent); padding: .1rem 0 .1rem .9rem; }
+details.ans > div { border-left-color: var(--ok); }
+.verdict { font-weight: 700; color: var(--ok); }
+.write { background: var(--pill); border-radius: 8px; padding: .4rem .7rem; }
+.write::before { content: "Write: "; font-weight: 600; color: var(--accent); }
+.trap { color: var(--bad); } .trap::before { content: "Trap: "; font-weight: 600; }
+.got { color: var(--muted); font-size: .92rem; }
+.katex-display { overflow-x: auto; overflow-y: hidden; }
+button { font: inherit; padding: .35em .8em; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--ink); cursor: pointer; }
+a.cite { color: var(--accent); }
+dialog { max-width: 60rem; width: 94%; border: 1px solid var(--line); border-radius: 12px; background: var(--card); color: var(--ink); }
+dialog img { width: 100%; border: 1px solid var(--line); margin: .4rem 0; }
+@media (max-width: 860px) { .app { display: block; } nav { position: static; height: auto; padding-bottom: 1rem; border-right: 0; border-bottom: 1px solid var(--line); }
+  nav ol { display: grid; grid-template-columns: 1fr 1fr; gap: 0 .6em; } main { margin: 0; padding: 20px 16px 4rem; box-shadow: none; } }
+</style>
+<script defer src="quiz-assets/katex/katex.min.js"></script>
+<script defer src="quiz-assets/katex/contrib/auto-render.min.js"></script>
+<script defer src="quiz-assets/render-math.js"></script>
+</head>
+<body><div class="app">
+<nav><h2>Quiz 2 · Guided paper</h2><ol id="toc"></ol>
+<div class="tools">Questions I can explain: <span id="total">0</span><br><a href="quiz-02-primer.html">← Primer</a><br><a href="quiz-02-mock-01.html">→ Mock 1 (sit next)</a><br><button id="reset" type="button">Reset ticks</button></div></nav>
+<main>
+<h1>EE6221 · Quiz #2 guided paper (Lec 1–4)</h1>
+<p class="meta">About 40 minutes. A practice paper in the expected quiz format, with the answer and the reasoning one click away. It is for learning, not for scoring.</p>
+<p class="notice">Where this sits: <strong>primer → this guided paper → Mock 1 cold → mistake review</strong>. For each question, decide your answer and say your one-line reason out loud (or write it). Open <em>Hint</em> only if you are stuck, then open <em>Answer &amp; guidance</em> and compare. Tick “I can explain this” when you could reproduce the reasoning without looking. The numbers here differ from Mock 1, so Mock 1 stays a cold test. The format is unofficial (see <code>quiz-02-intel.md</code>). Click a slide reference to see the slide.</p>
+
+<section data-sec="a"><h2 class="sec" id="a">Section A · True/False with a reason</h2>
+<p>In the quiz, a verdict alone is worth half the marks at most. The reason should name the governing fact or show the one-line calculation. Each answer below gives a model reason in that style.</p>
+
+<div class="qn" data-id="ga1">
+<p class="stem"><b>A1</b> · A mobile robot fitted with only proprioceptive sensors (wheel encoders, motor current, battery monitor) can stop before hitting a box someone has just placed in its path.</p>
+<details><summary>Hint</summary><div><p>Ask what each sensor measures: the robot itself, or the world around it?</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="verdict">FALSE.</p>
+<p class="write">Proprioceptive sensors measure the robot's internal state (wheel angle, motor speed, load, battery). Detecting an unknown obstacle needs an exteroceptive sensor (range, vision, contact) that measures the environment relative to the robot.</p>
+<p>How to think: sort the sensor by <em>what it measures</em>, not by where it is mounted. An encoder still counts wheel turns perfectly while the robot drives into the box. Lec 1 states the job of exteroceptive sensors directly: “keep the robot from colliding with other objects”. <a class="cite" data-pages="L1:17-18">Lec 1 pp. 17–18</a></p>
+<p class="trap">Slide 17 lists GPS among the proprioceptive examples. The lecturer said GPS counts as <em>both</em> internal and external. If a GPS item appears, write that.</p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="ga2">
+<p class="stem"><b>A2</b> · An ultrasonic range sensor is a passive sensor because it only listens for the returning echo.</p>
+<details><summary>Hint</summary><div><p>Where does the sound that comes back come from in the first place?</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="verdict">FALSE.</p>
+<p class="write">An ultrasonic sensor emits its own sound pulse and times the echo, so it is active. Passive sensors only receive energy already present (camera, potentiometer, gyro).</p>
+<p>How to think: “active” means the sensor puts energy into the environment. Ultrasonic, laser and IR range sensors do. A camera under normal lighting does not. <a class="cite" data-pages="L1:19-19">Lec 1 p. 19</a></p>
+<p class="trap">“It only listens” describes the <em>receiving</em> half. Classification depends on whether the sensor also transmits.</p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="ga3">
+<p class="stem"><b>A3</b> · An ultrasonic echo returns 25 ms after the pulse is sent (speed of sound 340 m/s). The object is 8.5 m away.</p>
+<details><summary>Hint</summary><div><p>$340\times0.025$ is how far the sound travelled in total. What path did it take?</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="verdict">FALSE. The object is 4.25 m away.</p>
+<p class="write">$d=c\,t/2=340\times0.025/2=4.25$ m. The 8.5 m is the round trip (out and back).</p>
+<p>How to think: no calculator, so split the product: $340\times0.025=340/40=8.5$, then halve it. <a class="cite" data-pages="L1:38-38">Lec 1 p. 38</a></p>
+<p class="trap">Lec 1 p. 36 writes $d=c\,t$, where $d$ is the round-trip path. When a question asks for the distance to the object, divide by 2, and say so in your reason. <a class="cite" data-pages="L1:36-36">Lec 1 p. 36</a></p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="ga4">
+<p class="stem"><b>A4</b> · An IMU's position estimate can drift without bound, even if the accelerometer error is very small, so IMU/INS systems are usually corrected by an external source such as GPS or a magnetometer.</p>
+<details><summary>Hint</summary><div><p>Position comes from acceleration by integrating twice. What happens to a small constant error after you integrate it?</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="verdict">TRUE.</p>
+<p class="write">IMU/INS position is obtained by integrating the sensor signals, so even a small error accumulates over time (drift). An absolute external reference such as GPS or a magnetometer is needed to correct it.</p>
+<p>How to think: a constant bias $b$ in acceleration becomes $bt$ in velocity and $\tfrac12 bt^2$ in position. The error keeps growing, however small $b$ is. This is the organising idea for Lec 1's sensor families: <em>rate sensors integrate and drift; absolute references correct them</em>. <a class="cite" data-pages="L1:31-31">Lec 1 p. 31</a></p>
+<p class="trap">Calibration reduces the systematic part of the bias, but the random part still accumulates. “Calibrate once and the drift is gone” is false.</p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="ga5">
+<p class="stem"><b>A5</b> · Camera with $f\sigma_x=f\sigma_y=200$, $\alpha=0$, $(u_0,v_0)=(100,100)$. The point $\bar m=[1,\,2,\,4]^{\mathsf T}$ images at $(150,200)$. If the point moves to $\bar m=[1,\,2,\,8]^{\mathsf T}$ (depth doubled, $x$ and $y$ unchanged), its pixel coordinates halve to $(75,100)$.</p>
+<details><summary>Hint</summary><div><p>Doubling $z$ halves $x/z$ and $y/z$. Then what does $A$ add after scaling?</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="verdict">FALSE. The new pixel is $(125,150)$.</p>
+<p class="write">The normalised coordinates halve: $m=[1/8,\,2/8,\,1]^{\mathsf T}=[0.125,\,0.25,\,1]^{\mathsf T}$. But $p=Am$ adds the principal point, so $u=200(0.125)+100=125$ and $v=200(0.25)+100=150$. Only the offset from $(u_0,v_0)$ halves.</p>
+<p>How to think, step by step:</p>
+<ol><li>Check the first pixel: $m=[1/4,\,1/2,\,1]^{\mathsf T}$, so $u=200\cdot\tfrac14+100=150$ and $v=200\cdot\tfrac12+100=200$. ✓</li>
+<li>Doubling $z$ halves $m$'s first two entries. That is the Week 9 in-class question: <em>normalised</em> coordinates halve.</li>
+<li>The pixel offsets from the centre go from $(50,100)$ to $(25,50)$. Adding $(100,100)$ back gives $(125,150)$, not $(75,100)$.</li></ol>
+<p><a class="cite" data-pages="L2:30-30">Lec 2 p. 30</a></p>
+<p class="trap">Mixing up $m$ (normalised) and $p$ (pixels). The lecturer named “the three coordinate types and what each means” as a key point, so a statement that blurs them is a likely T/F.</p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="ga6">
+<p class="stem"><b>A6</b> · From a single image and a known calibration matrix $A$, we can recover the direction to a point but not its distance from the camera.</p>
+<details><summary>Hint</summary><div><p>Which of $\bar m$, $m$, $p$ can you get from $p$ with $A^{-1}$?</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="verdict">TRUE.</p>
+<p class="write">$m=A^{-1}p=[x/z,\,y/z,\,1]^{\mathsf T}$ fixes the ray (the direction), but every point $\bar m=z\,m$ on that ray gives the same pixel, so $z$ is lost in projection.</p>
+<p>How to think: this is the “one-eyed bottle” in-class question. A small bottle up close and a big bottle far away can give the same image. Recovering depth needs extra information: a known size, a second view (Lec 3), or another sensor. <a class="cite" data-pages="L2:32-32">Lec 2 p. 32</a></p>
+<p class="trap">The tempting wrong answer is “False, because $A$ is invertible”. Inverting $A$ undoes the pixel mapping, but it cannot undo the division by $z$.</p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="ga7">
+<p class="stem"><b>A7</b> · The 8-point algorithm yields four candidate poses $(R,\,x')$. The correct one is chosen by requiring the matched points to lie in front of both cameras.</p>
+<details><summary>Hint</summary><div><p>Lec 3 p. 19: three of the four solutions are “physically impossible”. Why?</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="verdict">TRUE.</p>
+<p class="write">The four candidates come from the sign ambiguity of $E$ ($m^{\mathsf T}Em^*=0$ also holds for $-E$) and the two decompositions. Three of them put some points behind a camera (negative depth $\lambda$ or $\lambda^*$), so the positive-depth test leaves one.</p>
+<p>How to think: you do not need the decomposition algebra (slide 18 is not tested). Know three things: there are four solutions, why there is more than one, and that the positive-depth test picks one. The translation found is still only $x'=\lambda x$, up to scale. <a class="cite" data-pages="L3:19-19">Lec 3 p. 19</a></p>
+<p class="trap">Saying the test picks the solution “with the smallest error”. All four fit the constraint equally well. Only physics (depth &gt; 0) separates them.</p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="ga8">
+<p class="stem"><b>A8</b> · Four matched points on a plane, three of which lie on one straight line, are enough to compute the homography $H$.</p>
+<details><summary>Hint</summary><div><p>Count the unknowns and the equations, then ask whether the three collinear points really give independent equations.</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="verdict">FALSE.</p>
+<p class="write">$H$ (scaled so $h_{33}=1$) has 8 unknowns and each point gives 2 equations, so 4 points are needed, but they must be coplanar with <em>no three collinear</em>. With three on a line the equations are not independent and $H$ is not determined.</p>
+<p>How to think: the count “4 points = 8 equations” only works if the equations are independent. Three collinear points cannot pin down how the plane maps off that line. The slide's wording is “at least 4 coplanar, noncollinear points”, and for four points that means no three of them on one line. <a class="cite" data-pages="L3:29-29">Lec 3 p. 29</a> <a class="cite" data-pages="L3:32-32">p. 32</a></p>
+<p class="trap">Swapping the E and H requirements. E needs points <em>not</em> all coplanar. H needs them <em>all</em> coplanar (and no three collinear).</p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="ga9">
+<p class="stem"><b>A9</b> · If two random variables are uncorrelated, they are independent.</p>
+<details><summary>Hint</summary><div><p>Try $X$ taking $-1,0,1$ with equal probability, and $Y=X^2$.</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="verdict">FALSE.</p>
+<p class="write">Independent implies uncorrelated, but not conversely. Example: $X\in\{-1,0,1\}$ equally likely and $Y=X^2$. Then $E[XY]=E[X^3]=0=E[X]E[Y]$, so they are uncorrelated, yet $Y$ is completely determined by $X$.</p>
+<p>How to think: covariance $V(X,Y)=E[XY]-E[X]E[Y]$ only measures <em>linear</em> association. A symmetric non-linear link like $Y=X^2$ gives zero covariance. <a class="cite" data-pages="L4:14-14">Lec 4 p. 14</a></p>
+<p class="trap">Slide 14 writes “(uncorrelated) independent” loosely. The direction that is always true is independent ⇒ uncorrelated ⇒ $V(X,Y)=0$. For the variance rule $V(X+Y)=V(X)+V(Y)$, uncorrelated is enough. <a class="cite" data-pages="L4:15-15">Lec 4 p. 15</a></p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="ga10">
+<p class="stem"><b>A10</b> · In the scalar Kalman filter with $A=H=1$, the gain $K_k$ always lies between 0 and 1.</p>
+<details><summary>Hint</summary><div><p>Write $K_k=\dfrac{HAP_k}{H^2P_k+R}$ with $A=H=1$. What signs do $P_k$ and $R$ have?</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="verdict">TRUE.</p>
+<p class="write">With $A=H=1$, $K_k=P_k/(P_k+R)$. Since $P_k\ge0$ and $R\ge0$, the numerator is never larger than the denominator, so $0\le K_k\le1$. $K\to0$ when the sensor is useless ($R\to\infty$) and $K\to1$ when it is perfect ($R\to0$).</p>
+<p>How to think: read $K$ as the fraction of the surprise $z-\hat x$ that you believe. You can believe none of it or all of it, but not more than all of it. <a class="cite" data-pages="L4:29-29">Lec 4 p. 29</a> <a class="cite" data-pages="L4:31-31">p. 31</a></p>
+<p class="trap">The condition $A=H=1$ matters. With general $A$ and $H$, $K=HAP/(H^2P+R)$ can exceed 1 (e.g. $A=2$, $H=1$, $P=R=1$ gives $K=1$; $A=3$ gives $3/2$).</p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+</section>
+
+<section data-sec="b1"><h2 class="sec" id="b1">Section B1 · Homography: derive and compute</h2>
+<p>The lecturer named slide 31 (definition and derivation) and slide 32 (how $H$ is computed) as key points, so a short-answer question here is likely. Work each part on paper before opening its guidance.</p>
+<p><strong>Given:</strong> two camera frames $\mathcal F^*$ and $\mathcal F$ with $\bar m_j=R\,\bar m_j^*+x$. All feature points lie on a plane $\pi$ with unit normal $n^*$ (in $\mathcal F^*$) at distance $d^*$ from the origin of $\mathcal F^*$. Normalised coordinates are $m_j=\bar m_j/z_j$ and $m_j^*=\bar m_j^*/z_j^*$.</p>
+
+<div class="qn" data-id="gb1a">
+<p class="stem"><b>B1(a)</b> · Show that $m_j=\alpha_j H m_j^*$, and give $H$ and $\alpha_j$.</p>
+<details><summary>Hint</summary><div><p>The plane equation $n^{*\mathsf T}\bar m_j^*=d^*$ lets you write a “1” that you can multiply onto $x$. Why would you want $x$ multiplied by something containing $\bar m_j^*$?</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p>The goal is to write the right-hand side as <em>one matrix times $\bar m_j^*$</em>. The obstacle is the lone $+x$ term, which has no $\bar m_j^*$ in it. The plane fixes that.</p>
+<ol>
+<li>Plane constraint: $n^{*\mathsf T}\bar m_j^*=d^*$, so $\dfrac{n^{*\mathsf T}\bar m_j^*}{d^*}=1$.</li>
+<li>Multiply $x$ by this 1 and factor out $\bar m_j^*$:
+$$\bar m_j=R\bar m_j^*+x\,\frac{n^{*\mathsf T}\bar m_j^*}{d^*}=\Big(R+\frac{x}{d^*}n^{*\mathsf T}\Big)\bar m_j^*.$$</li>
+<li>Substitute $\bar m_j=z_jm_j$ and $\bar m_j^*=z_j^*m_j^*$, then divide by $z_j$:
+$$m_j=\underbrace{\frac{z_j^*}{z_j}}_{\alpha_j}\ \underbrace{\Big(R+\frac{x}{d^*}n^{*\mathsf T}\Big)}_{H}\ m_j^*.$$</li>
+</ol>
+<p class="write">$H=R+\dfrac{x}{d^*}n^{*\mathsf T}$ (the Euclidean homography) and $\alpha_j=z_j^*/z_j$ (the depth ratio). Marks: the plane constraint written as 1, factoring, substituting $z\,m$, naming $H$ and $\alpha_j$. <a class="cite" data-pages="L3:31-31">Lec 3 p. 31</a></p>
+<p class="trap">Forgetting the $\alpha_j$. The two sides are different depth-scalings of the same direction, so they are equal only up to the factor $z_j^*/z_j$.</p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="gb1b">
+<p class="stem"><b>B1(b)</b> · Why can the homography method give the translation only as $x/d^*$? When is metric $x$ available?</p>
+<details><summary>Hint</summary><div><p>Look at where $x$ appears in $H$. Could you double $x$ and $d^*$ together and see any change?</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="write">$x$ enters $H$ only through the ratio $x/d^*$. Doubling both the translation and the plane distance (a scene twice as big, viewed from twice as far) gives the same $H$ and the same images. So only $x/d^*$ is recoverable, and metric $x$ needs $d^*$ known from extra information.</p>
+<p>This is the same “loss of scale information” arrow drawn on slide 31, and the same story as the essential matrix, where $x'=\lambda x$. A camera cannot measure absolute size on its own. <a class="cite" data-pages="L3:31-31">Lec 3 p. 31</a> <a class="cite" data-pages="L3:43-43">p. 43</a></p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="gb1c">
+<p class="stem"><b>B1(c)</b> · $H$ is known only up to scale, so set $h_{33}=1$ and unknown vector $h=[h_1,\dots,h_8]^{\mathsf T}$. Writing $m_j=[m_x,\,m_y,\,1]^{\mathsf T}$ and $m_j^*=[m_x^*,\,m_y^*,\,1]^{\mathsf T}$, eliminate $\alpha_j$ and show that each point gives two equations that are <em>linear</em> in $h$.</p>
+<details><summary>Hint</summary><div><p>The third row of $m_j=\alpha_jHm_j^*$ reads $1=\alpha_j(\dots)$. Use it to get $\alpha_j$, then substitute into rows 1 and 2.</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p>Write $H_n=\begin{bmatrix}h_1&amp;h_2&amp;h_3\\h_4&amp;h_5&amp;h_6\\h_7&amp;h_8&amp;1\end{bmatrix}$ and expand $m_j=\alpha_jH_nm_j^*$ row by row.</p>
+<ol>
+<li>Row 3: $1=\alpha_j\,(h_7m_x^*+h_8m_y^*+1)$, so $\alpha_j=\dfrac{1}{h_7m_x^*+h_8m_y^*+1}$. This is why the third coordinate being 1 matters.</li>
+<li>Row 1: $m_x=\alpha_j(h_1m_x^*+h_2m_y^*+h_3)$. Multiply across by the denominator:
+$$m_x(h_7m_x^*+h_8m_y^*+1)=h_1m_x^*+h_2m_y^*+h_3.$$</li>
+<li>Move the $h$ terms to one side. The known $m_x$ stays on the right:
+$$h_1m_x^*+h_2m_y^*+h_3-h_7m_x^*m_x-h_8m_y^*m_x=m_x.$$</li>
+<li>Row 2 gives the same pattern with $h_4,h_5,h_6$ and $m_y$.</li>
+</ol>
+<p class="write">Each point gives a $2\times8$ block $M_jh=m_j$ with rows $[m_x^*,\,m_y^*,\,1,\,0,\,0,\,0,\,-m_x^*m_x,\,-m_y^*m_x]$ and $[0,\,0,\,0,\,m_x^*,\,m_y^*,\,1,\,-m_x^*m_y,\,-m_y^*m_y]$. Stacking $N$ points gives $Mh=m$ with $M\in\mathbb R^{2N\times8}$. <a class="cite" data-pages="L3:32-32">Lec 3 p. 32</a></p>
+<p class="trap">The equations are linear in $h$ even though they contain products like $m_x^*m_x$. Those products are <em>measured numbers</em>, not unknowns.</p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="gb1d">
+<p class="stem"><b>B1(d)</b> · (i) What is the minimum number of points, and what condition must they satisfy? (ii) A planar target has 12 feature points, no three collinear. How many different four-point groups could each be used to compute $H$ on their own? (No calculator.)</p>
+<details><summary>Hint</summary><div><p>(i) 8 unknowns, 2 equations per point. (ii) Order does not matter, so it is “12 choose 4”.</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="write">(i) 8 unknowns ÷ 2 equations per point = <strong>4 points</strong>, all on the plane, no three collinear. (ii) $\binom{12}{4}=\dfrac{12\cdot11\cdot10\cdot9}{4\cdot3\cdot2\cdot1}=495$ groups.</p>
+<p>By hand: cancel first, $\dfrac{12}{4\cdot3}=1$ and $\dfrac{10}{2}=5$, which leaves $11\cdot5\cdot9=495$.</p>
+<p>Why the count matters: with noise, different groups give slightly different $H$. Using all 12 points in the stacked $Mh=m$ (least squares) averages the noise out. This counting step appeared in the AY24-25 final (Q4), so it is the lecturer's style. <a class="cite" data-pages="L3:29-29">Lec 3 p. 29</a></p>
+<p class="trap">Using $12\cdot11\cdot10\cdot9$ (ordered choices, 11880). Choosing the same 4 points in a different order gives the same $H$.</p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+</section>
+
+<section data-sec="b2"><h2 class="sec" id="b2">Section B2 · Kalman gain from first principles</h2>
+<p>This is the single-sensor derivation from Lec 4 pp. 26–29. Mock 1 Section B asks you to apply the same moves to two sensors, so learn the <em>moves</em> here, not just the result.</p>
+<p><strong>Given:</strong> $x_{k+1}=Ax_k+Bu_k+w_k$ and $z_k=Hx_k+v_k$. The estimator is $\hat x_{k+1}=A\hat x_k+Bu_k+K_k(z_k-H\hat x_k)$. $w_k$ and $v_k$ are zero-mean with variances $Q$ and $R$. $\tilde x_k=x_k-\hat x_k$ has zero mean and variance $P_k$, and $\tilde x_k$, $w_k$, $v_k$ are mutually uncorrelated.</p>
+
+<div class="qn" data-id="gb2a">
+<p class="stem"><b>B2(a)</b> · Find the error $\tilde x_{k+1}$ in terms of $\tilde x_k$, $w_k$, $v_k$.</p>
+<details><summary>Hint</summary><div><p>Subtract the estimator from the true state, then replace $z_k$ by $Hx_k+v_k$. Collect everything with $x_k-\hat x_k$.</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<ol>
+<li>$\tilde x_{k+1}=(Ax_k+Bu_k+w_k)-(A\hat x_k+Bu_k+K_k[z_k-H\hat x_k])$. The $Bu_k$ terms cancel, which is why the input never affects the gain.</li>
+<li>Substitute $z_k=Hx_k+v_k$, so $z_k-H\hat x_k=H\tilde x_k+v_k$.</li>
+<li>Collect:
+$$\tilde x_{k+1}=(A-K_kH)\,\tilde x_k+w_k-K_kv_k.$$</li>
+</ol>
+<p class="write">$\tilde x_{k+1}=(A-K_kH)\tilde x_k+w_k-K_kv_k$. <a class="cite" data-pages="L4:26-26">Lec 4 p. 26</a></p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="gb2b">
+<p class="stem"><b>B2(b)</b> · Show that $P_{k+1}=(A-K_kH)^2P_k+Q+K_k^2R$, stating where each assumption is used.</p>
+<details><summary>Hint</summary><div><p>$P_{k+1}=E[\tilde x_{k+1}^2]$ because the mean is zero. Square three terms: there are three squares and three cross terms. What kills the cross terms?</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<ol>
+<li>Zero-mean error, so $P_{k+1}=V(\tilde x_{k+1})=E[\tilde x_{k+1}^2]$.</li>
+<li>Square $(A-K_kH)\tilde x_k+w_k-K_kv_k$. The cross terms contain $E[\tilde x_kw_k]$, $E[\tilde x_kv_k]$ and $E[w_kv_k]$. Each is 0 because the variables are uncorrelated and zero-mean ($E[XY]=E[X]E[Y]=0$).</li>
+<li>What is left: $(A-K_kH)^2E[\tilde x_k^2]+E[w_k^2]+K_k^2E[v_k^2]$, that is,
+$$P_{k+1}=(A-K_kH)^2P_k+Q+K_k^2R.$$</li>
+</ol>
+<p class="write">Name the uncorrelatedness assumption at the step where the cross terms vanish. That sentence is usually worth a mark. <a class="cite" data-pages="L4:27-28">Lec 4 pp. 27–28</a></p>
+<p class="trap">Writing $-K_k^2R$. The sign of $-K_kv_k$ disappears when squared, so noise <em>always adds</em> variance (the same rule as $V(X-Y)=V(X)+V(Y)$).</p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="gb2c">
+<p class="stem"><b>B2(c)</b> · Minimise $P_{k+1}$ over $K_k$ to get the Kalman gain.</p>
+<details><summary>Hint</summary><div><p>Differentiate with the chain rule: $\dfrac{\partial}{\partial K}(A-KH)^2=2(A-KH)(-H)$. Set the result to 0.</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<ol>
+<li>$\dfrac{\partial P_{k+1}}{\partial K_k}=-2H(A-K_kH)P_k+2K_kR=0$. $Q$ does not depend on $K_k$, so it drops out.</li>
+<li>Expand: $HAP_k-K_kH^2P_k=K_kR$.</li>
+<li>Collect $K_k$: $(H^2P_k+R)K_k=HAP_k$, so
+$$K_k=\frac{HAP_k}{H^2P_k+R}.$$</li>
+</ol>
+<p class="write">$K_k=HAP_k/(H^2P_k+R)$. It is a minimum because $\partial^2P_{k+1}/\partial K_k^2=2(H^2P_k+R)&gt;0$. <a class="cite" data-pages="L4:28-29">Lec 4 pp. 28–29</a></p>
+<p>Bridge to Mock 1: with two sensors there are two gains. Write the error, square it (cross terms vanish), and set <em>both</em> partial derivatives to zero. The moves are the same.</p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="gb2d">
+<p class="stem"><b>B2(d)</b> · Constant state ($A=H=1$, $B=0$, $Q=0$). Current estimate $\hat x_k=4$ with $P_k=6$. A sensor with $R=3$ reads $z_k=10$. Find $K_k$, $\hat x_{k+1}$ and $P_{k+1}$ by hand.</p>
+<details><summary>Hint</summary><div><p>$K=P/(P+R)$. Then $\hat x\leftarrow\hat x+K(z-\hat x)$, and $P$ from (b) with $Q=0$.</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<ol>
+<li>$K_k=\dfrac{6}{6+3}=\dfrac23$.</li>
+<li>$\hat x_{k+1}=4+\tfrac23(10-4)=4+4=8$.</li>
+<li>$P_{k+1}=(1-\tfrac23)^2\cdot6+(\tfrac23)^2\cdot3=\tfrac69+\tfrac{12}9=2$.</li>
+</ol>
+<p class="write">$K=2/3$, $\hat x_{k+1}=8$, $P_{k+1}=2$.</p>
+<p>Sanity checks: (1) $P_{k+1}=(1-K)P_k=\tfrac13\cdot6=2$ agrees, the shortcut valid at the optimal gain. (2) $1/P_{k+1}=1/6+1/3=1/2$, the parallel-variance rule for fusion. (3) The new estimate 8 lies between the prior 4 and the reading 10, closer to the reading because the sensor ($R=3$) is more trusted than the prior ($P=6$). <a class="cite" data-pages="L4:31-31">Lec 4 p. 31</a></p>
+<p class="trap">Getting $P_{k+1}=9$ or $3$ by adding or subtracting the variances. Uncertainties combine in parallel, so the result is smaller than both.</p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+</section>
+
+<section data-sec="z"><h2 class="sec" id="z">Next · Sit Mock 1 cold</h2>
+<p>Once most boxes are ticked, close this page and open <a href="quiz-02-mock-01.html">quiz-02-mock-01.html</a>. Take 60 minutes, closed book, no calculator. Write the reasons and Section B on paper, then press <em>Export</em> and send me the attempt. Grading and the mistake review come next.</p>
+</section>
+</main></div>
+<dialog id="pages"><p><strong id="ptitle"></strong> · <a id="plink" target="_blank">open PDF at this page</a> <button type="button" id="pclose" style="float:right">Close</button></p><div id="pimgs"></div></dialog>
+<script>
+addEventListener("DOMContentLoaded", () => {
+const STEMS = { L1: "part-2-lecture-01-introduction-and-sensors", L2: "part-2-lecture-02-vision-sensors-and-systems",
+  L3: "part-2-lecture-03-structure-and-pose-estimation", L4: "part-2-lecture-04-kalman-filter-sensor-integration" };
+const KEY = "ee6221-quiz2-guided-v1";
+let state = {};
+try { state = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} };
+
+// citations: data-pages="L1:13-15" -> PDF link + pop-up of rendered slides (same images as the primer)
+const dlg = document.getElementById("pages");
+document.querySelectorAll("a.cite").forEach(a => {
+  const [k, r] = a.dataset.pages.split(":"), [lo, hi] = r.split("-").map(Number);
+  a.href = `../resources/part-2/${STEMS[k]}.pdf#page=${lo}`;
+  a.addEventListener("click", ev => {
+    ev.preventDefault();
+    document.getElementById("ptitle").textContent = a.textContent;
+    document.getElementById("plink").href = a.href;
+    const box = document.getElementById("pimgs"); box.innerHTML = "";
+    for (let p = lo; p <= hi; p++) { const img = new Image(); img.alt = `${a.textContent}, PDF page ${p}`;
+      img.src = `quiz-02-primer-pages/${STEMS[k]}-p${String(p).padStart(3, "0")}.jpg`; box.append(img); }
+    dlg.showModal();
+  });
+});
+document.getElementById("pclose").onclick = () => dlg.close();
+
+// "I can explain this" ticks, saved per question id
+const toc = document.getElementById("toc");
+function tally() {
+  toc.innerHTML = ""; let all = 0;
+  document.querySelectorAll("section[data-sec]").forEach(s => {
+    const qs = [...s.querySelectorAll(".qn")], ok = qs.filter(q => state[q.dataset.id]).length; all += ok;
+    const li = document.createElement("li");
+    li.innerHTML = `<a href="#${s.dataset.sec}">${s.querySelector("h2").textContent}</a>` +
+      (qs.length ? `<span class="sc${ok === qs.length ? " done" : ""}">${ok}/${qs.length}</span>` : "");
+    toc.append(li);
+  });
+  document.getElementById("total").textContent = `${all}/${document.querySelectorAll(".qn").length}`;
+}
+document.querySelectorAll(".qn").forEach(q => {
+  const cb = q.querySelector(".got input");
+  cb.checked = !!state[q.dataset.id];
+  cb.onchange = () => { state[q.dataset.id] = cb.checked; save(); tally(); };
+});
+document.getElementById("reset").onclick = () => { state = {}; save(); location.reload(); };
+tally();
+});
+</script>
+</body>
+</html>
