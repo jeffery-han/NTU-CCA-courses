@@ -30,6 +30,12 @@ k = K(1, 1, 6, 3)
 assert k == F(2, 3) and 4 + k * (10 - 4) == 8
 assert (1 - k) ** 2 * 6 + k ** 2 * 3 == 2 == (1 - k) * 6 == 1 / (F(1, 6) + F(1, 3))
 
+# answer keys embedded in the page match the recomputed values
+assert re.search(r'data-id="gb1d" data-num="([^"]+)"', html).group(1) == "495"
+assert [F(v) for v in re.search(r'data-id="gb2d" data-num="([^"]+)"', html).group(1).split(",")] == [k, 8, 2]
+assert dict(re.findall(r'data-id="(ga\d+)" data-tf="([TF])"', html)) == {
+    "ga1": "F", "ga2": "F", "ga3": "F", "ga4": "T", "ga5": "F", "ga6": "T", "ga7": "T", "ga8": "F", "ga9": "F", "ga10": "T"}
+
 # question ids unique (they key the saved ticks)
 ids = re.findall(r'class="qn" data-id="([^"]+)"', html)
 assert len(ids) == len(set(ids)) == 18, ids

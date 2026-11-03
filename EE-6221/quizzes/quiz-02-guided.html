@@ -32,6 +32,10 @@ details.ans > div { border-left-color: var(--ok); }
 .write::before { content: "Write: "; font-weight: 600; color: var(--accent); }
 .trap { color: var(--bad); } .trap::before { content: "Trap: "; font-weight: 600; }
 .got { color: var(--muted); font-size: .92rem; }
+.try textarea { font: inherit; font-size: .95rem; width: 100%; min-height: 3.2em; padding: .3em .5em; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); resize: vertical; }
+.try input { font: inherit; width: 5.5em; padding: .2em .4em; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--ink); }
+.try button.on { border-color: var(--accent); font-weight: 600; }
+.fb.ok { color: var(--ok); font-weight: 600; } .fb.bad { color: var(--bad); font-weight: 600; }
 .katex-display { overflow-x: auto; overflow-y: hidden; }
 button { font: inherit; padding: .35em .8em; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--ink); cursor: pointer; }
 a.cite { color: var(--accent); }
@@ -50,12 +54,12 @@ dialog img { width: 100%; border: 1px solid var(--line); margin: .4rem 0; }
 <main>
 <h1>EE6221 · Quiz #2 guided paper (Lec 1–4)</h1>
 <p class="meta">About 40 minutes. A practice paper in the expected quiz format, with the answer and the reasoning one click away. It is for learning, not for scoring.</p>
-<p class="notice">Where this sits: <strong>primer → this guided paper → Mock 1 cold → mistake review</strong>. For each question, decide your answer and say your one-line reason out loud (or write it). Open <em>Hint</em> only if you are stuck, then open <em>Answer &amp; guidance</em> and compare. Tick “I can explain this” when you could reproduce the reasoning without looking. The numbers here differ from Mock 1, so Mock 1 stays a cold test. The format is unofficial (see <code>quiz-02-intel.md</code>). Click a slide reference to see the slide.</p>
+<p class="notice">Where this sits: <strong>primer → this guided paper → Mock 1 cold → mistake review</strong>. For each question, type your one-line reason (or working) in the box, then click True/False (or enter the numbers and press Check). You are marked straight away and the guidance opens so you can compare your reason. Open <em>Hint</em> only if you are stuck; your answers are saved if you refresh. Tick “I can explain this” when you could reproduce the reasoning without looking. The numbers here differ from Mock 1, so Mock 1 stays a cold test. The format is unofficial (see <code>quiz-02-intel.md</code>). Click a slide reference to see the slide.</p>
 
 <section data-sec="a"><h2 class="sec" id="a">Section A · True/False with a reason</h2>
 <p>In the quiz, a verdict alone is worth half the marks at most. The reason should name the governing fact or show the one-line calculation. Each answer below gives a model reason in that style.</p>
 
-<div class="qn" data-id="ga1">
+<div class="qn" data-id="ga1" data-tf="F">
 <p class="stem"><b>A1</b> · A mobile robot fitted with only proprioceptive sensors (wheel encoders, motor current, battery monitor) can stop before hitting a box someone has just placed in its path.</p>
 <details><summary>Hint</summary><div><p>Ask what each sensor measures: the robot itself, or the world around it?</p></div></details>
 <details class="ans"><summary>Answer &amp; guidance</summary><div>
@@ -66,7 +70,7 @@ dialog img { width: 100%; border: 1px solid var(--line); margin: .4rem 0; }
 </div></details>
 <label class="got"><input type="checkbox"> I can explain this</label></div>
 
-<div class="qn" data-id="ga2">
+<div class="qn" data-id="ga2" data-tf="F">
 <p class="stem"><b>A2</b> · An ultrasonic range sensor is a passive sensor because it only listens for the returning echo.</p>
 <details><summary>Hint</summary><div><p>Where does the sound that comes back come from in the first place?</p></div></details>
 <details class="ans"><summary>Answer &amp; guidance</summary><div>
@@ -77,7 +81,7 @@ dialog img { width: 100%; border: 1px solid var(--line); margin: .4rem 0; }
 </div></details>
 <label class="got"><input type="checkbox"> I can explain this</label></div>
 
-<div class="qn" data-id="ga3">
+<div class="qn" data-id="ga3" data-tf="F">
 <p class="stem"><b>A3</b> · An ultrasonic echo returns 25 ms after the pulse is sent (speed of sound 340 m/s). The object is 8.5 m away.</p>
 <details><summary>Hint</summary><div><p>$340\times0.025$ is how far the sound travelled in total. What path did it take?</p></div></details>
 <details class="ans"><summary>Answer &amp; guidance</summary><div>
@@ -88,7 +92,7 @@ dialog img { width: 100%; border: 1px solid var(--line); margin: .4rem 0; }
 </div></details>
 <label class="got"><input type="checkbox"> I can explain this</label></div>
 
-<div class="qn" data-id="ga4">
+<div class="qn" data-id="ga4" data-tf="T">
 <p class="stem"><b>A4</b> · An IMU's position estimate can drift without bound, even if the accelerometer error is very small, so IMU/INS systems are usually corrected by an external source such as GPS or a magnetometer.</p>
 <details><summary>Hint</summary><div><p>Position comes from acceleration by integrating twice. What happens to a small constant error after you integrate it?</p></div></details>
 <details class="ans"><summary>Answer &amp; guidance</summary><div>
@@ -99,7 +103,7 @@ dialog img { width: 100%; border: 1px solid var(--line); margin: .4rem 0; }
 </div></details>
 <label class="got"><input type="checkbox"> I can explain this</label></div>
 
-<div class="qn" data-id="ga5">
+<div class="qn" data-id="ga5" data-tf="F">
 <p class="stem"><b>A5</b> · Camera with $f\sigma_x=f\sigma_y=200$, $\alpha=0$, $(u_0,v_0)=(100,100)$. The point $\bar m=[1,\,2,\,4]^{\mathsf T}$ images at $(150,200)$. If the point moves to $\bar m=[1,\,2,\,8]^{\mathsf T}$ (depth doubled, $x$ and $y$ unchanged), its pixel coordinates halve to $(75,100)$.</p>
 <details><summary>Hint</summary><div><p>Doubling $z$ halves $x/z$ and $y/z$. Then what does $A$ add after scaling?</p></div></details>
 <details class="ans"><summary>Answer &amp; guidance</summary><div>
@@ -114,7 +118,7 @@ dialog img { width: 100%; border: 1px solid var(--line); margin: .4rem 0; }
 </div></details>
 <label class="got"><input type="checkbox"> I can explain this</label></div>
 
-<div class="qn" data-id="ga6">
+<div class="qn" data-id="ga6" data-tf="T">
 <p class="stem"><b>A6</b> · From a single image and a known calibration matrix $A$, we can recover the direction to a point but not its distance from the camera.</p>
 <details><summary>Hint</summary><div><p>Which of $\bar m$, $m$, $p$ can you get from $p$ with $A^{-1}$?</p></div></details>
 <details class="ans"><summary>Answer &amp; guidance</summary><div>
@@ -125,7 +129,7 @@ dialog img { width: 100%; border: 1px solid var(--line); margin: .4rem 0; }
 </div></details>
 <label class="got"><input type="checkbox"> I can explain this</label></div>
 
-<div class="qn" data-id="ga7">
+<div class="qn" data-id="ga7" data-tf="T">
 <p class="stem"><b>A7</b> · The 8-point algorithm yields four candidate poses $(R,\,x')$. The correct one is chosen by requiring the matched points to lie in front of both cameras.</p>
 <details><summary>Hint</summary><div><p>Lec 3 p. 19: three of the four solutions are “physically impossible”. Why?</p></div></details>
 <details class="ans"><summary>Answer &amp; guidance</summary><div>
@@ -136,7 +140,7 @@ dialog img { width: 100%; border: 1px solid var(--line); margin: .4rem 0; }
 </div></details>
 <label class="got"><input type="checkbox"> I can explain this</label></div>
 
-<div class="qn" data-id="ga8">
+<div class="qn" data-id="ga8" data-tf="F">
 <p class="stem"><b>A8</b> · Four matched points on a plane, three of which lie on one straight line, are enough to compute the homography $H$.</p>
 <details><summary>Hint</summary><div><p>Count the unknowns and the equations, then ask whether the three collinear points really give independent equations.</p></div></details>
 <details class="ans"><summary>Answer &amp; guidance</summary><div>
@@ -147,7 +151,7 @@ dialog img { width: 100%; border: 1px solid var(--line); margin: .4rem 0; }
 </div></details>
 <label class="got"><input type="checkbox"> I can explain this</label></div>
 
-<div class="qn" data-id="ga9">
+<div class="qn" data-id="ga9" data-tf="F">
 <p class="stem"><b>A9</b> · If two random variables are uncorrelated, they are independent.</p>
 <details><summary>Hint</summary><div><p>Try $X$ taking $-1,0,1$ with equal probability, and $Y=X^2$.</p></div></details>
 <details class="ans"><summary>Answer &amp; guidance</summary><div>
@@ -158,7 +162,7 @@ dialog img { width: 100%; border: 1px solid var(--line); margin: .4rem 0; }
 </div></details>
 <label class="got"><input type="checkbox"> I can explain this</label></div>
 
-<div class="qn" data-id="ga10">
+<div class="qn" data-id="ga10" data-tf="T">
 <p class="stem"><b>A10</b> · In the scalar Kalman filter with $A=H=1$, the gain $K_k$ always lies between 0 and 1.</p>
 <details><summary>Hint</summary><div><p>Write $K_k=\dfrac{HAP_k}{H^2P_k+R}$ with $A=H=1$. What signs do $P_k$ and $R$ have?</p></div></details>
 <details class="ans"><summary>Answer &amp; guidance</summary><div>
@@ -218,7 +222,7 @@ $$h_1m_x^*+h_2m_y^*+h_3-h_7m_x^*m_x-h_8m_y^*m_x=m_x.$$</li>
 </div></details>
 <label class="got"><input type="checkbox"> I can explain this</label></div>
 
-<div class="qn" data-id="gb1d">
+<div class="qn" data-id="gb1d" data-num="495" data-labels="groups">
 <p class="stem"><b>B1(d)</b> · (i) What is the minimum number of points, and what condition must they satisfy? (ii) A planar target has 12 feature points, no three collinear. How many different four-point groups could each be used to compute $H$ on their own? (No calculator.)</p>
 <details><summary>Hint</summary><div><p>(i) 8 unknowns, 2 equations per point. (ii) Order does not matter, so it is “12 choose 4”.</p></div></details>
 <details class="ans"><summary>Answer &amp; guidance</summary><div>
@@ -278,7 +282,7 @@ $$K_k=\frac{HAP_k}{H^2P_k+R}.$$</li>
 </div></details>
 <label class="got"><input type="checkbox"> I can explain this</label></div>
 
-<div class="qn" data-id="gb2d">
+<div class="qn" data-id="gb2d" data-num="2/3,8,2" data-labels="K,x̂ₖ₊₁,Pₖ₊₁">
 <p class="stem"><b>B2(d)</b> · Constant state ($A=H=1$, $B=0$, $Q=0$). Current estimate $\hat x_k=4$ with $P_k=6$. A sensor with $R=3$ reads $z_k=10$. Find $K_k$, $\hat x_{k+1}$ and $P_{k+1}$ by hand.</p>
 <details><summary>Hint</summary><div><p>$K=P/(P+R)$. Then $\hat x\leftarrow\hat x+K(z-\hat x)$, and $P$ from (b) with $Q=0$.</p></div></details>
 <details class="ans"><summary>Answer &amp; guidance</summary><div>
@@ -303,7 +307,7 @@ $$K_k=\frac{HAP_k}{H^2P_k+R}.$$</li>
 addEventListener("DOMContentLoaded", () => {
 const STEMS = { L1: "part-2-lecture-01-introduction-and-sensors", L2: "part-2-lecture-02-vision-sensors-and-systems",
   L3: "part-2-lecture-03-structure-and-pose-estimation", L4: "part-2-lecture-04-kalman-filter-sensor-integration" };
-const KEY = "ee6221-quiz2-guided-v1";
+const KEY = "ee6221-quiz2-guided-v2";
 let state = {};
 try { state = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) {}
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} };
@@ -325,12 +329,14 @@ document.querySelectorAll("a.cite").forEach(a => {
 });
 document.getElementById("pclose").onclick = () => dlg.close();
 
-// "I can explain this" ticks, saved per question id
+// per question: { tf, txt, num:[...], got } saved under the question id
+const st = id => state[id] || (state[id] = {});
+const frac = v => { const [a, b] = v.trim().split("/"); return b === undefined ? Number(a) : Number(a) / Number(b); };
 const toc = document.getElementById("toc");
 function tally() {
   toc.innerHTML = ""; let all = 0;
   document.querySelectorAll("section[data-sec]").forEach(s => {
-    const qs = [...s.querySelectorAll(".qn")], ok = qs.filter(q => state[q.dataset.id]).length; all += ok;
+    const qs = [...s.querySelectorAll(".qn")], ok = qs.filter(q => st(q.dataset.id).got).length; all += ok;
     const li = document.createElement("li");
     li.innerHTML = `<a href="#${s.dataset.sec}">${s.querySelector("h2").textContent}</a>` +
       (qs.length ? `<span class="sc${ok === qs.length ? " done" : ""}">${ok}/${qs.length}</span>` : "");
@@ -339,9 +345,49 @@ function tally() {
   document.getElementById("total").textContent = `${all}/${document.querySelectorAll(".qn").length}`;
 }
 document.querySelectorAll(".qn").forEach(q => {
+  const id = q.dataset.id, s0 = st(id), ans = q.querySelector("details.ans");
+  const box = document.createElement("div"); box.className = "try";
+  const fb = document.createElement("p"); fb.className = "fb";
+  const ta = document.createElement("textarea");
+  ta.placeholder = q.dataset.tf ? "Your one-line reason…" : "Your working (or do it on paper)…";
+  ta.value = s0.txt || ""; ta.oninput = () => { st(id).txt = ta.value; save(); };
+  box.append(ta);
+  if (q.dataset.tf) {
+    const row = document.createElement("p"), btns = [];
+    const pick = (v, restore) => {
+      st(id).tf = v; if (!restore) save();
+      btns.forEach(b => b.classList.toggle("on", b.dataset.v === v));
+      const ok = v === q.dataset.tf, word = q.dataset.tf === "T" ? "TRUE" : "FALSE";
+      fb.className = "fb " + (ok ? "ok" : "bad");
+      fb.textContent = ok ? `✓ Correct: ${word}. Now compare your reason with the guidance below.` : `✗ Not quite: it is ${word}. Read the guidance below and find where your reasoning went off.`;
+      ans.open = true;
+    };
+    ["T", "F"].forEach(v => { const b = document.createElement("button"); b.type = "button"; b.dataset.v = v;
+      b.textContent = v === "T" ? "True" : "False"; b.onclick = () => pick(v); btns.push(b); row.append(b, " "); });
+    box.append(row, fb);
+    if (s0.tf) pick(s0.tf, true);
+  } else if (q.dataset.num) {
+    const keys = q.dataset.num.split(",").map(frac), labels = q.dataset.labels.split(","), row = document.createElement("p"), ins = [];
+    labels.forEach((l, n) => { const i = document.createElement("input"); i.setAttribute("aria-label", l); i.value = (s0.num || [])[n] || "";
+      ins.push(i); row.append(`${l} = `, i, "  "); });
+    const b = document.createElement("button"); b.type = "button"; b.textContent = "Check";
+    const check = restore => {
+      const vals = ins.map(i => i.value); st(id).num = vals; if (!restore) save();
+      const bad = vals.map((v, n) => v.trim() === "" || !(Math.abs(frac(v) - keys[n]) < 1e-3) ? labels[n] : null).filter(Boolean);
+      fb.className = "fb " + (bad.length ? "bad" : "ok");
+      fb.textContent = bad.length ? `✗ Check ${bad.join(", ")}. The guidance below shows each step.` : "✓ All correct. Compare your working with the guidance below.";
+      ans.open = true;
+    };
+    b.onclick = () => check(false); row.append(b); box.append(row, fb);
+    if (s0.num) check(true);
+  } else {
+    const b = document.createElement("button"); b.type = "button"; b.textContent = "I've written my answer: show guidance";
+    b.onclick = () => { ans.open = true; }; const row = document.createElement("p"); row.append(b); box.append(row);
+  }
+  q.querySelector("details").before(box);
   const cb = q.querySelector(".got input");
-  cb.checked = !!state[q.dataset.id];
-  cb.onchange = () => { state[q.dataset.id] = cb.checked; save(); tally(); };
+  cb.checked = !!s0.got;
+  cb.onchange = () => { st(id).got = cb.checked; save(); tally(); };
 });
 document.getElementById("reset").onclick = () => { state = {}; save(); location.reload(); };
 tally();
