@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EE6221 Quiz 2 Past Questions</title>
+<link rel="stylesheet" href="quiz-assets/katex/katex.min.css">
+<style>
+:root { --ink:#172334; --muted:#435366; --bg:#eef2f5; --card:#fff; --line:#c8d2dc; --pill:#f3f6f9; --accent:#205d87; --ok:#1d7a46; --bad:#b03a2e; --warn:#b47412; --warnbg:#fff5e1;
+        font: 17px/1.55 system-ui,sans-serif; color: var(--ink); background: var(--bg); }
+@media (prefers-color-scheme: dark) { :root { --ink:#dfe7ef; --muted:#9fb0c2; --bg:#11181f; --card:#18222c; --line:#34475a; --pill:#1f2c38; --accent:#6fb3e0; --ok:#5fc48a; --bad:#e8786c; --warn:#e0a54a; --warnbg:#2b2416; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); }
+.app { display: grid; grid-template-columns: 270px minmax(0,1fr); }
+nav { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 20px 16px 3rem; border-right: 1px solid var(--line); background: var(--card); font-size: .9rem; }
+nav h2 { font-size: 1rem; margin: 0 0 .6rem; } nav a { color: var(--ink); text-decoration: none; }
+nav ol { list-style: none; padding: 0; margin: 0; } nav li { display: flex; justify-content: space-between; gap: .5em; padding: .25em .4em; border-radius: 6px; }
+nav li:hover { background: var(--pill); } nav .sc { color: var(--muted); font-variant-numeric: tabular-nums; } nav .sc.done { color: var(--ok); font-weight: 600; }
+nav .tools { margin-top: 1rem; border-top: 1px solid var(--line); padding-top: .7rem; color: var(--muted); }
+main { min-width: 0; width: 100%; max-width: 880px; margin: 24px auto; padding: 34px 46px 4rem; background: var(--card); box-shadow: 0 2px 18px #14263a19; }
+h1 { margin: 0; line-height: 1.2; } h2.sec { margin: 2.4rem 0 .5rem; border-top: 2px solid var(--accent); padding-top: 1rem; }
+p, li { max-width: 76ch; } .meta { color: var(--muted); }
+.notice { border-left: 4px solid var(--warn); background: var(--warnbg); padding: .65rem 1rem; }
+.qn { border: 1px solid var(--line); border-radius: 10px; padding: .3rem 1rem .7rem; margin: 1.1rem 0; }
+.qn > .stem { font-weight: 600; } .qn > .stem b { color: var(--accent); }
+details { margin: .45rem 0; } summary { cursor: pointer; display: inline-block; padding: .25em .8em; border: 1px solid var(--line); border-radius: 8px; background: var(--pill); }
+details[open] > summary { margin-bottom: .4rem; }
+details > div { border-left: 3px solid var(--accent); padding: .1rem 0 .1rem .9rem; }
+details.ans > div { border-left-color: var(--ok); }
+.verdict { font-weight: 700; color: var(--ok); }
+.write { background: var(--pill); border-radius: 8px; padding: .4rem .7rem; }
+.write::before { content: "Write: "; font-weight: 600; color: var(--accent); }
+.trap { color: var(--bad); } .trap::before { content: "Trap: "; font-weight: 600; }
+.got { color: var(--muted); font-size: .92rem; }
+.try textarea { font: inherit; font-size: .95rem; width: 100%; min-height: 3.2em; padding: .3em .5em; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); resize: vertical; }
+.try input { font: inherit; width: 5.5em; padding: .2em .4em; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--ink); }
+.try button.on { border-color: var(--accent); font-weight: 600; }
+.fb.ok { color: var(--ok); font-weight: 600; } .fb.bad { color: var(--bad); font-weight: 600; }
+.katex-display { overflow-x: auto; overflow-y: hidden; }
+button { font: inherit; padding: .35em .8em; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--ink); cursor: pointer; }
+a.cite { color: var(--accent); }
+dialog { max-width: 60rem; width: 94%; border: 1px solid var(--line); border-radius: 12px; background: var(--card); color: var(--ink); }
+dialog img { width: 100%; border: 1px solid var(--line); margin: .4rem 0; }
+@media (max-width: 860px) { .app { display: block; } nav { position: static; height: auto; padding-bottom: 1rem; border-right: 0; border-bottom: 1px solid var(--line); }
+  nav ol { display: grid; grid-template-columns: 1fr 1fr; gap: 0 .6em; } main { margin: 0; padding: 20px 16px 4rem; box-shadow: none; } }
+main h3 { margin: 1.6rem 0 .3rem; font-size: 1.08rem; }
+</style>
+<script defer src="quiz-assets/katex/katex.min.js"></script>
+<script defer src="quiz-assets/katex/contrib/auto-render.min.js"></script>
+<script defer src="quiz-assets/render-math.js"></script>
+</head>
+<body><div class="app">
+<nav><h2>Quiz 2 · Past-question guided test</h2><ol id="toc"></ol>
+<div class="tools">Questions I can explain: <span id="total">0</span><br><a href="quiz-02-guided.html">← Guided paper</a><br><a href="quiz-02-mock-01.html">→ Mock 1 (sit next)</a><br><button id="reset" type="button">Reset ticks</button></div></nav>
+<main>
+<h1>EE6221 · Quiz #2 guided test from past questions</h1>
+<p class="meta">About 60–75 minutes. Every question here is a <em>real</em> question set by this course before. Part A has the lecturer's own in-class quiz-prep questions (Weeks 8–9, 2026). Parts B and C have the Part 2 questions from four past final papers (2015-16, 2016-17, 2017-18, AY24-25 S1), which are always a homography question (Q4) and a multi-sensor Kalman question (Q5).</p>
+<p class="notice">Honest scope note: no past <em>Quiz 2</em> paper is available, so these are the closest real questions. The quiz is short questions (closed book, no calculator). Each exam sub-part below is roughly one quiz-sized item, and together they cover the derivations the lecturer named as key (homography Lec 3 pp. 31–32, Kalman gain Lec 4). Type your answer or working first, then check or reveal the guidance. Open <em>Hint</em> only if you are stuck. Answers are saved if you refresh. Exam wording is condensed here; click a citation to see the original page.</p>
+
+<section data-sec="a"><h2 class="sec" id="a">Part A · The lecturer's in-class questions</h2>
+<p>Prof. Hu asked these in class and said they show the quiz style: a concept plus a one-line reason, or a small hand calculation. Source: <a href="../resources/transcripts-raw/week-08-transcript.txt">Week 8</a> and <a href="../resources/transcripts-raw/week-09-transcript.txt">Week 9</a> transcripts (machine transcription, so the wording is approximate). Model answers are mine and grounded in the slides cited.</p>
+
+<div class="qn" data-id="pa1">
+<p class="stem"><b>A1</b> (Week 8) · Can a robot act intelligently using only internal (proprioceptive) sensors? Why?</p>
+<details><summary>Hint</summary><div><p>What do internal sensors measure, and what does “intelligent” behaviour have to react to?</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="verdict">No (not in an unknown or changing environment).</p>
+<p class="write">Internal sensors measure only the robot's own state (joint angles, wheel speed, battery). Acting intelligently means reacting to the environment (obstacles, targets, people), which needs external (exteroceptive) sensors.</p>
+<p>A robot with only encoders can repeat a pre-programmed path, but it cannot notice that the world has changed. <a class="cite" data-pages="L1:17-18">Lec 1 pp. 17–18</a></p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="pa2">
+<p class="stem"><b>A2</b> (Week 8) · Why use multiple sensors?</p>
+<details><summary>Hint</summary><div><p>Think of two reasons: each sensor's weaknesses, and what fusing noisy readings does to the variance.</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="write">No single sensor is accurate, reliable and complete in every condition. Different sensors cover each other's weaknesses (for example, GPS corrects IMU drift), add redundancy if one fails, and when fused they give a lower-variance estimate than any single sensor.</p>
+<p>The variance claim is exactly what Part C proves: optimal fusion gives $1/p_{\text{new}}=1/p+\sum_i 1/\sigma_i^2$, which is smaller than any single term. <a class="cite" data-pages="L4:40-41">Lec 4 pp. 40–41</a></p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="pa3">
+<p class="stem"><b>A3</b> (Week 8) · Which of these are active sensors: camera, LiDAR, ultrasonic?</p>
+<details><summary>Hint</summary><div><p>Active means the sensor emits its own energy into the scene.</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="write">LiDAR and ultrasonic are active: they emit light or sound pulses and time the return. A (normal) camera is passive: it only receives light that is already present.</p>
+<p class="trap">An ultrasonic sensor “listens for the echo”, but it is still active because it sends the pulse in the first place. <a class="cite" data-pages="L1:19-19">Lec 1 p. 19</a></p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="pa4">
+<p class="stem"><b>A4</b> (Week 8) · A sensor gives the same wrong reading every time. Is it accurate or precise?</p>
+<details><summary>Hint</summary><div><p>Accuracy compares the reading with the true value. Precision compares readings with each other.</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="verdict">Precise, but not accurate.</p>
+<p class="write">The readings agree with each other (high repeatability, small spread, so precise), but they are all offset from the true value (a systematic error, so not accurate).</p>
+<p>Course formulas: accuracy $=1-|m-v|/v$; precision $=$ range / standard deviation. A constant offset fixes the first without changing the second. <a class="cite" data-pages="L1:25-26">Lec 1 pp. 25–26</a></p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="pa5">
+<p class="stem"><b>A5</b> (Week 8, “a question to help you prepare for the quiz”) · Why does integrating IMU data over a long time drift?</p>
+<details><summary>Hint</summary><div><p>Integrate a small constant bias $b$ in acceleration twice.</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="write">Position is obtained by integrating acceleration twice, so even a tiny bias or noise accumulates: a constant bias $b$ gives a velocity error $bt$ and a position error $\tfrac12bt^2$, which grows without bound. An absolute reference (GPS, magnetometer) is needed to correct it.</p>
+<p><a class="cite" data-pages="L1:31-31">Lec 1 p. 31</a></p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="pa6" data-num="1.7" data-labels="d (m)">
+<p class="stem"><b>A6</b> (Week 8) · An ultrasonic echo returns after 10 ms. The speed of sound is 340 m/s. How far away is the object?</p>
+<details><summary>Hint</summary><div><p>The sound travels out <em>and back</em>.</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="write">$d=\dfrac{c\,t}{2}=\dfrac{340\times0.01}{2}=\dfrac{3.4}{2}=1.7$ m.</p>
+<p class="trap">3.4 m is the round-trip path. Lec 1 p. 36 writes $d=ct$ with $d$ meaning the round trip, while p. 38 uses $ct/2$ for the range. Say which one you are giving. <a class="cite" data-pages="L1:36-36">Lec 1 p. 36</a> <a class="cite" data-pages="L1:38-38">p. 38</a></p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="pa7">
+<p class="stem"><b>A7</b> (Week 9) · What are the benefits of vision (camera) feedback for a robot?</p>
+<details><summary>Hint</summary><div><p>Think about how much information is in one image, energy, and what you need to know in advance.</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="write">Rich information (shape, texture, colour, many features at once). Passive, so it emits nothing and does not interfere. Cheap and contact-free. It can control relative to what is seen, without needing the absolute position of the robot or the target.</p>
+<p><a class="cite" data-pages="L2:17-17">Lec 2 p. 17</a></p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="pa8">
+<p class="stem"><b>A8</b> (Week 9) · With one eye closed, why can you not tell the distance to a bottle of unknown size from one image?</p>
+<details><summary>Hint</summary><div><p>Write $\bar m = z\,m$. What does the image give you?</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="write">Projection divides by depth: $m=[x/z,\,y/z,\,1]^{\mathsf T}$. A small bottle near the camera and a bigger one further away give the same image, so one image fixes only the direction (the ray), not the depth $z$. Extra information is needed: a known size, a second view, or a range sensor.</p>
+<p><a class="cite" data-pages="L2:30-30">Lec 2 p. 30</a></p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="pa9">
+<p class="stem"><b>A9</b> (Week 9) · Do all 3D points on the same ray through the camera centre map to the same image point?</p>
+<details><summary>Hint</summary><div><p>Scale $\bar m$ by $\lambda$ and compute $m$.</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="verdict">Yes.</p>
+<p class="write">The points on the ray are $\lambda\bar m$, and $\dfrac{\lambda x}{\lambda z}=\dfrac{x}{z}$, $\dfrac{\lambda y}{\lambda z}=\dfrac{y}{z}$. They give the same $m$, so the same pixel $p=Am$. This is the depth loss in A8.</p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="pa10">
+<p class="stem"><b>A10</b> (Week 9) · A straight edge appears curved in an image. Is this caused by lens distortion or by defocus?</p>
+<details><summary>Hint</summary><div><p>Which one moves points, and which one only spreads them?</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="verdict">Lens distortion.</p>
+<p class="write">Distortion is a nonlinear change of image geometry (points move, so straight lines bend). Defocus only blurs each point into a spot. Edges become fuzzy but stay straight.</p>
+<p>Distortion parameters are “not the focus of this class”, so know the concept only. <a class="cite" data-pages="L2:32-32">Lec 2 p. 32</a></p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="pa11" data-num="256,1024" data-labels="grey levels,bytes">
+<p class="stem"><b>A11</b> (Week 9) · A $32\times32$ grayscale image uses 8 bits per pixel. How many grey levels are there, and how many bytes does the image need?</p>
+<details><summary>Hint</summary><div><p>$n$ bits give $2^n$ values. 8 bits is one byte.</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="write">$2^8=256$ levels (0–255). Pixels $=32\times32=1024$, at 1 byte each $=1024$ bytes (1 KB).</p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="pa12">
+<p class="stem"><b>A12</b> (Week 9) · A point's depth $z$ doubles while its $x$ and $y$ stay fixed. What happens to its normalised coordinates? To its pixel coordinates?</p>
+<details><summary>Hint</summary><div><p>$m=[x/z,\,y/z,\,1]^{\mathsf T}$, then $p=Am$ adds the principal point.</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="write">The normalised coordinates $x/z$ and $y/z$ halve (the point moves halfway towards the optical axis). In pixels, only the offset from the principal point $(u_0,v_0)$ halves: $u-u_0=f\sigma_x\,x/z$ halves, but $u$ itself does not.</p>
+<p class="trap">Saying “the pixel coordinates halve”. That is true only if $u_0=v_0=0$. <a class="cite" data-pages="L2:30-30">Lec 2 p. 30</a></p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="pa13">
+<p class="stem"><b>A13</b> (Week 9) · What does camera calibration need?</p>
+<details><summary>Hint</summary><div><p>Calibration estimates $A$. What pairs of known and measured quantities would let you solve for it?</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="write">A calibration target of known geometry (known 3D point positions, for example a checkerboard) and the measured image (pixel) coordinates of those points. Matching them lets you solve for the intrinsic matrix $A$ ($f$, the scale factors, $(u_0,v_0)$) and the distortion.</p>
+<p><a class="cite" data-pages="L2:30-30">Lec 2 p. 30</a></p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+</section>
+
+<section data-sec="b"><h2 class="sec" id="b">Part B · Homography (past exam Q4)</h2>
+<p><strong>One toolkit for all four papers.</strong> “$H$ from $F_a$ to $F_b$” means $m_{ib}=\alpha_i H m_{ia}$ for coplanar points, with $H=R+\frac{x}{d^*}n^{*\mathsf T}$ and $\alpha_i$ the depth ratio. The scaled matrix $H_n=H/h_{33}$ has 8 unknowns $h=[h_1,\dots,h_8]^{\mathsf T}$. Each matched point with $m_{ia}=[x_a,y_a,1]^{\mathsf T}$, $m_{ib}=[x_b,y_b,1]^{\mathsf T}$ gives two linear equations:
+$$\begin{bmatrix}x_a&amp;y_a&amp;1&amp;0&amp;0&amp;0&amp;-x_ax_b&amp;-y_ax_b\\0&amp;0&amp;0&amp;x_a&amp;y_a&amp;1&amp;-x_ay_b&amp;-y_ay_b\end{bmatrix}h=\begin{bmatrix}x_b\\y_b\end{bmatrix}.$$
+So you need <strong>at least 4 coplanar points seen in both images, with no three collinear</strong>. <a class="cite" data-pages="L3:31-32">Lec 3 pp. 31–32</a> (Week 10: slides 31–32 are key points, while decomposing $H$ on slides 33–36 is “not tested”.)</p>
+
+<h3>B1 · 2016-17 Q4 <a class="cite" data-pages="E1617:6-7">exam pp. 6–7</a></h3>
+<p>Six coplanar points lie on three lines, as in the figure: $\{O_1,O_2,O_4\}$, $\{O_1,O_3,O_6\}$, $\{O_4,O_5,O_6\}$. So $O_1,O_4,O_6$ are the corners of a triangle and $O_2,O_3,O_5$ lie on its sides. The camera views them from $F_a$ and $F_b$, and $H$ maps $F_a\to F_b$.</p>
+<p><img src="quiz-assets/ee6221-2016-2017-q4-six-points-three-lines.jpg" alt="Six points O1 to O6 on three lines forming a triangle O1, O4, O6" style="max-width:100%"></p>
+
+<div class="qn" data-id="pb1a">
+<p class="stem"><b>B1(a)</b> (12 marks) · $O_2,O_3,O_5,O_6$ are seen in both images, with $m_{2a}=[a_1,a_2,1]^{\mathsf T}$, $m_{3a}=[a_3,a_4,1]^{\mathsf T}$, $m_{5a}=[a_5,a_6,1]^{\mathsf T}$, $m_{6a}=[a_7,a_8,1]^{\mathsf T}$ and similarly $m_{ib}$ with $b_1,\dots,b_8$. Find $H/h_{33}$.</p>
+<details><summary>Hint</summary><div><p>Start from $m_{ib}=\alpha_iHm_{ia}$, divide $H$ by $h_{33}$, use row 3 to eliminate the depth ratio, then stack 4 points into one $8\times8$ system.</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<ol>
+<li>$m_{ib}=\alpha_i H m_{ia}=(\alpha_ih_{33})\,H_n m_{ia}$ with $H_n=H/h_{33}=\begin{bmatrix}h_1&amp;h_2&amp;h_3\\h_4&amp;h_5&amp;h_6\\h_7&amp;h_8&amp;1\end{bmatrix}$. Dividing by $h_{33}$ removes the scale ambiguity (an unknown-scale $H$ has only 8 independent entries).</li>
+<li>Row 3: $1=\alpha_ih_{33}(h_7x_a+h_8y_a+1)$, so the scalar $\alpha_ih_{33}$ is fixed by $h$. Substitute it into rows 1 and 2 and multiply out. This gives the two linear rows in the toolkit above.</li>
+<li>Stack the four points (O₂: $a_1,a_2\to b_1,b_2$; O₃: $a_3,a_4\to b_3,b_4$; O₅; O₆):
+$$\underbrace{\begin{bmatrix}a_1&amp;a_2&amp;1&amp;0&amp;0&amp;0&amp;-a_1b_1&amp;-a_2b_1\\0&amp;0&amp;0&amp;a_1&amp;a_2&amp;1&amp;-a_1b_2&amp;-a_2b_2\\ a_3&amp;a_4&amp;1&amp;0&amp;0&amp;0&amp;-a_3b_3&amp;-a_4b_3\\0&amp;0&amp;0&amp;a_3&amp;a_4&amp;1&amp;-a_3b_4&amp;-a_4b_4\\ \vdots&amp;&amp;&amp;&amp;&amp;&amp;&amp;\vdots\\0&amp;0&amp;0&amp;a_7&amp;a_8&amp;1&amp;-a_7b_8&amp;-a_8b_8\end{bmatrix}}_{M\ (8\times8)}h=\begin{bmatrix}b_1\\b_2\\ \vdots\\b_8\end{bmatrix}.$$</li>
+<li>No three of $O_2,O_3,O_5,O_6$ are collinear (check against the three lines), so $M$ is invertible: $h=M^{-1}[b_1,\dots,b_8]^{\mathsf T}$. Fold $h$ back into $H_n$.</li>
+</ol>
+<p class="write">Marks: the relation $m_b=\alpha Hm_a$, the scaling by $h_{33}$, eliminating $\alpha$ with row 3, the explicit $M$, the invertibility condition, and the final $H/h_{33}$ assembled from $h$.</p>
+<p class="trap">Leaving $\alpha_i$ in the final system. It is unknown per point and must be eliminated with row 3.</p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="pb1b">
+<p class="stem"><b>B1(b)</b> (4 marks) · $F_a$ sees only $O_1,O_2,O_3,O_5$, and $F_b$ sees only $O_2,O_3,O_4,O_5$. Can $H/h_{33}$ be calculated?</p>
+<details><summary>Hint</summary><div><p>Only points seen in <em>both</em> images give equations.</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="verdict">No.</p>
+<p class="write">The common points are only $O_2,O_3,O_5$: 3 points give 6 equations for 8 unknowns, so the system is underdetermined. At least 4 coplanar points matched in both images, no three collinear, are needed.</p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="pb1c" data-num="6" data-labels="four-point groups">
+<p class="stem"><b>B1(c)</b> (4 marks) · All six points are seen in both images. List all combinations of feature points that can be used to calculate $H/h_{33}$. How many four-point groups are there?</p>
+<details><summary>Hint</summary><div><p>There are $\binom64=15$ groups. Remove every group that contains one of the three collinear triples. Can a 4-point group contain two triples?</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<ol>
+<li>$\binom64=15$ four-point groups in total.</li>
+<li>Each collinear triple, plus any one of the other 3 points, gives a bad group: $3\times3=9$. Two triples share at most one point, so their union has 5 points and no group is counted twice.</li>
+<li>$15-9=6$ valid groups:
+$\{O_1,O_2,O_3,O_5\}$, $\{O_2,O_3,O_4,O_5\}$, $\{O_2,O_3,O_5,O_6\}$ (the three side points plus any corner), and $\{O_1,O_2,O_5,O_6\}$, $\{O_1,O_3,O_4,O_5\}$, $\{O_2,O_3,O_4,O_6\}$.</li>
+</ol>
+<p class="write">6 groups of four points, as listed, each coplanar with no three collinear. Any 5 or all 6 points also work (they always contain a valid group), solved by least squares on the stacked $Mh=m$.</p>
+<p class="trap">Listing $\{O_1,O_2,O_3,O_4\}$. It contains the collinear triple $O_1,O_2,O_4$, so it gives a singular $M$. (One handwritten solution in the archive lists it.)</p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<h3>B2 · 2015-16 Q4 <a class="cite" data-pages="E1516:10-11">exam pp. 10–11</a></h3>
+<p>Five coplanar points $O_1,\dots,O_5$, any four of them non-collinear. Three camera poses: $F_b$ sees all five, $F_a$ sees $O_1$–$O_4$ and $F_c$ sees $O_2$–$O_5$. $H$: $F_a\to F_b$, $J$: $F_b\to F_c$, $K$: $F_a\to F_c$. (The paper prints “normalised coordinates in $F_b$” for the $c$-points; it means $F_c$.)</p>
+
+<div class="qn" data-id="pb2a">
+<p class="stem"><b>B2(a)</b> (14 marks) · Derive two sets of equations that can be used to compute $H/h_{33}$ and $J/j_{33}$.</p>
+<details><summary>Hint</summary><div><p>For each matrix, which four points are seen in both of its images?</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<ol>
+<li><strong>$H$ ($a\to b$):</strong> common points $O_1,O_2,O_3,O_4$. For each, $m_{ib}=\alpha_iHm_{ia}$, so in scaled form use the two toolkit rows with $(x_a,y_a)=(a_{ix},a_{iy})$, $(x_b,y_b)=(b_{ix},b_{iy})$. Stack them into $M_Hh=[b_{1x},b_{1y},\dots,b_{4y}]^{\mathsf T}$, then $h=M_H^{-1}(\cdot)$.</li>
+<li><strong>$J$ ($b\to c$):</strong> common points $O_2,O_3,O_4,O_5$. Use $m_{ic}=\beta_iJm_{ib}$ and the same rows with $(x_a,y_a)\to(b_{ix},b_{iy})$, $(x_b,y_b)\to(c_{ix},c_{iy})$. Stack them into $M_Jj=[c_{2x},\dots,c_{5y}]^{\mathsf T}$.</li>
+<li>Each $8\times8$ system is invertible only if no <em>three</em> of its four points are collinear. The paper's “any four non-collinear” is read as guaranteeing this.</li>
+</ol>
+<p class="write">Two $8\times8$ linear systems, each derived from $m=\alpha\,(\cdot)\,m$ with row-3 elimination, as in B1(a).</p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="pb2b">
+<p class="stem"><b>B2(b)</b> (6 marks) · Can $K/k_{33}$ be obtained? If yes, how? If no, why not?</p>
+<details><summary>Hint</summary><div><p>Directly, $F_a$ and $F_c$ share only $O_2,O_3,O_4$. But you already have $H$ and $J$. Chain the two maps.</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="verdict">Yes, by composing the two homographies.</p>
+<ol>
+<li>Directly it is impossible: only 3 common points ($O_2,O_3,O_4$).</li>
+<li>For any point on the plane: $m_{ib}=\alpha_iHm_{ia}$ and $m_{ic}=\beta_iJm_{ib}$, so $m_{ic}=\alpha_i\beta_i\,JH\,m_{ia}$. Hence $K\propto JH$ (in Euclidean terms $\bar m_c=J\bar m_b=JH\bar m_a$).</li>
+<li>With the scaled matrices from (a): $K_s=\dfrac{J}{j_{33}}\dfrac{H}{h_{33}}$, then $\dfrac{K}{k_{33}}=\dfrac{K_s}{(K_s)_{33}}$ (divide by its own (3,3) entry).</li>
+</ol>
+<p class="trap">Answering “No, only three common points”. That ignores the middle view. An archive solution makes exactly this mistake. The order also matters: $JH$, not $HJ$ ($H$ acts first).</p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<h3>B3 · AY24-25 S1 Q4 <a class="cite" data-pages="E2425:4-5">exam pp. 4–5</a></h3>
+<p>Twelve coplanar points form a grid. Columns $\{O_1..O_4\}$, $\{O_5..O_8\}$, $\{O_9..O_{12}\}$ and rows $\{O_1,O_5,O_9\}$, $\{O_2,O_6,O_{10}\}$, $\{O_3,O_7,O_{11}\}$, $\{O_4,O_8,O_{12}\}$ make the 7 lines. $F_p$ sees $O_1$–$O_8$, $F_q$ sees all 12, and $F_d$ sees $O_5$–$O_{12}$. $G$: $F_p\to F_q$, $H$: $F_q\to F_d$, $J$: $F_p\to F_d$. Scaled matrices: $G_n,H_n,J_n$.</p>
+<p><img src="quiz-assets/ee6221-2024-2025-s1-q4-twelve-point-grid.jpg" alt="Three camera frames Fp, Fq, Fd with maps G, H, J and a 3 by 4 grid of points O1 to O12" style="max-width:100%"></p>
+
+<div class="qn" data-id="pb3a">
+<p class="stem"><b>B3(a)</b> (7 marks) · Choose one group of feature points and derive $G_n$.</p>
+<details><summary>Hint</summary><div><p>Common to $F_p$ and $F_q$: $O_1$–$O_8$ (two columns). Pick 4 points with no three on one line.</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="write">Choose e.g. $O_1,O_2,O_5,O_6$: two from each column, and in different rows, so no three are collinear. For each, $m_{iq}=\alpha_iG\,m_{ip}$. Scale by $g_{33}$, eliminate $\alpha_i$ with row 3, and stack the $2\times8$ rows with $(x_a,y_a)=(p_{ix},p_{iy})$, $(x_b,y_b)=(q_{ix},q_{iy})$. Then $g=M^{-1}[q_{1x},q_{1y},q_{2x},\dots,q_{6y}]^{\mathsf T}$ gives $G_n$.</p>
+<p class="trap">Picking $O_1,O_2,O_3,O_5$: $O_1,O_2,O_3$ lie on one column, so $M$ is singular.</p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="pb3b" data-num="36" data-labels="groups">
+<p class="stem"><b>B3(b)</b> (6 marks) · How many groups of four feature points can be used to derive $H_n$?</p>
+<details><summary>Hint</summary><div><p>$H$ is $F_q\to F_d$. The common points are $O_5$–$O_{12}$: two columns of 4. The rows now contain only 2 of these points each. Which groups contain three collinear points?</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<ol>
+<li>Common points: $O_5,\dots,O_{12}$, so $\binom84=70$ groups.</li>
+<li>Within these 8 points, the only lines with ≥ 3 of them are the two columns. The rows hold just 2 each ($O_5,O_9$ etc.), so they cannot cause collinear triples.</li>
+<li>Bad groups (≥ 3 points from one column): $\binom43\binom41+\binom44=17$ per column, so 34.</li>
+<li>Good groups: $70-34=36$, which equals exactly 2 points from each column, $\binom42\binom42=6\times6=36$.</li>
+</ol>
+<p class="write">36 groups, each made of 2 points from $\{O_5..O_8\}$ and 2 from $\{O_9..O_{12}\}$.</p>
+<p class="trap">The archived student solution gets 68 by also counting “3 from one column + 1 from the other”. Those groups contain three collinear points and cannot determine $H$.</p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="pb3c">
+<p class="stem"><b>B3(c)</b> (7 marks) · Derive $J_n$.</p>
+<details><summary>Hint</summary><div><p>Points common to $F_p$ and $F_d$: $O_5$–$O_8$. Is that enough on its own? This is B2(b) again.</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<ol>
+<li>Directly it is impossible: the common points $O_5,O_6,O_7,O_8$ are all on one line (a column), so $M$ is singular.</li>
+<li>Compose through $F_q$: $m_{iq}=\alpha_iGm_{ip}$ and $m_{id}=\beta_iHm_{iq}$, so $m_{id}=\alpha_i\beta_i\,HG\,m_{ip}$ and $J\propto HG$.</li>
+<li>$J_n=\dfrac{H_nG_n}{(H_nG_n)_{33}}$, using $G_n$ from (a) and $H_n$ from any group in (b).</li>
+</ol>
+<p class="write">$J_n=H_nG_n/(H_nG_n)_{33}$, because the direct route fails (all common points are collinear).</p>
+<p class="trap">Writing $GH$. $G$ acts first ($p\to q$), so it sits on the right.</p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<h3>B4 · 2017-18 Q4 <a class="cite" data-pages="E1718:8-8">exam p. 8</a></h3>
+<div class="qn" data-id="pb4a">
+<p class="stem"><b>B4(a)</b> (10 marks) · Four coplanar, non-collinear points are measured in <em>pixel</em> coordinates $p_{ia}=[a_{2i-1},a_{2i},1]^{\mathsf T}$ at $P_a$ and $p_{ib}=[b_{2i-1},b_{2i},1]^{\mathsf T}$ at $P_b$. With depth ratios $\alpha_i$ and calibration matrix $A$, determine $H/h_{33}$.</p>
+<details><summary>Hint</summary><div><p>$H$ relates <em>normalised</em> coordinates. Convert first: $p=Am$.</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<ol>
+<li>Normalise: $m_{ia}=A^{-1}p_{ia}$ and $m_{ib}=A^{-1}p_{ib}$. Their third entries stay 1 because $A$'s last row is $[0,0,1]$.</li>
+<li>Then $m_{ib}=\alpha_iHm_{ia}$, which in pixels reads $p_{ib}=\alpha_i\,AHA^{-1}\,p_{ia}$ (the projective homography $G=AHA^{-1}$).</li>
+<li>Scale by $h_{33}$, eliminate $\alpha_i$ with row 3, and stack 4 points into an $8\times8$ system as in B1(a), using the entries of $m_{ia},m_{ib}$. Solve for $h$ to get $H/h_{33}$.</li>
+</ol>
+<p class="trap">Plugging pixel numbers straight into the rows gives $G=AHA^{-1}$ (scaled), not $H$. You must say where $A^{-1}$ enters. <a class="cite" data-pages="L2:30-30">Lec 2 p. 30</a></p>
+<p class="got">Parts (b) (decomposing $H$ into $R$ and $x/d^*$) and (c) (a visual-servo control law) are skipped. The lecturer said decomposition is not tested, and (c) is Lec 5–6 material, outside the Quiz 2 scope.</p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+</section>
+
+<section data-sec="c"><h2 class="sec" id="c">Part C · Multi-sensor Kalman fusion (past exam Q5)</h2>
+<p><strong>Four moves every year:</strong> (1) write the error $\tilde x_{k+1}=x_{k+1}-\hat x_{k+1}$ and substitute the sensor models; (2) square it and take expectations, where the cross terms vanish because the variables are uncorrelated and zero-mean; (3) set $\partial p_{k+1}/\partial(\text{each gain})=0$; (4) substitute back. A useful check at the end: optimal fusion satisfies $1/p_{k+1}=1/p_k+\sum_i(\text{information of sensor }i)$. <a class="cite" data-pages="L4:26-29">Lec 4 pp. 26–29</a> <a class="cite" data-pages="L4:40-42">pp. 40–42</a></p>
+
+<h3>C1 · 2016-17 Q5 <a class="cite" data-pages="E1617:8-8">exam p. 8</a></h3>
+<p>$x_{k+1}=x_k$. Three sensors $y_{ik}=x_k+v_{ik}$ with variances $\sigma^2,\sigma^2,4\sigma^2$. <strong>One</strong> gain: $\hat x_{k+1}=\hat x_k+M_k(y_{1k}-\hat x_k)+M_k(y_{2k}-\hat x_k)+M_k(y_{3k}-\hat x_k)$.</p>
+
+<div class="qn" data-id="pc1a">
+<p class="stem"><b>C1(a)</b> (15 marks) · Find the update equation for $p_{k+1}$ and derive the $M_k$ that minimises it.</p>
+<details><summary>Hint</summary><div><p>Each $y_{ik}-\hat x_k=\tilde x_k+v_{ik}$. You get $(1-3M_k)\tilde x_k$ plus a noise term. What is the variance of $v_1+v_2+v_3$?</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<ol>
+<li>$\tilde x_{k+1}=x_k-\hat x_k-M_k\sum_i(\tilde x_k+v_{ik})=(1-3M_k)\tilde x_k-M_k(v_{1k}+v_{2k}+v_{3k})$.</li>
+<li>Square it. The cross terms vanish (uncorrelated, zero mean), and $V(v_1+v_2+v_3)=\sigma^2+\sigma^2+4\sigma^2=6\sigma^2$:
+$$p_{k+1}=(1-3M_k)^2p_k+6\sigma^2M_k^2.$$</li>
+<li>$\dfrac{\partial p_{k+1}}{\partial M_k}=-6(1-3M_k)p_k+12\sigma^2M_k=0\Rightarrow M_k=\dfrac{p_k}{3p_k+2\sigma^2}$.</li>
+<li>Substitute: $1-3M_k=\dfrac{2\sigma^2}{3p_k+2\sigma^2}$, so
+$$p_{k+1}=\frac{2\sigma^2p_k}{3p_k+2\sigma^2}\quad\Big(\text{i.e. }\frac1{p_{k+1}}=\frac1{p_k}+\frac{3}{2\sigma^2}\Big).$$</li>
+</ol>
+<p class="trap">Writing the noise variance as $(\sigma+\sigma+2\sigma)^2$. Variances of uncorrelated terms add; standard deviations do not.</p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="pc1b" data-num="7" data-labels="k">
+<p class="stem"><b>C1(b)</b> (5 marks) · With $p_1=\sigma^2$, find the value of $k$, if any, such that $p_{k+1}$ first becomes less than $\sigma^2/10$.</p>
+<details><summary>Hint</summary><div><p>Use the reciprocal form. Each step adds the same amount to $1/p$.</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<ol>
+<li>$\dfrac1{p_{k+1}}=\dfrac1{p_1}+k\cdot\dfrac{3}{2\sigma^2}=\dfrac{2+3k}{2\sigma^2}$, so $p_{k+1}=\dfrac{2\sigma^2}{2+3k}$.</li>
+<li>$p_{k+1}&lt;\dfrac{\sigma^2}{10}\iff 2+3k&gt;20\iff k&gt;6$.</li>
+<li>Check: $k=6$ gives exactly $\sigma^2/10$ (not less), and $k=7$ gives $2\sigma^2/23&lt;\sigma^2/10$.</li>
+</ol>
+<p class="write">$k=7$ (so $p_8=2\sigma^2/23$).</p>
+<p class="trap">Answering $k=6$ (boundary equality) or forgetting that the count starts from $p_1$, not $p_0$.</p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<h3>C2 · AY24-25 S1 Q5 <a class="cite" data-pages="E2425:5-5">exam p. 5</a></h3>
+<p>$x_{k+1}=x_k$. $y_{ik}=x_k+v_{ik}$ with variances $a^2,4a^2,9a^2$.</p>
+
+<div class="qn" data-id="pc2a">
+<p class="stem"><b>C2(a)</b> (10 marks) · Using $\hat x_{k+1}=\hat x_k+L_{1k}(y_{1k}-\hat x_k)+L_{2k}(y_{2k}-\hat x_k)+L_{3k}(y_{3k}-\hat x_k)$, design the update laws for the three gains that minimise $p_{k+1}$.</p>
+<details><summary>Hint</summary><div><p>Let $S=L_1+L_2+L_3$. Each partial derivative gives $L_i\sigma_i^2=(1-S)p_k$. Sum the $L_i$ to find $S$.</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<ol>
+<li>$\tilde x_{k+1}=(1-S)\tilde x_k-L_1v_1-L_2v_2-L_3v_3$, so $p_{k+1}=(1-S)^2p_k+a^2L_1^2+4a^2L_2^2+9a^2L_3^2$.</li>
+<li>$\partial/\partial L_i$: $-2(1-S)p_k+2\sigma_i^2L_i=0\Rightarrow L_i=\dfrac{(1-S)p_k}{\sigma_i^2}$.</li>
+<li>Sum: $S=(1-S)p_k\Big(\dfrac1{a^2}+\dfrac1{4a^2}+\dfrac1{9a^2}\Big)=(1-S)p_k\dfrac{49}{36a^2}$, so $1-S=\dfrac{36a^2}{36a^2+49p_k}$.</li>
+<li>$$L_{1k}=\frac{36p_k}{36a^2+49p_k},\quad L_{2k}=\frac{9p_k}{36a^2+49p_k},\quad L_{3k}=\frac{4p_k}{36a^2+49p_k},\quad p_{k+1}=\frac{36a^2p_k}{36a^2+49p_k}.$$</li>
+</ol>
+<p class="write">The gains are proportional to $1/\sigma_i^2$ (ratio 36 : 9 : 4), so the least noisy sensor gets the most weight.</p>
+<p>No calculator: $\tfrac11+\tfrac14+\tfrac19=\tfrac{36+9+4}{36}=\tfrac{49}{36}$.</p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="pc2b">
+<p class="stem"><b>C2(b)</b> (10 marks) · Design a strategy with <em>one</em> gain for all three sensors. Compare it with (a): advantages and disadvantages.</p>
+<details><summary>Hint</summary><div><p>Same as C1 with noise variance $a^2+4a^2+9a^2$. Then compare the reciprocals $1/p_{k+1}$.</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<ol>
+<li>$p_{k+1}=(1-3L_k)^2p_k+14a^2L_k^2$, and $\partial/\partial L_k=0$ gives $L_k=\dfrac{3p_k}{9p_k+14a^2}$, so $p_{k+1}=\dfrac{14a^2p_k}{9p_k+14a^2}$.</li>
+<li>Compare information gained per step: one gain adds $\dfrac{9}{14a^2}\approx\dfrac{0.64}{a^2}$ to $1/p$, while three gains add $\dfrac{49}{36a^2}\approx\dfrac{1.36}{a^2}$.</li>
+</ol>
+<p class="write">Three gains: lower variance (the optimal weighting by $1/\sigma_i^2$), but more computation and you must know each sensor's variance. One gain: simpler and cheaper, but it weights the noisy sensor as heavily as the good one. Here it is even worse than using sensor 1 alone ($9/14&lt;1$). The two are equal only when all variances are equal.</p>
+<p class="trap">Saying one gain is “just as good”. Show the number that proves it is not.</p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<h3>C3 · 2015-16 Q5 <a class="cite" data-pages="E1516:12-12">exam p. 12</a></h3>
+<p>$x_{k+1}=x_k$. Two sensors $z_{ik}=c_ix_k+v_{ik}$ ($c_i&gt;0$) with variances $\sigma_1^2,\sigma_2^2$. $\hat x_{k+1}=\hat x_k+L_{1k}(z_{1k}-c_1\hat x_k)+L_{2k}(z_{2k}-c_2\hat x_k)$.</p>
+
+<div class="qn" data-id="pc3a">
+<p class="stem"><b>C3(a)</b> (6 marks) · Derive the update equation for $p_{k+1}$.</p>
+<details><summary>Hint</summary><div><p>$z_i-c_i\hat x=c_i\tilde x+v_i$.</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="write">$\tilde x_{k+1}=(1-c_1L_{1k}-c_2L_{2k})\tilde x_k-L_{1k}v_{1k}-L_{2k}v_{2k}$, so
+$$p_{k+1}=(1-c_1L_{1k}-c_2L_{2k})^2p_k+L_{1k}^2\sigma_1^2+L_{2k}^2\sigma_2^2.$$
+State that the cross terms vanish because $\tilde x_k,v_{1k},v_{2k}$ are uncorrelated and zero-mean.</p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="pc3b">
+<p class="stem"><b>C3(b)</b> (8 marks) · Derive $L_{1k},L_{2k}$ that minimise $p_{k+1}$.</p>
+<details><summary>Hint</summary><div><p>Let $g=1-c_1L_1-c_2L_2$. The partials give $L_i\sigma_i^2=c_i\,g\,p_k$.</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<ol>
+<li>$\partial/\partial L_i$: $-2c_i g\,p_k+2L_i\sigma_i^2=0\Rightarrow L_i=\dfrac{c_i\,g\,p_k}{\sigma_i^2}$.</li>
+<li>Substitute into $g$: $g=1-g\,p_kS$ with $S=\dfrac{c_1^2}{\sigma_1^2}+\dfrac{c_2^2}{\sigma_2^2}$, so $g=\dfrac1{1+p_kS}$.</li>
+<li>$$L_{ik}=\frac{c_ip_k}{\sigma_i^2(1+p_kS)},\qquad p_{k+1}=\frac{p_k}{1+p_kS}\quad\Big(\frac1{p_{k+1}}=\frac1{p_k}+\frac{c_1^2}{\sigma_1^2}+\frac{c_2^2}{\sigma_2^2}\Big).$$</li>
+</ol>
+<p>Check: with $c_1=c_2=1$ this reduces to the C2 pattern (the gains are proportional to $1/\sigma_i^2$).</p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="pc3c">
+<p class="stem"><b>C3(c)</b> (6 marks) · Choose $c_1,c_2$ so that $p_{k+1}$ does not depend on $\sigma_1^2,\sigma_2^2$, if possible.</p>
+<details><summary>Hint</summary><div><p>$\sigma_i$ enters $p_{k+1}$ only through $c_i^2/\sigma_i^2$.</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="write">Yes. Choose $c_1=\sigma_1$ and $c_2=\sigma_2$ (more generally $c_i=\kappa_i\sigma_i$ with fixed $\kappa_i$). Then $S=2$ and $p_{k+1}=\dfrac{p_k}{1+2p_k}$, which is independent of the noise variances (given $p_0$).</p>
+<p>Intuition: a sensor's usefulness is its signal-to-noise ratio $c_i/\sigma_i$. Scaling the gain with the noise keeps that ratio fixed.</p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<h3>C4 · 2017-18 Q5 <a class="cite" data-pages="E1718:9-9">exam p. 9</a></h3>
+<p>Temperature $x_{k+1}=x_k+w_k$ (process noise variance $\sigma_w^2$). $N$ sensors $z_{ik}=x_k+v_{ik}$, each with variance $\sigma^2$. $\hat x_{k+1}=\hat x_k+\sum_{i=1}^NK_{ik}(z_{ik}-\hat x_k)$.</p>
+
+<div class="qn" data-id="pc4a">
+<p class="stem"><b>C4(a)</b> (12 marks) · Derive the difference equations for $\tilde x_{k+1}$ and $p_{k+1}$.</p>
+<details><summary>Hint</summary><div><p>Now $x_{k+1}$ carries $+w_k$, which survives in the error and adds $\sigma_w^2$.</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="write">$\tilde x_{k+1}=\Big(1-\sum_iK_{ik}\Big)\tilde x_k+w_k-\sum_iK_{ik}v_{ik}$, so
+$$p_{k+1}=\Big(1-\sum_iK_{ik}\Big)^2p_k+\sigma_w^2+\sigma^2\sum_iK_{ik}^2.$$</p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="pc4b">
+<p class="stem"><b>C4(b)</b> (8 marks) · Find the optimal gains and the update law for $p_{k+1}$.</p>
+<details><summary>Hint</summary><div><p>Every partial gives $K_i\sigma^2=(1-\sum K)p_k$. The right side is the same for every $i$, so all gains are equal.</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<ol>
+<li>$\partial/\partial K_i$: $K_{ik}=\dfrac{(1-\sum_jK_{jk})p_k}{\sigma^2}$, the same for every $i$. Call it $K_k$.</li>
+<li>$K_k\sigma^2=(1-NK_k)p_k\Rightarrow K_k=\dfrac{p_k}{\sigma^2+Np_k}$.</li>
+<li>$$p_{k+1}=\frac{\sigma^2p_k}{\sigma^2+Np_k}+\sigma_w^2.$$</li>
+</ol>
+<p>Reading it: the fusion step shrinks $p$ (equivalent to one sensor with variance $\sigma^2/N$), then the process noise adds $\sigma_w^2$ back. So with $\sigma_w&gt;0$, $p$ settles at a positive floor instead of tending to 0.</p>
+<p class="trap">Dropping $\sigma_w^2$, or putting it inside the fraction. $w_k$ is not touched by the gains.</p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+</section>
+
+<section data-sec="z"><h2 class="sec" id="z">After this</h2>
+<p>Untick anything you could not reproduce on paper and redo it tomorrow. If you have not yet sat <a href="quiz-02-mock-01.html">Mock 1</a>, sit it cold next. Its Section B is a fresh two-sensor fusion question, so Part C here is direct preparation.</p>
+</section>
+</main>
+</div>
+<dialog id="pages"><p><strong id="ptitle"></strong> · <a id="plink" target="_blank">open PDF at this page</a> <button type="button" id="pclose" style="float:right">Close</button></p><div id="pimgs"></div></dialog>
+<script>
+addEventListener("DOMContentLoaded", () => {
+const LEC = s => [`../resources/part-2/${s}.pdf`, `quiz-02-primer-pages/${s}`];
+const EX = "../resources/public-archive-2026-08-24/";
+const SRC = { L1: LEC("part-2-lecture-01-introduction-and-sensors"), L2: LEC("part-2-lecture-02-vision-sensors-and-systems"),
+  L3: LEC("part-2-lecture-03-structure-and-pose-estimation"), L4: LEC("part-2-lecture-04-kalman-filter-sensor-integration"),
+  E1516: [EX + "past-exam-solutions-2015-2018/EE6221%202015-2016.pdf", "quiz-02-past-pages/exam-2015-2016"],
+  E1617: [EX + "past-exam-solutions-2015-2018/EE6221%202016-2017.pdf", "quiz-02-past-pages/exam-2016-2017"],
+  E1718: [EX + "past-exam-solutions-2015-2018/EE6221%202017-2018.pdf", "quiz-02-past-pages/exam-2017-2018"],
+  E2425: [EX + "past-exam-2024-2025/test-final-2024-2025-semester-1.pdf", "quiz-02-past-pages/exam-2024-2025-s1"] };
+const KEY = "ee6221-quiz2-past-guided-v1";
+let state = {};
+try { state = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} };
+
+// citations: data-pages="L1:13-15" or "E1617:6-7" -> PDF link + pop-up of the rendered pages
+const dlg = document.getElementById("pages");
+document.querySelectorAll("a.cite").forEach(a => {
+  const [k, r] = a.dataset.pages.split(":"), [lo, hi] = r.split("-").map(Number);
+  a.href = `${SRC[k][0]}#page=${lo}`;
+  a.addEventListener("click", ev => {
+    ev.preventDefault();
+    document.getElementById("ptitle").textContent = a.textContent;
+    document.getElementById("plink").href = a.href;
+    const box = document.getElementById("pimgs"); box.innerHTML = "";
+    for (let p = lo; p <= hi; p++) { const img = new Image(); img.alt = `${a.textContent}, PDF page ${p}`;
+      img.src = `${SRC[k][1]}-p${String(p).padStart(3, "0")}.jpg`; box.append(img); }
+    dlg.showModal();
+  });
+});
+document.getElementById("pclose").onclick = () => dlg.close();
+
+// per question: { tf, txt, num:[...], got } saved under the question id
+const st = id => state[id] || (state[id] = {});
+const frac = v => { const [a, b] = v.trim().split("/"); return b === undefined ? Number(a) : Number(a) / Number(b); };
+const toc = document.getElementById("toc");
+function tally() {
+  toc.innerHTML = ""; let all = 0;
+  document.querySelectorAll("section[data-sec]").forEach(s => {
+    const qs = [...s.querySelectorAll(".qn")], ok = qs.filter(q => st(q.dataset.id).got).length; all += ok;
+    const li = document.createElement("li");
+    li.innerHTML = `<a href="#${s.dataset.sec}">${s.querySelector("h2").textContent}</a>` +
+      (qs.length ? `<span class="sc${ok === qs.length ? " done" : ""}">${ok}/${qs.length}</span>` : "");
+    toc.append(li);
+  });
+  document.getElementById("total").textContent = `${all}/${document.querySelectorAll(".qn").length}`;
+}
+document.querySelectorAll(".qn").forEach(q => {
+  const id = q.dataset.id, s0 = st(id), ans = q.querySelector("details.ans");
+  const box = document.createElement("div"); box.className = "try";
+  const fb = document.createElement("p"); fb.className = "fb";
+  const ta = document.createElement("textarea");
+  ta.placeholder = q.dataset.tf ? "Your one-line reason…" : "Your working (or do it on paper)…";
+  ta.value = s0.txt || ""; ta.oninput = () => { st(id).txt = ta.value; save(); };
+  box.append(ta);
+  if (q.dataset.tf) {
+    const row = document.createElement("p"), btns = [];
+    const pick = (v, restore) => {
+      st(id).tf = v; if (!restore) save();
+      btns.forEach(b => b.classList.toggle("on", b.dataset.v === v));
+      const ok = v === q.dataset.tf, word = q.dataset.tf === "T" ? "TRUE" : "FALSE";
+      fb.className = "fb " + (ok ? "ok" : "bad");
+      fb.textContent = ok ? `✓ Correct: ${word}. Now compare your reason with the guidance below.` : `✗ Not quite: it is ${word}. Read the guidance below and find where your reasoning went off.`;
+      ans.open = true;
+    };
+    ["T", "F"].forEach(v => { const b = document.createElement("button"); b.type = "button"; b.dataset.v = v;
+      b.textContent = v === "T" ? "True" : "False"; b.onclick = () => pick(v); btns.push(b); row.append(b, " "); });
+    box.append(row, fb);
+    if (s0.tf) pick(s0.tf, true);
+  } else if (q.dataset.num) {
+    const keys = q.dataset.num.split(",").map(frac), labels = q.dataset.labels.split(","), row = document.createElement("p"), ins = [];
+    labels.forEach((l, n) => { const i = document.createElement("input"); i.setAttribute("aria-label", l); i.value = (s0.num || [])[n] || "";
+      ins.push(i); row.append(`${l} = `, i, "  "); });
+    const b = document.createElement("button"); b.type = "button"; b.textContent = "Check";
+    const check = restore => {
+      const vals = ins.map(i => i.value); st(id).num = vals; if (!restore) save();
+      const bad = vals.map((v, n) => v.trim() === "" || !(Math.abs(frac(v) - keys[n]) < 1e-3) ? labels[n] : null).filter(Boolean);
+      fb.className = "fb " + (bad.length ? "bad" : "ok");
+      fb.textContent = bad.length ? `✗ Check ${bad.join(", ")}. The guidance below shows each step.` : "✓ All correct. Compare your working with the guidance below.";
+      ans.open = true;
+    };
+    b.onclick = () => check(false); row.append(b); box.append(row, fb);
+    if (s0.num) check(true);
+  } else {
+    const b = document.createElement("button"); b.type = "button"; b.textContent = "I've written my answer: show guidance";
+    b.onclick = () => { ans.open = true; }; const row = document.createElement("p"); row.append(b); box.append(row);
+  }
+  q.querySelector("details").before(box);
+  const cb = q.querySelector(".got input");
+  cb.checked = !!s0.got;
+  cb.onchange = () => { st(id).got = cb.checked; save(); tally(); };
+});
+document.getElementById("reset").onclick = () => { state = {}; save(); location.reload(); };
+tally();
+});
+</script>
+</body>
+</html>
