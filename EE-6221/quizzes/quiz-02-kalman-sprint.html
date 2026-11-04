@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EE6221 Kalman Sprint</title>
+<link rel="stylesheet" href="quiz-assets/katex/katex.min.css">
+<style>
+:root { --ink:#172334; --muted:#435366; --bg:#eef2f5; --card:#fff; --line:#c8d2dc; --pill:#f3f6f9; --accent:#205d87; --ok:#1d7a46; --bad:#b03a2e; --warn:#b47412; --warnbg:#fff5e1;
+        font: 17px/1.55 system-ui,sans-serif; color: var(--ink); background: var(--bg); }
+@media (prefers-color-scheme: dark) { :root { --ink:#dfe7ef; --muted:#9fb0c2; --bg:#11181f; --card:#18222c; --line:#34475a; --pill:#1f2c38; --accent:#6fb3e0; --ok:#5fc48a; --bad:#e8786c; --warn:#e0a54a; --warnbg:#2b2416; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); }
+.app { display: grid; grid-template-columns: 270px minmax(0,1fr); }
+nav { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 20px 16px 3rem; border-right: 1px solid var(--line); background: var(--card); font-size: .9rem; }
+nav h2 { font-size: 1rem; margin: 0 0 .6rem; } nav a { color: var(--ink); text-decoration: none; }
+nav ol { list-style: none; padding: 0; margin: 0; } nav li { display: flex; justify-content: space-between; gap: .5em; padding: .25em .4em; border-radius: 6px; }
+nav li:hover { background: var(--pill); } nav .sc { color: var(--muted); font-variant-numeric: tabular-nums; } nav .sc.done { color: var(--ok); font-weight: 600; }
+nav .tools { margin-top: 1rem; border-top: 1px solid var(--line); padding-top: .7rem; color: var(--muted); }
+main { min-width: 0; width: 100%; max-width: 880px; margin: 24px auto; padding: 34px 46px 4rem; background: var(--card); box-shadow: 0 2px 18px #14263a19; }
+h1 { margin: 0; line-height: 1.2; } h2.sec { margin: 2.4rem 0 .5rem; border-top: 2px solid var(--accent); padding-top: 1rem; }
+p, li { max-width: 76ch; } .meta { color: var(--muted); }
+.notice { border-left: 4px solid var(--warn); background: var(--warnbg); padding: .65rem 1rem; }
+.qn { border: 1px solid var(--line); border-radius: 10px; padding: .3rem 1rem .7rem; margin: 1.1rem 0; }
+.qn > .stem { font-weight: 600; } .qn > .stem b { color: var(--accent); }
+details { margin: .45rem 0; } summary { cursor: pointer; display: inline-block; padding: .25em .8em; border: 1px solid var(--line); border-radius: 8px; background: var(--pill); }
+details[open] > summary { margin-bottom: .4rem; }
+details > div { border-left: 3px solid var(--accent); padding: .1rem 0 .1rem .9rem; }
+details.ans > div { border-left-color: var(--ok); }
+.verdict { font-weight: 700; color: var(--ok); }
+.write { background: var(--pill); border-radius: 8px; padding: .4rem .7rem; }
+.write::before { content: "Write: "; font-weight: 600; color: var(--accent); }
+.trap { color: var(--bad); } .trap::before { content: "Trap: "; font-weight: 600; }
+.got { color: var(--muted); font-size: .92rem; }
+.try textarea { font: inherit; font-size: .95rem; width: 100%; min-height: 3.2em; padding: .3em .5em; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); resize: vertical; }
+.try input { font: inherit; width: 5.5em; padding: .2em .4em; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--ink); }
+.try button.on { border-color: var(--accent); font-weight: 600; }
+.fb.ok { color: var(--ok); font-weight: 600; } .fb.bad { color: var(--bad); font-weight: 600; }
+.katex-display { overflow-x: auto; overflow-y: hidden; }
+button { font: inherit; padding: .35em .8em; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--ink); cursor: pointer; }
+a.cite { color: var(--accent); }
+dialog { max-width: 60rem; width: 94%; border: 1px solid var(--line); border-radius: 12px; background: var(--card); color: var(--ink); }
+dialog img { width: 100%; border: 1px solid var(--line); margin: .4rem 0; }
+@media (max-width: 860px) { .app { display: block; } nav { position: static; height: auto; padding-bottom: 1rem; border-right: 0; border-bottom: 1px solid var(--line); }
+  nav ol { display: grid; grid-template-columns: 1fr 1fr; gap: 0 .6em; } main { margin: 0; padding: 20px 16px 4rem; box-shadow: none; } }
+main h3 { margin: 1.6rem 0 .3rem; font-size: 1.08rem; }
+</style>
+<script defer src="quiz-assets/katex/katex.min.js"></script>
+<script defer src="quiz-assets/katex/contrib/auto-render.min.js"></script>
+<script defer src="quiz-assets/render-math.js"></script>
+</head>
+<body><div class="app">
+<nav><h2>Quiz 2 · Kalman sprint</h2><ol id="toc"></ol>
+<div class="tools">Questions I can explain: <span id="total">0</span><br><a href="quiz-02-sprint.html">Quiz 2 sprint</a><br><a href="quiz-02-mock-01.html">Mock 1</a><br><a href="quiz-02-final-mocks.html">Final mocks A and B</a><br><button id="reset" type="button">Reset answers</button></div></nav>
+<main>
+<h1>EE6221 · Kalman filter sprint (Quiz 2 scope)</h1>
+<p class="meta">About 30 minutes. This covers only what Lecture 4 can test on a closed-book, no-calculator quiz: the idea, the model and its assumptions, the gain, the variance update, two-sensor fusion, and the True/False conditions. Every part ends with a check, so do it before you move on. Click a slide reference to see the page.</p>
+<p class="notice"><strong>The one idea to keep.</strong> A Kalman update <em>fuses two things</em>: your current estimate (uncertainty $P$) and a new measurement (uncertainty $R$). The more certain one gets more weight, and the result is more certain than either. If you already know $\dfrac1p = \dfrac1{\sigma_1^2} + \dfrac1{\sigma_2^2}$, you already know the core of the Kalman filter.</p>
+
+<section data-sec="k1"><h2 class="sec" id="k1">Part 1 · Why a Kalman filter?</h2>
+<p>Several sensors (or one sensor over time) measure the same thing. The simplest way to fuse them is a <strong>weighted average</strong>, with bigger weights for better sensors. It is fast and works in real time.</p>
+<p>The lecture's point is that the <strong>Kalman filter is usually preferred</strong>. It needs <em>nearly the same processing</em> as a weighted average, and unlike the weighted average its estimate is <strong>optimal in a statistical sense</strong>. “Statistically optimal” just means the estimate has the <em>smallest possible error variance</em> on average over the noise. <a class="cite" data-pages="L4:2-3">Lec 4 pp. 2–3</a></p>
+<p>It is also <strong>recursive</strong>. Each step uses only the previous estimate, its variance and the new measurement, never the whole history. That is why it suits “systems without large data storage capabilities”. <a class="cite" data-pages="L4:17-17">Lec 4 p. 17</a></p>
+
+<div class="qn" data-id="k1a" data-tf="F">
+<p class="stem"><b>Check 1a</b> · The weighted average is preferred over the Kalman filter because it is statistically optimal.</p>
+<details class="ans"><summary>Answer</summary><div><p class="write">False. The Kalman filter is the statistically optimal one (minimum error variance), at nearly the same processing cost, so it is the one usually preferred. <a class="cite" data-pages="L4:3-3">Lec 4 p. 3</a></p></div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="k1b" data-tf="F">
+<p class="stem"><b>Check 1b</b> · The Kalman filter must store all past measurements to compute the current estimate.</p>
+<details class="ans"><summary>Answer</summary><div><p class="write">False. It is recursive: it needs only the last estimate, its variance and the new measurement, so little storage is needed. <a class="cite" data-pages="L4:17-17">Lec 4 p. 17</a></p></div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+</section>
+
+<section data-sec="k2"><h2 class="sec" id="k2">Part 2 · The model and its assumptions</h2>
+<p>The quiz uses the <strong>scalar</strong> (single-number) version. There are two equations: how the state moves, and what the sensor sees. <a class="cite" data-pages="L4:25-25">Lec 4 p. 25</a></p>
+<p>$$x_{k+1} = A\,x_k + B\,u_k + w_k \qquad\text{(state: where the thing really is)}$$
+$$z_k = H\,x_k + v_k \qquad\text{(measurement: what the sensor reports)}$$</p>
+<ul>
+<li>$x_k$ is the true state (e.g. position, or an object's shape). It is never seen directly.</li>
+<li>$A$ says how the state evolves. $A = 1$ means “it stays the same”.</li>
+<li>$B\,u_k$ is a known input. Ignore it on the quiz; it is usually 0.</li>
+<li>$H$ says how the sensor sees the state. $H = 1$ means “the sensor measures $x$ directly”.</li>
+<li>$w_k$ is <strong>process noise</strong> with variance $Q$ (the world is not perfectly predictable).</li>
+<li>$v_k$ is <strong>measurement noise</strong> with variance $R$ (the sensor is not perfect).</li>
+<li>$P_k$ is the variance of the <em>estimation error</em> $\tilde x_k = x_k - \hat x_k$, i.e. how unsure the current estimate is.</li>
+</ul>
+<p><strong>Assumption (worth marks):</strong> $w$ and $v$ are <strong>uncorrelated, zero-mean, white Gaussian</strong> noise sequences. “Uncorrelated” is what makes the cross terms vanish in the derivation (Part 6). <a class="cite" data-pages="L4:21-21">Lec 4 p. 21</a></p>
+<p>The <strong>optimal</strong> filtering equations also assume all the model parameters ($\Phi$/$A$, $B$, $G$, $H$, $Q$, $R$) are <strong>known</strong>. <a class="cite" data-pages="L4:22-22">Lec 4 p. 22</a></p>
+
+<div class="qn" data-id="k2a" data-tf="F">
+<p class="stem"><b>Check 2a</b> · The process noise $w$ and the measurement noise $v$ are assumed to be correlated.</p>
+<details class="ans"><summary>Answer</summary><div><p class="write">False. They are assumed <em>uncorrelated</em> zero-mean white Gaussian sequences, which is why the cross terms drop out of the variance. <a class="cite" data-pages="L4:21-21">Lec 4 p. 21</a></p></div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="k2b" data-tf="T">
+<p class="stem"><b>Check 2b</b> · For a stationary object measured directly by a sensor, $A = 1$ and $H = 1$.</p>
+<details class="ans"><summary>Answer</summary><div><p class="write">True. The state does not change ($x_{k+1} = x_k$, so $A = 1$) and the sensor reads the state plus noise ($z = x + v$, so $H = 1$). This is the lecture's shape-recognition example. <a class="cite" data-pages="L4:33-34">Lec 4 pp. 33–34</a></p></div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+</section>
+
+<section data-sec="k3"><h2 class="sec" id="k3">Part 3 · The update and the gain K</h2>
+<p>The new estimate is the prediction plus a correction:
+$$\hat x_{k+1} = A\hat x_k + B u_k + K_k\,\big(z_k - H\hat x_k\big).$$
+The bracket is the <strong>innovation</strong>, “what I measured minus what I expected to measure”. The <strong>Kalman gain</strong> $K$ decides how much of that surprise to believe. <a class="cite" data-pages="L4:26-26">Lec 4 p. 26</a></p>
+<p>The design rule is to <strong>choose $K$ to minimise the variance of the new estimate error</strong>. That gives (derivation in Part 6) <a class="cite" data-pages="L4:29-29">Lec 4 p. 29</a> <a class="cite" data-pages="L4:31-31">p. 31</a>
+$$K_k = \frac{A H P_k}{H^2 P_k + R}, \qquad P_{k+1} = A^2P_k + Q - \frac{(AHP_k)^2}{H^2P_k + R}.$$</p>
+<p><strong>Read K by intuition</strong> (with $A = H = 1$, $K = \dfrac{P}{P+R}$):</p>
+<ul>
+<li>$R \to 0$ (perfect sensor): $K \to 1$, so the filter trusts the measurement fully.</li>
+<li>$R \to \infty$ (useless sensor): $K \to 0$, so it ignores the measurement.</li>
+<li>$P$ large (unsure estimate): $K \to 1$, so it leans on the measurement.</li>
+</ul>
+<p class="trap">Saying “a larger R gives a larger K”. R sits in the denominator: a noisier sensor is trusted <em>less</em>.</p>
+
+<div class="qn" data-id="k3a" data-num="2/3" data-labels="K">
+<p class="stem"><b>Check 3a</b> · $A = H = 1$, $P = 6$, $R = 3$. Find $K$ (a fraction is fine).</p>
+<details><summary>Hint</summary><div><p>$K = P/(P+R)$.</p></div></details>
+<details class="ans"><summary>Answer</summary><div><p class="write">$K = 6/(6+3) = 2/3$. The estimate is unsure ($P = 6$) compared with the sensor ($R = 3$), so the filter leans toward the measurement.</p></div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="k3b" data-tf="F">
+<p class="stem"><b>Check 3b</b> · Increasing the measurement noise variance $R$ increases the Kalman gain.</p>
+<details class="ans"><summary>Answer</summary><div><p class="write">False. $K = AHP/(H^2P + R)$ falls as $R$ grows. A noisier sensor gets less weight, and as $R \to \infty$, $K \to 0$. <a class="cite" data-pages="L4:29-29">Lec 4 p. 29</a></p></div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+</section>
+
+<section data-sec="k4"><h2 class="sec" id="k4">Part 4 · The shortcut: A = H = 1, Q = 0 is just fusion</h2>
+<p>This is the case the quiz is most likely to use, a constant state measured directly. Substitute $A = H = 1$ and $Q = 0$ into Part 3:</p>
+<ol>
+<li>$K = \dfrac{P}{P+R}$</li>
+<li>$P_{\text{new}} = P - \dfrac{P^2}{P+R} = \dfrac{P(P+R) - P^2}{P+R} = \dfrac{PR}{P+R}$ (put everything over one denominator)</li>
+<li>Take reciprocals: $\dfrac{1}{P_{\text{new}}} = \dfrac{P+R}{PR} = \dfrac1R + \dfrac1P$</li>
+</ol>
+<p>So $\boxed{\dfrac{1}{P_{\text{new}}} = \dfrac1P + \dfrac1R}$. This is <strong>exactly</strong> the two-sensor fusion formula, with the old estimate playing “sensor 1” and the measurement playing “sensor 2”. Equivalently, $P_{\text{new}} = (1-K)P$.</p>
+<p><strong>Consequence (a favourite True/False):</strong> after a measurement, the variance always goes <em>down</em> and ends below both $P$ and $R$. A variance that grows after an update is a wrong answer.</p>
+
+<div class="qn" data-id="k4a" data-num="1/2,2" data-labels="K,P_new">
+<p class="stem"><b>Check 4a</b> · $A = H = 1$, $Q = 0$, $P = 4$, $R = 4$. Find $K$ and $P_{\text{new}}$.</p>
+<details><summary>Hint</summary><div><p>Equal uncertainties: who should get more weight?</p></div></details>
+<details class="ans"><summary>Answer</summary><div><p class="write">$K = 4/8 = 1/2$ (equal trust). $P_{\text{new}} = 4\cdot4/8 = 2$, or $1/P_{\text{new}} = 1/4 + 1/4 = 1/2$. Two equally good pieces of information halve the variance.</p></div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="k4b" data-num="2" data-labels="P_new">
+<p class="stem"><b>Check 4b</b> · Same setup with $P = 6$, $R = 3$. Find $P_{\text{new}}$.</p>
+<details class="ans"><summary>Answer</summary><div><p class="write">$P_{\text{new}} = 6\cdot3/9 = 2$. Check: $1/6 + 1/3 = 1/2$. Also $(1-K)P = (1/3)(6) = 2$. All three routes agree.</p></div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+</section>
+
+<section data-sec="k5"><h2 class="sec" id="k5">Part 5 · Two sensors: batch and sequential</h2>
+<p>The lecture's example: sensors $S_1$ and $S_2$ measure the same constant $x$, with $z_1 = x + v_1$ and $z_2 = x + v_2$. The noises are independent, zero-mean, with variances $\sigma_1^2$ and $\sigma_2^2$. <a class="cite" data-pages="L4:33-35">Lec 4 pp. 33–35</a></p>
+<p><strong>Batch</strong> (both readings at once): choose $K_1, K_2$ to minimise the variance. The result is <a class="cite" data-pages="L4:38-40">Lec 4 pp. 38–40</a>
+$$\hat x = \frac{\sigma_2^2\,z_1 + \sigma_1^2\,z_2}{\sigma_1^2 + \sigma_2^2}, \qquad P = \frac{\sigma_1^2\sigma_2^2}{\sigma_1^2 + \sigma_2^2}.$$
+Notice the weight on $z_1$ uses the <em>other</em> sensor's variance $\sigma_2^2$. So the <strong>less noisy sensor gets the bigger weight</strong>, and $P$ is below both $\sigma_1^2$ and $\sigma_2^2$. <a class="cite" data-pages="L4:43-43">Lec 4 p. 43</a></p>
+<p><strong>Sequential</strong> (one reading after another): start from sensor 1, $\hat x_0 = z_1$ and $P_0 = \sigma_1^2$. Then apply Part 4 with $R = \sigma_2^2$: <a class="cite" data-pages="L4:41-42">Lec 4 pp. 41–42</a>
+$$K = \frac{\sigma_1^2}{\sigma_1^2 + \sigma_2^2}, \qquad \hat x = z_1 + K(z_2 - z_1).$$
+<strong>Both routes give the same answer.</strong> (The tutor's comparison adds that batch needs more computation at once, while sequential handles readings as they arrive.)</p>
+<p class="trap">Mixing up $K$ with the weight on $z_1$. In the sequential form, $K$ multiplies the <em>innovation</em> $(z_2 - z_1)$; the weight on $z_1$ is $1 - K$.</p>
+
+<div class="qn" data-id="k5a" data-num="11,2/3" data-labels="x̂,P">
+<p class="stem"><b>Check 5a</b> · $z_1 = 10$ with $\sigma_1^2 = 1$, and $z_2 = 13$ with $\sigma_2^2 = 2$. Find the fused $\hat x$ and $P$.</p>
+<details><summary>Hint</summary><div><p>Weights $\sigma_2^2 : \sigma_1^2 = 2 : 1$, so $z_1$ counts double.</p></div></details>
+<details class="ans"><summary>Answer</summary><div><p class="write">$\hat x = (2\cdot10 + 1\cdot13)/(1+2) = 33/3 = 11$ and $P = (1\cdot2)/3 = 2/3$. Sequential check: $K = 1/3$, $\hat x = 10 + \tfrac13(3) = 11$ and $P = (1-\tfrac13)(1) = \tfrac23$. The estimate sits closer to the better sensor's reading.</p></div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="k5b" data-tf="F">
+<p class="stem"><b>Check 5b</b> · In optimal two-sensor fusion, the sensor with the larger variance receives the larger weight.</p>
+<details class="ans"><summary>Answer</summary><div><p class="write">False. The weight on $z_1$ is $\sigma_2^2/(\sigma_1^2 + \sigma_2^2)$, so the measurement with the <em>least</em> variance gets the greatest weight. <a class="cite" data-pages="L4:43-43">Lec 4 p. 43</a></p></div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+</section>
+
+<section data-sec="k6"><h2 class="sec" id="k6">Part 6 · If a derivation appears: K in five lines</h2>
+<p>Only needed if the quiz asks you to “derive the gain”. Every step uses one of two tools: <em>substitute</em> and <em>drop cross terms because the quantities are uncorrelated</em> (the V(X+Y) fact). <a class="cite" data-pages="L4:26-29">Lec 4 pp. 26–29</a></p>
+<ol>
+<li><strong>Error:</strong> $\tilde x_{k+1} = x_{k+1} - \hat x_{k+1}$. Substitute both equations: $\tilde x_{k+1} = (A - K H)\,\tilde x_k + w_k - K v_k$.</li>
+<li><strong>Variance:</strong> square and take expectations. $\tilde x$, $w$ and $v$ are uncorrelated, so the cross terms vanish: $P_{k+1} = (A - KH)^2 P_k + Q + K^2 R$.</li>
+<li><strong>Minimise over K:</strong> $\dfrac{\partial P_{k+1}}{\partial K} = -2H(A - KH)P_k + 2KR = 0$.</li>
+<li><strong>Solve:</strong> $K(H^2P_k + R) = AHP_k$, so $K = \dfrac{AHP_k}{H^2P_k + R}$.</li>
+<li><strong>Substitute back</strong> for the minimum variance: $P_{k+1} = A^2P_k + Q - \dfrac{(AHP_k)^2}{H^2P_k + R}$.</li>
+</ol>
+
+<div class="qn" data-id="k6a">
+<p class="stem"><b>Check 6a</b> · On paper, without looking: write steps 1–4 above for the case $A = H = 1$, $Q = 0$, and show $K = P/(P+R)$.</p>
+<details class="ans"><summary>Answer</summary><div><p class="write">$\tilde x_{k+1} = (1-K)\tilde x_k - Kv$, so $P_{k+1} = (1-K)^2P + K^2R$. Then $\dfrac{d}{dK}$: $-2(1-K)P + 2KR = 0$, so $K(P+R) = P$ and $K = \dfrac{P}{P+R}$. The marks are for saying <em>why</em> the cross term $2K(1-K)E[\tilde x v]$ is zero: $\tilde x$ and $v$ are uncorrelated and zero-mean.</p></div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+</section>
+
+<section data-sec="k7"><h2 class="sec" id="k7">Part 7 · True/False conditions (the likeliest marks)</h2>
+<ul>
+<li><strong>Optimal when</strong> the system is <strong>linear</strong> and the process and measurement noise are <strong>(unimodal) white Gaussian</strong>. Otherwise it is suboptimal, and the alternatives are the EKF, UKF, particle filter and MCMC/RANSAC. <a class="cite" data-pages="L4:45-45">Lec 4 p. 45</a> <a class="cite" data-pages="L4:17-17">p. 17</a></li>
+<li><strong>Recursive</strong>, so little storage is needed. <a class="cite" data-pages="L4:17-17">Lec 4 p. 17</a></li>
+<li>The optimal equations need the <strong>model parameters known</strong>. <a class="cite" data-pages="L4:22-22">Lec 4 p. 22</a></li>
+<li>It is used to fuse <strong>dynamic, low-level, redundant</strong> data in <strong>real time</strong>; it was originally a state-estimation method, later extended to tracking and fusion. <a class="cite" data-pages="L4:17-18">Lec 4 pp. 17–18</a></li>
+<li>The fused variance is <strong>below every individual variance</strong>. <a class="cite" data-pages="L4:43-43">Lec 4 p. 43</a></li>
+</ul>
+
+<div class="qn" data-id="k7a" data-tf="F">
+<p class="stem"><b>7a</b> · The Kalman filter gives statistically optimal estimates for any nonlinear system.</p>
+<details class="ans"><summary>Answer</summary><div><p class="write">False. It is optimal only for a linear system with white Gaussian noise; for nonlinear systems it is suboptimal, and the EKF, UKF or a particle filter is used. <a class="cite" data-pages="L4:45-45">Lec 4 p. 45</a></p></div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="k7b" data-tf="T">
+<p class="stem"><b>7b</b> · The Kalman filter is appropriate for fusing dynamic, low-level redundant sensor data in real time.</p>
+<details class="ans"><summary>Answer</summary><div><p class="write">True. That is its stated use in multi-sensor systems; its recursive form makes the real-time use practical. <a class="cite" data-pages="L4:17-17">Lec 4 p. 17</a></p></div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="k7c" data-tf="F">
+<p class="stem"><b>7c</b> · After a Kalman measurement update, the error variance can become larger than before the measurement.</p>
+<details class="ans"><summary>Answer</summary><div><p class="write">False. With the optimal gain, $P_{\text{new}} = (1-K)P \le P$ (for $A = H = 1$, $1/P_{\text{new}} = 1/P + 1/R$). Adding information never increases the uncertainty.</p></div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="k7d" data-tf="T">
+<p class="stem"><b>7d</b> · As the measurement noise variance $R \to 0$, the Kalman gain tends to 1 (with $A = H = 1$), so the estimate follows the measurement.</p>
+<details class="ans"><summary>Answer</summary><div><p class="write">True. $K = P/(P+R) \to P/P = 1$, so $\hat x_{\text{new}} = \hat x + 1\cdot(z - \hat x) = z$. A perfect sensor is fully trusted. <a class="cite" data-pages="L4:29-29">Lec 4 p. 29</a></p></div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+</section>
+
+<section data-sec="kz"><h2 class="sec" id="kz">One-screen summary</h2>
+<ul>
+<li><strong>Model:</strong> $x_{k+1} = Ax_k + w$ and $z = Hx + v$, with $w, v$ uncorrelated, zero-mean, white Gaussian (variances $Q$, $R$).</li>
+<li><strong>Update:</strong> $\hat x \leftarrow$ prediction $+\;K\,(z - H\hat x)$.</li>
+<li><strong>Gain:</strong> $K = \dfrac{AHP}{H^2P + R}$. With $A = H = 1$, $K = \dfrac{P}{P+R}$; small $R$ means large $K$.</li>
+<li><strong>Variance:</strong> with $A = H = 1$, $Q = 0$: $\dfrac1{P_{\text{new}}} = \dfrac1P + \dfrac1R$, and it always decreases.</li>
+<li><strong>Two sensors:</strong> $\hat x = \dfrac{\sigma_2^2z_1 + \sigma_1^2z_2}{\sigma_1^2 + \sigma_2^2}$ and $P = \dfrac{\sigma_1^2\sigma_2^2}{\sigma_1^2 + \sigma_2^2}$; the better sensor gets the bigger weight; batch and sequential agree.</li>
+<li><strong>Conditions:</strong> optimal if linear and Gaussian (else EKF, UKF, particle filter); recursive, so little storage; parameters must be known; preferred over the weighted average.</li>
+</ul>
+</section>
+</main>
+
+</div>
+<dialog id="pages"><p><strong id="ptitle"></strong> · <a id="plink" target="_blank">open PDF at this page</a> <button type="button" id="pclose" style="float:right">Close</button></p><div id="pimgs"></div></dialog>
+<script>
+addEventListener("DOMContentLoaded", () => {
+const LEC = s => [`../resources/part-2/${s}.pdf`, `quiz-02-primer-pages/${s}`];
+const EX = "../resources/public-archive-2026-08-24/";
+const SRC = { L1: LEC("part-2-lecture-01-introduction-and-sensors"), L2: LEC("part-2-lecture-02-vision-sensors-and-systems"),
+  L3: LEC("part-2-lecture-03-structure-and-pose-estimation"), L4: LEC("part-2-lecture-04-kalman-filter-sensor-integration"),
+  E1516: [EX + "past-exam-solutions-2015-2018/EE6221%202015-2016.pdf", "quiz-02-past-pages/exam-2015-2016"],
+  E1617: [EX + "past-exam-solutions-2015-2018/EE6221%202016-2017.pdf", "quiz-02-past-pages/exam-2016-2017"],
+  E1718: [EX + "past-exam-solutions-2015-2018/EE6221%202017-2018.pdf", "quiz-02-past-pages/exam-2017-2018"],
+  E2425: [EX + "past-exam-2024-2025/test-final-2024-2025-semester-1.pdf", "quiz-02-past-pages/exam-2024-2025-s1"] };
+const KEY = "ee6221-quiz2-kalman-sprint-v1";
+let state = {};
+try { state = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} };
+
+// citations: data-pages="L1:13-15" or "E1617:6-7" -> PDF link + pop-up of the rendered pages
+const dlg = document.getElementById("pages");
+document.querySelectorAll("a.cite[data-img]").forEach(a => {
+  a.href = "../resources/peer-tutor-deck-04-quiz2-mobile-kalman.pptx";
+  a.addEventListener("click", ev => {
+    ev.preventDefault();
+    document.getElementById("ptitle").textContent = a.dataset.title;
+    document.getElementById("plink").href = a.href;
+    const box = document.getElementById("pimgs"); box.innerHTML = a.dataset.img ? "" : "<p>These slides are text only. Open the deck to read them.</p>";
+    a.dataset.img.split(",").filter(Boolean).forEach(n => { const img = new Image(); img.alt = `${a.dataset.title}, image ${n}`;
+      img.src = `quiz-02-sprint-pages/tutor4-image${n}.png`; box.append(img); });
+    dlg.showModal();
+  });
+});
+document.querySelectorAll("a.cite[data-pages]").forEach(a => {
+  const [k, r] = a.dataset.pages.split(":"), [lo, hi] = r.split("-").map(Number);
+  a.href = `${SRC[k][0]}#page=${lo}`;
+  a.addEventListener("click", ev => {
+    ev.preventDefault();
+    document.getElementById("ptitle").textContent = a.textContent;
+    document.getElementById("plink").href = a.href;
+    const box = document.getElementById("pimgs"); box.innerHTML = "";
+    for (let p = lo; p <= hi; p++) { const img = new Image(); img.alt = `${a.textContent}, PDF page ${p}`;
+      img.src = `${SRC[k][1]}-p${String(p).padStart(3, "0")}.jpg`; box.append(img); }
+    dlg.showModal();
+  });
+});
+document.getElementById("pclose").onclick = () => dlg.close();
+
+// per question: { tf, txt, num:[...], got } saved under the question id
+const st = id => state[id] || (state[id] = {});
+const frac = v => { const [a, b] = v.trim().split("/"); return b === undefined ? Number(a) : Number(a) / Number(b); };
+const toc = document.getElementById("toc");
+function tally() {
+  toc.innerHTML = ""; let all = 0;
+  document.querySelectorAll("section[data-sec]").forEach(s => {
+    const qs = [...s.querySelectorAll(".qn")], ok = qs.filter(q => st(q.dataset.id).got).length; all += ok;
+    const li = document.createElement("li");
+    li.innerHTML = `<a href="#${s.dataset.sec}">${s.querySelector("h2").textContent}</a>` +
+      (qs.length ? `<span class="sc${ok === qs.length ? " done" : ""}">${ok}/${qs.length}</span>` : "");
+    toc.append(li);
+  });
+  document.getElementById("total").textContent = `${all}/${document.querySelectorAll(".qn").length}`;
+}
+document.querySelectorAll(".qn").forEach(q => {
+  const id = q.dataset.id, s0 = st(id), ans = q.querySelector("details.ans");
+  const box = document.createElement("div"); box.className = "try";
+  const fb = document.createElement("p"); fb.className = "fb";
+  const ta = document.createElement("textarea");
+  ta.placeholder = q.dataset.tf ? "Your one-line reason…" : "Your working (or do it on paper)…";
+  ta.value = s0.txt || ""; ta.oninput = () => { st(id).txt = ta.value; save(); };
+  box.append(ta);
+  if (q.dataset.tf) {
+    const row = document.createElement("p"), btns = [];
+    const pick = (v, restore) => {
+      st(id).tf = v; if (!restore) save();
+      btns.forEach(b => b.classList.toggle("on", b.dataset.v === v));
+      const ok = v === q.dataset.tf, word = q.dataset.tf === "T" ? "TRUE" : "FALSE";
+      fb.className = "fb " + (ok ? "ok" : "bad");
+      fb.textContent = ok ? `✓ Correct: ${word}. Now compare your reason with the guidance below.` : `✗ Not quite: it is ${word}. Read the guidance below and find where your reasoning went off.`;
+      ans.open = true;
+    };
+    ["T", "F"].forEach(v => { const b = document.createElement("button"); b.type = "button"; b.dataset.v = v;
+      b.textContent = v === "T" ? "True" : "False"; b.onclick = () => pick(v); btns.push(b); row.append(b, " "); });
+    box.append(row, fb);
+    if (s0.tf) pick(s0.tf, true);
+  } else if (q.dataset.num) {
+    const keys = q.dataset.num.split(",").map(frac), labels = q.dataset.labels.split(","), row = document.createElement("p"), ins = [];
+    labels.forEach((l, n) => { const i = document.createElement("input"); i.setAttribute("aria-label", l); i.value = (s0.num || [])[n] || "";
+      ins.push(i); row.append(`${l} = `, i, "  "); });
+    const b = document.createElement("button"); b.type = "button"; b.textContent = "Check";
+    const check = restore => {
+      const vals = ins.map(i => i.value); st(id).num = vals; if (!restore) save();
+      const bad = vals.map((v, n) => v.trim() === "" || !(Math.abs(frac(v) - keys[n]) < 1e-3) ? labels[n] : null).filter(Boolean);
+      fb.className = "fb " + (bad.length ? "bad" : "ok");
+      fb.textContent = bad.length ? `✗ Check ${bad.join(", ")}. The guidance below shows each step.` : "✓ All correct. Compare your working with the guidance below.";
+      ans.open = true;
+    };
+    b.onclick = () => check(false); row.append(b); box.append(row, fb);
+    if (s0.num) check(true);
+  } else {
+    const b = document.createElement("button"); b.type = "button"; b.textContent = "I've written my answer: show guidance";
+    b.onclick = () => { ans.open = true; }; const row = document.createElement("p"); row.append(b); box.append(row);
+  }
+  q.querySelector("details").before(box);
+  const cb = q.querySelector(".got input");
+  cb.checked = !!s0.got;
+  cb.onchange = () => { st(id).got = cb.checked; save(); tally(); };
+});
+document.getElementById("reset").onclick = () => { state = {}; save(); location.reload(); };
+tally();
+});
+</script>
+</body>
+</html>
