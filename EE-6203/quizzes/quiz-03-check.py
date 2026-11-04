@@ -86,6 +86,37 @@ u0 = [float(U0.coeff(x, k)) for k in range(4)]
 close(u0[0], 20.160); close(u0[1], -27.578); close(u0[2] / u0[1], zr)
 close(1 / b1, 20.160)
 
+# ---------------- Mock B (recalled 3-question shape) ----------------
+# Q1: G(z) = K(0.4261z + 0.3608)/((z-1)(z-0.6065)), from K/(s(s+0.5)), T = 1, ZOH
+b1, b0, q = zoh_type1(0.5, 1, 1.0)
+close(b1, 0.42612); close(b0, 0.36082); close(q, 0.60653)
+PB = sp.expand((z - 1) * (z - q) + K * (b1 * z + b0))
+close((1 - q) / b0, 1.0905)                         # |a2| < 1  -> K < 1.0905
+close(sp.Poly(PB.subs(z, 1), K).all_coeffs()[0], 0.78694)  # P(1) = 0.7869K
+close(sp.solve(PB.subs(z, -1), K)[0], 49.20)        # P(-1) > 0 -> K < 49.2
+close((b1 + b0) / (1 - q), 2.0)                     # Kv = 2K
+# Q2: G(s) = 4/(s^2+2s+4), T = 0.5
+GB = sp.simplify((4 / (s**2 + 2 * s + 4)).subs(s, 4 * (z - 1) / (z + 1)))
+assert sp.simplify(GB - (z + 1)**2 / (7 * z**2 - 6 * z + 3)) == 0
+close(math.sqrt(3 / 7), 0.6547)
+cB = 2 * math.exp(-0.5) * math.cos(math.sqrt(3) * 0.5); dB = math.exp(-1)
+close(cB, 0.7859); close(dB, 0.3679); close((1 - cB + dB) / 2, 0.2910)
+# Q3(a): G1 = 0.2(z+0.6)/((z-0.8)(z-0.4)), Gcl = z^-1
+G1 = sp.Rational(1, 5) * (z + sp.Rational(3, 5)) / ((z - sp.Rational(4, 5)) * (z - sp.Rational(2, 5)))
+C1 = sp.simplify((1 / z) / (G1 * (1 - 1 / z)))
+assert sp.simplify(C1 - 5 * (z - sp.Rational(4, 5)) * (z - sp.Rational(2, 5)) / ((z - 1) * (z + sp.Rational(3, 5)))) == 0
+# Q3(b): G2 = 0.1(z+1.5)/((z-1)(z-0.5)); z^-1 gives C pole at -1.5; fix Gcl = 0.4 z^-1 (1+1.5 z^-1)
+G2 = sp.Rational(1, 10) * (z + sp.Rational(3, 2)) / ((z - 1) * (z - sp.Rational(1, 2)))
+Cbad = sp.simplify((1 / z) / (G2 * (1 - 1 / z)))
+assert sp.simplify(Cbad - 10 * (z - sp.Rational(1, 2)) / (z + sp.Rational(3, 2))) == 0
+Gcl2 = sp.Rational(2, 5) * (z + sp.Rational(3, 2)) / z**2
+C2 = sp.simplify(Gcl2 / (G2 * (1 - Gcl2)))
+assert sp.simplify(C2 - 4 * (z - sp.Rational(1, 2)) / (z + sp.Rational(3, 5))) == 0
+Y2 = sp.series((Gcl2 * z / (z - 1)).subs(z, 1 / x), x, 0, 5).removeO()
+U2 = sp.series((Gcl2 / G2 * z / (z - 1)).subs(z, 1 / x), x, 0, 5).removeO()
+assert [Y2.coeff(x, k) for k in range(4)] == [0, sp.Rational(2, 5), 1, 1]
+assert [U2.coeff(x, k) for k in range(4)] == [4, -2, 0, 0]
+
 # ---------------- Primer checks ----------------
 # P1 Jury: z^2 + (K - 1.3) z + 0.4 -> -0.1 < K < 2.7
 Pp = z**2 + (K - sp.Rational(13, 10)) * z + sp.Rational(2, 5)

@@ -81,7 +81,8 @@ dialog.pages img { width:100%; height:auto; border:1px solid var(--border); bord
   <h1>EE6203 Quiz 3 primer</h1>
   <div id="toc"></div>
   <div class="tools">
-    <a href="quiz-03-mock-a.html">→ Sit Mock A (45 min)</a>
+    <a href="quiz-03-mock-b.html">→ Sit Mock B (recalled shape, 45 min)</a>
+    <a href="quiz-03-mock-a.html">→ Mock A (45 min)</a>
     <a href="../notes/quiz1-prep-learning.html#module-5">Ch 4 in depth (Quiz 1 companion, Module 5)</a>
     <a href="#" id="reset">Reset my answers</a>
   </div>
@@ -91,8 +92,8 @@ dialog.pages img { width:100%; height:auto; border:1px solid var(--border); bord
 <section id="s0" data-title="0 · What is tested">
 <h2>0 · What is tested, and how to use this page</h2>
 <p><strong>Official</strong> (NTULearn announcement, 30 Oct): Saturday 7 Nov, 2:30–3:15 pm, LT 2A, 45 min, closed book, own calculator, transform pairs provided. The scope is Wen's Weeks 4, 10, 11 and 12, i.e. <strong>Chapters 4, 5 and 6</strong>. Show all workings for non-MCQ questions; that phrase suggests some MCQs too.</p>
-<p><strong>Unofficial pattern</strong> (past <em>finals</em>, see <code>quiz-03-intel.md</code>): ripple-free / deadbeat design comes up most often, then Jury gain ranges, s→z mapping of a controller, and direct/standard programming.</p>
-<div class="box">This is a primer, not a course. Each topic gives you the one idea, the formulas you must carry into the room, a tiny example and two quick checks. If you pass a topic's checks, move on. Then sit <a href="quiz-03-mock-a.html">Mock A</a> cold. Most of the learning happens when we go through your mistakes afterwards.</div>
+<p><strong>Unofficial pattern</strong> (three RedNote recollections of earlier Quiz 3 sittings, see <code>quiz-03-intel.md</code>): <strong>3 calculation questions</strong>. (1) A Jury K-range from an open-loop \(G(z)\) with \(K\) (like Ex 4.8 <a class="src" href="../resources/lecture-notes-weeks-01-04.pdf#page=174" data-pages="c14:174-175">pp. 174–175</a>). (2) Bilinear (once pole-zero matching) of a \(G(s)\). (3) Given \(G_{ZAS}\) and \(G_{cl}=z^{-1}\), can the output track? If so, find \(C(z)\) (once ripple-free deadbeat). Wen's Quiz 1 this term also had MCQs, and Ch 6 is new this year.</p>
+<div class="box">This is a primer, not a course. Each topic gives you the one idea, the formulas you must carry into the room, a tiny example and two quick checks. If you pass a topic's checks, move on. Then sit <a href="quiz-03-mock-b.html">Mock B</a> cold. Most of the learning happens when we go through your mistakes afterwards.</div>
 </section>
 
 <section id="s1" data-title="1 · Ch 4 stability & error">
@@ -212,7 +213,7 @@ It needs only \(n\) delays, which saves memory. The \(a_i\) are feedback gains a
 <div class="q" data-id="p7b" data-ans="0.5"><p>Same \(C\), direct form \(u(k)=c\,u(k-1)-0.06\,u(k-2)+\dots\). What is \(c\)?</p><input type="text" aria-label="c"> <button class="go">Check</button>
 <div class="why">\(a_1=-0.5\), and the recursion uses \(-a_1=+0.5\).</div></div>
 </div>
-<div class="box">All checks done? Now sit <a href="quiz-03-mock-a.html"><strong>Mock A</strong></a> under real conditions: 45 min, closed book, on paper. Then paste the export here for marking.</div>
+<div class="box">All checks done? Now sit <a href="quiz-03-mock-b.html"><strong>Mock B</strong></a> (recalled shape), then <a href="quiz-03-mock-a.html">Mock A</a> under real conditions: 45 min, closed book, on paper. Then paste the export here for marking.</div>
 </section>
 
 <p style="color:var(--muted);font-size:.85rem">Sources: <code>resources/lecture-notes-chapters-05-06.pdf</code> (Ch 5–6) and <code>resources/lecture-notes-weeks-01-04.pdf</code> (Ch 4). Page numbers are PDF page indices; click one to see the page. The check-question numbers are original and verified by <code>quizzes/quiz-03-check.py</code>.</p>
