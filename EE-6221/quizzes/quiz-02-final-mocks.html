@@ -53,7 +53,7 @@ main h3 { margin: 1.6rem 0 .3rem; font-size: 1.08rem; }
 </head>
 <body><div class="app">
 <nav><h2>Quiz 2 · Final mocks</h2><ol id="toc"></ol>
-<div class="tools"><a href="quiz-02-sprint.html">Sprint (last year's paper)</a><br><a href="quiz-02-mock-01.html">Mock 1</a><br><button id="reset" type="button">Reset both papers</button></div></nav>
+<div class="tools"><a href="quiz-02-sprint.html">Sprint (last year's paper)</a><br><a href="quiz-02-mock-01.html">Mock 1</a><br><button id="copy" type="button">Copy my answers</button> <button id="reset" type="button">Reset both papers</button></div></nav>
 <main>
 <h1>EE6221 · Quiz #2 final mocks A and B</h1>
 <p class="meta">Two cold papers in last year's format: 7 True/False questions (10 marks each) and 1 multiple-choice question (30 marks), 100 marks in total, with a reason required for every answer. They come from the paper reproduced in the peer tutor's deck (see the <a href="quiz-02-sprint.html">sprint</a>), with the bank reworded and new statements from Lec 1–4. None of the items repeats a sprint or Mock 1 statement word for word.</p>
@@ -294,6 +294,11 @@ document.querySelectorAll("section[data-paper]").forEach(sec => {
   };
   render();
 });
+document.getElementById("copy").onclick = ev => {
+  const lines = [...document.querySelectorAll(".qn")].map(q => { const s = st(q.dataset.id);
+    return `${q.dataset.id}: ${s.tf || (s.mcq || []).slice().sort().join("") || "-"} | reason ok: ${s.reason ? "y" : "n"} | ${(s.txt || "").replace(/\n/g, " ")}`; });
+  navigator.clipboard.writeText(lines.join("\n")).then(() => { ev.target.textContent = "Copied, paste it to Claude"; });
+};
 document.getElementById("reset").onclick = () => { state = {}; save(); location.reload(); };
 });
 </script>
