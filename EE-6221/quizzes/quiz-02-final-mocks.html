@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EE6221 Quiz 2 Final Mocks</title>
+<link rel="stylesheet" href="quiz-assets/katex/katex.min.css">
+<style>
+:root { --ink:#172334; --muted:#435366; --bg:#eef2f5; --card:#fff; --line:#c8d2dc; --pill:#f3f6f9; --accent:#205d87; --ok:#1d7a46; --bad:#b03a2e; --warn:#b47412; --warnbg:#fff5e1;
+        font: 17px/1.55 system-ui,sans-serif; color: var(--ink); background: var(--bg); }
+@media (prefers-color-scheme: dark) { :root { --ink:#dfe7ef; --muted:#9fb0c2; --bg:#11181f; --card:#18222c; --line:#34475a; --pill:#1f2c38; --accent:#6fb3e0; --ok:#5fc48a; --bad:#e8786c; --warn:#e0a54a; --warnbg:#2b2416; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); }
+.app { display: grid; grid-template-columns: 270px minmax(0,1fr); }
+nav { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 20px 16px 3rem; border-right: 1px solid var(--line); background: var(--card); font-size: .9rem; }
+nav h2 { font-size: 1rem; margin: 0 0 .6rem; } nav a { color: var(--ink); text-decoration: none; }
+nav ol { list-style: none; padding: 0; margin: 0; } nav li { display: flex; justify-content: space-between; gap: .5em; padding: .25em .4em; border-radius: 6px; }
+nav li:hover { background: var(--pill); } nav .sc { color: var(--muted); font-variant-numeric: tabular-nums; } nav .sc.done { color: var(--ok); font-weight: 600; }
+nav .tools { margin-top: 1rem; border-top: 1px solid var(--line); padding-top: .7rem; color: var(--muted); }
+main { min-width: 0; width: 100%; max-width: 880px; margin: 24px auto; padding: 34px 46px 4rem; background: var(--card); box-shadow: 0 2px 18px #14263a19; }
+h1 { margin: 0; line-height: 1.2; } h2.sec { margin: 2.4rem 0 .5rem; border-top: 2px solid var(--accent); padding-top: 1rem; }
+p, li { max-width: 76ch; } .meta { color: var(--muted); }
+.notice { border-left: 4px solid var(--warn); background: var(--warnbg); padding: .65rem 1rem; }
+.qn { border: 1px solid var(--line); border-radius: 10px; padding: .3rem 1rem .7rem; margin: 1.1rem 0; }
+.qn > .stem { font-weight: 600; } .qn > .stem b { color: var(--accent); }
+details { margin: .45rem 0; } summary { cursor: pointer; display: inline-block; padding: .25em .8em; border: 1px solid var(--line); border-radius: 8px; background: var(--pill); }
+details[open] > summary { margin-bottom: .4rem; }
+details > div { border-left: 3px solid var(--accent); padding: .1rem 0 .1rem .9rem; }
+details.ans > div { border-left-color: var(--ok); }
+.verdict { font-weight: 700; color: var(--ok); }
+.write { background: var(--pill); border-radius: 8px; padding: .4rem .7rem; }
+.write::before { content: "Write: "; font-weight: 600; color: var(--accent); }
+.trap { color: var(--bad); } .trap::before { content: "Trap: "; font-weight: 600; }
+.got { color: var(--muted); font-size: .92rem; }
+.try textarea { font: inherit; font-size: .95rem; width: 100%; min-height: 3.2em; padding: .3em .5em; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); resize: vertical; }
+.try input { font: inherit; width: 5.5em; padding: .2em .4em; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--ink); }
+.try button.on { border-color: var(--accent); font-weight: 600; }
+.fb.ok { color: var(--ok); font-weight: 600; } .fb.bad { color: var(--bad); font-weight: 600; }
+.katex-display { overflow-x: auto; overflow-y: hidden; }
+button { font: inherit; padding: .35em .8em; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--ink); cursor: pointer; }
+a.cite { color: var(--accent); }
+dialog { max-width: 60rem; width: 94%; border: 1px solid var(--line); border-radius: 12px; background: var(--card); color: var(--ink); }
+dialog img { width: 100%; border: 1px solid var(--line); margin: .4rem 0; }
+@media (max-width: 860px) { .app { display: block; } nav { position: static; height: auto; padding-bottom: 1rem; border-right: 0; border-bottom: 1px solid var(--line); }
+  nav ol { display: grid; grid-template-columns: 1fr 1fr; gap: 0 .6em; } main { margin: 0; padding: 20px 16px 4rem; box-shadow: none; } }
+main h3 { margin: 1.6rem 0 .3rem; font-size: 1.08rem; }
+.ans { border-left: 3px solid var(--ok); padding: .1rem 0 .1rem .9rem; margin-top: .5rem; }
+.opts li { margin: .15rem 0; } .score { font-weight: 700; color: var(--accent); } .time { color: var(--muted); font-variant-numeric: tabular-nums; }
+</style>
+<script defer src="quiz-assets/katex/katex.min.js"></script>
+<script defer src="quiz-assets/katex/contrib/auto-render.min.js"></script>
+<script defer src="quiz-assets/render-math.js"></script>
+</head>
+<body><div class="app">
+<nav><h2>Quiz 2 · Final mocks</h2><ol id="toc"></ol>
+<div class="tools"><a href="quiz-02-sprint.html">Sprint (last year's paper)</a><br><a href="quiz-02-mock-01.html">Mock 1</a><br><button id="reset" type="button">Reset both papers</button></div></nav>
+<main>
+<h1>EE6221 · Quiz #2 final mocks A and B</h1>
+<p class="meta">Two cold papers in last year's format: 7 True/False questions (10 marks each) and 1 multiple-choice question (30 marks), 100 marks in total, with a reason required for every answer. They come from the paper reproduced in the peer tutor's deck (see the <a href="quiz-02-sprint.html">sprint</a>), with the bank reworded and new statements from Lec 1–4. None of the items repeats a sprint or Mock 1 statement word for word.</p>
+<p class="notice"><strong>How to sit them.</strong> Press <em>Start</em>, give yourself 30 minutes, and answer every item with a verdict and a one- or two-line reason that names the condition. Nothing is revealed until you press <em>Submit paper</em>. Then tick the items where your reason matched the key, and redo every miss on paper from its cited slide. The scoring below is my estimate, not the official rubric: 10 marks for a T/F with the right verdict and reason, 5 for the right verdict with a weak reason; for the MCQ, 20 for the exact option set and 10 for a reason that covers every option.</p>
+
+<section data-sec="A" data-paper="A"><h2 class="sec" id="A">Paper A</h2>
+<p class="clock"><button type="button" class="start">Start Paper A</button> <span class="time"></span></p>
+
+<div class="qn" data-id="a1" data-tf="F">
+<p class="stem"><b>1</b> · Lens distortion in a camera is a random error, so it can only be described probabilistically.</p>
+<div class="ans" hidden><p class="verdict">False.</p>
+<p class="write">Distortion caused by the optics is the slides' own example of a <em>systematic</em> (deterministic) error. It comes from factors that can be modelled and predicted, so calibration can estimate the distortion parameters and remove them. Random errors (hue instability, black-level noise, non-returning ultrasonic echoes) are the ones that can only be described probabilistically. <a class="cite" data-pages="L1:26-26">Lec 1 p. 26</a> <a class="cite" data-pages="L2:20-20">Lec 2 p. 20</a></p></div></div>
+
+<div class="qn" data-id="a2" data-tf="T">
+<p class="stem"><b>2</b> · With the homography method, if the distance $d^*$ from the camera to the feature plane is known, the translation and the Euclidean coordinates of all the feature points can be recovered.</p>
+<div class="ans" hidden><p class="verdict">True.</p>
+<p class="write">Decomposing H gives R and the scaled translation $x' = x/d^*$. The lost factor is exactly $d^*$, so if $d^*$ is known, measured or estimated, $x = d^*x'$ and the points' Euclidean coordinates follow. Without it, only relative depths are available. <a class="cite" data-pages="L3:38-38">Lec 3 p. 38</a></p>
+<p class="trap">Reflexively answering “False, scale is always lost”. Scale is lost from the images alone; here the extra knowledge supplies it.</p></div></div>
+
+<div class="qn" data-id="a3" data-tf="T">
+<p class="stem"><b>3</b> · After R and the scaled translation $x'$ are recovered from the essential matrix, the depths of the feature points can be found, but only up to one common scale factor.</p>
+<div class="ans" hidden><p class="verdict">True.</p>
+<p class="write">Stacking the rigid-body equation $z_j m_j = z_j^* R m_j^* + x'$ for all points gives a homogeneous system whose null space gives all the depths up to a single scale factor. That is the “relative structure” in structure from motion. <a class="cite" data-pages="L3:20-20">Lec 3 p. 20</a> <a class="cite" data-pages="L3:11-11">p. 11</a></p></div></div>
+
+<div class="qn" data-id="a4" data-tf="T">
+<p class="stem"><b>4</b> · The Kalman filter suits systems with limited data storage because it computes its estimates recursively.</p>
+<div class="ans" hidden><p class="verdict">True.</p>
+<p class="write">Each update needs only the previous estimate, its error variance and the new measurement. Past measurements do not have to be stored, which is why the lecture says the filter suits “systems without large data storage capabilities”. <a class="cite" data-pages="L4:17-17">Lec 4 p. 17</a></p></div></div>
+
+<div class="qn" data-id="a5" data-tf="T">
+<p class="stem"><b>5</b> · If X and Y are uncorrelated and both have zero mean, then $E[XY] = 0$.</p>
+<div class="ans" hidden><p class="verdict">True.</p>
+<p class="write">$\mathrm{Cov}(X,Y) = E[XY] - E[X]E[Y]$. Uncorrelated means $\mathrm{Cov} = 0$, so $E[XY] = E[X]E[Y]$, and with zero means this is $0 \cdot 0 = 0$. This is the step that kills the cross terms in the Kalman variance derivations. <a class="cite" data-pages="L4:14-14">Lec 4 p. 14</a></p>
+<p class="trap">Without the zero-mean condition, the statement would be false: only $E[XY] = E[X]E[Y]$ holds.</p></div></div>
+
+<div class="qn" data-id="a6" data-tf="F">
+<p class="stem"><b>6</b> · Active sensors generally consume less energy than passive sensors, but they often suffer more from signal and noise problems.</p>
+<div class="ans" hidden><p class="verdict">False: the properties are swapped.</p>
+<p class="write">Active sensors (ultrasonic, laser, IR) emit their own energy and measure the reaction. They give better performance but influence the environment and generally consume <em>more</em> energy. Passive sensors (the camera) receive energy already in the environment. They consume less energy but often have signal and noise problems. <a class="cite" data-pages="L1:19-19">Lec 1 p. 19</a></p></div></div>
+
+<div class="qn" data-id="a7" data-tf="F">
+<p class="stem"><b>7</b> · When two sensors are fused optimally, the measurement with the larger variance receives the larger weight, because it carries more information.</p>
+<div class="ans" hidden><p class="verdict">False.</p>
+<p class="write">The measurement with the <em>least</em> variance gets the greatest weight. The weight on $z_1$ is $\sigma_2^2/(\sigma_1^2 + \sigma_2^2)$, which is proportional to the <em>other</em> sensor's variance. A large variance means less information, not more. The fused variance $\sigma_1^2\sigma_2^2/(\sigma_1^2 + \sigma_2^2)$ is below either variance. <a class="cite" data-pages="L4:43-43">Lec 4 p. 43</a></p></div></div>
+
+<div class="qn" data-id="a8" data-mcq="ABD">
+<p class="stem"><b>8</b> (MCQ, 30 marks) · Which of the following statements comparing the essential matrix (E, 8-point) and the Euclidean homography (H, 4-point) are correct? Select all that apply and justify each choice.</p>
+<ol type="A" class="opts">
+<li>E needs at least 8 matched points; H needs at least 4.</li>
+<li>E cannot have all the points coplanar, whereas H requires all the points to be coplanar.</li>
+<li>Both methods degenerate when the translation between the two views is zero.</li>
+<li>For H, an extra view or prior knowledge is generally needed to choose between the solutions that survive the depth test.</li>
+</ol>
+<div class="ans" hidden><p class="verdict">A, B and D.</p>
+<p class="write"><strong>A ✓</strong> 8-point algorithm vs 4-point algorithm. <strong>B ✓</strong> (E: no four of the 3D points coplanar; H: coplanar and non-collinear.) <strong>C ✗</strong> Only E degenerates as $x \to 0$, since $E = [x]_\times R \to 0$. H still works: if all its singular values are equal, there was no translation, so $R = H$ and $x = 0$. <strong>D ✓</strong> In the general case two solutions pass the positive-depth test; prior knowledge of the plane normal $n^*$ or a third view selects one. You can also add that the lecturer finds H more accurate. <a class="cite" data-pages="L3:43-43">Lec 3 p. 43</a> <a class="cite" data-pages="L3:34-34">p. 34</a> <a class="cite" data-pages="L3:37-37">p. 37</a></p>
+<p class="trap">Picking C because “scale is lost in both”. Scale loss and the degenerate zero-translation case are different issues.</p></div></div>
+<p><button type="button" class="submit">Submit Paper A</button></p>
+<p class="score"></p>
+</section>
+
+<section data-sec="B" data-paper="B"><h2 class="sec" id="B">Paper B</h2>
+<p class="clock"><button type="button" class="start">Start Paper B</button> <span class="time"></span></p>
+
+<div class="qn" data-id="b1" data-tf="T">
+<p class="stem"><b>1</b> · Potentiometers, optical encoders and tachometers are internal state sensors.</p>
+<div class="ans" hidden><p class="verdict">True.</p>
+<p class="write">Internal state sensors measure the position, velocity or acceleration of the robot's joints and end effectors, which is what controls the robot's internal states. Potentiometers (voltage, giving position), optical encoders (motion) and tachometers (shaft speed) are the slide's examples. External sensors instead measure the robot's relation to its environment. <a class="cite" data-pages="L1:7-7">Lec 1 p. 7</a> <a class="cite" data-pages="L1:4-4">p. 4</a></p></div></div>
+
+<div class="qn" data-id="b2" data-tf="F">
+<p class="stem"><b>2</b> · An ultrasonic sensor hears the echo 20 ms after transmitting. With $c = 340$ m/s, the object is 6.8 m away.</p>
+<div class="ans" hidden><p class="verdict">False: it is 3.4 m.</p>
+<p class="write">$c\,t = 340 \times 0.02 = 6.8$ m is the <em>round trip</em>. The range is $d = c\,t/2 = 3.4$ m. (On p. 36, $d = c\,t$ is the total distance travelled, “usually round-trip”.) <a class="cite" data-pages="L1:38-38">Lec 1 p. 38</a> <a class="cite" data-pages="L1:36-36">p. 36</a></p></div></div>
+
+<div class="qn" data-id="b3" data-tf="T">
+<p class="stem"><b>3</b> · Given a point's pixel coordinates $p$ and the calibration matrix $A$, its normalised coordinates can be recovered as $m = A^{-1}p$.</p>
+<div class="ans" hidden><p class="verdict">True.</p>
+<p class="write">$p = A m$ with $A$ invertible, so $m = A^{-1}p = [x/z,\; y/z,\; 1]^T$. Only the normalised coordinates come back, though: the Euclidean point $\bar m = z\,m$ needs the depth $z$, which imaging loses (depth ambiguity). <a class="cite" data-pages="L2:32-32">Lec 2 p. 32</a></p>
+<p class="trap">Confusing this with the false claim that the 3D (Euclidean) point can be recovered.</p></div></div>
+
+<div class="qn" data-id="b4" data-tf="F">
+<p class="stem"><b>4</b> · In the homography decomposition, the positive-depth constraint always leaves exactly one valid solution, as it does for the essential matrix.</p>
+<div class="ans" hidden><p class="verdict">False.</p>
+<p class="write">For H, in the general case <em>two</em> solutions pass the depth constraint $n^{*T}m_j > 0$. (In the lecture example, solutions 1 and 3 remain after 2 and 4 are eliminated.) A third view or prior knowledge of the normal $n^*$ picks one. For E, by contrast, positive depth leaves one of the four candidates. <a class="cite" data-pages="L3:37-37">Lec 3 p. 37</a> <a class="cite" data-pages="L3:41-41">p. 41</a></p></div></div>
+
+<div class="qn" data-id="b5" data-tf="T">
+<p class="stem"><b>5</b> · The Kalman filter is optimal if the system is linear and the process and measurement noise are unimodal Gaussian; otherwise methods such as the extended Kalman filter or the particle filter are used.</p>
+<div class="ans" hidden><p class="verdict">True.</p>
+<p class="write">Those are exactly the two optimality assumptions in the lecture's remarks, which list the EKF, UKF, particle filter and MCMC/RANSAC as the alternatives. <a class="cite" data-pages="L4:45-45">Lec 4 p. 45</a></p></div></div>
+
+<div class="qn" data-id="b6" data-tf="T">
+<p class="stem"><b>6</b> · X and Y are uncorrelated with $V(X) = 4$ and $V(Y) = 1$. Then $V(X - 2Y) = 8$.</p>
+<div class="ans" hidden><p class="verdict">True.</p>
+<p class="write">The variances of uncorrelated terms add, and a constant comes out squared: $V(X - 2Y) = V(X) + (-2)^2V(Y) = 4 + 4 = 8$. The cross term $2\,\mathrm{Cov}(X, -2Y)$ is 0. <a class="cite" data-pages="L4:15-15">Lec 4 p. 15</a></p>
+<p class="trap">Getting $4 - 2 = 2$ (sign carried through linearly) or $4 + 2 = 6$ (constant not squared).</p></div></div>
+
+<div class="qn" data-id="b7" data-tf="F">
+<p class="stem"><b>7</b> · Weighted-average fusion gives estimates that are optimal in a statistical sense, which is why it is usually preferred over the Kalman filter.</p>
+<div class="ans" hidden><p class="verdict">False.</p>
+<p class="write">The weighted average is the simplest signal-level method and works in real time, but it is the <em>Kalman filter</em> that is usually preferred. It needs nearly the same processing and, unlike a weighted average, gives an estimate that is statistically optimal. <a class="cite" data-pages="L4:2-3">Lec 4 pp. 2–3</a></p></div></div>
+
+<div class="qn" data-id="b8" data-mcq="ABC">
+<p class="stem"><b>8</b> (MCQ, 30 marks) · Two independent sensors measure the same constant $x$: $z_1 = 10$ with variance $\sigma_1^2 = 1$, and $z_2 = 13$ with variance $\sigma_2^2 = 2$. Which statements are correct? Select all that apply and justify each one (no calculator).</p>
+<ol type="A" class="opts">
+<li>The optimal fused estimate is $\hat x = 11$.</li>
+<li>The variance of the fused estimate is $2/3$.</li>
+<li>The fused variance is smaller than the variance of the better sensor.</li>
+<li>The weight applied to $z_1$ is $1/3$.</li>
+</ol>
+<div class="ans" hidden><p class="verdict">A, B and C.</p>
+<p class="write">The weights are proportional to the <em>other</em> variance: $\hat x = \dfrac{\sigma_2^2 z_1 + \sigma_1^2 z_2}{\sigma_1^2 + \sigma_2^2} = \dfrac{2(10) + 1(13)}{3} = 11$, so <strong>A ✓</strong>. <strong>B ✓</strong> $P = \dfrac{\sigma_1^2\sigma_2^2}{\sigma_1^2 + \sigma_2^2} = \dfrac{2}{3}$ (equivalently $1/P = 1 + 1/2$). <strong>C ✓</strong> $2/3 < 1 = \min(\sigma_1^2, \sigma_2^2)$, because fusing redundant information reduces uncertainty. <strong>D ✗</strong> The weight on $z_1$ is $2/3$; the less noisy sensor gets the larger weight. Sequential check: $\hat x_0 = 10$, $P_0 = 1$, $K = 1/(1+2) = 1/3$, so $\hat x = 10 + \tfrac13(13 - 10) = 11$ and $P = (1 - \tfrac13)(1) = \tfrac23$. <a class="cite" data-pages="L4:41-43">Lec 4 pp. 41–43</a></p>
+<p class="trap">The $K = 1/3$ in the sequential form multiplies the <em>innovation</em> $(z_2 - \hat x_0)$, so it is not the weight on $z_1$. That is the confusion option D is testing.</p></div></div>
+<p><button type="button" class="submit">Submit Paper B</button></p>
+<p class="score"></p>
+</section>
+
+<section data-sec="after"><h2 class="sec" id="after">After each paper</h2>
+<ol>
+<li>For every item below 10 marks, open its cited slide and rewrite the reason in one sentence that names the condition.</li>
+<li>Look for the pattern: missed conditions (non-coplanar, white Gaussian, uncorrelated), swap traps (accuracy/precision, active/passive, which weight), or arithmetic (round trip, squared constants).</li>
+<li>Last pass at 7:50 pm: read the <a href="quiz-02-sprint.html#z">phrase sheet</a>. Nothing new after that.</li>
+</ol>
+</section>
+</main>
+</div>
+<dialog id="pages"><p><strong id="ptitle"></strong> · <a id="plink" target="_blank">open PDF at this page</a> <button type="button" id="pclose" style="float:right">Close</button></p><div id="pimgs"></div></dialog>
+<script>
+addEventListener("DOMContentLoaded", () => {
+const LEC = s => [`../resources/part-2/${s}.pdf`, `quiz-02-primer-pages/${s}`];
+const SRC = { L1: LEC("part-2-lecture-01-introduction-and-sensors"), L2: LEC("part-2-lecture-02-vision-sensors-and-systems"),
+  L3: LEC("part-2-lecture-03-structure-and-pose-estimation"), L4: LEC("part-2-lecture-04-kalman-filter-sensor-integration") };
+const KEY = "ee6221-quiz2-final-mocks-v1";
+let state = {};
+try { state = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} };
+const st = id => state[id] || (state[id] = {});
+
+const dlg = document.getElementById("pages");
+document.querySelectorAll("a.cite[data-pages]").forEach(a => {
+  const [k, r] = a.dataset.pages.split(":"), [lo, hi] = r.split("-").map(Number);
+  a.href = `${SRC[k][0]}#page=${lo}`;
+  a.addEventListener("click", ev => {
+    ev.preventDefault();
+    document.getElementById("ptitle").textContent = a.textContent;
+    document.getElementById("plink").href = a.href;
+    const box = document.getElementById("pimgs"); box.innerHTML = "";
+    for (let p = lo; p <= hi; p++) { const img = new Image(); img.alt = `${a.textContent}, PDF page ${p}`;
+      img.src = `${SRC[k][1]}-p${String(p).padStart(3, "0")}.jpg`; box.append(img); }
+    dlg.showModal();
+  });
+});
+document.getElementById("pclose").onclick = () => dlg.close();
+
+const fmt = s => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+const toc = document.getElementById("toc");
+function tally() {
+  toc.innerHTML = "";
+  document.querySelectorAll("section[data-sec]").forEach(s => {
+    const P = s.dataset.paper, li = document.createElement("li");
+    const sc = P && state[P] && state[P].submitted ? `<span class="sc done">${score(s)}/100</span>` : "";
+    li.innerHTML = `<a href="#${s.dataset.sec}">${s.querySelector("h2").textContent}</a>${sc}`;
+    toc.append(li);
+  });
+}
+// marking: T/F 10 = verdict + reason ticked, 5 = verdict only; MCQ 20 exact set + 10 reason ticked
+function score(sec) {
+  let t = 0;
+  sec.querySelectorAll(".qn").forEach(q => {
+    const s = st(q.dataset.id);
+    if (q.dataset.tf) t += s.tf === q.dataset.tf ? (s.reason ? 10 : 5) : 0;
+    else t += ((s.mcq || []).slice().sort().join("") === q.dataset.mcq ? 20 : 0) + (s.reason ? 10 : 0);
+  });
+  return t;
+}
+
+document.querySelectorAll("section[data-paper]").forEach(sec => {
+  const P = sec.dataset.paper, ps = () => state[P] || (state[P] = {});
+  const qs = [...sec.querySelectorAll(".qn")], time = sec.querySelector(".time"), out = sec.querySelector(".score");
+  const tick = () => { const p = ps(); if (!p.start) return;
+    const s = Math.round(((p.end || Date.now()) - p.start) / 1000);
+    time.textContent = `${p.end ? "Finished in" : "Elapsed"} ${fmt(s)}${!p.end && s > 1800 ? " (over 30 min)" : ""}`; };
+  sec.querySelector(".start").onclick = () => { if (!ps().start) { ps().start = Date.now(); save(); } tick(); };
+  setInterval(tick, 1000); tick();
+
+  qs.forEach(q => {
+    const id = q.dataset.id, s0 = st(id), ans = q.querySelector(".ans");
+    const box = document.createElement("div"); box.className = "try";
+    const fb = document.createElement("p"); fb.className = "fb"; q._fb = fb;
+    if (q.dataset.tf) {
+      const row = document.createElement("p");
+      ["T", "F"].forEach(v => { const b = document.createElement("button"); b.type = "button"; b.dataset.v = v;
+        b.textContent = v === "T" ? "True" : "False";
+        b.onclick = () => { if (ps().submitted) return; st(id).tf = v; save(); mark(); };
+        row.append(b, " "); });
+      box.append(row);
+    } else {
+      const row = document.createElement("p");
+      [...q.querySelectorAll(".opts li")].forEach((li, n) => {
+        const L = "ABCD"[n], lab = document.createElement("label"), cb = document.createElement("input");
+        cb.type = "checkbox"; cb.value = L; cb.checked = (s0.mcq || []).includes(L);
+        cb.onchange = () => { if (ps().submitted) { cb.checked = !cb.checked; return; }
+          st(id).mcq = [...row.querySelectorAll("input:checked")].map(c => c.value); save(); };
+        lab.append(cb, ` ${L}  `); row.append(lab); });
+      box.append(row);
+    }
+    const ta = document.createElement("textarea"); ta.placeholder = "Your reason…"; ta.value = s0.txt || "";
+    ta.oninput = () => { st(id).txt = ta.value; save(); };
+    const rl = document.createElement("label"); rl.className = "got reason";
+    const rc = document.createElement("input"); rc.type = "checkbox"; rc.checked = !!s0.reason;
+    rc.onchange = () => { st(id).reason = rc.checked; save(); render(); };
+    rl.append(rc, " My reason names the same condition or fact as the key");
+    box.append(ta, fb, rl);
+    ans.before(box); q._rl = rl;
+    const mark = () => box.querySelectorAll("button[data-v]").forEach(b => b.classList.toggle("on", b.dataset.v === st(id).tf));
+    q._mark = mark; mark();
+  });
+
+  function render() {
+    const done = !!ps().submitted;
+    qs.forEach(q => {
+      const s = st(q.dataset.id), ans = q.querySelector(".ans");
+      ans.hidden = !done; q._rl.hidden = !done; q._fb.textContent = "";
+      if (!done) return;
+      let ok;
+      if (q.dataset.tf) ok = s.tf === q.dataset.tf;
+      else ok = (s.mcq || []).slice().sort().join("") === q.dataset.mcq;
+      q._fb.className = "fb " + (ok ? "ok" : "bad");
+      q._fb.textContent = ok ? "✓ Verdict correct. Now check your reason against the key." :
+        `✗ ${q.dataset.tf ? "Wrong verdict" : `Your set was ${(s.mcq || []).slice().sort().join("") || "empty"}`}. Read the key and find where your reasoning went off.`;
+    });
+    sec.querySelector(".submit").textContent = done ? `Retry Paper ${P}` : `Submit Paper ${P}`;
+    out.textContent = done ? `Estimated score: ${score(sec)}/100. Tick the reason boxes honestly; that's where the marks are.` : "";
+    tally();
+  }
+  sec.querySelector(".submit").onclick = () => {
+    const p = ps();
+    if (p.submitted) { qs.forEach(q => delete state[q.dataset.id]); state[P] = {}; save(); location.reload(); return; }
+    p.submitted = true; if (p.start && !p.end) p.end = Date.now(); save(); render(); tick();
+  };
+  render();
+});
+document.getElementById("reset").onclick = () => { state = {}; save(); location.reload(); };
+});
+</script>
+</body>
+</html>
