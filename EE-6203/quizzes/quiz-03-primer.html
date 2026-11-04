@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Light primer for EE6203 Quiz 3 (C. Wen Ch 4-6): one idea, the formulas, one example and two quick checks per topic, then the mock.">
+<title>EE6203 Quiz 3 Primer</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+  options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+};
+</script>
+<script async src="vendor/mathjax/tex-mml-chtml.js" onerror="document.getElementById('math-warning').hidden=false"></script>
+<style>
+:root {
+  color-scheme: light dark;
+  --bg:#f7f8fb; --surface:#fff; --surface-2:#eef3fb; --text:#18202c; --muted:#5f6b7a;
+  --border:#d8dee9; --accent:#245ec7; --accent-soft:#e8f0ff; --ok:#167a3e; --ok-soft:#e3f5ea; --bad:#b3261e; --bad-soft:#fbe9e7;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#10141b; --surface:#171d26; --surface-2:#202a38; --text:#edf2f8; --muted:#aab4c2;
+    --border:#344052; --accent:#8bb5ff; --accent-soft:#1e3558; --ok:#6fd49a; --ok-soft:#173726; --bad:#ff8a80; --bad-soft:#3b1d1b;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:#10141b; --surface:#171d26; --surface-2:#202a38; --text:#edf2f8; --muted:#aab4c2;
+  --border:#344052; --accent:#8bb5ff; --accent-soft:#1e3558; --ok:#6fd49a; --ok-soft:#173726; --bad:#ff8a80; --bad-soft:#3b1d1b;
+}
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.62; }
+a { color:var(--accent); }
+.app { display:grid; grid-template-columns:270px minmax(0,1fr); }
+nav { position:sticky; top:0; height:100vh; overflow-y:auto; border-right:1px solid var(--border); background:var(--surface); padding:1rem; }
+nav h1 { font-size:1.05rem; margin:.2rem 0 .8rem; }
+nav a { display:flex; justify-content:space-between; gap:.5rem; padding:.35rem .5rem; border-radius:8px; text-decoration:none; color:var(--text); font-size:.92rem; }
+nav a:hover { background:var(--accent-soft); color:var(--accent); }
+nav .score { color:var(--muted); font-variant-numeric:tabular-nums; }
+nav .score.done { color:var(--ok); font-weight:700; }
+nav .tools { margin-top:1rem; padding-top:.8rem; border-top:1px solid var(--border); font-size:.9rem; }
+nav .tools a { display:block; }
+main { min-width:0; padding:1.5rem 2rem 4rem; max-width:860px; }
+section { margin-bottom:2.6rem; }
+h2 { border-bottom:2px solid var(--border); padding-bottom:.3rem; }
+.box { border-left:4px solid var(--accent); background:var(--accent-soft); padding:.7rem 1rem; border-radius:0 10px 10px 0; margin:1rem 0; }
+.pit { border-left:4px solid var(--bad); background:var(--bad-soft); padding:.6rem 1rem; border-radius:0 10px 10px 0; margin:1rem 0; }
+.checks { border:2px dashed var(--accent); border-radius:14px; padding:1rem; margin:1.4rem 0; }
+.checks h4 { margin:0 0 .5rem; color:var(--accent); }
+.q { margin:.9rem 0; }
+.q input[type=text] { width:8rem; padding:.4rem .6rem; border:1px solid var(--border); border-radius:8px; background:var(--bg); color:var(--text); font:inherit; }
+button { font:inherit; padding:.35rem .8rem; border:1px solid var(--border); border-radius:8px; background:var(--surface-2); color:var(--text); cursor:pointer; margin:.15rem .2rem .15rem 0; }
+button:hover { border-color:var(--accent); }
+button.chosen { border-color:var(--accent); background:var(--accent-soft); }
+.fb { margin-top:.4rem; padding:.5rem .8rem; border-radius:8px; }
+.fb.ok { background:var(--ok-soft); color:var(--ok); }
+.fb.bad { background:var(--bad-soft); color:var(--bad); }
+.fb .why { color:var(--text); display:block; margin-top:.2rem; }
+.mjx-container { overflow-x:auto; overflow-y:hidden; max-width:100%; }
+table { border-collapse:collapse; width:100%; font-size:.95rem; }
+td, th { border:1px solid var(--border); padding:.35rem .5rem; text-align:left; vertical-align:top; }
+a.src { white-space:nowrap; }
+dialog.pages { width:min(920px,96vw); max-height:92vh; border:1px solid var(--border); border-radius:12px; background:var(--surface); color:var(--text); padding:0; }
+dialog.pages::backdrop { background:rgb(0 0 0 / .55); }
+dialog.pages .bar { position:sticky; top:0; display:flex; justify-content:space-between; align-items:center; gap:1rem; padding:.6rem 1rem; background:var(--surface-2); border-bottom:1px solid var(--border); }
+dialog.pages figure { margin:1rem; }
+dialog.pages img { width:100%; height:auto; border:1px solid var(--border); border-radius:6px; background:#fff; }
+#math-warning { background:var(--bad-soft); color:var(--bad); padding:.6rem 1rem; }
+@media (max-width:860px) {
+  .app { grid-template-columns:1fr; }
+  nav { position:static; height:auto; border-right:0; border-bottom:1px solid var(--border); }
+  #toc { display:grid; grid-template-columns:1fr 1fr; gap:.1rem .5rem; }
+  main { padding:1rem 16px 3rem; }
+}
+</style>
+</head>
+<body>
+<div id="math-warning" hidden>Equations could not load. Keep this file next to its <code>vendor/mathjax/</code> folder.</div>
+<div class="app">
+<nav>
+  <h1>EE6203 Quiz 3 primer</h1>
+  <div id="toc"></div>
+  <div class="tools">
+    <a href="quiz-03-mock-a.html">→ Sit Mock A (45 min)</a>
+    <a href="../notes/quiz1-prep-learning.html#module-5">Ch 4 in depth (Quiz 1 companion, Module 5)</a>
+    <a href="#" id="reset">Reset my answers</a>
+  </div>
+</nav>
+<main>
+
+<section id="s0" data-title="0 · What is tested">
+<h2>0 · What is tested, and how to use this page</h2>
+<p><strong>Official</strong> (NTULearn announcement, 30 Oct): Saturday 7 Nov, 2:30–3:15 pm, LT 2A, 45 min, closed book, own calculator, transform pairs provided. The scope is Wen's Weeks 4, 10, 11 and 12, i.e. <strong>Chapters 4, 5 and 6</strong>. Show all workings for non-MCQ questions; that phrase suggests some MCQs too.</p>
+<p><strong>Unofficial pattern</strong> (past <em>finals</em>, see <code>quiz-03-intel.md</code>): ripple-free / deadbeat design comes up most often, then Jury gain ranges, s→z mapping of a controller, and direct/standard programming.</p>
+<div class="box">This is a primer, not a course. Each topic gives you the one idea, the formulas you must carry into the room, a tiny example and two quick checks. If you pass a topic's checks, move on. Then sit <a href="quiz-03-mock-a.html">Mock A</a> cold. Most of the learning happens when we go through your mistakes afterwards.</div>
+</section>
+
+<section id="s1" data-title="1 · Ch 4 stability & error">
+<h2>1 · Ch 4: z-plane stability and steady-state error</h2>
+<p><strong>Idea.</strong> Sampling maps \(s\) to \(z=e^{sT}\). The left half s-plane lands inside the unit circle, so a sampled loop is stable iff every closed-loop pole has \(|z|\lt 1\). The Jury test checks this from the coefficients, without finding the roots <a class="src" href="../resources/lecture-notes-weeks-01-04.pdf#page=146" data-pages="c14:146-147">pp. 146–147</a>.</p>
+<p><strong>Jury, for \(P(z)=a_0z^n+\dots+a_n\) with \(a_0\gt0\)</strong> <a class="src" href="../resources/lecture-notes-weeks-01-04.pdf#page=166" data-pages="c14:164-166">pp. 164–166</a>:
+(1) \(|a_n|\lt a_0\); (2) \(P(1)\gt0\); (3) \(P(-1)\gt0\) if \(n\) is even, \(\lt0\) if \(n\) is odd; (4) the table rows \(|b_{n-1}|\gt|b_0|,\dots\). <em>For \(n=2\) you only need (1)–(3).</em></p>
+<p><strong>Error constants</strong> (unity feedback, \(GH(z)\) includes the ZOH) <a class="src" href="../resources/lecture-notes-weeks-01-04.pdf#page=186" data-pages="c14:186-187">pp. 186–187</a>:
+\[K_p=\lim_{z\to1}GH(z),\quad K_v=\lim_{z\to1}\frac{(1-z^{-1})GH(z)}{T},\quad K_a=\lim_{z\to1}\frac{(1-z^{-1})^2GH(z)}{T^2},\]
+which give \(e_{ss}=\frac1{1+K_p},\ \frac1{K_v},\ \frac1{K_a}\) for a step, ramp and acceleration respectively.</p>
+<div class="pit">Pitfall: \(K_v\) has a \(1/T\). Forget it and you are wrong by a factor of 10 at \(T=0.1\).</div>
+<div class="checks"><h4>Quick checks</h4>
+<div class="q" data-id="p1a" data-ans="2.7"><p>\(P(z)=z^2+(K-1.3)z+0.4\). What is the <em>upper</em> limit of \(K\) for stability?</p><input type="text" aria-label="upper K"> <button class="go">Check</button>
+<div class="why" hidden>\(|0.4|\lt1\) always holds. \(P(1)=K+0.1\gt0\) gives \(K\gt-0.1\). \(P(-1)=1-(K-1.3)+0.4=2.7-K\gt0\) gives \(K\lt2.7\).</div></div>
+<div class="q" data-id="p1b" data-ans="4.75"><p>\(GH(z)=\dfrac{0.1(z+0.9)}{(z-1)(z-0.6)}\), \(T=0.1\). Find \(K_v\).</p><input type="text" aria-label="Kv"> <button class="go">Check</button>
+<div class="why">\((1-z^{-1})GH=\frac{z-1}{z}GH\to\frac{0.1\cdot1.9}{1\cdot0.4}=0.475\). Divide by \(T\): \(K_v=4.75\), so the ramp error is \(1/4.75\approx0.21\).</div></div>
+</div>
+</section>
+
+<section id="s2" data-title="2 · Analog → digital">
+<h2>2 · §5.2: Turning an analog controller into a digital one</h2>
+<p><strong>Idea.</strong> Design \(C(s)\) as usual, map it to \(C(z)\), then check the sampled response. This works well when \(T\) is small. The design steps are on <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=7" data-pages="c56:7-8">pp. 7–8</a>.</p>
+<p><strong>Bilinear (Tustin).</strong> Trapezoidal integration gives \(\displaystyle s=\frac{2}{T}\frac{z-1}{z+1}\). Substitute it and simplify. It preserves DC gain: \(z=1\) maps to \(s=0\). Example: \(\frac{a}{s+a}\to\frac{a}{\frac{2}{T}\frac{z-1}{z+1}+a}\).</p>
+<p><strong>Pole-zero matching</strong> <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=14" data-pages="c56:14-15">pp. 14–15</a>. Map every pole and zero by \(z=e^{sT}\). With \(n\) poles and \(m\) zeros, add \(n-m\) zeros at \(-1\) (proper) or \(n-m-1\) (strictly proper, as the slide formula uses). Then pick \(\alpha\) to match the gain at a critical frequency, usually DC: \(G(1)=G_a(0)\). For complex poles \(-\zeta\omega_n\pm j\omega_d\), the denominator is \(z^2-2e^{-\zeta\omega_nT}\cos(\omega_dT)z+e^{-2\zeta\omega_nT}\) (Example 5.2 <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=16" data-pages="c56:16-17">pp. 16–17</a>).</p>
+<div class="checks"><h4>Quick checks</h4>
+<div class="q" data-id="p2a" data-ans="1/3"><p>Map \(C(s)=\frac{2}{s+2}\) with the bilinear rule at \(T=0.5\). Where is the pole of \(C(z)\)?</p><input type="text" aria-label="pole"> <button class="go">Check</button>
+<div class="why">\(s=4\frac{z-1}{z+1}\), so \(C=\frac{2(z+1)}{4(z-1)+2(z+1)}=\frac{z+1}{3z-1}\). The pole is at \(z=1/3\). DC check: \(C(1)=2/2=1\).</div></div>
+<div class="q" data-id="p2b" data-ans="0.6321"><p>Same \(C(s)\), now pole-zero matched and strictly proper at \(T=0.5\): \(C(z)=\frac{\alpha}{z-e^{-1}}\). Find \(\alpha\) for equal DC gain.</p><input type="text" aria-label="alpha"> <button class="go">Check</button>
+<div class="why">\(n-m-1=0\), so no \((z+1)\) is added. \(C(1)=\alpha/(1-0.3679)=1\) gives \(\alpha=0.6321\).</div></div>
+</div>
+</section>
+
+<section id="s3" data-title="3 · w-plane design">
+<h2>3 · §5.3: Frequency-response design in the w-plane</h2>
+<p><strong>Idea.</strong> \(G(e^{j\omega T})\) is not rational in \(\omega\), so Bode rules do not apply directly. The w-transform \(z=\frac{1+wT/2}{1-wT/2}\), or equivalently \(w=\frac2T\frac{z-1}{z+1}\), maps the unit-circle interior onto the left half w-plane. Then you design with ordinary Bode tools in the fictitious frequency \(v\) <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=23" data-pages="c56:23-24">pp. 23–24</a>.</p>
+<p><strong>Procedure</strong>: \(G_{ZAS}(z)\to G(w)\); choose \(K\) from the error constant (e.g. \(K_v=\lim_{w\to0}wG_D(w)G(w)\)); read the PM of \(KG\); add the phase lead \(\phi=\text{PM}_\text{req}-\text{PM}+(5^\circ\text{ to }10^\circ)\); set
+\[\alpha=\frac{1-\sin\phi}{1+\sin\phi};\]
+place the new crossover where \(|KG(jv)|=10\log\alpha\) dB, i.e. \(-10\log(1/\alpha)\); set \(\tau=1/(\sqrt\alpha\,v_g')\); \(G_D(w)=\frac{\tau w+1}{\alpha\tau w+1}\); map back with \(w=\frac2T\frac{z-1}{z+1}\) (Example 5.5 <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=44" data-pages="c56:44-46">pp. 44–46</a>).</p>
+<p><strong>Lead vs lag</strong> <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=29" data-pages="c56:29">p. 29</a>. Lead raises the PM and bandwidth, so the response is faster but more sensitive to noise. Lag raises low-frequency gain and lowers bandwidth, so steady-state accuracy improves, the response is slower and noise is attenuated. Lag-lead combines both.</p>
+<div class="checks"><h4>Quick checks</h4>
+<div class="q" data-id="p3a" data-ans="1/3"><p>You need \(\phi=30^\circ\) of lead. Find \(\alpha\).</p><input type="text" aria-label="alpha"> <button class="go">Check</button>
+<div class="why">\((1-0.5)/(1+0.5)=1/3\). The new crossover is then where \(|KG|=10\log(1/3)=-4.77\) dB.</div></div>
+<div class="q" data-id="p3b" data-choice="lag"><p>Which compensator do you add to cut the steady-state error without much change to the transient?</p><button data-v="lead">Lead</button><button data-v="lag">Lag</button>
+<div class="why">Lag raises the low-frequency gain, which improves accuracy. Lead targets the phase margin and speed of response.</div></div>
+</div>
+</section>
+
+<section id="s4" data-title="4 · Direct design & deadbeat">
+<h2>4 · §5.4: Direct design from a desired \(G_{cl}(z)\); deadbeat</h2>
+<p><strong>Idea.</strong> Choose the closed loop you want, then solve for the controller. From \(G_{cl}=\frac{CG}{1+CG}\) <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=49" data-pages="c56:49-50">pp. 49–50</a>:
+\[C(z)=\frac{1}{G_{ZAS}(z)}\,\frac{G_{cl}(z)}{1-G_{cl}(z)}\qquad(5.11)\]</p>
+<p><strong>Four conditions on \(G_{cl}\)</strong> <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=56" data-pages="c56:51-56">pp. 51–56</a>:
+(i) relative degree of \(G_{cl}\) ≥ that of \(G_{ZAS}\) (causality);
+(ii) \(G_{cl}\) contains every zero of \(G_{ZAS}\) outside the unit circle;
+(iii) \(1-G_{cl}\) contains every unstable pole of \(G_{ZAS}\);
+(iv) \(G_{cl}(1)=1\) (zero step error).
+Conditions (ii) and (iii) exist because \(C\) would otherwise cancel an unstable zero or pole. The loop would then look input-output stable but would not be asymptotically stable.</p>
+<p><strong>Choosing \(G_{cl}\)</strong> <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=57" data-pages="c56:57">p. 57</a>: pick \(T_s\) and the overshoot, choose a unit-gain 1st/2nd-order \(G_{cl}(s)\), map its poles by \(z=e^{sT}\), then check (i)–(iv). A plant delay \(z^{-5}\) forces \(z^{-5}\) into \(G_{cl}\) (Example 5.7).</p>
+<p><strong>Deadbeat</strong> <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=64" data-pages="c56:64-65">pp. 64–65</a>: if all poles and zeros of \(G_{ZAS}\) are inside the circle, choose \(G_{cl}=z^{-m}\) with \(m\) = relative degree. Then \(C=\frac{1}{G_{ZAS}}\frac{z^{-m}}{1-z^{-m}}\) (5.12), and the only design knob left is \(T\).</p>
+<div class="pit">Count the relative degree in powers of \(z\), after clearing every \(z^{-1}\): (degree of denominator) − (degree of numerator).</div>
+<div class="checks"><h4>Quick checks</h4>
+<div class="q" data-id="p4a" data-ans="2"><p>\(G_{ZAS}=\dfrac{0.05z^{-2}(1+0.7z^{-1})}{(1-0.9z^{-1})(1-0.5z^{-1})}\). Deadbeat \(G_{cl}=z^{-m}\): what is \(m\)?</p><input type="text" aria-label="m"> <button class="go">Check</button>
+<div class="why">Numerator \(=\frac{z+0.7}{z^3}\); denominator \(=\frac{(z-0.9)(z-0.5)}{z^2}\). So \(G=\frac{0.05(z+0.7)}{z(z-0.9)(z-0.5)}\), with relative degree 3 − 1 = 2.</div></div>
+<div class="q" data-id="p4b" data-choice="no"><p>If \(G_{ZAS}\) had a zero at \(z=-1.5\), could you still use \(G_{cl}=z^{-m}\)?</p><button data-v="yes">Yes</button><button data-v="no">No</button>
+<div class="why">No. Condition (ii) makes \(G_{cl}\) contain \((z+1.5)\); otherwise \(C\) has a pole at −1.5 and the control signal blows up.</div></div>
+</div>
+</section>
+
+<section id="s5" data-title="5 · Ripple-free">
+<h2>5 · §5.4.3: Ripple-free deadbeat</h2>
+<p><strong>Idea.</strong> Plain deadbeat makes \(C\) cancel <em>all</em> plant zeros. A zero near \(-1\) then becomes a controller pole near \(-1\), so \(u(k)\) alternates sign and the output rings between samples (Examples 5.8–5.9 <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=66" data-pages="c56:66-67">pp. 66–67</a>). The fix is to keep \(u\) constant after \(n\) samples, \(n\) being the plant order <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=73" data-pages="c56:73-74">pp. 73–74</a>:
+\[U(z)=G_{cl}(z)\frac{R(z)}{G_{ZAS}(z)}\qquad(5.13)\]
+Choose \(G_{cl}\) so that \(U(z)\) is a finite polynomial in \(z^{-1}\). In practice: <strong>\(G_{cl}=Kz^{-d}\times\)(all zeros of \(G_{ZAS}\))</strong>, then \(G_{cl}(1)=1\) fixes \(K\).</p>
+<table>
+<tr><th>Plant</th><th>After \(n\) samples</th><th>Example</th></tr>
+<tr><td>Type 1 (has \(1-z^{-1}\))</td><td>\(u(k)=0\); \(R\)'s \(1-z^{-1}\) cancels the plant integrator</td><td>Ex 5.10 <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=75" data-pages="c56:75-77">pp. 75–77</a></td></tr>
+<tr><td>Type 0</td><td>\(u(k)\) = non-zero constant; \(e(k)=0\), so \(E=e_0+e_1z^{-1}\), and \(C\) must contain an integrator</td><td>Ex 5.12 <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=79" data-pages="c56:78-82">pp. 78–82</a></td></tr>
+</table>
+<div class="checks"><h4>Quick checks</h4>
+<div class="q" data-id="p5a" data-ans="0.625"><p>A type-1 plant has one zero, at \(z=-0.6\), and relative degree 1. The ripple-free choice is \(G_{cl}=Kz^{-1}(1+0.6z^{-1})\). Find \(K\).</p><input type="text" aria-label="K"> <button class="go">Check</button>
+<div class="why">\(G_{cl}(1)=K(1+0.6)=1\) gives \(K=0.625\). (Wrong path: \(1/0.6\).)</div></div>
+<div class="q" data-id="p5b" data-choice="const"><p>For a type-0 plant, what does \(u(k)\) do after \(n\) samples in a ripple-free design?</p><button data-v="zero">Goes to 0</button><button data-v="const">Settles at a non-zero constant</button>
+<div class="why">Without an integrator in the plant, holding \(y=1\) needs a constant input. The integrator must then sit in \(C(z)\) (p. 79).</div></div>
+</div>
+</section>
+
+<section id="s6" data-title="6 · 1-DOF, 2-DOF, poles">
+<h2>6 · §5.5–5.7: One vs two degrees of freedom; pole placement</h2>
+<p><strong>1-DOF</strong> <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=84" data-pages="c56:84">p. 84</a>: \(y=Tr+Sv\) with \(T=\frac{GG_c}{1+GG_c}\) and \(S=\frac{1}{1+GG_c}\). Because \(S+T=1\), fixing one fixes the other.</p>
+<p><strong>2-DOF</strong> <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=87" data-pages="c56:85-87">pp. 85–87</a>: \(u=\gamma\frac{T_c}{R_c}r-\frac{S_c}{R_c}y\) and plant \(G=z^{-k}B/A\) give
+\[Y=\frac{z^{-k}\gamma BT_c}{R_cA+z^{-k}BS_c}R+\frac{AR_c}{R_cA+z^{-k}BS_c}V.\]
+The denominator sets stability, the second term should be small (disturbance rejection), and the first should be close to 1 (tracking).</p>
+<p><strong>Pole placement</strong> <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=91" data-pages="c56:89-93">pp. 89–93</a>: split \(B=B^gB^b\), \(A=A^gA^b\) into good and bad factors (bad = outside the circle or poorly damped). Set \(R_c=B^gR_1\), \(S_c=A^gS_1\), \(T_c=A^gT_1\). Then solve
+\[A^bR_1+z^{-k}B^bS_1=\phi_{cl}\qquad(5.24)\]
+for \(R_1,S_1\) by matching coefficients. With \(T_1=1\): \(\gamma=\phi_{cl}(1)/B^b(1)\) and \(G_Y=\gamma z^{-k}B^b/\phi_{cl}\). <em>Bad zeros cannot be moved by feedback.</em></p>
+<div class="checks"><h4>Quick checks</h4>
+<div class="q" data-id="p6a" data-ans="0.1"><p>\(\phi_{cl}=1-1.2z^{-1}+0.45z^{-2}\) and \(B^b=1+1.5z^{-1}\). With \(T_1=1\), find \(\gamma\).</p><input type="text" aria-label="gamma"> <button class="go">Check</button>
+<div class="why">\(\phi_{cl}(1)=0.25\) and \(B^b(1)=2.5\), so \(\gamma=0.1\).</div></div>
+<div class="q" data-id="p6b" data-choice="t1s1"><p>Which choice of \(T_1\) collapses the 2-DOF controller back to 1-DOF?</p><button data-v="t11">\(T_1=1\)</button><button data-v="t1s1">\(T_1=S_1\)</button>
+<div class="why">With \(T_1=S_1\), \(T_c=S_c\) and \(u=\frac{S_c}{R_c}(\gamma r-y)\): one block acting on the error (p. 92).</div></div>
+</div>
+</section>
+
+<section id="s7" data-title="7 · Ch 6 implementation">
+<h2>7 · Ch 6: Implementing \(C(z)\) in software</h2>
+<p>Write \(C(z)=\frac{b_0+b_1z^{-1}+\dots+b_mz^{-m}}{1+a_1z^{-1}+\dots+a_nz^{-n}}\) (6.1, \(n\ge m\)) <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=104" data-pages="c56:104-105">pp. 104–105</a>.</p>
+<p><strong>Direct programming</strong> (Fig 6.1): \(y(k)=-a_1y(k-1)-\dots-a_ny(k-n)+b_0x(k)+\dots+b_mx(k-m)\). It uses \(n+m\) delays <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=107" data-pages="c56:106-107">pp. 106–107</a>.</p>
+<p><strong>Standard programming</strong> (Fig 6.2) <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=108" data-pages="c56:108-110">pp. 108–110</a>: split through an internal signal \(H\):
+\[h(k)=x(k)-a_1h(k-1)-\dots-a_nh(k-n),\]
+\[y(k)=b_0h(k)+b_1h(k-1)+\dots+b_mh(k-m).\]
+It needs only \(n\) delays, which saves memory. The \(a_i\) are feedback gains and the \(b_i\) feed-forward gains.</p>
+<p><strong>Coefficient quantization</strong> <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=118" data-pages="c56:116-119">pp. 116–119</a>: \(|\Delta p_i|=\left|\sum_j\frac{p_i^{\,n-j}}{\prod_{k\ne i}(p_i-p_k)}\Delta a_j\right|\). Tightly clustered poles make the denominator small and the error large. The fix is to break \(C\) into 1st/2nd-order sections: <strong>series</strong> \(C=\prod G_i\), grouping real pairs or conjugate pairs; or <strong>parallel</strong> \(C=A+\sum G_i\) by partial fractions <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=121" data-pages="c56:120-125">pp. 120–125</a>.</p>
+<div class="pit">Sign trap: (6.1) has \(+a_i\) in the denominator, but the recursion uses \(-a_i\). For \(1-0.5z^{-1}\) the recursion term is \(+0.5\,y(k-1)\).</div>
+<div class="checks"><h4>Quick checks</h4>
+<div class="q" data-id="p7a" data-ans="2"><p>\(C=\dfrac{2-1.2z^{-1}+0.3z^{-2}}{1-0.5z^{-1}+0.06z^{-2}}\). How many delay elements does standard programming need?</p><input type="text" aria-label="delays"> <button class="go">Check</button>
+<div class="why">\(n=2\), so 2 delays. Direct programming would need \(n+m=4\).</div></div>
+<div class="q" data-id="p7b" data-ans="0.5"><p>Same \(C\), direct form \(u(k)=c\,u(k-1)-0.06\,u(k-2)+\dots\). What is \(c\)?</p><input type="text" aria-label="c"> <button class="go">Check</button>
+<div class="why">\(a_1=-0.5\), and the recursion uses \(-a_1=+0.5\).</div></div>
+</div>
+<div class="box">All checks done? Now sit <a href="quiz-03-mock-a.html"><strong>Mock A</strong></a> under real conditions: 45 min, closed book, on paper. Then paste the export here for marking.</div>
+</section>
+
+<p style="color:var(--muted);font-size:.85rem">Sources: <code>resources/lecture-notes-chapters-05-06.pdf</code> (Ch 5–6) and <code>resources/lecture-notes-weeks-01-04.pdf</code> (Ch 4). Page numbers are PDF page indices; click one to see the page. The check-question numbers are original and verified by <code>quizzes/quiz-03-check.py</code>.</p>
+</main>
+</div>
+
+<script>
+// Source-page pop-ups: data-pages="c56:73-74" shows ../notes/quiz3-pages/<stem>-pNNN.jpg
+(() => {
+  const STEM = { c56: 'lecture-notes-chapters-05-06', c14: 'lecture-notes-weeks-01-04' };
+  const NAME = { c56: 'Ch 5–6 notes', c14: 'Weeks 1–4 notes (Ch 4)' };
+  const dlg = document.createElement('dialog'); dlg.className = 'pages'; document.body.append(dlg);
+  dlg.addEventListener('click', e => { if (e.target === dlg || e.target.matches('.close')) dlg.close(); });
+  document.querySelectorAll('a.src[data-pages]').forEach(a => a.addEventListener('click', e => {
+    e.preventDefault();
+    const [k, r] = a.dataset.pages.split(':'); const [p, q] = r.split('-').map(Number);
+    const figs = []; for (let i = p; i <= (q || p); i++)
+      figs.push(`<figure><img loading="lazy" src="../notes/quiz3-pages/${STEM[k]}-p${String(i).padStart(3, '0')}.jpg" alt="${NAME[k]} page ${i}"></figure>`);
+    dlg.innerHTML = `<div class="bar"><span><strong>${NAME[k]}, p. ${r.replace('-', '–')}</strong> · <a href="${a.getAttribute('href')}">open PDF</a></span><button type="button" class="close">Close</button></div>` + figs.join('');
+    dlg.showModal(); dlg.scrollTop = 0;
+  }));
+})();
+// Quick checks with saved progress
+(() => {
+  const KEY = 'ee6203-quiz3-primer-v1';
+  let st = {}; try { st = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) {}
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} };
+  const num = s => { s = String(s).trim().replace(/\s/g, ''); if (/^-?\d+(\.\d+)?\/-?\d+(\.\d+)?$/.test(s)) { const [a, b] = s.split('/').map(Number); return a / b; } return s === '' ? NaN : Number(s); };
+  const sections = [...document.querySelectorAll('main section')];
+  const toc = document.getElementById('toc');
+  sections.forEach(sec => { const a = document.createElement('a'); a.href = '#' + sec.id; a.innerHTML = `<span>${sec.dataset.title}</span><span class="score" data-for="${sec.id}"></span>`; toc.append(a); });
+  const score = () => sections.forEach(sec => {
+    const qs = [...sec.querySelectorAll('.q')]; if (!qs.length) return;
+    const ok = qs.filter(q => st[q.dataset.id]?.ok).length; const el = toc.querySelector(`[data-for="${sec.id}"]`);
+    el.textContent = `${ok}/${qs.length}`; el.classList.toggle('done', ok === qs.length);
+  });
+  const show = (q, ok) => {
+    let fb = q.querySelector('.fb'); if (!fb) { fb = document.createElement('div'); q.append(fb); }
+    const why = q.querySelector('.why'); why.hidden = false;
+    fb.className = 'fb ' + (ok ? 'ok' : 'bad'); fb.textContent = ok ? 'Correct.' : `Not quite. Answer: ${q.dataset.ans || q.querySelector(`[data-v="${q.dataset.choice}"]`).textContent}.`;
+    fb.append(why); window.MathJax?.typesetPromise?.([fb]).catch(() => {});
+  };
+  document.querySelectorAll('.q').forEach(q => {
+    q.querySelector('.why').hidden = true;
+    const id = q.dataset.id;
+    if (q.dataset.ans) {
+      const inp = q.querySelector('input'); const go = q.querySelector('.go');
+      const check = () => { const v = num(inp.value), a = num(q.dataset.ans); if (isNaN(v)) return; const ok = Math.abs(v - a) <= 0.01 * Math.max(1, Math.abs(a)); st[id] = { v: inp.value, ok }; save(); show(q, ok); score(); };
+      go.onclick = check; inp.onkeydown = e => { if (e.key === 'Enter') check(); };
+      if (st[id]) { inp.value = st[id].v; show(q, st[id].ok); }
+    } else {
+      q.querySelectorAll('button[data-v]').forEach(b => {
+        b.onclick = () => { q.querySelectorAll('button').forEach(x => x.classList.remove('chosen')); b.classList.add('chosen'); const ok = b.dataset.v === q.dataset.choice; st[id] = { v: b.dataset.v, ok }; save(); show(q, ok); score(); };
+        if (st[id]?.v === b.dataset.v) { b.classList.add('chosen'); show(q, st[id].ok); }
+      });
+    }
+  });
+  document.getElementById('reset').onclick = e => { e.preventDefault(); st = {}; save(); location.reload(); };
+  score();
+})();
+</script>
+</body>
+</html>

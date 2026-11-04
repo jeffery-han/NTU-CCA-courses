@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Unofficial EE6203 Quiz 3 Mock A (C. Wen Ch 4-6): 30 marks, 45 minutes, answer-free. Work on paper, then export for marking.">
+<title>EE6203 Quiz 3 Mock</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+  options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+};
+</script>
+<script async src="vendor/mathjax/tex-mml-chtml.js" onerror="document.getElementById('math-warning').hidden=false"></script>
+<style>
+:root {
+  color-scheme: light dark;
+  --bg:#f7f8fb; --surface:#fff; --surface-2:#eef3fb; --text:#18202c; --muted:#5f6b7a;
+  --border:#d8dee9; --accent:#245ec7; --accent-soft:#e8f0ff; --ok:#167a3e; --warn:#a15c00; --warn-soft:#fff3e0;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#10141b; --surface:#171d26; --surface-2:#202a38; --text:#edf2f8; --muted:#aab4c2;
+    --border:#344052; --accent:#8bb5ff; --accent-soft:#1e3558; --ok:#6fd49a; --warn:#ffb74d; --warn-soft:#3a2a12;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:#10141b; --surface:#171d26; --surface-2:#202a38; --text:#edf2f8; --muted:#aab4c2;
+  --border:#344052; --accent:#8bb5ff; --accent-soft:#1e3558; --ok:#6fd49a; --warn:#ffb74d; --warn-soft:#3a2a12;
+}
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.62; }
+a { color:var(--accent); }
+.app { display:grid; grid-template-columns:270px minmax(0,1fr); }
+nav { position:sticky; top:0; height:100vh; overflow-y:auto; border-right:1px solid var(--border); background:var(--surface); padding:1rem; }
+nav h1 { font-size:1.05rem; margin:.2rem 0 .6rem; }
+#timer { font-size:2rem; font-variant-numeric:tabular-nums; font-weight:700; }
+#timer.low { color:var(--warn); }
+nav a { display:flex; justify-content:space-between; gap:.5rem; padding:.35rem .5rem; border-radius:8px; text-decoration:none; color:var(--text); font-size:.92rem; }
+nav a:hover { background:var(--accent-soft); color:var(--accent); }
+nav .score { color:var(--muted); font-variant-numeric:tabular-nums; }
+nav .score.done { color:var(--ok); font-weight:700; }
+nav .tools { margin-top:1rem; padding-top:.8rem; border-top:1px solid var(--border); font-size:.9rem; }
+nav .tools a { display:block; }
+main { min-width:0; padding:1.5rem 2rem 4rem; max-width:860px; }
+section { margin-bottom:2.4rem; }
+h2 { border-bottom:2px solid var(--border); padding-bottom:.3rem; display:flex; justify-content:space-between; gap:1rem; }
+h2 small { color:var(--muted); font-weight:400; }
+.rules { border-left:4px solid var(--accent); background:var(--accent-soft); padding:.7rem 1rem; border-radius:0 10px 10px 0; }
+.part { border:1px solid var(--border); background:var(--surface); border-radius:12px; padding:.8rem 1rem; margin:.9rem 0; }
+.part .mk { float:right; color:var(--muted); font-size:.9rem; }
+.tf { display:flex; flex-wrap:wrap; align-items:center; gap:.4rem; margin:.4rem 0 .9rem; }
+button { font:inherit; padding:.35rem .8rem; border:1px solid var(--border); border-radius:8px; background:var(--surface-2); color:var(--text); cursor:pointer; }
+button:hover { border-color:var(--accent); }
+button.chosen { border-color:var(--accent); background:var(--accent); color:var(--bg); }
+label.paper { display:inline-flex; align-items:center; gap:.4rem; margin-right:1rem; color:var(--muted); font-size:.93rem; }
+input[type=text] { padding:.35rem .6rem; border:1px solid var(--border); border-radius:8px; background:var(--bg); color:var(--text); font:inherit; width:min(26rem,100%); }
+textarea { width:100%; min-height:14rem; font:13px/1.5 ui-monospace,Menlo,monospace; background:var(--surface); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:.6rem; }
+.mjx-container { overflow-x:auto; overflow-y:hidden; max-width:100%; }
+#math-warning { background:var(--warn-soft); color:var(--warn); padding:.6rem 1rem; }
+@media (max-width:860px) {
+  .app { grid-template-columns:1fr; }
+  nav { position:static; height:auto; border-right:0; border-bottom:1px solid var(--border); }
+  #toc { display:grid; grid-template-columns:1fr 1fr; gap:.1rem .5rem; }
+  main { padding:1rem 16px 3rem; }
+}
+</style>
+</head>
+<body>
+<div id="math-warning" hidden>Equations could not load. Keep this file next to its <code>vendor/mathjax/</code> folder.</div>
+<div class="app">
+<nav>
+  <h1>EE6203 Quiz 3 · Mock A</h1>
+  <div id="timer">45:00</div>
+  <div><button id="t-start">Start</button> <button id="t-pause">Pause</button> <button id="t-reset">Reset</button></div>
+  <div id="toc" style="margin-top:.8rem"></div>
+  <div class="tools">
+    <a href="#export">Export answers for marking</a>
+    <a href="quiz-03-primer.html">← Primer</a>
+    <a href="#" id="clear">Clear all answers</a>
+  </div>
+</nav>
+<main>
+<div class="rules"><strong>Unofficial practice paper.</strong> 30 marks, 45 minutes, closed book, calculator allowed. Write every derivation <strong>on paper</strong>; that is where the marks are. Click the T/F items here, tick "done on paper" for each written part, and optionally type your final answer so I can compare. Once time is up, press <em>Export</em> and paste the block into the chat, together with a photo of your working (save it as <code>quizzes/attempts/quiz-03-mock-a-&lt;date&gt;.jpg</code>). There is no answer key on this page.</div>
+
+<section id="q1" data-title="Q1 · short items + Jury">
+<h2>Question 1 <small>10 marks</small></h2>
+<div class="part" data-part="1a"><span class="mk">6 × 1</span>
+<p><strong>(a)</strong> True or False? Write a one-line reason for each on your paper.</p>
+<ol>
+<li>The transformation \(w=\frac{2}{T}\frac{z-1}{z+1}\) maps the inside of the unit circle in the z-plane onto the entire left half of the w-plane.<div class="tf" data-tf="1"></div></li>
+<li>A phase-lag compensator is the right choice when the main goal is to widen the bandwidth and speed up the response.<div class="tf" data-tf="2"></div></li>
+<li>For \(G_{ZAS}(z)=\dfrac{0.2\,z^{-3}(1+0.5z^{-1})}{(1-0.6z^{-1})(1-0.3z^{-1})}\), the deadbeat choice is \(G_{cl}(z)=z^{-3}\).<div class="tf" data-tf="3"></div></li>
+<li>Standard programming of a controller with 3 poles and 2 zeros needs 5 delay elements.<div class="tf" data-tf="4"></div></li>
+<li>In the 1-DOF loop, \(S(z)+T(z)=1\), so set-point tracking and disturbance rejection cannot be shaped independently.<div class="tf" data-tf="5"></div></li>
+<li>In the pole-placement design with \(T_1=1\), feedback can move an unstable ("bad") zero of the plant to a better location.<div class="tf" data-tf="6"></div></li>
+</ol>
+<label class="paper"><input type="checkbox" data-paper="1a"> reasons written on paper</label>
+</div>
+<div class="part" data-part="1b"><span class="mk">4</span>
+<p><strong>(b)</strong> A unity-feedback loop with gain \(K\) and \(T=0.2\) s has closed-loop characteristic polynomial
+\[P(z)=z^2-(1.6-0.4K)z+(0.6+0.2K).\]
+(i) Use the Jury test to find the range of \(K\) for stability. (ii) At the upper limit, where are the closed-loop poles, and at what frequency (rad/s) does the output oscillate?</p>
+<label class="paper"><input type="checkbox" data-paper="1b"> done on paper</label>
+<input type="text" data-final="1b" placeholder="final: K range; poles; ω">
+</div>
+</section>
+
+<section id="q2" data-title="Q2 · analog → digital → code">
+<h2>Question 2 <small>10 marks</small></h2>
+<p>An analog lead controller \(C(s)=\dfrac{5(s+2)}{s+10}\) is to run on a computer with sampling period \(T=0.1\) s.</p>
+<div class="part" data-part="2a"><span class="mk">4</span>
+<p><strong>(a)</strong> Find \(C(z)\) using the bilinear transformation \(s=\frac{2}{T}\frac{z-1}{z+1}\). Check its DC gain.</p>
+<label class="paper"><input type="checkbox" data-paper="2a"> done on paper</label>
+<input type="text" data-final="2a" placeholder="final C(z)">
+</div>
+<div class="part" data-part="2b"><span class="mk">3</span>
+<p><strong>(b)</strong> Find the pole-zero matched \(C(z)\), with the gain matched at DC. Compare its gain at \(z=-1\) with that of your answer to (a).</p>
+<label class="paper"><input type="checkbox" data-paper="2b"> done on paper</label>
+<input type="text" data-final="2b" placeholder="final C(z); gains at z = -1">
+</div>
+<div class="part" data-part="2c"><span class="mk">3</span>
+<p><strong>(c)</strong> Write \(C(z)\) from (a) in the standard form \(\frac{b_0+b_1z^{-1}+\dots}{1+a_1z^{-1}+\dots}\) and give the <em>standard-programming</em> difference equations. How many delay elements are needed, and how many would direct programming need?</p>
+<label class="paper"><input type="checkbox" data-paper="2c"> done on paper</label>
+<input type="text" data-final="2c" placeholder="equations; delay counts">
+</div>
+</section>
+
+<section id="q3" data-title="Q3 · ripple-free deadbeat">
+<h2>Question 3 <small>10 marks</small></h2>
+<p>A type-1 plant \(G(s)=\dfrac{3}{s(s+3)}\) is driven through a zero-order hold with \(T=0.2\) s, in unity feedback with a digital controller \(C(z)\).</p>
+<div class="part" data-part="3a"><span class="mk">3</span>
+<p><strong>(a)</strong> Show that \(G_{ZAS}(z)=\dfrac{0.04960(z+0.8192)}{(z-1)(z-0.5488)}\). State the plant order \(n\) and the relative degree.</p>
+<label class="paper"><input type="checkbox" data-paper="3a"> done on paper</label>
+<input type="text" data-final="3a" placeholder="n; relative degree">
+</div>
+<div class="part" data-part="3b"><span class="mk">3</span>
+<p><strong>(b)</strong> Design a <strong>ripple-free</strong> deadbeat controller for a unit-step reference: choose \(G_{cl}(z)\) and find its gain.</p>
+<label class="paper"><input type="checkbox" data-paper="3b"> done on paper</label>
+<input type="text" data-final="3b" placeholder="G_cl(z); gain">
+</div>
+<div class="part" data-part="3c"><span class="mk">2</span>
+<p><strong>(c)</strong> Find \(C(z)\).</p>
+<label class="paper"><input type="checkbox" data-paper="3c"> done on paper</label>
+<input type="text" data-final="3c" placeholder="C(z)">
+</div>
+<div class="part" data-part="3d"><span class="mk">2</span>
+<p><strong>(d)</strong> List \(u(k)\) and \(y(k)\) for \(k=0,1,2,3\). In one sentence, explain why the plain deadbeat choice \(G_{cl}=z^{-1}\) would produce intersample ripple for this plant.</p>
+<label class="paper"><input type="checkbox" data-paper="3d"> done on paper</label>
+<input type="text" data-final="3d" placeholder="u(0..3); y(0..3); one-line reason">
+</div>
+</section>
+
+<section id="export" data-title="Export">
+<h2>Export for marking</h2>
+<p>Press Export, copy the block, and paste it into a chat together with your paper photo(s).</p>
+<button id="do-export">Export</button> <button id="copy">Copy</button>
+<p><textarea id="out" readonly></textarea></p>
+</section>
+</main>
+</div>
+
+<script>
+(() => {
+  const KEY = 'ee6203-quiz3-mock-a-v1', DUR = 45 * 60;
+  let st = { tf: {}, paper: {}, final: {}, elapsed: 0 };
+  try { st = Object.assign(st, JSON.parse(localStorage.getItem(KEY)) || {}); } catch (e) {}
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} };
+  const PARTS = ['1a', '1b', '2a', '2b', '2c', '3a', '3b', '3c', '3d'];
+  const STEM = { 1: 'w-map unit circle→LHP', 2: 'lag widens bandwidth', 3: 'deadbeat m=3', 4: 'standard prog 5 delays', 5: '1-DOF S+T=1', 6: 'feedback moves bad zero' };
+
+  // T/F buttons
+  document.querySelectorAll('.tf').forEach(div => {
+    const i = div.dataset.tf;
+    ['True', 'False'].forEach(v => {
+      const b = document.createElement('button'); b.textContent = v; b.type = 'button';
+      if (st.tf[i] === v) b.classList.add('chosen');
+      b.onclick = () => { st.tf[i] = st.tf[i] === v ? undefined : v; div.querySelectorAll('button').forEach(x => x.classList.toggle('chosen', st.tf[i] === x.textContent)); save(); score(); };
+      div.append(b);
+    });
+  });
+  document.querySelectorAll('[data-paper]').forEach(c => { c.checked = !!st.paper[c.dataset.paper]; c.onchange = () => { st.paper[c.dataset.paper] = c.checked; save(); score(); }; });
+  document.querySelectorAll('[data-final]').forEach(t => { t.value = st.final[t.dataset.final] || ''; t.oninput = () => { st.final[t.dataset.final] = t.value; save(); }; });
+
+  // sidebar
+  const toc = document.getElementById('toc');
+  const secs = [...document.querySelectorAll('main section')];
+  secs.forEach(s => { const a = document.createElement('a'); a.href = '#' + s.id; a.innerHTML = `<span>${s.dataset.title}</span><span class="score" data-for="${s.id}"></span>`; toc.append(a); });
+  function score() {
+    secs.forEach(s => {
+      const el = toc.querySelector(`[data-for="${s.id}"]`); if (s.id === 'export') return;
+      let done = 0, tot = 0;
+      s.querySelectorAll('.tf').forEach(d => { tot++; if (st.tf[d.dataset.tf]) done++; });
+      s.querySelectorAll('[data-paper]').forEach(c => { tot++; if (st.paper[c.dataset.paper]) done++; });
+      el.textContent = `${done}/${tot}`; el.classList.toggle('done', done === tot);
+    });
+  }
+  score();
+
+  // timer
+  const tEl = document.getElementById('timer'); let iv = null;
+  const fmt = sec => { const r = Math.max(0, DUR - sec); return `${String(Math.floor(r / 60)).padStart(2, '0')}:${String(r % 60).padStart(2, '0')}`; };
+  const draw = () => { tEl.textContent = st.elapsed >= DUR ? "TIME'S UP" : fmt(st.elapsed); tEl.classList.toggle('low', DUR - st.elapsed <= 300); };
+  document.getElementById('t-start').onclick = () => { if (iv) return; iv = setInterval(() => { st.elapsed++; draw(); if (st.elapsed % 10 === 0) save(); if (st.elapsed >= DUR) { clearInterval(iv); iv = null; save(); } }, 1000); };
+  document.getElementById('t-pause').onclick = () => { clearInterval(iv); iv = null; save(); };
+  document.getElementById('t-reset').onclick = () => { clearInterval(iv); iv = null; st.elapsed = 0; save(); draw(); };
+  draw();
+
+  // export
+  document.getElementById('do-export').onclick = () => {
+    const m = Math.floor(st.elapsed / 60), s = st.elapsed % 60;
+    const L = [
+      'EE6203 Quiz 3 — Mock A attempt (unofficial practice paper)',
+      'Key + rubric: EE-6203/quizzes/quiz-03-mock-a.md   (marks: Q1 10 [a 6x1, b 4], Q2 10 [a 4, b 3, c 3], Q3 10 [a 3, b 3, c 2, d 2]; total 30)',
+      `Exported: ${new Date().toISOString().slice(0, 16).replace('T', ' ')}   Elapsed on timer: ${m} min ${s} s of 45`,
+      '',
+      'Q1(a) True/False:'
+    ];
+    for (let i = 1; i <= 6; i++) L.push(`  ${i}. [${STEM[i]}] ${st.tf[i] || '<blank>'}`);
+    L.push(`  reasons on paper: ${st.paper['1a'] ? 'yes' : 'no'}`, '');
+    PARTS.filter(p => p !== '1a').forEach(p => L.push(`Q${p[0]}(${p[1]}): on paper: ${st.paper[p] ? 'yes' : 'NO'}; typed final: ${(st.final[p] || '').trim() || '<blank>'}`));
+    L.push('', 'Paper photos: quizzes/attempts/quiz-03-mock-a-<date>*.jpg (attach or name the path)');
+    document.getElementById('out').value = L.join('\n');
+  };
+  document.getElementById('copy').onclick = async () => { const o = document.getElementById('out'); if (!o.value) document.getElementById('do-export').click(); try { await navigator.clipboard.writeText(o.value); } catch (e) { o.select(); document.execCommand('copy'); } };
+  document.getElementById('clear').onclick = e => { e.preventDefault(); if (!document.getElementById('clear').dataset.armed) { document.getElementById('clear').dataset.armed = 1; document.getElementById('clear').textContent = 'Click again to clear'; return; } st = { tf: {}, paper: {}, final: {}, elapsed: 0 }; save(); location.reload(); };
+})();
+</script>
+</body>
+</html>
