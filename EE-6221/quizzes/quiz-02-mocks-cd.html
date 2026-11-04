@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EE6221 Quiz 2 Mocks C–D</title>
+<link rel="stylesheet" href="quiz-assets/katex/katex.min.css">
+<style>
+:root { --ink:#172334; --muted:#435366; --bg:#eef2f5; --card:#fff; --line:#c8d2dc; --pill:#f3f6f9; --accent:#205d87; --ok:#1d7a46; --bad:#b03a2e; --warn:#b47412; --warnbg:#fff5e1;
+        font: 17px/1.55 system-ui,sans-serif; color: var(--ink); background: var(--bg); }
+@media (prefers-color-scheme: dark) { :root { --ink:#dfe7ef; --muted:#9fb0c2; --bg:#11181f; --card:#18222c; --line:#34475a; --pill:#1f2c38; --accent:#6fb3e0; --ok:#5fc48a; --bad:#e8786c; --warn:#e0a54a; --warnbg:#2b2416; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); }
+.app { display: grid; grid-template-columns: 270px minmax(0,1fr); }
+nav { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 20px 16px 3rem; border-right: 1px solid var(--line); background: var(--card); font-size: .9rem; }
+nav h2 { font-size: 1rem; margin: 0 0 .6rem; } nav a { color: var(--ink); text-decoration: none; }
+nav ol { list-style: none; padding: 0; margin: 0; } nav li { display: flex; justify-content: space-between; gap: .5em; padding: .25em .4em; border-radius: 6px; }
+nav li:hover { background: var(--pill); } nav .sc { color: var(--muted); font-variant-numeric: tabular-nums; } nav .sc.done { color: var(--ok); font-weight: 600; }
+nav .tools { margin-top: 1rem; border-top: 1px solid var(--line); padding-top: .7rem; color: var(--muted); }
+main { min-width: 0; width: 100%; max-width: 880px; margin: 24px auto; padding: 34px 46px 4rem; background: var(--card); box-shadow: 0 2px 18px #14263a19; }
+h1 { margin: 0; line-height: 1.2; } h2.sec { margin: 2.4rem 0 .5rem; border-top: 2px solid var(--accent); padding-top: 1rem; }
+p, li { max-width: 76ch; } .meta { color: var(--muted); }
+.notice { border-left: 4px solid var(--warn); background: var(--warnbg); padding: .65rem 1rem; }
+.qn { border: 1px solid var(--line); border-radius: 10px; padding: .3rem 1rem .7rem; margin: 1.1rem 0; }
+.qn > .stem { font-weight: 600; } .qn > .stem b { color: var(--accent); }
+details { margin: .45rem 0; } summary { cursor: pointer; display: inline-block; padding: .25em .8em; border: 1px solid var(--line); border-radius: 8px; background: var(--pill); }
+details[open] > summary { margin-bottom: .4rem; }
+details > div { border-left: 3px solid var(--accent); padding: .1rem 0 .1rem .9rem; }
+details.ans > div { border-left-color: var(--ok); }
+.verdict { font-weight: 700; color: var(--ok); }
+.write { background: var(--pill); border-radius: 8px; padding: .4rem .7rem; }
+.write::before { content: "Write: "; font-weight: 600; color: var(--accent); }
+.trap { color: var(--bad); } .trap::before { content: "Trap: "; font-weight: 600; }
+.got { color: var(--muted); font-size: .92rem; }
+.try textarea { font: inherit; font-size: .95rem; width: 100%; min-height: 3.2em; padding: .3em .5em; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); resize: vertical; }
+.try input { font: inherit; width: 5.5em; padding: .2em .4em; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--ink); }
+.try button.on { border-color: var(--accent); font-weight: 600; }
+.fb.ok { color: var(--ok); font-weight: 600; } .fb.bad { color: var(--bad); font-weight: 600; }
+.katex-display { overflow-x: auto; overflow-y: hidden; }
+button { font: inherit; padding: .35em .8em; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--ink); cursor: pointer; }
+a.cite { color: var(--accent); }
+dialog { max-width: 60rem; width: 94%; border: 1px solid var(--line); border-radius: 12px; background: var(--card); color: var(--ink); }
+dialog img { width: 100%; border: 1px solid var(--line); margin: .4rem 0; }
+@media (max-width: 860px) { .app { display: block; } nav { position: static; height: auto; padding-bottom: 1rem; border-right: 0; border-bottom: 1px solid var(--line); }
+  nav ol { display: grid; grid-template-columns: 1fr 1fr; gap: 0 .6em; } main { margin: 0; padding: 20px 16px 4rem; box-shadow: none; } }
+.must { color: var(--accent); font-weight: 600; }
+main h3 { margin: 1.6rem 0 .3rem; font-size: 1.08rem; }
+.ans { border-left: 3px solid var(--ok); padding: .1rem 0 .1rem .9rem; margin-top: .5rem; }
+.opts li { margin: .15rem 0; } .score { font-weight: 700; color: var(--accent); } .time { color: var(--muted); font-variant-numeric: tabular-nums; }
+</style>
+<script defer src="quiz-assets/katex/katex.min.js"></script>
+<script defer src="quiz-assets/katex/contrib/auto-render.min.js"></script>
+<script defer src="quiz-assets/render-math.js"></script>
+</head>
+<body><div class="app">
+<nav><h2>Quiz 2 · Mocks C and D</h2><ol id="toc"></ol>
+<div class="tools"><a href="quiz-02-final-mocks.html">Mocks A and B</a><br><a href="quiz-02-sprint.html">Sprint (last year's paper)</a><br><a href="quiz-02-mock-01.html">Mock 1</a><br><button id="copy" type="button">Copy my answers</button> <button id="reset" type="button">Reset both papers</button></div></nav>
+<main>
+<h1>EE6221 · Quiz #2 mocks C and D</h1>
+<p class="meta">Two cold papers in last year's format: 7 True/False questions (10 marks each) and 1 multiple-choice question (30 marks), 100 marks in total, with a reason required for every answer. They come from the paper reproduced in the peer tutor's deck (see the <a href="quiz-02-sprint.html">sprint</a>), with the bank reworded and new statements from Lec 1–4. Every item is new; none repeats a sprint, Mock 1, or Paper A/B statement.</p>
+<p class="notice"><strong>How to sit them.</strong> Press <em>Start</em>, give yourself 30 minutes, and answer every item with a verdict and a one- or two-line reason that names the condition. Nothing is revealed until you press <em>Submit paper</em>. Then tick the items whose reason covers the key's <strong>Must name</strong> line, and redo every miss on paper from its cited slide. The scoring below is my estimate, not the official rubric: 10 marks for a T/F with the right verdict and reason, 5 for the right verdict with a weak reason; for the MCQ, 20 for the exact option set and 10 for a reason that covers every option.</p>
+
+<section data-sec="C" data-paper="C"><h2 class="sec" id="C">Paper C</h2>
+<p class="clock"><button type="button" class="start">Start Paper C</button> <span class="time"></span></p>
+
+<div class="qn" data-id="c1" data-tf="F">
+<p class="stem"><b>1</b> · Motion blur and the cross-sensitivity of sensors are random errors, because they cannot be predicted.</p>
+<div class="ans" hidden><p class="verdict">False.</p>
+<p class="write">The slides put them in a third group, “others”. These errors are rarely possible to model, so they <em>appear</em> random, but they are neither systematic nor random. Systematic errors are deterministic and can be modelled (for example, lens distortion). Random errors are non-deterministic and can only be described probabilistically (for example, black-level noise). <a class="cite" data-pages="L1:26-26">Lec 1 p. 26</a></p>
+<p class="must">Must name: the third category, “others”, which look random but are neither systematic nor random.</p></div></div>
+
+<div class="qn" data-id="c2" data-tf="F">
+<p class="stem"><b>2</b> · Because a rate gyroscope measures rotation velocity directly, the orientation computed from it stays accurate indefinitely without any external reference.</p>
+<div class="ans" hidden><p class="verdict">False.</p>
+<p class="write">A rate gyro's reading must be <em>integrated</em> to get the angle, so any bias accumulates. Drift is a problem common to all gyroscopes. Unless it is corrected against another measurement (a compass, GPS or vision), the drift eventually exceeds the required accuracy. This is the same reason an IMU needs GPS or a magnetometer. <a class="cite" data-pages="L1:29-29">Lec 1 p. 29</a> <a class="cite" data-pages="L1:31-31">p. 31</a></p>
+<p class="must">Must name: integration leads to drift, which needs correction from an external or alternate measurement.</p></div></div>
+
+<div class="qn" data-id="c3" data-tf="T">
+<p class="stem"><b>3</b> · A sensor reads 98 when the true value is 100, so its accuracy is 0.98.</p>
+<div class="ans" hidden><p class="verdict">True.</p>
+<p class="write">Accuracy $= 1 - |m - v|/v$, where $m$ is the measured value and $v$ the true value: $1 - |98 - 100|/100 = 1 - 0.02 = 0.98$. Accuracy is how closely the measurement conforms to the true value. It is not precision, which is repeatability (range divided by the standard deviation). <a class="cite" data-pages="L1:25-25">Lec 1 p. 25</a></p>
+<p class="must">Must name: the formula with m = measured and v = true, and the arithmetic.</p></div></div>
+
+<div class="qn" data-id="c4" data-tf="T">
+<p class="stem"><b>4</b> · In the pinhole model, every point along a ray through the projection centre lands on the same image point, so size and depth are lost; a priori knowledge or extra sensors are needed to fix the scale.</p>
+<div class="ans" hidden><p class="verdict">True.</p>
+<p class="write">Projection maps $\bar m = [x, y, z]^T$ to $m = [x/z,\; y/z,\; 1]^T$, so scaling $\bar m$ by any factor gives the same $m$. The lecture calls this the “fundamental drawback to imaging as a sensor”, and scale has to come from prior knowledge or another measurement. <a class="cite" data-pages="L2:17-17">Lec 2 p. 17</a></p>
+<p class="must">Must name: the same ray gives the same image point (division by z), and scale needs extra information.</p></div></div>
+
+<div class="qn" data-id="c5" data-tf="T">
+<p class="stem"><b>5</b> · In the 8-point algorithm, E is found from the null space of a matrix built from the matched points, so E is estimated only up to a scale factor.</p>
+<div class="ans" hidden><p class="verdict">True.</p>
+<p class="write">Each match gives one row $M_j$, and the constraint is $M e = 0$. Any multiple of a null-space vector $e$ also satisfies it. So E (and hence the translation) is known only up to scale, which is the “loss of scale information”. <a class="cite" data-pages="L3:16-17">Lec 3 pp. 16–17</a></p>
+<p class="must">Must name: the homogeneous equation Me = 0 (or the constraint mᵀEm* = 0), so any multiple works and scale is lost.</p></div></div>
+
+<div class="qn" data-id="c6" data-tf="F">
+<p class="stem"><b>6</b> · Of the four candidate $(R, x')$ solutions from decomposing E, the correct one is the solution with the smallest rotation angle.</p>
+<div class="ans" hidden><p class="verdict">False.</p>
+<p class="write">The selection rule is the <strong>positive-depth constraint</strong>. Three of the four solutions would put some feature points behind a camera, so they are physically impossible. The solution in which all the points have positive depth is kept. In the lecture example, that was solution 4. <a class="cite" data-pages="L3:19-19">Lec 3 p. 19</a> <a class="cite" data-pages="L3:24-24">p. 24</a></p>
+<p class="must">Must name: the positive-depth test (points in front of both cameras); three of the four solutions are impossible.</p></div></div>
+
+<div class="qn" data-id="c7" data-tf="F">
+<p class="stem"><b>7</b> · In the Kalman filter model, the process noise $w$ and the measurement noise $v$ are assumed to be correlated zero-mean white Gaussian sequences.</p>
+<div class="ans" hidden><p class="verdict">False.</p>
+<p class="write">They are assumed to be <strong>uncorrelated</strong> zero-mean white Gaussian sequences. That assumption is what makes the cross terms $E[\tilde x w]$, $E[\tilde x v]$ and $E[wv]$ vanish in the derivation of $P_{k+1}$. <a class="cite" data-pages="L4:21-21">Lec 4 p. 21</a> <a class="cite" data-pages="L4:27-27">p. 27</a></p>
+<p class="must">Must name: they are uncorrelated, and this is why the cross terms are zero.</p></div></div>
+
+<div class="qn" data-id="c8" data-mcq="ABD">
+<p class="stem"><b>8</b> (MCQ, 30 marks) · A mobile robot carries an IMU and a GPS receiver. Which statements are correct? Select all that apply and justify <em>each</em> option.</p>
+<ol type="A" class="opts">
+<li>The IMU position estimate drifts, because it comes from integrating measured accelerations and rotation rates.</li>
+<li>GPS provides an absolute position that can be used to correct the IMU's drift.</li>
+<li>GPS works equally well for indoor robots.</li>
+<li>If the two errors are independent, optimally fusing the two position estimates gives a variance smaller than either estimate alone.</li>
+</ol>
+<div class="ans" hidden><p class="verdict">A, B and D.</p>
+<p class="write"><strong>A ✓</strong> An IMU integrates acceleration twice for position, so it is extremely sensitive to measurement errors and drifts. <strong>B ✓</strong> The slides say an external source such as GPS or a magnetometer is often required to correct this. <strong>C ✗</strong> “For indoor robots GPS is not applicable.” <strong>D ✓</strong> $1/p = 1/\sigma_1^2 + 1/\sigma_2^2$, so $p &lt; \min(\sigma_1^2, \sigma_2^2)$: redundancy increases accuracy. <a class="cite" data-pages="L1:31-32">Lec 1 pp. 31–32</a> <a class="cite" data-pages="L4:43-43">Lec 4 p. 43</a></p>
+<p class="must">Must name, one line each: A integration gives drift · B GPS is an absolute reference that corrects drift · C GPS is not applicable indoors · D the fused variance is below both.</p></div></div>
+<p><button type="button" class="submit">Submit Paper C</button></p>
+<p class="score"></p>
+</section>
+
+<section data-sec="D" data-paper="D"><h2 class="sec" id="D">Paper D</h2>
+<p class="clock"><button type="button" class="start">Start Paper D</button> <span class="time"></span></p>
+
+<div class="qn" data-id="d1" data-tf="F">
+<p class="stem"><b>1</b> · The sensitivity of a sensor is the smallest change in input that it can detect.</p>
+<div class="ans" hidden><p class="verdict">False: that is resolution.</p>
+<p class="write"><strong>Resolution</strong> is the smallest detectable input change, limited by noise, physical limits or the A/D conversion. <strong>Sensitivity</strong> is the ratio of output change to input change. (Cross-sensitivity is sensitivity to <em>other</em> environmental parameters.) <a class="cite" data-pages="L1:23-24">Lec 1 pp. 23–24</a></p>
+<p class="must">Must name: what this actually defines (resolution) and the real definition of sensitivity (Δoutput / Δinput).</p></div></div>
+
+<div class="qn" data-id="d2" data-tf="T">
+<p class="stem"><b>2</b> · A power sensor measuring from 1 mW to 20 W has a dynamic range of about 43 dB.</p>
+<div class="ans" hidden><p class="verdict">True.</p>
+<p class="write">Dynamic range is the ratio between the largest and smallest values, usually given in decibels for a power ratio: $10\log_{10}(20/0.001) = 10\log_{10}(2\times10^4) = 10(4.3) = 43$ dB. <a class="cite" data-pages="L1:22-22">Lec 1 p. 22</a></p>
+<p class="must">Must name: the ratio max/min, 10 log₁₀ for power, and the arithmetic.</p></div></div>
+
+<div class="qn" data-id="d3" data-tf="F">
+<p class="stem"><b>3</b> · Odometry from wheel encoders gives a reliable position relative to a fixed reference frame, even over long movements.</p>
+<div class="ans" hidden><p class="verdict">False.</p>
+<p class="write">Encoders are proprioceptive sensors. Odometry <em>integrates</em> wheel movement, so the errors accumulate, and the position estimate relative to a fixed frame is only valuable for short movements. Long runs need an external reference. <a class="cite" data-pages="L1:27-27">Lec 1 p. 27</a></p>
+<p class="must">Must name: proprioceptive sensing plus integration, so the error accumulates; only valid for short movements.</p></div></div>
+
+<div class="qn" data-id="d4" data-tf="T">
+<p class="stem"><b>4</b> · A camera has $f\sigma_x = f\sigma_y = 500$ pixels, zero skew and principal point $(u_0, v_0) = (320, 240)$. The normalised point $m = [0.2,\; -0.1,\; 1]^T$ maps to pixel $(420, 190)$.</p>
+<div class="ans" hidden><p class="verdict">True.</p>
+<p class="write">$p = A m$: $u = 500(0.2) + 320 = 420$ and $v = 500(-0.1) + 240 = 190$. Here $A$ is the intrinsic calibration matrix, and $m$ is already normalised (divided by $z$), so no division is needed. <a class="cite" data-pages="L2:30-31">Lec 2 pp. 30–31</a></p>
+<p class="must">Must name: p = A m, written out for u and v.</p></div></div>
+
+<div class="qn" data-id="d5" data-tf="F">
+<p class="stem"><b>5</b> · The Euclidean homography $H = R + \dfrac{x}{d^*}\,n^{*T}$ contains only the relative pose (R and x), with no information about the scene structure.</p>
+<div class="ans" hidden><p class="verdict">False.</p>
+<p class="write">H contains the relative pose <em>and some structure information</em>: the plane normal $n^*$ and the distance $d^*$, which enter as $x/d^*$. This is why decomposing H also returns $n^*$, and why the translation comes out scaled by $d^*$. <a class="cite" data-pages="L3:31-31">Lec 3 p. 31</a></p>
+<p class="must">Must name: n* and d* are structure (the plane), so H holds pose and structure.</p></div></div>
+
+<div class="qn" data-id="d6" data-tf="F">
+<p class="stem"><b>6</b> · If all three singular values of the homography are equal, the camera has undergone a pure translation.</p>
+<div class="ans" hidden><p class="verdict">False: it is the opposite case.</p>
+<p class="write">Equal singular values mean there was <strong>no translation</strong>: $R = H$, $x = 0$, and $n^*$ is unknown. (Two equal singular values mean the translation was along the normal; all distinct means general motion.) <a class="cite" data-pages="L3:34-34">Lec 3 p. 34</a></p>
+<p class="must">Must name: equal singular values mean x = 0 and R = H.</p></div></div>
+
+<div class="qn" data-id="d7" data-tf="T">
+<p class="stem"><b>7</b> · For the population $X = \{1, 1, 1, 2, 2, 2, 2, 3\}$, $E[X] = 1.75$ and $V(X) = 0.4375$.</p>
+<div class="ans" hidden><p class="verdict">True.</p>
+<p class="write">$E[X] = 1\cdot\tfrac38 + 2\cdot\tfrac48 + 3\cdot\tfrac18 = \tfrac{14}{8} = 1.75$. $E[X^2] = \tfrac{3(1) + 4(4) + 9}{8} = \tfrac{28}{8} = 3.5$. $V(X) = E[X^2] - (E[X])^2 = 3.5 - 3.0625 = 0.4375 = \tfrac{7}{16}$. <a class="cite" data-pages="L4:5-5">Lec 4 p. 5</a> <a class="cite" data-pages="L4:11-11">p. 11</a></p>
+<p class="must">Must name: E[X] = Σ xᵢP(xᵢ), and V = E[X²] − (E[X])² with both numbers shown.</p></div></div>
+
+<div class="qn" data-id="d8" data-mcq="ACD">
+<p class="stem"><b>8</b> (MCQ, 30 marks) · A scalar Kalman filter has $A = H = 1$, no process noise ($Q = 0$), current error variance $P_k = 4$, and measurement noise variance $R = 4$. Which statements are correct? Justify <em>each</em> option.</p>
+<ol type="A" class="opts">
+<li>The Kalman gain is $K_k = 1/2$.</li>
+<li>The updated error variance is $P_{k+1} = 8$.</li>
+<li>As $R \to 0$, $K_k \to 1$, so the update trusts the measurement completely.</li>
+<li>The optimal Kalman filtering equations require the model parameters ($\Phi$, B, G, H, Q, R) to be known.</li>
+</ol>
+<div class="ans" hidden><p class="verdict">A, C and D.</p>
+<p class="write"><strong>A ✓</strong> $K = \dfrac{AHP}{H^2P + R} = \dfrac{4}{4 + 4} = \dfrac12$. <strong>B ✗</strong> $P_{k+1} = A^2P + Q - \dfrac{(AHP)^2}{H^2P + R} = 4 + 0 - \dfrac{16}{8} = 2$. A measurement <em>reduces</em> the variance; it never doubles it. <strong>C ✓</strong> $K \to AHP/(H^2P) = 1$: a perfect sensor is fully trusted. <strong>D ✓</strong> The slides give the optimal equations “when all of the parameters … of the models are known”. <a class="cite" data-pages="L4:29-29">Lec 4 p. 29</a> <a class="cite" data-pages="L4:31-31">p. 31</a> <a class="cite" data-pages="L4:22-22">p. 22</a></p>
+<p class="must">Must name, one line each: A the gain formula and its value · B the correct P = 2 (variance falls) · C the limit R → 0 · D the parameters must be known.</p></div></div>
+<p><button type="button" class="submit">Submit Paper D</button></p>
+<p class="score"></p>
+</section>
+
+<section data-sec="after"><h2 class="sec" id="after">After each paper</h2>
+<ol>
+<li>For every item below 10 marks, open its cited slide and rewrite the reason in one sentence that names the condition.</li>
+<li>Look for the pattern: missed conditions (non-coplanar, white Gaussian, uncorrelated), swap traps (accuracy/precision, active/passive, which weight), or arithmetic (round trip, squared constants).</li>
+<li>Last pass at 7:50 pm: read the <a href="quiz-02-sprint.html#z">phrase sheet</a>. Nothing new after that.</li>
+</ol>
+</section>
+</main>
+</div>
+<dialog id="pages"><p><strong id="ptitle"></strong> · <a id="plink" target="_blank">open PDF at this page</a> <button type="button" id="pclose" style="float:right">Close</button></p><div id="pimgs"></div></dialog>
+<script>
+addEventListener("DOMContentLoaded", () => {
+const LEC = s => [`../resources/part-2/${s}.pdf`, `quiz-02-primer-pages/${s}`];
+const SRC = { L1: LEC("part-2-lecture-01-introduction-and-sensors"), L2: LEC("part-2-lecture-02-vision-sensors-and-systems"),
+  L3: LEC("part-2-lecture-03-structure-and-pose-estimation"), L4: LEC("part-2-lecture-04-kalman-filter-sensor-integration") };
+const KEY = "ee6221-quiz2-mocks-cd-v1";
+let state = {};
+try { state = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} };
+const st = id => state[id] || (state[id] = {});
+
+const dlg = document.getElementById("pages");
+document.querySelectorAll("a.cite[data-pages]").forEach(a => {
+  const [k, r] = a.dataset.pages.split(":"), [lo, hi] = r.split("-").map(Number);
+  a.href = `${SRC[k][0]}#page=${lo}`;
+  a.addEventListener("click", ev => {
+    ev.preventDefault();
+    document.getElementById("ptitle").textContent = a.textContent;
+    document.getElementById("plink").href = a.href;
+    const box = document.getElementById("pimgs"); box.innerHTML = "";
+    for (let p = lo; p <= hi; p++) { const img = new Image(); img.alt = `${a.textContent}, PDF page ${p}`;
+      img.src = `${SRC[k][1]}-p${String(p).padStart(3, "0")}.jpg`; box.append(img); }
+    dlg.showModal();
+  });
+});
+document.getElementById("pclose").onclick = () => dlg.close();
+
+const fmt = s => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+const toc = document.getElementById("toc");
+function tally() {
+  toc.innerHTML = "";
+  document.querySelectorAll("section[data-sec]").forEach(s => {
+    const P = s.dataset.paper, li = document.createElement("li");
+    const sc = P && state[P] && state[P].submitted ? `<span class="sc done">${score(s)}/100</span>` : "";
+    li.innerHTML = `<a href="#${s.dataset.sec}">${s.querySelector("h2").textContent}</a>${sc}`;
+    toc.append(li);
+  });
+}
+// marking: T/F 10 = verdict + reason ticked, 5 = verdict only; MCQ 20 exact set + 10 reason ticked
+function score(sec) {
+  let t = 0;
+  sec.querySelectorAll(".qn").forEach(q => {
+    const s = st(q.dataset.id);
+    if (q.dataset.tf) t += s.tf === q.dataset.tf ? (s.reason ? 10 : 5) : 0;
+    else t += ((s.mcq || []).slice().sort().join("") === q.dataset.mcq ? 20 : 0) + (s.reason ? 10 : 0);
+  });
+  return t;
+}
+
+document.querySelectorAll("section[data-paper]").forEach(sec => {
+  const P = sec.dataset.paper, ps = () => state[P] || (state[P] = {});
+  const qs = [...sec.querySelectorAll(".qn")], time = sec.querySelector(".time"), out = sec.querySelector(".score");
+  const tick = () => { const p = ps(); if (!p.start) return;
+    const s = Math.round(((p.end || Date.now()) - p.start) / 1000);
+    time.textContent = `${p.end ? "Finished in" : "Elapsed"} ${fmt(s)}${!p.end && s > 1800 ? " (over 30 min)" : ""}`; };
+  sec.querySelector(".start").onclick = () => { if (!ps().start) { ps().start = Date.now(); save(); } tick(); };
+  setInterval(tick, 1000); tick();
+
+  qs.forEach(q => {
+    const id = q.dataset.id, s0 = st(id), ans = q.querySelector(".ans");
+    const box = document.createElement("div"); box.className = "try";
+    const fb = document.createElement("p"); fb.className = "fb"; q._fb = fb;
+    if (q.dataset.tf) {
+      const row = document.createElement("p");
+      ["T", "F"].forEach(v => { const b = document.createElement("button"); b.type = "button"; b.dataset.v = v;
+        b.textContent = v === "T" ? "True" : "False";
+        b.onclick = () => { if (ps().submitted) return; st(id).tf = v; save(); mark(); };
+        row.append(b, " "); });
+      box.append(row);
+    } else {
+      const row = document.createElement("p");
+      [...q.querySelectorAll(".opts li")].forEach((li, n) => {
+        const L = "ABCD"[n], lab = document.createElement("label"), cb = document.createElement("input");
+        cb.type = "checkbox"; cb.value = L; cb.checked = (s0.mcq || []).includes(L);
+        cb.onchange = () => { if (ps().submitted) { cb.checked = !cb.checked; return; }
+          st(id).mcq = [...row.querySelectorAll("input:checked")].map(c => c.value); save(); };
+        lab.append(cb, ` ${L}  `); row.append(lab); });
+      box.append(row);
+    }
+    const ta = document.createElement("textarea"); ta.placeholder = q.dataset.mcq ? "One line per option: A ✓/✗ because… B … C … D …" : "Verdict + the fact or condition + what is wrong in the statement…"; if (q.dataset.mcq && !s0.txt) ta.value = "A: \nB: \nC: \nD: "; ta.rows = q.dataset.mcq ? 5 : 2; ta.value = s0.txt || "";
+    ta.oninput = () => { st(id).txt = ta.value; save(); };
+    const rl = document.createElement("label"); rl.className = "got reason";
+    const rc = document.createElement("input"); rc.type = "checkbox"; rc.checked = !!s0.reason;
+    rc.onchange = () => { st(id).reason = rc.checked; save(); render(); };
+    rl.append(rc, " My reason names the same condition or fact as the key");
+    box.append(ta, fb, rl);
+    ans.before(box); q._rl = rl;
+    const mark = () => box.querySelectorAll("button[data-v]").forEach(b => b.classList.toggle("on", b.dataset.v === st(id).tf));
+    q._mark = mark; mark();
+  });
+
+  function render() {
+    const done = !!ps().submitted;
+    qs.forEach(q => {
+      const s = st(q.dataset.id), ans = q.querySelector(".ans");
+      ans.hidden = !done; q._rl.hidden = !done; q._fb.textContent = "";
+      if (!done) return;
+      let ok;
+      if (q.dataset.tf) ok = s.tf === q.dataset.tf;
+      else ok = (s.mcq || []).slice().sort().join("") === q.dataset.mcq;
+      q._fb.className = "fb " + (ok ? "ok" : "bad");
+      q._fb.textContent = ok ? "✓ Verdict correct. Now check your reason against the key." :
+        `✗ ${q.dataset.tf ? "Wrong verdict" : `Your set was ${(s.mcq || []).slice().sort().join("") || "empty"}`}. Read the key and find where your reasoning went off.`;
+    });
+    sec.querySelector(".submit").textContent = done ? `Retry Paper ${P}` : `Submit Paper ${P}`;
+    out.textContent = done ? `Estimated score: ${score(sec)}/100. Tick the reason boxes honestly; that's where the marks are.` : "";
+    tally();
+  }
+  sec.querySelector(".submit").onclick = () => {
+    const p = ps();
+    if (p.submitted) { qs.forEach(q => delete state[q.dataset.id]); state[P] = {}; save(); location.reload(); return; }
+    p.submitted = true; if (p.start && !p.end) p.end = Date.now(); save(); render(); tick();
+  };
+  render();
+});
+document.getElementById("copy").onclick = ev => {
+  const lines = [...document.querySelectorAll(".qn")].map(q => { const s = st(q.dataset.id);
+    return `${q.dataset.id}: ${s.tf || (s.mcq || []).slice().sort().join("") || "-"} | reason ok: ${s.reason ? "y" : "n"} | ${(s.txt || "").replace(/\n/g, " ")}`; });
+  navigator.clipboard.writeText(lines.join("\n")).then(() => { ev.target.textContent = "Copied, paste it to Claude"; });
+};
+document.getElementById("reset").onclick = () => { state = {}; save(); location.reload(); };
+});
+</script>
+</body>
+</html>
