@@ -221,7 +221,7 @@ It needs only \(n\) delays, which saves memory. The \(a_i\) are feedback gains a
 </div>
 
 <script>
-// Source-page pop-ups: data-pages="c56:73-74" shows ../notes/quiz3-pages/<stem>-pNNN.jpg
+// Source-page pop-ups: data-pages="c56:73-74" shows quiz3-pages/<stem>-pNNN.jpg
 (() => {
   const STEM = { c56: 'lecture-notes-chapters-05-06', c14: 'lecture-notes-weeks-01-04' };
   const NAME = { c56: 'Ch 5–6 notes', c14: 'Weeks 1–4 notes (Ch 4)' };
@@ -231,7 +231,7 @@ It needs only \(n\) delays, which saves memory. The \(a_i\) are feedback gains a
     e.preventDefault();
     const [k, r] = a.dataset.pages.split(':'); const [p, q] = r.split('-').map(Number);
     const figs = []; for (let i = p; i <= (q || p); i++)
-      figs.push(`<figure><img loading="lazy" src="../notes/quiz3-pages/${STEM[k]}-p${String(i).padStart(3, '0')}.jpg" alt="${NAME[k]} page ${i}"></figure>`);
+      figs.push(`<figure><img loading="lazy" src="quiz3-pages/${STEM[k]}-p${String(i).padStart(3, '0')}.jpg" alt="${NAME[k]} page ${i}"></figure>`);
     dlg.innerHTML = `<div class="bar"><span><strong>${NAME[k]}, p. ${r.replace('-', '–')}</strong> · <a href="${a.getAttribute('href')}">open PDF</a></span><button type="button" class="close">Close</button></div>` + figs.join('');
     dlg.showModal(); dlg.scrollTop = 0;
   }));
