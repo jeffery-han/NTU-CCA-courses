@@ -148,4 +148,14 @@ assert sp.simplify(C0 * G0 / (1 + C0 * G0) - 1 / z) == 0
 # P4 start-here check: relative degree of 0.2/(z^2-0.3z) = 2
 n_, d_ = sp.fraction(sp.factor(sp.Rational(1, 5) / (z**2 - sp.Rational(3, 10) * z)))
 assert sp.degree(d_, z) - sp.degree(n_, z) == 2
+# P4 reldeg walkthrough: impulse of 0.05z^-2(1+0.7z^-1)/((1-0.9z^-1)(1-0.5z^-1)) -> 0, 0, 0.05
+assert sp.expand((1 - sp.Rational(9, 10) * x) * (1 - x / 2)) == 1 - sp.Rational(7, 5) * x + sp.Rational(9, 20) * x**2
+yk, u = [], [1, 0, 0, 0]
+for k in range(4):
+    g = lambda a, i: a[i] if i >= 0 else 0
+    yk.append(1.4 * g(yk, k - 1) - 0.45 * g(yk, k - 2) + 0.05 * g(u, k - 2) + 0.035 * g(u, k - 3))
+close(yk[0], 0); close(yk[1], 0); close(yk[2], 0.05)
+# P4c: (0.2z^-2 + 0.1z^-4)/(1-0.5z^-1) -> relative degree 2
+n_, d_ = sp.fraction(sp.factor(sp.simplify(((x**2 / 5 + x**4 / 10) / (1 - x / 2)).subs(x, 1 / z))))
+assert sp.degree(d_, z) - sp.degree(n_, z) == 2
 print('all Quiz 3 keys verified')
