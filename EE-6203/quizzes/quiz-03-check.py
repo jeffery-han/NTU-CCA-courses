@@ -158,4 +158,19 @@ close(yk[0], 0); close(yk[1], 0); close(yk[2], 0.05)
 # P4c: (0.2z^-2 + 0.1z^-4)/(1-0.5z^-1) -> relative degree 2
 n_, d_ = sp.fraction(sp.factor(sp.simplify(((x**2 / 5 + x**4 / 10) / (1 - x / 2)).subs(x, 1 / z))))
 assert sp.degree(d_, z) - sp.degree(n_, z) == 2
+# P5 start-here: u sequences via U = Gcl R / G (x = z^-1)
+def useq(Gcl, G, n=5):
+    c = [float(v) for v in sp.Poly(sp.series(sp.simplify(Gcl / (1 - x) / G), x, 0, n).removeO(), x).all_coeffs()[::-1]]
+    return c + [0.0] * (n - len(c))
+F = sp.Float
+G8 = F(1.8604e-4) * (1 + F(0.9293) * x) * x / ((1 - F(0.8187) * x) * (1 - F(0.9802) * x))
+u8 = useq(x, G8); close(u8[0], 5375.2); close(u8[1], -9289.4); close(u8[2], 8651.9)
+G10 = F(0.0048374) * (1 + F(0.9672) * x) * x / ((1 - x) * (1 - F(0.9048) * x))
+K10 = 1 / F(1.9672); close(K10, 0.5083)
+u10 = useq(K10 * x * (1 + F(0.9672) * x), G10); close(u10[0], 105.08); close(u10[1], -95.08); close(u10[2], 0)
+G12 = F(0.0035501) * (1 + F(0.6945) * x) * x / ((1 - F(0.9048) * x) * (1 - F(0.3679) * x))
+K12 = 1 / F(1.6945); close(K12, 0.5901)
+u12 = useq(K12 * x * (1 + F(0.6945) * x), G12); close(u12[0], 166.23); close(u12[1], -45.33); close(u12[2], 10.0); close(u12[4], 10.0)
+Gc = sp.Rational(1, 10) * x * (1 + x / 2) / ((1 - x) * (1 - sp.Rational(3, 5) * x))
+uc = useq(sp.Rational(2, 3) * x * (1 + x / 2), Gc); close(uc[0], 20 / 3); close(uc[1], -4); close(uc[2], 0)
 print('all Quiz 3 keys verified')

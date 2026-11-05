@@ -225,6 +225,48 @@ Conditions (ii) and (iii) exist because \(C\) would otherwise cancel an unstable
 
 <section id="s5" data-title="5 · Ripple-free">
 <h2>5 · §5.4.3: Ripple-free deadbeat</h2>
+<details class="box" id="s5-start">
+<summary><strong>Start here: what "ripple" is and why the fix works</strong> (about 6 minutes)</summary>
+<p><strong>5.0.1 The problem: the computer only looks at sample instants.</strong> It measures \(y\) at \(t=0,T,2T,\dots\) and nowhere in between. The real plant is continuous, so it keeps moving between those instants. A design can hit the target at every sample and still swing wildly in between. That swinging is <strong>ripple</strong> (intersample oscillation).</p>
+<svg viewBox="0 0 560 150" role="img" aria-label="Left: plain deadbeat, output passes through 1 at every sample but swings between them. Right: ripple-free, output rises smoothly and stays at 1." style="width:100%;max-width:560px;color:var(--text)">
+<g fill="none" stroke="currentColor" stroke-width="1" opacity=".45"><path d="M20 110H260M20 40H260M300 110H540M300 40H540"/></g>
+<g fill="none" stroke="var(--bad)" stroke-width="2"><path d="M20 110Q34 0 48 40Q62 85 76 40Q90 0 104 40Q118 75 132 40Q146 10 160 40Q174 66 188 40Q202 18 216 40Q230 58 244 40L260 40"/></g>
+<g fill="none" stroke="var(--ok)" stroke-width="2"><path d="M300 110C320 110 330 75 328 75C340 70 345 40 356 40H540"/></g>
+<g fill="currentColor"><circle cx="20" cy="110" r="3.5"/><circle cx="48" cy="40" r="3.5"/><circle cx="76" cy="40" r="3.5"/><circle cx="104" cy="40" r="3.5"/><circle cx="132" cy="40" r="3.5"/><circle cx="160" cy="40" r="3.5"/><circle cx="188" cy="40" r="3.5"/><circle cx="216" cy="40" r="3.5"/><circle cx="244" cy="40" r="3.5"/>
+<circle cx="300" cy="110" r="3.5"/><circle cx="328" cy="75" r="3.5"/><circle cx="356" cy="40" r="3.5"/><circle cx="384" cy="40" r="3.5"/><circle cx="412" cy="40" r="3.5"/><circle cx="440" cy="40" r="3.5"/><circle cx="468" cy="40" r="3.5"/><circle cx="496" cy="40" r="3.5"/><circle cx="524" cy="40" r="3.5"/></g>
+<g fill="currentColor" font-size="12" font-family="inherit"><text x="6" y="44">1</text><text x="20" y="135">plain deadbeat: ripple between samples</text><text x="300" y="135">ripple-free: smooth, 1 sample slower</text></g>
+</svg>
+<p style="font-size:.85rem;color:var(--muted)">Sketch, not to scale. Dots are what the computer sees; the curve is the real continuous output.</p>
+<p><strong>5.0.2 Where the ripple comes from (Example 5.8, <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=66" data-pages="c56:66-67">pp. 66–67</a>).</strong> The plant is \(G_{ZAS}=1.8604\times10^{-4}\frac{z+0.9293}{(z-0.8187)(z-0.9802)}\). Everything is inside the circle, so §4's plain deadbeat \(G_{cl}=z^{-1}\) is allowed. Look at the controller it produces:</p>
+\[C(z)=\frac{5375.05\,(z-0.8187)(z-0.9802)}{(z-1)(z+0.9293)}.\]
+<p>The factor \(1/G_{ZAS}\) turned the plant zero at \(-0.9293\) into a <em>controller pole</em> at \(-0.9293\). A pole at \(p\) contributes a term \(p^k\) to the signal, and \((-0.93)^k=1,-0.93,+0.86,-0.80,\dots\) flips sign every sample and dies away very slowly. So the control signal is</p>
+\[u(k)=5375,\ -9289,\ +8652,\ -8021,\ +7473,\ \dots\]
+<p>That is a huge input slammed up and down every period. Why do the samples of \(y\) still look perfect? In \(CG\) the controller pole at \(-0.9293\) is cancelled by the plant zero at \(-0.9293\). The cancelled mode is invisible <em>at the sample instants</em>, but the continuous plant is still being shaken between them. This is the same "hidden mode" story as §4's conditions (ii)/(iii). Here the hidden mode is stable, so nothing blows up, but it decays so slowly and alternates so hard that the output ripples. A zero near \(-1\) is the warning sign.</p>
+<p><strong>5.0.3 The cure in one sentence.</strong> If \(u(k)\) becomes <em>constant</em> after a few samples, the plant sees a constant input from then on, settles, and has nothing left to ripple about <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=73" data-pages="c56:73-74">pp. 73–74</a>. "A few" is \(n\) = degree of the plant's denominator. Which constant?</p>
+<ul>
+<li><strong>Type 1 plant</strong> (has a \(1-z^{-1}\), i.e. an integrator, as in position control): \(u\) must go to <strong>0</strong>. A non-zero constant into an integrator makes the output ramp away.</li>
+<li><strong>Type 0 plant</strong> (no integrator, as in speed control): \(u\) must settle at a <strong>non-zero</strong> constant, namely the input needed to hold \(y=1\), which is \(1/\text{DC gain}\).</li>
+</ul>
+<p><strong>5.0.4 Turning that into a rule for \(G_{cl}\).</strong> The plant links \(U\) to \(Y\) by \(Y=G_{ZAS}U\), so \(U=Y/G_{ZAS}\). With \(Y=G_{cl}R\):</p>
+\[U(z)=G_{cl}(z)\,\frac{R(z)}{G_{ZAS}(z)}\qquad(5.13)\]
+<p>"\(u\) settles in finitely many steps" means \(U(z)\) has to come out as a <em>finite</em> polynomial in \(z^{-1}\), plus at most a constant tail. Now look at what \(1/G_{ZAS}\) puts in the denominator of \(U\): <em>every plant zero</em>. Each leftover factor \((1+bz^{-1})\) in a denominator creates an endless \((-b)^k\) tail in \(u\), which is exactly the ripple source. The only way to remove them is to let \(G_{cl}\) contain <strong>all</strong> the zeros of \(G_{ZAS}\), stable ones included. Plain deadbeat only had to keep the <em>unstable</em> zeros; ripple-free keeps them all. Hence the recipe:</p>
+\[G_{cl}=K\,z^{-d}\times(\text{every zero factor of }G_{ZAS}),\qquad G_{cl}(1)=1\ \text{fixes }K,\]
+<p>with \(d\) = the plant's delay (its relative degree, as in §4).</p>
+<p><strong>5.0.5 Worked: Example 5.10 (type 1) <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=75" data-pages="c56:75-77">pp. 75–77</a>.</strong> \(G_{ZAS}=\dfrac{0.0048374(1+0.9672z^{-1})z^{-1}}{(1-z^{-1})(1-0.9048z^{-1})}\), unit step \(R=\frac{1}{1-z^{-1}}\).</p>
+<ol>
+<li>Delay \(z^{-1}\) and zero factor \((1+0.9672z^{-1})\), so \(G_{cl}=Kz^{-1}(1+0.9672z^{-1})\).</li>
+<li>\(G_{cl}(1)=K(1.9672)=1\), so \(K=0.5083\).</li>
+<li>Check \(u\) with (5.13). The step's \(1-z^{-1}\) cancels the plant integrator, and the zero factor cancels: \(U=K\cdot206.72\,(1-0.9048z^{-1})\). That is a two-term polynomial, so \(u=105.1,\ -95.1,\ 0,0,\dots\) Zero after \(n=2\) samples, as a type-1 plant needs.</li>
+<li>Output: \(Y=G_{cl}R\) gives \(y=0,\ 0.508,\ 1,1,\dots\). It takes <em>two</em> samples instead of one. That extra sample is the price of being smooth.</li>
+<li>Controller from (5.11): \(C=\dfrac{105.1z-95.08}{z+0.4917}\). Compare plain deadbeat's \(5375\) gain with a pole at \(-0.93\).</li>
+</ol>
+<p><strong>5.0.6 Type 0: Example 5.12 <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=79" data-pages="c56:78-82">pp. 78–82</a>.</strong> Same recipe: \(G_{cl}=Kz^{-1}(1+0.6945z^{-1})\), \(K=1/1.6945=0.5901\). The new point is <em>why \(C\) must contain an integrator</em>. The error is \(E=(1-G_{cl})R=\frac{1-G_{cl}}{1-z^{-1}}\). Since \(G_{cl}(1)=1\), the factor \(1-G_{cl}\) vanishes at \(z=1\), so it contains \((1-z^{-1})\). That cancels, leaving \(E=e_0+e_1z^{-1}\) (5.14): the error is exactly zero from \(k=2\) on. Yet \(u\) must stay at a non-zero constant. A block whose input is zero but whose output stays constant is an <strong>integrator</strong>, so \(C\) needs a pole at \(z=1\). Formula (5.11) gives it automatically: \(C=\dfrac{166.24(z-0.9048)(z-0.3679)}{(z-1)(z+0.4099)}\). The numbers: \(e=1,\ 0.41,\ 0,\dots\) and \(u=166.2,\ -45.3,\ 10,10,\dots\) The input settles at \(10=1/0.1\) because the plant's DC gain is \(0.1\). (Figure 5.15 on p. 82 plots a different final level; the slide's own numbers give 10.)</p>
+<p><strong>Method to remember:</strong> write \(G_{ZAS}\) in \(z^{-1}\)-form → \(G_{cl}=Kz^{-d}\times\)(all its zero factors) → \(K\) from \(G_{cl}(1)=1\) → confirm \(U=G_{cl}R/G_{ZAS}\) is finite (type 1: ends at 0; type 0: ends at \(1/\)DC gain) → \(C\) from (5.11).</p>
+<div class="q" data-id="p5c" data-ans="20/3"><p>Check: \(G_{ZAS}=\dfrac{0.1z^{-1}(1+0.5z^{-1})}{(1-z^{-1})(1-0.6z^{-1})}\), unit step, ripple-free design. Find \(u(0)\).</p><input type="text" aria-label="u0"> <button class="go">Check</button>
+<div class="why">\(G_{cl}=Kz^{-1}(1+0.5z^{-1})\) with \(K=1/1.5=2/3\). Then \(U=G_{cl}\frac{R}{G}=\frac23\cdot10\,(1-0.6z^{-1})\), so \(u(0)=20/3\approx6.667\).</div></div>
+<div class="q" data-id="p5d" data-ans="-4"><p>Same design. Find \(u(1)\). (Then say what \(u(2), u(3),\dots\) are, and why.)</p><input type="text" aria-label="u1"> <button class="go">Check</button>
+<div class="why">\(u(1)=\frac{20}{3}\cdot(-0.6)=-4\). After that \(u=0\): \(U\) has only two terms, as a type-1 plant needs. The output is \(y=0,\ 2/3,\ 1,1,\dots\)</div></div>
+</details>
 <p><strong>Idea.</strong> Plain deadbeat makes \(C\) cancel <em>all</em> plant zeros. A zero near \(-1\) then becomes a controller pole near \(-1\), so \(u(k)\) alternates sign and the output rings between samples (Examples 5.8–5.9 <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=66" data-pages="c56:66-67">pp. 66–67</a>). The fix is to keep \(u\) constant after \(n\) samples, \(n\) being the plant order <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=73" data-pages="c56:73-74">pp. 73–74</a>:
 \[U(z)=G_{cl}(z)\frac{R(z)}{G_{ZAS}(z)}\qquad(5.13)\]
 Choose \(G_{cl}\) so that \(U(z)\) is a finite polynomial in \(z^{-1}\). In practice: <strong>\(G_{cl}=Kz^{-d}\times\)(all zeros of \(G_{ZAS}\))</strong>, then \(G_{cl}(1)=1\) fixes \(K\).</p>
