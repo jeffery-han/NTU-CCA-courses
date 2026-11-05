@@ -140,4 +140,12 @@ assert sp.degree(d_, z) - sp.degree(n_, z) == 2
 close(1 / 1.6, 0.625)
 # P6 gamma = phi(1)/Bb(1)
 close((1 - 1.2 + 0.45) / (1 + 1.5), 0.1)
+# P4 start-here: deadbeat for G = 0.5/(z-0.5) -> C = 2(z-0.5)/(z-1), Gcl = 1/z, step y = 0,1,1,...
+G0 = sp.Rational(1, 2) / (z - sp.Rational(1, 2))
+C0 = sp.simplify((1 / G0) * (1 / z) / (1 - 1 / z))
+assert sp.simplify(C0 - 2 * (z - sp.Rational(1, 2)) / (z - 1)) == 0
+assert sp.simplify(C0 * G0 / (1 + C0 * G0) - 1 / z) == 0
+# P4 start-here check: relative degree of 0.2/(z^2-0.3z) = 2
+n_, d_ = sp.fraction(sp.factor(sp.Rational(1, 5) / (z**2 - sp.Rational(3, 10) * z)))
+assert sp.degree(d_, z) - sp.degree(n_, z) == 2
 print('all Quiz 3 keys verified')

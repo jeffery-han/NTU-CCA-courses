@@ -143,6 +143,54 @@ place the new crossover where \(|KG(jv)|=10\log\alpha\) dB, i.e. \(-10\log(1/\al
 
 <section id="s4" data-title="4 · Direct design & deadbeat">
 <h2>4 · §5.4: Direct design from a desired \(G_{cl}(z)\); deadbeat</h2>
+<details class="box" id="s4-start">
+<summary><strong>Start here if "closed loop" means nothing to you yet</strong> (about 5 minutes)</summary>
+<p><strong>4.0.1 The loop.</strong> Think of cruise control. You set a target speed. A computer measures the real speed, compares, adjusts the throttle, measures again, and so on forever. The measured output is fed <em>back</em> to the decision, so the signal path forms a circle: a <strong>closed loop</strong> (feedback control). This is the loop of <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=49" data-pages="c56:49">p. 49</a>:</p>
+<svg viewBox="0 0 560 140" role="img" aria-label="Unity feedback loop: R minus Y gives E, into C(z), giving U, into G_ZAS(z), giving Y, which is fed back" style="width:100%;max-width:560px;color:var(--text)">
+<defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs>
+<g fill="none" stroke="currentColor" stroke-width="1.6">
+<path d="M42 55H91" marker-end="url(#ar)"/><circle cx="105" cy="55" r="13"/>
+<path d="M118 55H178" marker-end="url(#ar)"/><rect x="180" y="33" width="90" height="44" rx="4"/>
+<path d="M270 55H338" marker-end="url(#ar)"/><rect x="340" y="33" width="110" height="44" rx="4"/>
+<path d="M450 55H548" marker-end="url(#ar)"/><path d="M505 55V115H105V70" marker-end="url(#ar)"/>
+</g>
+<g fill="currentColor" font-size="15" font-family="inherit">
+<text x="4" y="60">R(z)</text><text x="80" y="42">+</text><text x="88" y="90">−</text>
+<text x="130" y="47">E(z)</text><text x="207" y="61">C(z)</text><text x="288" y="47">U(z)</text>
+<text x="362" y="61">G<tspan font-size="11" dy="4">ZAS</tspan><tspan dy="-4">(z)</tspan></text><text x="485" y="47">Y(z)</text>
+<text x="230" y="132" font-size="12">feedback: the measured output is subtracted</text>
+</g></svg>
+<table>
+<tr><th>Signal / box</th><th>Meaning</th></tr>
+<tr><td>\(R\)</td><td>reference: what you <em>want</em> the output to be</td></tr>
+<tr><td>\(Y\)</td><td>output: what you actually <em>get</em></td></tr>
+<tr><td>\(E=R-Y\)</td><td>error: how far off you are right now</td></tr>
+<tr><td>\(C(z)\)</td><td>controller: the program on the computer. <strong>You design this.</strong></td></tr>
+<tr><td>\(U\)</td><td>control signal the computer sends out</td></tr>
+<tr><td>\(G_{ZAS}(z)\)</td><td>the plant as the computer sees it: zero-order hold (DAC) → analog plant \(G(s)\) → sampler (ADC), i.e. \(G_{ZAS}(z)=(1-z^{-1})\,\mathcal Z\{G(s)/s\}\). <strong>Given; you cannot change it.</strong></td></tr>
+</table>
+<p>Read \(z^{-1}\) as "one sample ago": a block equal to \(z^{-1}\) outputs its input delayed by one sample period \(T\).</p>
+<p><strong>4.0.2 Why \(G_{cl}=\frac{CG}{1+CG}\).</strong> \(G_{cl}\) is the whole circle seen as one box, from what you ask for to what you get: \(G_{cl}=Y/R\). Write \(G\) for \(G_{ZAS}\) and walk around the loop:</p>
+\[Y=CG\,E,\qquad E=R-Y\quad\Rightarrow\quad Y=CG(R-Y)\]
+\[\Rightarrow\quad Y(1+CG)=CG\,R\quad\Rightarrow\quad G_{cl}=\frac{Y}{R}=\frac{CG}{1+CG}.\]
+<p>If \(G_{cl}\) were exactly 1, the output would copy the reference perfectly.</p>
+<p><strong>4.0.3 Direct design runs that backwards.</strong> Usually you guess \(C\) and see what \(G_{cl}\) you get. Here you <em>pick</em> the \(G_{cl}\) you want and solve the same equation for \(C\):</p>
+\[G_{cl}(1+CG)=CG\;\Rightarrow\;G_{cl}=CG\,(1-G_{cl})\;\Rightarrow\;C=\frac{1}{G}\,\frac{G_{cl}}{1-G_{cl}}.\]
+<p>That is all (5.11) is. Notice the factor \(1/G\): the controller tries to <em>undo</em> the plant. Each of the four conditions below marks a case where undoing the plant is impossible or dangerous:</p>
+<ul>
+<li><strong>(i) Causality.</strong> If the plant needs \(d\) samples before its output reacts at all, no controller can make the loop react sooner; that would need tomorrow's measurement. So \(G_{cl}\) must keep at least that much delay.</li>
+<li><strong>(ii) Zeros outside the unit circle.</strong> \(1/G\) turns every plant zero into a <em>pole of \(C\)</em>. A zero at, say, \(z=-1.5\) would give \(C\) an unstable pole, so \(U\) grows without bound even while \(Y\) looks fine on paper. The cure is to keep that zero inside \(G_{cl}\) so \(C\) never has to cancel it.</li>
+<li><strong>(iii) Unstable plant poles.</strong> Mirror image: \(C\) would need a zero exactly on top of the unstable pole. Any small mismatch leaves something exploding inside the loop. The cure is to put that pole into \(1-G_{cl}\).</li>
+<li><strong>(iv) \(G_{cl}(1)=1\).</strong> Setting \(z=1\) gives the steady-state gain. Gain 1 means that after a step, \(Y\) ends up exactly equal to \(R\).</li>
+</ul>
+<p>"Input-output stable but not asymptotically stable" means exactly the failure in (ii)/(iii). The \(R\to Y\) formula looks stable, but a signal hidden inside the loop (for example \(U\)) diverges.</p>
+<p><strong>4.0.4 Deadbeat, worked.</strong> Deadbeat picks the most aggressive target, \(G_{cl}=z^{-m}\): "the output equals the reference, \(m\) samples late", with no overshoot and no slow tail. Take \(G_{ZAS}=\dfrac{0.5}{z-0.5}\). The pole \(0.5\) is inside the circle and there are no zeros, so deadbeat is allowed. The relative degree is \(1-0=1\), so the fastest choice is \(G_{cl}=z^{-1}=1/z\). Then</p>
+\[C=\frac{z-0.5}{0.5}\cdot\frac{1/z}{1-1/z}=\frac{z-0.5}{0.5}\cdot\frac{1}{z-1}=\frac{2(z-0.5)}{z-1}.\]
+<p><em>Verify.</em> \(CG=\frac{2(z-0.5)}{z-1}\cdot\frac{0.5}{z-0.5}=\frac{1}{z-1}\), so \(G_{cl}=\frac{1/(z-1)}{1+1/(z-1)}=\frac1z\) ✓. For a unit step \(r=1,1,1,\dots\) the output is \(y=0,1,1,1,\dots\): exactly on target from the first sample on. \(C\) has a pole at \(z=1\). That is a discrete integrator, and it is what delivers condition (iv).</p>
+<p><strong>Method to remember:</strong> identify \(G_{ZAS}\) → pick \(G_{cl}\) (deadbeat: \(z^{-m}\)) → check (i)–(iv) → \(C=\frac{1}{G_{ZAS}}\frac{G_{cl}}{1-G_{cl}}\) → verify by recomputing \(\frac{CG}{1+CG}\).</p>
+<div class="q" data-id="p4s" data-ans="2"><p>Check: \(G_{ZAS}=\dfrac{0.2}{z^2-0.3z}\). What is the smallest \(m\) allowed for a deadbeat \(G_{cl}=z^{-m}\)?</p><input type="text" aria-label="m"> <button class="go">Check</button>
+<div class="why">Denominator degree 2, numerator degree 0, so the relative degree is 2: the plant needs two samples to respond. The fastest deadbeat is \(G_{cl}=z^{-2}\). The poles (0 and 0.3) are inside the circle and there are no zeros, so deadbeat is allowed.</div></div>
+</details>
 <p><strong>Idea.</strong> Choose the closed loop you want, then solve for the controller. From \(G_{cl}=\frac{CG}{1+CG}\) <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=49" data-pages="c56:49-50">pp. 49–50</a>:
 \[C(z)=\frac{1}{G_{ZAS}(z)}\,\frac{G_{cl}(z)}{1-G_{cl}(z)}\qquad(5.11)\]</p>
 <p><strong>Four conditions on \(G_{cl}\)</strong> <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=56" data-pages="c56:51-56">pp. 51–56</a>:
@@ -152,10 +200,10 @@ place the new crossover where \(|KG(jv)|=10\log\alpha\) dB, i.e. \(-10\log(1/\al
 (iv) \(G_{cl}(1)=1\) (zero step error).
 Conditions (ii) and (iii) exist because \(C\) would otherwise cancel an unstable zero or pole. The loop would then look input-output stable but would not be asymptotically stable.</p>
 <p><strong>Choosing \(G_{cl}\)</strong> <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=57" data-pages="c56:57">p. 57</a>: pick \(T_s\) and the overshoot, choose a unit-gain 1st/2nd-order \(G_{cl}(s)\), map its poles by \(z=e^{sT}\), then check (i)–(iv). A plant delay \(z^{-5}\) forces \(z^{-5}\) into \(G_{cl}\) (Example 5.7).</p>
-<p><strong>Deadbeat</strong> <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=64" data-pages="c56:64-65">pp. 64–65</a>: if all poles and zeros of \(G_{ZAS}\) are inside the circle, choose \(G_{cl}=z^{-m}\) with \(m\) = relative degree. Then \(C=\frac{1}{G_{ZAS}}\frac{z^{-m}}{1-z^{-m}}\) (5.12), and the only design knob left is \(T\).</p>
+<p><strong>Deadbeat</strong> <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=64" data-pages="c56:64-65">pp. 64–65</a>: if all poles and zeros of \(G_{ZAS}\) are inside the circle, choose \(G_{cl}=z^{-m}\) with \(m\ge\) the relative degree; the smallest such \(m\) settles fastest. Then \(C=\frac{1}{G_{ZAS}}\frac{z^{-m}}{1-z^{-m}}\) (5.12), and the only design knob left is \(T\).</p>
 <div class="pit">Count the relative degree in powers of \(z\), after clearing every \(z^{-1}\): (degree of denominator) − (degree of numerator).</div>
 <div class="checks"><h4>Quick checks</h4>
-<div class="q" data-id="p4a" data-ans="2"><p>\(G_{ZAS}=\dfrac{0.05z^{-2}(1+0.7z^{-1})}{(1-0.9z^{-1})(1-0.5z^{-1})}\). Deadbeat \(G_{cl}=z^{-m}\): what is \(m\)?</p><input type="text" aria-label="m"> <button class="go">Check</button>
+<div class="q" data-id="p4a" data-ans="2"><p>\(G_{ZAS}=\dfrac{0.05z^{-2}(1+0.7z^{-1})}{(1-0.9z^{-1})(1-0.5z^{-1})}\). Deadbeat \(G_{cl}=z^{-m}\): what is the smallest allowed \(m\)?</p><input type="text" aria-label="m"> <button class="go">Check</button>
 <div class="why">Numerator \(=\frac{z+0.7}{z^3}\); denominator \(=\frac{(z-0.9)(z-0.5)}{z^2}\). So \(G=\frac{0.05(z+0.7)}{z(z-0.9)(z-0.5)}\), with relative degree 3 − 1 = 2.</div></div>
 <div class="q" data-id="p4b" data-choice="no"><p>If \(G_{ZAS}\) had a zero at \(z=-1.5\), could you still use \(G_{cl}=z^{-m}\)?</p><button data-v="yes">Yes</button><button data-v="no">No</button>
 <div class="why">No. Condition (ii) makes \(G_{cl}\) contain \((z+1.5)\); otherwise \(C\) has a pole at −1.5 and the control signal blows up.</div></div>
