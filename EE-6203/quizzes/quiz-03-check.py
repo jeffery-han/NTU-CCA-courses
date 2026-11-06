@@ -173,4 +173,17 @@ K12 = 1 / F(1.6945); close(K12, 0.5901)
 u12 = useq(K12 * x * (1 + F(0.6945) * x), G12); close(u12[0], 166.23); close(u12[1], -45.33); close(u12[2], 10.0); close(u12[4], 10.0)
 Gc = sp.Rational(1, 10) * x * (1 + x / 2) / ((1 - x) * (1 - sp.Rational(3, 5) * x))
 uc = useq(sp.Rational(2, 3) * x * (1 + x / 2), Gc); close(uc[0], 20 / 3); close(uc[1], -4); close(uc[2], 0)
+# P6 start-here: pole placement, G = z^-1 (1+2x)/((1-x/2)(1-2x)), Ag=1-x/2, Ab=1-2x, Bb=1+2x
+def pp(phi):
+    r1, s0 = sp.symbols('r1 s0')
+    sol = sp.solve(sp.Poly(sp.expand((1 - 2 * x) * (1 + r1 * x) + x * (1 + 2 * x) * s0 - phi), x).all_coeffs(), [r1, s0])
+    return sol[r1], sol[s0], phi.subs(x, 1) / 3
+r1_, s0_, g_ = pp(1 - x + sp.Rational(6, 25) * x**2); close(r1_, 0.44); close(s0_, 0.56); close(g_, 0.08)
+A_, B_, Rc_, Sc_ = (1 - x / 2) * (1 - 2 * x), 1 + 2 * x, 1 + r1_ * x, (1 - x / 2) * s0_
+assert sp.expand(Rc_ * A_ + x * B_ * Sc_ - (1 - x / 2) * (1 - x + sp.Rational(6, 25) * x**2)) == 0
+GY_ = g_ * x * B_ / (1 - x + sp.Rational(6, 25) * x**2); close(GY_.subs(x, 1), 1)
+ys = [float(c) for c in sp.Poly(sp.series(GY_ / (1 - x), x, 0, 4).removeO(), x).all_coeffs()[::-1]]
+close(ys[1], 0.08); close(ys[2], 0.32); close(ys[3], 0.5408)
+close(sp.limit(g_ * (1 - x / 2) / Rc_ - Sc_ / Rc_ * GY_, x, 1), -1 / 6)
+r1_, s0_, g_ = pp((1 - x / 2)**2); close(s0_, 0.5625); close(r1_, 0.4375); close(g_, 1 / 12)
 print('all Quiz 3 keys verified')

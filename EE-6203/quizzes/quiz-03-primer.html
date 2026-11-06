@@ -285,6 +285,86 @@ Choose \(G_{cl}\) so that \(U(z)\) is a finite polynomial in \(z^{-1}\). In prac
 
 <section id="s6" data-title="6 · 1-DOF, 2-DOF, poles">
 <h2>6 · §5.5–5.7: One vs two degrees of freedom; pole placement</h2>
+<details class="box" id="s6-start">
+<summary><strong>Start here: what a "degree of freedom" is, and pole placement built from zero</strong> (about 8 minutes)</summary>
+<p><strong>6.0.1 The picture: one knob vs two knobs.</strong> Back to cruise control. The controller has two separate jobs. <em>Job 1, tracking:</em> when you raise the set speed from 80 to 100, the car should reach 100 smoothly, without a jolt. <em>Job 2, disturbance rejection:</em> when the car hits a hill, which you did not ask for, it should fight back hard and fast. A good design wants a <em>gentle</em> response to the first and an <em>aggressive</em> response to the second.</p>
+<p>In the §4 loop the controller \(C\) only ever sees the error \(e=r-y\). A setpoint step and a hill both arrive as "the error just changed", so \(C\) cannot treat them differently. One block means one knob: a <strong>one degree of freedom (1-DOF)</strong> controller. The fix is to let the reference and the measurement enter through <em>different</em> blocks. That gives the <strong>two degrees of freedom (2-DOF)</strong> structure of Figure 5.17 <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=85" data-pages="c56:85">p. 85</a>:</p>
+<svg viewBox="0 0 560 170" role="img" aria-label="2-DOF loop: r goes through G_f to a summing junction; y is fed back through G_b and subtracted; the result u drives plant G; disturbance v adds to the plant output to give y" style="width:100%;max-width:560px;color:var(--text)">
+<defs><marker id="ar6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs>
+<g fill="none" stroke="currentColor" stroke-width="1.6">
+<path d="M20 70H68" marker-end="url(#ar6)"/><rect x="70" y="48" width="80" height="44" rx="4"/>
+<path d="M150 70H196" marker-end="url(#ar6)"/><circle cx="210" cy="70" r="13"/>
+<path d="M223 70H283" marker-end="url(#ar6)"/><rect x="285" y="48" width="90" height="44" rx="4"/>
+<path d="M375 70H431" marker-end="url(#ar6)"/><circle cx="445" cy="70" r="13"/>
+<path d="M445 14V55" marker-end="url(#ar6)"/>
+<path d="M458 70H548" marker-end="url(#ar6)"/><path d="M500 70V140H335" marker-end="url(#ar6)"/><rect x="255" y="120" width="80" height="40" rx="4"/><path d="M255 140H210V85" marker-end="url(#ar6)"/>
+</g>
+<g fill="currentColor" font-size="15" font-family="inherit">
+<text x="22" y="62">r</text><text x="96" y="76">G<tspan font-size="11" dy="4">f</tspan></text><text x="195" y="60">+</text><text x="216" y="104">−</text>
+<text x="245" y="62">u</text><text x="324" y="76">G</text><text x="452" y="22">v</text><text x="520" y="62">y</text>
+<text x="282" y="146">G<tspan font-size="11" dy="4">b</tspan></text>
+<text x="60" y="120" font-size="12">G<tspan font-size="9" dy="3">f</tspan><tspan dy="-3">: shapes the reaction to r</tspan></text>
+<text x="350" y="165" font-size="12">G<tspan font-size="9" dy="3">b</tspan><tspan dy="-3">: fights v, sets stability</tspan></text>
+</g></svg>
+<table>
+<tr><th>Symbol</th><th>Meaning</th><th>Who sets it</th></tr>
+<tr><td>\(r,\ y,\ u\)</td><td>reference, output, control signal (as in §4)</td><td>—</td></tr>
+<tr><td>\(v\)</td><td>disturbance added at the output (the hill)</td><td>nature</td></tr>
+<tr><td>\(G=z^{-k}\dfrac{B}{A}\)</td><td>plant: \(z^{-k}\) is its pure delay, \(B\) and \(A\) are polynomials in \(z^{-1}\) whose roots are its zeros and poles</td><td><strong>given</strong></td></tr>
+<tr><td>\(G_f=\gamma\dfrac{T_c}{R_c}\)</td><td>feedforward block acting on \(r\)</td><td><strong>you design</strong></td></tr>
+<tr><td>\(G_b=\dfrac{S_c}{R_c}\)</td><td>feedback block acting on \(y\)</td><td><strong>you design</strong></td></tr>
+<tr><td>\(R_c,S_c,T_c\)</td><td>the controller's polynomials in \(z^{-1}\). \(R_c\) is the shared denominator</td><td><strong>you design</strong></td></tr>
+<tr><td>\(\gamma\)</td><td>a plain number that scales the reference so the final value is right</td><td><strong>you design</strong></td></tr>
+<tr><td>\(\phi_{cl}\)</td><td>the closed-loop characteristic polynomial you <em>want</em>: its roots are the poles you choose</td><td><strong>you choose</strong></td></tr>
+</table>
+<p><strong>6.0.2 Why 1-DOF has only one knob, in algebra</strong> <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=84" data-pages="c56:84">p. 84</a>. With one controller \(G_c\) on the error and \(v\) added at the output: \(y=GG_c(r-y)+v\). Collect the \(y\) terms: \(y(1+GG_c)=GG_c\,r+v\), so</p>
+\[y=\underbrace{\frac{GG_c}{1+GG_c}}_{T}\,r+\underbrace{\frac{1}{1+GG_c}}_{S}\,v,\qquad S+T=\frac{1+GG_c}{1+GG_c}=1.\]
+<p>You want \(T\approx1\) (copy \(r\)) and \(S\approx0\) (ignore \(v\)). These two wishes agree. The trouble is that you cannot <em>shape</em> them separately: choosing how \(y\) reacts to \(r\) (that is, \(T\)) also fixes \(S=1-T\), so it fixes how \(y\) reacts to \(v\). You get one free function, not two.</p>
+<p><strong>6.0.3 Deriving the 2-DOF output (5.16)</strong> <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=86" data-pages="c56:86-87">pp. 86–87</a>. The controller is \(U=\gamma\frac{T_c}{R_c}R-\frac{S_c}{R_c}Y\). The plant says \(Y=z^{-k}\frac{B}{A}U+V\). Multiply the plant equation by \(A\) and by \(R_c\) to clear both fractions, then substitute \(R_cU=\gamma T_cR-S_cY\):</p>
+\[R_cA\,Y=z^{-k}B\,(R_cU)+R_cA\,V=z^{-k}B(\gamma T_cR-S_cY)+R_cA\,V.\]
+<p>Move the \(Y\) term to the left:</p>
+\[\big(R_cA+z^{-k}BS_c\big)\,Y=z^{-k}\gamma BT_c\,R+AR_c\,V\]
+\[\Rightarrow\quad Y=\frac{z^{-k}\gamma BT_c}{R_cA+z^{-k}BS_c}\,R+\frac{AR_c}{R_cA+z^{-k}BS_c}\,V.\qquad(5.16)\]
+<p>Read this formula carefully. The shared denominator \(R_cA+z^{-k}BS_c\) does not contain \(T_c\) or \(\gamma\). So:</p>
+<ul>
+<li><strong>Knob 1</strong>, \(R_c\) and \(S_c\) (the feedback block): sets the poles, so it sets stability and how hard \(v\) is rejected.</li>
+<li><strong>Knob 2</strong>, \(T_c\) and \(\gamma\) (the feedforward block): appear <em>only</em> in the \(R\) numerator. You can reshape the tracking response freely without touching stability or disturbance rejection.</li>
+</ul>
+<p>Those are the two degrees of freedom.</p>
+<p><strong>6.0.4 Pole placement: decide the answer first</strong> <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=89" data-pages="c56:89-90">pp. 89–90</a>. As in §4, pick the closed loop you want, then solve for the controller. The target is \(G_{cl}=\gamma z^{-k}\frac{B_r}{\phi_{cl}}\) (5.18). Here you choose the poles, so \(\phi_{cl}\) is yours. \(\gamma=\phi_{cl}(1)/B_r(1)\) (5.19) makes \(G_{cl}(1)=1\), so after a step \(y(\infty)=r(\infty)\). That is the same condition (iv) as in §4. Setting \(V=0\) in (5.16) and matching it to the target gives</p>
+\[\frac{BT_c}{AR_c+z^{-k}BS_c}=\frac{B_r}{\phi_{cl}}.\qquad(5.21)\]
+<p><strong>6.0.5 Why split into "good" and "bad" factors</strong> <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=91" data-pages="c56:91-92">pp. 91–92</a>. A factor is <strong>good</strong> if its root is well inside the unit circle and well damped. It is <strong>bad</strong> if the root is outside the circle, or inside but close to it or poorly damped. Write \(B=B^gB^b\) and \(A=A^gA^b\).</p>
+<ul>
+<li><strong>Good factors may be cancelled.</strong> Put \(B^g\) into the controller's denominator and \(A^g\) into its numerators: \(R_c=B^gR_1\), \(S_c=A^gS_1\), \(T_c=A^gT_1\) (5.22). Cancelling a pole with a zero leaves that mode hidden inside the loop (§4's "not asymptotically stable" story). That is harmless only when the hidden mode dies out quickly by itself, so only good factors may be cancelled.</li>
+<li><strong>Bad factors may not be cancelled.</strong> Cancelling the bad zero \(B^b\) would need a controller pole on top of it, which is an unstable or ringing hidden mode (exactly the §5 ripple story). Cancelling the bad pole \(A^b\) would need an exact controller zero on it, and any mismatch leaves something exploding. So \(A^b\) and \(B^b\) are left in, and feedback has to deal with them.</li>
+</ul>
+<p>Substitute (5.22) into (5.21). Every term then contains \(A^gB^g\), so it cancels:</p>
+\[\frac{B^gB^bA^gT_1}{A^gB^g\big(A^bR_1+z^{-k}B^bS_1\big)}=\frac{B^bT_1}{A^bR_1+z^{-k}B^bS_1}=\frac{B_r}{\phi_{cl}}.\]
+<p>Match the numerators and the denominators separately:</p>
+\[B_r=B^bT_1\quad(5.23),\qquad A^bR_1+z^{-k}B^bS_1=\phi_{cl}\quad(5.24).\]
+<p>Equation (5.24) is the heart of the method. The bad plant poles \(A^b\) are on the left, the poles you want are on the right, and \(R_1,S_1\) are the unknowns that turn one into the other. <em>This is how feedback moves bad poles:</em> it never cancels them. It mixes them with \(z^{-k}B^bS_1\) until the sum has the roots you chose.</p>
+<p><strong>6.0.6 Why "bad zeros cannot be moved"</strong> <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=93" data-pages="c56:93">p. 93</a>. With the simple choice \(T_1=1\) (5.25), (5.23) gives \(B_r=B^b\), so</p>
+\[G_Y=\gamma z^{-k}\frac{B^b}{\phi_{cl}},\qquad\gamma=\frac{\phi_{cl}(1)}{B^b(1)}\quad(5.26).\]
+<p>The poles are now whatever you put in \(\phi_{cl}\), but the bad zeros \(B^b\) are still sitting in the numerator. You could only remove a zero by cancelling it, and 6.0.5 just ruled that out. Feedback can move poles; it cannot move bad zeros. The other option on p. 92, \(T_1=S_1\), makes \(T_c=S_c\). Then \(u=\frac{S_c}{R_c}(\gamma r-y)\) acts on one error signal again, and you are back to 1-DOF.</p>
+<p><strong>6.0.7 Worked example (numbers are this page's own).</strong> Take \(k=1\) and</p>
+\[G=z^{-1}\frac{1+2z^{-1}}{(1-0.5z^{-1})(1-2z^{-1})}.\]
+<ol>
+<li><strong>Classify.</strong> Pole \(0.5\): good, so \(A^g=1-0.5z^{-1}\). Pole \(2\): outside the circle, bad, so \(A^b=1-2z^{-1}\). Zero \(-2\): outside, bad, so \(B^b=1+2z^{-1}\) and \(B^g=1\).</li>
+<li><strong>Choose the poles.</strong> Put them at \(0.4\) and \(0.6\): \(\phi_{cl}=(1-0.4z^{-1})(1-0.6z^{-1})=1-z^{-1}+0.24z^{-2}\).</li>
+<li><strong>Pick the sizes of \(R_1,S_1\)</strong> (supplementary rule, not on the slides): make the number of unknowns equal the number of equations. The left of (5.24) has degree 2 when \(R_1=1+r_1z^{-1}\) and \(S_1=s_0\). That gives two unknowns \((r_1,s_0)\) for the two coefficients of \(z^{-1}\) and \(z^{-2}\). The constant term is \(1=1\) automatically.</li>
+<li><strong>Expand (5.24) and match coefficients:</strong>
+\[(1-2z^{-1})(1+r_1z^{-1})+z^{-1}(1+2z^{-1})s_0=1+(r_1-2+s_0)z^{-1}+(-2r_1+2s_0)z^{-2}.\]
+Match \(z^{-1}\): \(r_1+s_0-2=-1\), so \(r_1+s_0=1\). Match \(z^{-2}\): \(2s_0-2r_1=0.24\), so \(s_0-r_1=0.12\). Together they give \(s_0=0.56\) and \(r_1=0.44\).</li>
+<li><strong>\(\gamma\) from (5.26):</strong> \(\phi_{cl}(1)=1-1+0.24=0.24\) and \(B^b(1)=3\), so \(\gamma=0.08\).</li>
+<li><strong>Controller:</strong> \(G_b=\dfrac{S_c}{R_c}=\dfrac{0.56(1-0.5z^{-1})}{1+0.44z^{-1}}\) and \(G_f=\gamma\dfrac{T_c}{R_c}=\dfrac{0.08(1-0.5z^{-1})}{1+0.44z^{-1}}\). The controller's own pole, \(-0.44\), is safely inside the circle.</li>
+</ol>
+<p><em>Verify.</em> The full loop denominator is \(R_cA+z^{-1}BS_c=(1-0.5z^{-1})\,\phi_{cl}\). That is the poles you chose, plus the hidden good pole \(0.5\), which dies out on its own. The unstable pole at 2 is gone. \(G_Y=\dfrac{0.08z^{-1}(1+2z^{-1})}{1-z^{-1}+0.24z^{-2}}\) has \(G_Y(1)=0.08\cdot3/0.24=1\) ✓. The step response is \(y=0,\ 0.08,\ 0.32,\ 0.54,\ 0.70,\ 0.81,\dots\to1\). The input settles at \(u(\infty)=-1/6\). Why negative? The plant's DC gain is \(G(1)=\frac{3}{(0.5)(-1)}=-6\), and holding \(y=1\) needs \(u=1/(-6)\). The bad zero \((1+2z^{-1})\) is still in \(G_Y\), as 6.0.6 said it must be.</p>
+<p><strong>Method to remember:</strong> factor \(A,B\) into good and bad → choose \(\phi_{cl}\) from the poles you want → solve \(A^bR_1+z^{-k}B^bS_1=\phi_{cl}\) by matching coefficients (unknowns = equations) → \(\gamma=\phi_{cl}(1)/B^b(1)\) → \(R_c=B^gR_1,\ S_c=A^gS_1,\ T_c=A^g\) → check \(G_Y(1)=1\).</p>
+<div class="q" data-id="p6s" data-ans="0.5625"><p>Check: same plant, but now you want both poles at \(0.5\): \(\phi_{cl}=(1-0.5z^{-1})^2=1-z^{-1}+0.25z^{-2}\). With \(R_1=1+r_1z^{-1}\) and \(S_1=s_0\), find \(s_0\).</p><input type="text" aria-label="s0"> <button class="go">Check</button>
+<div class="why">The matched coefficients are \(r_1+s_0=1\) and \(2s_0-2r_1=0.25\), so \(s_0-r_1=0.125\). That gives \(s_0=0.5625\) and \(r_1=0.4375\).</div></div>
+<div class="q" data-id="p6t" data-ans="1/12"><p>Same design with \(T_1=1\). Find \(\gamma\).</p><input type="text" aria-label="gamma"> <button class="go">Check</button>
+<div class="why">\(\gamma=\phi_{cl}(1)/B^b(1)=0.25/3=1/12\approx0.0833\). Use \(B^b\), not the whole \(B\). Here they are equal because \(B^g=1\).</div></div>
+</details>
 <p><strong>1-DOF</strong> <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=84" data-pages="c56:84">p. 84</a>: \(y=Tr+Sv\) with \(T=\frac{GG_c}{1+GG_c}\) and \(S=\frac{1}{1+GG_c}\). Because \(S+T=1\), fixing one fixes the other.</p>
 <p><strong>2-DOF</strong> <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=87" data-pages="c56:85-87">pp. 85–87</a>: \(u=\gamma\frac{T_c}{R_c}r-\frac{S_c}{R_c}y\) and plant \(G=z^{-k}B/A\) give
 \[Y=\frac{z^{-k}\gamma BT_c}{R_cA+z^{-k}BS_c}R+\frac{AR_c}{R_cA+z^{-k}BS_c}V.\]

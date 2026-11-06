@@ -117,6 +117,7 @@
 
 ## Update record
 
+- 2026-11-06 (latest): `quizzes/quiz-03-primer.html` §6: added a collapsible beginner "Start here" for 1-DOF vs 2-DOF and pole placement (sources pp. 84-93: Fig 5.17 diagram, S+T=1 derivation, step-by-step derivation of (5.16), why only good factors may be cancelled, (5.21)-(5.26), why bad zeros stay), an original worked example (unstable pole 2, bad zero -2, poles placed at 0.4/0.6) and checks `p6s`/`p6t`; all numbers asserted in `quiz-03-check.py`. p. 88 has no rendered image (not cited).
 - 2026-11-06 (later): `quizzes/quiz-03-primer.html` §5: added a collapsible beginner "Start here" for ripple-free deadbeat (sources pp. 66-82: Ex 5.8 alternating u from the controller pole at −0.9293, the u-constant-after-n idea, derivation of "G_cl keeps all zeros" from (5.13), Ex 5.10 and Ex 5.12 with u/e/y sequences, why type 0 needs an integrator) plus checks `p5c`/`p5d`; sequences asserted in `quiz-03-check.py`. Note: Fig 5.15 (p. 82) plots a final u level inconsistent with the slide numbers (they give u→10).
 - 2026-11-06: `quizzes/quiz-03-primer.html` §4: added a collapsible "why you cannot count the z^-1 powers" block under check `p4a` (learner answered −1: z- vs z^-1-form trap, two methods, pulse-response verification) with check `p4c`; keys asserted in `quiz-03-check.py`.
 - 2026-11-05 (later): `quizzes/quiz-03-primer.html` §4: added the beginner "Start here" block (sources pp. 49-65) and check `p4s`; corrected "m = relative degree" to "m ≥ relative degree" to match p. 64; `quiz-03-check.py` asserts the new example and key.
