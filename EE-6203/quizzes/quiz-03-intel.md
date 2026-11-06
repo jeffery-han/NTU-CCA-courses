@@ -15,9 +15,21 @@ Compiled 2026-11-04. Official facts and unofficial evidence are kept apart. Noth
 | Weight | 15 % |
 | Absence | Zero without a valid reason (MC); email Wen by 5 pm, 8 Nov 2026 |
 
-Earlier context: the Week 11 recording (`resources/transcripts-raw/week-11-transcript.txt`, 26 Oct) says the quiz moved to Saturday because Monday of Week 13 is a public holiday, and that more details would come "next Monday". The Week 12 recording (2 Nov) has an attached transcript `82539 - 0_rqis9cve - PID 117.txt` (86.77 KB), seen on its Attachments tab on 2026-11-04 but **not yet downloaded**. Its opening slide shows §5.6 Two Degrees of Freedom, so Week 12 covered §5.6 onward plus Ch 6.
+Earlier context: the Week 11 recording (`resources/transcripts-raw/week-11-transcript.txt`, 26 Oct) says the quiz moved to Saturday because Monday of Week 13 is a public holiday, and that more details would come "next Monday". The Week 12 recording (2 Nov, `0_rqis9cve`) covered §5.6–5.7 (2-DOF pole placement, maglev-ball example) and all of Ch 6, then gave a review of Ch 1–6. Transcript downloaded 2026-11-06 to `resources/transcripts-raw/week-12-transcript.txt`; its quiz remarks are in the next section.
 
 For comparison, Wen's Quiz 1 (31 Aug, Ch 1–3) was 30 min, one question in two parts, 25 marks (`quiz-01-*` files; results announcement 11 Sep).
+
+## Week 12 lecture remarks (Wen, 2 Nov; `resources/transcripts-raw/week-12-transcript.txt`)
+
+Official in the sense that Wen said them in class; the auto-transcript is noisy, so wording is paraphrased.
+
+- **MCQs confirmed:** "for non-MCQ type questions, show the working … if it's MCQ, just give your choice". Logistics repeat the announcement (seated by 2:25 pm, attendance taken when you hand in).
+- **w-plane Bode design (§5.3): no exam questions** on it, because drawing Bode plots is too time-consuming. You "should know how", so expect at most a concept MCQ. Of the compensators, only **phase lead** was covered; lag and lag-lead were not.
+- **Direct design from G_cl (§5.4) is "a quite important approach".** Memorise C(z) = G_cl / [G(z)(1 − G_cl)] and the four necessary conditions: (i) realisable (relative degree of G_cl ≥ that of G); (ii) G_cl contains G's zeros outside the unit circle; (iii) G's unstable poles are zeros of 1 − G_cl; (iv) G_cl(1) = 1 for zero steady-state error. Finite settling and deadbeat (G_cl = z^-m) need a plant with no poles or zeros outside the unit circle. Ripple-free assumes a step input.
+- **Memorise the pole-zero matching formula**, including the (z+1) factors for zeros at s = ∞ (n − m − 1 of them for a strictly proper result, n − m for a proper one) and the DC-gain match that fixes α.
+- **Bilinear:** substitute s = (2/T)(z−1)/(z+1), simplify, then check the time response.
+- **Ch 6:** direct and standard programming; coefficient-sensitivity result (clustered poles and zeros give large errors); series and parallel programming with 1st/2nd-order sections.
+- **Ch 2–4 reminders:** the whole z-transform table is given, but you must remember its conditions (x(kT) = 0 for k < 0; some entries need k ≥ 1). **Not all z-transform properties are given.** Memorise the ZOH (1 − e^(−Ts))/s. Any inverse-z method is accepted unless the question names one. For difference equations, compute any initial values the question doesn't give; do not assume them. Stability means strictly inside the unit circle; marginal stability is not considered.
 
 ## Unofficial evidence
 
@@ -59,5 +71,4 @@ These are final-exam patterns, so they show what Wen tends to set from this mate
 
 ## Open items
 
-- Download the Week 12 transcript (needs the learner's OK) and look for any "quiz" remarks.
 - RedNote comment threads (11 + 16 comments on the two main posts) not yet read; the tool timed out.
