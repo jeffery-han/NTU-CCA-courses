@@ -205,6 +205,24 @@ ys = [float(c) for c in sp.Poly(sp.series(GY_ / (1 - x), x, 0, 4).removeO(), x).
 close(ys[1], 0.08); close(ys[2], 0.32); close(ys[3], 0.5408)
 close(sp.limit(g_ * (1 - x / 2) / Rc_ - Sc_ / Rc_ * GY_, x, 1), -1 / 6)
 r1_, s0_, g_ = pp((1 - x / 2)**2); close(s0_, 0.5625); close(r1_, 0.4375); close(g_, 1 / 12)
+# P2 start-here: Ex 5.1 bilinear PI (T=0.1 -> 1083.5/1016.5; T=0.2 -> 1117/983 = p2s)
+for T_, b0_, b1_ in ((0.1, 1083.5, 1016.5), (0.2, 1117, 983)):
+    Cz = sp.simplify(((1050 * s + 670) / s).subs(s, 2 / sp.nsimplify(T_) * (z - 1) / (z + 1)))
+    assert sp.simplify(Cz - (sp.nsimplify(b0_) * z - sp.nsimplify(b1_)) / (z - 1)) == 0
+# Ex 5.1 sampled loop (ZOH plant 1/(1000s+100), T=0.1, step 100): peak ~118.6 at 2.8 s, settles 100
+pq = math.exp(-0.01); gq = (1 - pq) / 100; yv = uv = e1 = 0; ys = []
+for _ in range(300):
+    ev = 100 - yv; uv += 1083.5 * ev - 1016.5 * e1; e1 = ev; ys.append(yv); yv = pq * yv + gq * uv
+close(max(ys), 118.6); close(ys.index(max(ys)) * 0.1, 2.8); close(ys[-1], 100)
+# Ex 5.2 pole-zero matched: T=0.1 -> 1.4138, 0.6065, alpha 0.0963 (slide 0.09625); T=0.2 -> alpha 0.2910 = p2t
+for T_, b_, c_, al in ((0.1, 1.4138, 0.6065, 0.0963), (0.2, 0.7859, 0.3679, 0.2910)):
+    bb = 2 * math.exp(-2.5 * T_) * math.cos(5 * math.sqrt(0.75) * T_); cc = math.exp(-5 * T_)
+    close(bb, b_); close(cc, c_); close((1 - bb + cc) / 2, al)
+    r1 = cmath.exp(complex(-2.5, 5 * math.sqrt(0.75)) * T_)          # e^{s1 T}
+    close(2 * r1.real, bb); close(abs(r1)**2, cc)
+# side-by-side table: bilinear pole (2-2T)/(2+2T) vs e^{-2T}
+for T_, pb, pm in ((0.1, 0.8182, 0.8187), (0.5, 0.3333, 0.3679), (1, 0, 0.1353)):
+    close((2 - 2 * T_) / (2 + 2 * T_), pb); close(math.exp(-2 * T_), pm)
 print('all Quiz 3 keys verified')
 
 # ---------------- Mock B step-by-step page checks ----------------
