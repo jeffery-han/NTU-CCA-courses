@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="EE6203 Quiz 3 Mock D: a full 45-minute paper in the real format (4 MCQs + 3 written calculation questions on Ch 4-6). Answers stay locked until you finish; then the paper marks itself and shows worked solutions with a rubric.">
+<title>EE6203 Quiz 3 Mock D</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+  options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+};
+</script>
+<script async src="vendor/mathjax/tex-mml-chtml.js" onerror="document.getElementById('math-warning').hidden=false"></script>
+<style>
+:root {
+  color-scheme: light dark;
+  --bg:#f7f8fb; --surface:#fff; --surface-2:#eef3fb; --text:#18202c; --muted:#5f6b7a;
+  --border:#d8dee9; --accent:#245ec7; --accent-soft:#e8f0ff; --ok:#167a3e; --ok-soft:#e5f6ec; --bad:#b3261e; --bad-soft:#fdecea;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#10141b; --surface:#171d26; --surface-2:#202a38; --text:#edf2f8; --muted:#aab4c2;
+    --border:#344052; --accent:#8bb5ff; --accent-soft:#1e3558; --ok:#6fd49a; --ok-soft:#143323; --bad:#ff8a80; --bad-soft:#3b1d1b;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:#10141b; --surface:#171d26; --surface-2:#202a38; --text:#edf2f8; --muted:#aab4c2;
+  --border:#344052; --accent:#8bb5ff; --accent-soft:#1e3558; --ok:#6fd49a; --ok-soft:#143323; --bad:#ff8a80; --bad-soft:#3b1d1b;
+}
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.62; }
+a { color:var(--accent); }
+header.bar { position:sticky; top:0; z-index:5; display:flex; flex-wrap:wrap; align-items:center; gap:.6rem 1rem; padding:.6rem 16px; background:var(--surface); border-bottom:1px solid var(--border); }
+header.bar h1 { font-size:1rem; margin:0; flex:1 1 auto; }
+#clock { font-variant-numeric:tabular-nums; font-weight:700; font-size:1.1rem; }
+#clock.low { color:var(--bad); }
+#total { font-weight:700; color:var(--ok); }
+main { max-width:860px; margin:0 auto; padding:1.2rem 16px 4rem; }
+h2 { border-bottom:2px solid var(--border); padding-bottom:.3rem; display:flex; justify-content:space-between; gap:1rem; margin-top:2.2rem; }
+h2 small, .mk { color:var(--muted); font-weight:400; font-size:.9rem; }
+.box { border-left:4px solid var(--accent); background:var(--accent-soft); padding:.7rem 1rem; border-radius:0 10px 10px 0; margin:1rem 0; }
+.paper[hidden] { display:none; }
+.q { border:1px solid var(--border); background:var(--surface); border-radius:12px; padding:.8rem 1rem; margin:1rem 0; }
+.q .part { margin:.7rem 0 .2rem; }
+.mcq label { display:block; padding:.35rem .6rem; margin:.25rem 0; border:1px solid var(--border); border-radius:8px; cursor:pointer; }
+.mcq label:hover { border-color:var(--accent); }
+.mcq label.right { border-color:var(--ok); background:var(--ok-soft); }
+.mcq label.wrong { border-color:var(--bad); background:var(--bad-soft); }
+.answers { display:flex; flex-wrap:wrap; gap:.4rem 1.2rem; margin:.5rem 0; padding:.5rem .7rem; border:1px dashed var(--border); border-radius:8px; }
+.answers::before { content:"Final answers:"; color:var(--muted); font-size:.9rem; width:100%; }
+.num input { width:7.5rem; padding:.3rem .5rem; border:1px solid var(--border); border-radius:8px; background:var(--bg); color:var(--text); font:inherit; }
+.num.right input { border-color:var(--ok); background:var(--ok-soft); }
+.num.wrong input { border-color:var(--bad); background:var(--bad-soft); }
+.num .key { font-size:.85rem; margin-left:.3rem; }
+.num.right .key { color:var(--ok); } .num.wrong .key { color:var(--bad); }
+.sol { border-left:4px solid var(--ok); background:var(--ok-soft); color:var(--text); padding:.6rem 1rem; border-radius:0 10px 10px 0; margin:.8rem 0; }
+.sol[hidden] { display:none; }
+.sol h4 { margin:.2rem 0 .4rem; color:var(--ok); }
+.pit { border-left:4px solid var(--bad); background:var(--bad-soft); padding:.5rem .9rem; border-radius:0 10px 10px 0; margin:.6rem 0; }
+.rubric { list-style:none; padding:0; margin:.6rem 0 0; border-top:1px dashed var(--border); padding-top:.5rem; }
+.rubric li { margin:.2rem 0; }
+.rubric::before { content:"Mark yourself (tick what your working shows):"; display:block; font-weight:650; margin-bottom:.2rem; }
+button { font:inherit; padding:.35rem .9rem; border:1px solid var(--border); border-radius:8px; background:var(--surface-2); color:var(--text); cursor:pointer; }
+button:hover { border-color:var(--accent); }
+button.primary { border-color:var(--accent); background:var(--accent-soft); font-weight:650; }
+table.tp { border-collapse:collapse; margin:.5rem 0; font-size:.95rem; }
+table.tp td, table.tp th { border:1px solid var(--border); padding:.3rem .6rem; }
+.mjx-container { overflow-x:auto; overflow-y:hidden; max-width:100%; }
+a.src { white-space:nowrap; }
+dialog.pages { width:min(920px,96vw); max-height:92vh; border:1px solid var(--border); border-radius:12px; background:var(--surface); color:var(--text); padding:0; }
+dialog.pages::backdrop { background:rgb(0 0 0 / .55); }
+dialog.pages .bar { position:sticky; top:0; display:flex; justify-content:space-between; align-items:center; gap:1rem; padding:.6rem 1rem; background:var(--surface-2); border-bottom:1px solid var(--border); }
+dialog.pages figure { margin:1rem; }
+dialog.pages img { width:100%; height:auto; border:1px solid var(--border); border-radius:6px; background:#fff; }
+#math-warning { background:var(--bad-soft); color:var(--bad); padding:.6rem 1rem; }
+#result[hidden] { display:none; }
+</style>
+</head>
+<body>
+<div id="math-warning" hidden>Equations could not load. Keep this file next to its <code>vendor/mathjax/</code> folder.</div>
+<header class="bar">
+  <h1>EE6203 Quiz 3 · Mock D</h1>
+  <span id="clock">45:00</span>
+  <span id="total"></span>
+  <button id="start" class="primary">Start the 45-min paper</button>
+  <button id="finish" hidden>Finish &amp; mark</button>
+  <button id="reset">Reset</button>
+</header>
+<main>
+<div class="box"><strong>Real-paper format (unofficial reconstruction).</strong> Section A: 4 MCQs, choose one answer each (3 marks each). Section B: 3 structured questions; show all working on paper and type the key final numbers into the boxes. <strong>40 marks, 45 minutes</strong>, closed book, calculator allowed. Nothing is marked or shown until you press <em>Finish &amp; mark</em> or the timer runs out. Then the MCQs and boxes mark themselves, the worked solutions open, and you tick the rubric against your written working.<br>
+<small>Why this shape: Wen confirmed MCQs plus written questions for Quiz 3 (Week 12 lecture), his Quiz 1 this term was one calculation plus four MCQs, and three seniors recall three calculation questions (Jury K-range, s→z mapping, direct design). See <a href="quiz-03-intel.md">quiz-03-intel.md</a>. Numbers are new and verified by <code>quiz-03-mock-cd-check.py</code>. Answers: 3–4 significant figures or an exact fraction.</small></div>
+
+<!--PAPER-START-->
+<div class="paper" hidden>
+<details class="q"><summary><strong>Transform pairs provided</strong> (as on the real paper)</summary>
+<table class="tp">
+<tr><th>\(X(s)\)</th><th>\(X(z)\)</th></tr>
+<tr><td>\(\dfrac1s\)</td><td>\(\dfrac{z}{z-1}\)</td></tr>
+<tr><td>\(\dfrac1{s^2}\)</td><td>\(\dfrac{Tz}{(z-1)^2}\)</td></tr>
+<tr><td>\(\dfrac1{s+a}\)</td><td>\(\dfrac{z}{z-e^{-aT}}\)</td></tr>
+<tr><td>\(\dfrac{a}{s(s+a)}\)</td><td>\(\dfrac{(1-e^{-aT})z}{(z-1)(z-e^{-aT})}\)</td></tr>
+</table>
+<p class="mk">The ZOH \(\dfrac{1-e^{-Ts}}{s}\) and the z-transform properties are <em>not</em> provided.</p>
+</details>
+
+<h2>Section A · Multiple choice <small>12 marks</small></h2>
+
+<div class="q mcq" data-id="d-a1" data-key="C" data-marks="3">
+<p><strong>A1.</strong> A unity-feedback loop has open-loop pulse transfer function \(G(z)=\dfrac{0.5(z+0.5)}{(z-0.5)(z-0.2)}\), and the closed loop is stable. The steady-state error to a unit step is</p>
+<label><input type="radio" name="d-a1" value="A"> (A) 0.533</label>
+<label><input type="radio" name="d-a1" value="B"> (B) 0</label>
+<label><input type="radio" name="d-a1" value="C"> (C) 0.348</label>
+<label><input type="radio" name="d-a1" value="D"> (D) 0.652</label>
+<div class="sol" hidden><h4>Answer: C</h4>The loop is type 0, so the step error is finite: \(K_p=\lim_{z\to1}G(z)=\frac{0.5(1.5)}{(0.5)(0.8)}=1.875\) and \(e_{ss}=\frac{1}{1+K_p}=\frac{1}{2.875}=0.348\) <a class="src" href="../resources/lecture-notes-weeks-01-04.pdf#page=186" data-pages="c14:186-188">pp. 186–188</a>. (A) is \(1/K_p\), (B) would need a pole at \(z=1\), (D) is \(K_p/(1+K_p)\), the final output value. (Closed-loop poles \(0.1\pm0.583j\), inside the circle ✓.)</div>
+</div>
+
+<div class="q mcq" data-id="d-a2" data-key="B" data-marks="3">
+<p><strong>A2.</strong> \(G(s)=\dfrac{5(s+3)}{(s+1)(s+2)(s+6)}\) is converted by pole-zero matching into a <em>strictly proper</em> \(G(z)\). How many factors \((z+1)\) appear in the numerator?</p>
+<label><input type="radio" name="d-a2" value="A"> (A) 0</label>
+<label><input type="radio" name="d-a2" value="B"> (B) 1</label>
+<label><input type="radio" name="d-a2" value="C"> (C) 2</label>
+<label><input type="radio" name="d-a2" value="D"> (D) 3</label>
+<div class="sol" hidden><h4>Answer: B</h4>\(G(s)\) has \(n-m=3-1=2\) zeros at \(s=\infty\). These map to \(z=-1\), but a strictly proper \(G(z)\) keeps one sample of delay, so it takes \(n-m-1=1\) factor \((z+1)\). A proper result would take \(n-m=2\) <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=14" data-pages="c56:14-15">pp. 14–15</a>.</div>
+</div>
+
+<div class="q mcq" data-id="d-a3" data-key="D" data-marks="3">
+<p><strong>A3.</strong> Why is \(G(z)\) transformed to the w-plane, \(w=\frac2T\frac{z-1}{z+1}\), before a Bode-based phase-lead design?</p>
+<label><input type="radio" name="d-a3" value="A"> (A) To remove the effect of the zero-order hold from the loop</label>
+<label><input type="radio" name="d-a3" value="B"> (B) Because the w-plane removes the frequency warping of the bilinear rule</label>
+<label><input type="radio" name="d-a3" value="C"> (C) To make an unstable \(G(z)\) stable before the design starts</label>
+<label><input type="radio" name="d-a3" value="D"> (D) Because \(G(e^{j\omega T})\) is not rational in \(\omega\), while \(G(w)\) is, so ordinary Bode asymptote rules apply</label>
+<div class="sol" hidden><h4>Answer: D</h4>On the unit circle \(z=e^{j\omega T}\), so \(G\) is a function of \(e^{j\omega T}\), not a rational function of \(\omega\), and straight-line Bode rules fail. The w-transform maps the unit disc onto the left half w-plane, and \(G(w)\) is rational in the fictitious frequency \(v\) <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=23" data-pages="c56:23-24">pp. 23–24</a>. (B) is backwards: the w-plane has the same warping, \(v=\frac2T\tan\frac{\omega T}{2}\). The ZOH stays inside \(G(z)\), and the transform does not change stability.</div>
+</div>
+
+<div class="q mcq" data-id="d-a4" data-key="A" data-marks="3">
+<p><strong>A4.</strong> In a one-degree-of-freedom loop, the reference response \(T(z)\) and the disturbance response \(S(z)\) satisfy \(S=1-T\). What does the two-degree-of-freedom structure add?</p>
+<label><input type="radio" name="d-a4" value="A"> (A) A separate block acting on \(r\), so the reference response can be shaped independently of the feedback part that sets stability and disturbance rejection</label>
+<label><input type="radio" name="d-a4" value="B"> (B) The ability to cancel plant zeros outside the unit circle safely</label>
+<label><input type="radio" name="d-a4" value="C"> (C) A guarantee of zero steady-state error without any integrator</label>
+<label><input type="radio" name="d-a4" value="D"> (D) Fewer delay elements than standard programming</label>
+<div class="sol" hidden><h4>Answer: A</h4>With one block on the error \(r-y\), choosing \(T\) fixes \(S=1-T\): there is one free function, not two. The 2-DOF form \(U=\gamma\frac{T_c}{R_c}R-\frac{S_c}{R_c}Y\) lets \(R_c,S_c\) place the closed-loop poles (stability, disturbance) while \(T_c,\gamma\) shape the reaction to \(r\) <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=85" data-pages="c56:84-87">pp. 84–87</a>. Unstable plant zeros still cannot be cancelled in any structure.</div>
+</div>
+
+<h2>Section B · Structured questions <small>28 marks</small></h2>
+
+<div class="q" id="q1">
+<p><strong>B1.</strong> <span class="mk">(10 marks)</span> A digital gain \(K\) controls a process in a unity-feedback loop. Including one sample of computation delay, the open-loop pulse transfer function is</p>
+\[G(z)=\frac{K}{z(z-1)(z-0.5)},\qquad T=0.1\ \text{s}.\]
+<p class="part"><strong>(a)</strong> Use the Jury test to find the range of \(K\) for closed-loop stability. <span class="mk">[7]</span></p>
+<p class="part"><strong>(b)</strong> With \(K=0.2\), find \(K_v\) and the steady-state error to a unit ramp. <span class="mk">[3]</span></p>
+<div class="answers">
+<span class="num" data-id="d-1a-kmax" data-ans="0.280776"><label>upper limit of \(K\) = <input type="text" inputmode="decimal"></label><span class="key"></span></span>
+<span class="num" data-id="d-1b-kv" data-ans="4"><label>\(K_v=\) <input type="text" inputmode="decimal"></label><span class="key"></span></span>
+<span class="num" data-id="d-1b-ess" data-ans="0.25"><label>\(e_{ss}=\) <input type="text" inputmode="decimal"></label><span class="key"></span></span>
+</div>
+<div class="sol" hidden><h4>Worked solution</h4>
+<p><strong>(a)</strong> \(1+G=0\) gives \(P(z)=z^3-1.5z^2+0.5z+K\), so \(a_0=1,\ a_1=-1.5,\ a_2=0.5,\ a_3=K\). This is third order, so the table row is needed as well <a class="src" href="../resources/lecture-notes-weeks-01-04.pdf#page=164" data-pages="c14:164-166">pp. 164–166</a>:</p>
+<ul>
+<li>(1) \(|a_3|\lt a_0\): \(-1\lt K\lt1\).</li>
+<li>(2) \(P(1)=1-1.5+0.5+K=K\gt0\).</li>
+<li>(3) \(n\) odd, so \(P(-1)\lt0\): \(-1-1.5-0.5+K=K-3\lt0\) → \(K\lt3\).</li>
+<li>(4) Row 3 uses \(b_k=a_na_{k+1}-a_0a_{n-1-k}\): \(b_0=a_3a_1-a_0a_2=-1.5K-0.5\) and \(b_2=a_3^2-a_0^2=K^2-1\). The condition is \(|b_2|\gt|b_0|\). With \(0\lt K\lt1\) this reads \(1-K^2\gt1.5K+0.5\), i.e. \(K^2+1.5K-0.5\lt0\), so \(K\lt\frac{-1.5+\sqrt{4.25}}{2}=0.2808\).</li>
+</ul>
+<p>Intersection: <strong>\(0\lt K\lt0.2808\)</strong>. Here the table row is the binding condition. Stopping after (1)–(3) gives the wrong answer \(0\lt K\lt1\). Spot check at \(K=0.2\): \(|b_2|=0.96\gt|b_0|=0.8\) ✓.</p>
+<p><strong>(b)</strong> \(K_v=\frac1T\lim_{z\to1}\frac{z-1}{z}\cdot\frac{K}{z(z-1)(z-0.5)}=\frac{1}{0.1}\cdot\frac{K}{0.5}=20K\) <a class="src" href="../resources/lecture-notes-weeks-01-04.pdf#page=186" data-pages="c14:186-187">pp. 186–187</a>. At \(K=0.2\) (stable ✓): <strong>\(K_v=4\), \(e_{ss}=0.25\)</strong>.</p>
+<div class="pit">Common slips: using \(P(-1)\gt0\) (the even-\(n\) rule); stopping at \(K\lt1\) without building the \(b\) row; mixing up the \(b_k\) index order (the \(z^0\) column of row 3 is \(b_{n-1}=b_2\)).</div>
+<ul class="rubric">
+<li><label><input type="checkbox" data-id="d-1-r1" data-marks="1"> (a) characteristic equation</label></li>
+<li><label><input type="checkbox" data-id="d-1-r2" data-marks="3"> (a) conditions (1)–(3), including the odd-\(n\) sign (1 each)</label></li>
+<li><label><input type="checkbox" data-id="d-1-r3" data-marks="1"> (a) \(b_0\) and \(b_2\) correct</label></li>
+<li><label><input type="checkbox" data-id="d-1-r4" data-marks="1"> (a) \(|b_2|\gt|b_0|\) solved to \(K\lt0.281\)</label></li>
+<li><label><input type="checkbox" data-id="d-1-r5" data-marks="1"> (a) final range \(0\lt K\lt0.281\)</label></li>
+<li><label><input type="checkbox" data-id="d-1-r6" data-marks="2"> (b) \(K_v=4\) including \(1/T\)</label></li>
+<li><label><input type="checkbox" data-id="d-1-r7" data-marks="1"> (b) \(e_{ss}=0.25\)</label></li>
+</ul></div>
+</div>
+
+<div class="q" id="q2">
+<p><strong>B2.</strong> <span class="mk">(8 marks)</span> An analog lead controller \(D(s)=\dfrac{4(s+2)}{s+8}\) is to be implemented with \(T=0.1\) s.</p>
+<p class="part"><strong>(a)</strong> Find \(D(z)\) by the bilinear transformation in the form \(K_d\dfrac{z-z_0}{z-p_0}\). <span class="mk">[3]</span></p>
+<p class="part"><strong>(b)</strong> Find the pole-zero matched \(D(z)=\alpha\dfrac{z-z_1}{z-p_1}\) with the DC gain matched. Give \(\alpha\). <span class="mk">[2]</span></p>
+<p class="part"><strong>(c)</strong> Write the direct-programming difference equation for your answer to (a), with input \(e(k)\) and output \(u(k)\). If \(e(k)=1\) for \(k\ge0\) (and 0 before), find \(u(0)\) and \(u(1)\). <span class="mk">[3]</span></p>
+<div class="answers">
+<span class="num" data-id="d-2a-gain" data-ans="22/7"><label>\(K_d=\) <input type="text" inputmode="decimal"></label><span class="key"></span></span>
+<span class="num" data-id="d-2a-zero" data-ans="9/11"><label>\(z_0=\) <input type="text" inputmode="decimal"></label><span class="key"></span></span>
+<span class="num" data-id="d-2a-pole" data-ans="3/7"><label>\(p_0=\) <input type="text" inputmode="decimal"></label><span class="key"></span></span>
+<span class="num" data-id="d-2b-alpha" data-ans="3.03786"><label>\(\alpha=\) <input type="text" inputmode="decimal"></label><span class="key"></span></span>
+<span class="num" data-id="d-2c-u0" data-ans="22/7"><label>\(u(0)=\) <input type="text" inputmode="decimal"></label><span class="key"></span></span>
+<span class="num" data-id="d-2c-u1" data-ans="94/49"><label>\(u(1)=\) <input type="text" inputmode="decimal"></label><span class="key"></span></span>
+</div>
+<div class="sol" hidden><h4>Worked solution</h4>
+<p><strong>(a)</strong> \(\frac2T=20\), \(s=20\frac{z-1}{z+1}\) <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=7" data-pages="c56:7-8">pp. 7–8</a>. Then \(s+2=\frac{22z-18}{z+1}\) and \(s+8=\frac{28z-12}{z+1}\), and the \((z+1)\) cancels:</p>
+\[D(z)=\frac{4(22z-18)}{28z-12}=\frac{22z-18}{7z-3}=\frac{22}{7}\cdot\frac{z-0.8182}{z-0.4286}.\]
+<p><strong>\(K_d=3.143\), \(z_0=0.8182\), \(p_0=0.4286\)</strong>. DC check: \(D(1)=\frac{4}{4}=1=D(s{=}0)=\frac{4\cdot2}{8}\) ✓.</p>
+<p><strong>(b)</strong> \(z_1=e^{-0.2}=0.8187\), \(p_1=e^{-0.8}=0.4493\). Since \(n=m\) there is no zero at infinity, so no \((z+1)\) factor <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=14" data-pages="c56:14-15">pp. 14–15</a>. DC: \(\alpha\frac{1-0.8187}{1-0.4493}=1\), so <strong>\(\alpha=\frac{0.5507}{0.1813}=3.038\)</strong>.</p>
+<p><strong>(c)</strong> Divide by \(7z\): \(D=\dfrac{\frac{22}{7}-\frac{18}{7}z^{-1}}{1-\frac37z^{-1}}\). Direct programming <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=106" data-pages="c56:104-107">pp. 104–107</a>:</p>
+\[u(k)=\tfrac37u(k-1)+\tfrac{22}{7}e(k)-\tfrac{18}{7}e(k-1).\]
+<p>\(u(0)=\frac{22}{7}=\mathbf{3.143}\). \(u(1)=\frac37\cdot\frac{22}{7}+\frac{22}{7}-\frac{18}{7}=\frac{66}{49}+\frac{28}{49}=\frac{94}{49}=\mathbf{1.918}\). (It decays toward the DC gain 1, the lead "kick" you expect.)</p>
+<div class="pit">Common slips: writing \(-\frac37u(k-1)\) (the denominator sign must flip); using \(2/T=2\); adding a \((z+1)\) in (b) even though \(n=m\).</div>
+<ul class="rubric">
+<li><label><input type="checkbox" data-id="d-2-r1" data-marks="1"> (a) substitution with \(2/T=20\)</label></li>
+<li><label><input type="checkbox" data-id="d-2-r2" data-marks="2"> (a) \(K_d\), \(z_0\), \(p_0\) correct</label></li>
+<li><label><input type="checkbox" data-id="d-2-r3" data-marks="1"> (b) mapped zero and pole, no \((z+1)\)</label></li>
+<li><label><input type="checkbox" data-id="d-2-r4" data-marks="1"> (b) \(\alpha=3.04\)</label></li>
+<li><label><input type="checkbox" data-id="d-2-r5" data-marks="2"> (c) difference equation with correct signs</label></li>
+<li><label><input type="checkbox" data-id="d-2-r6" data-marks="1"> (c) \(u(0)\), \(u(1)\)</label></li>
+</ul></div>
+</div>
+
+<div class="q" id="q3">
+<p><strong>B3.</strong> <span class="mk">(10 marks)</span> A unity-feedback loop has a digital controller \(C(z)\) in front of</p>
+\[G_{ZAS}(z)=\frac{0.25(z+0.8)}{(z-1)(z-0.5)}.\]
+<p>The reference is a unit step.</p>
+<p class="part"><strong>(a)</strong> Show that \(G_{cl}(z)=z^{-1}\) satisfies the design conditions, and find \(C(z)\). <span class="mk">[3]</span></p>
+<p class="part"><strong>(b)</strong> For the design in (a), find the control signal \(u(k)\) for \(k=0,\dots,3\). Explain what happens to the continuous output between samples. <span class="mk">[3]</span></p>
+<p class="part"><strong>(c)</strong> Design a ripple-free controller using \(G_{cl}(z)=Kz^{-1}(1+0.8z^{-1})\). Find \(K\) and \(C(z)\), and give \(y(1)\) and \(u(0)\). <span class="mk">[4]</span></p>
+<div class="answers">
+<span class="num" data-id="d-3b-u1" data-ans="-5.2"><label>(b) \(u(1)=\) <input type="text" inputmode="decimal"></label><span class="key"></span></span>
+<span class="num" data-id="d-3b-u2" data-ans="4.16"><label>(b) \(u(2)=\) <input type="text" inputmode="decimal"></label><span class="key"></span></span>
+<span class="num" data-id="d-3c-K" data-ans="5/9"><label>(c) \(K=\) <input type="text" inputmode="decimal"></label><span class="key"></span></span>
+<span class="num" data-id="d-3c-y1" data-ans="5/9"><label>(c) \(y(1)=\) <input type="text" inputmode="decimal"></label><span class="key"></span></span>
+<span class="num" data-id="d-3c-u0" data-ans="20/9"><label>(c) \(u(0)=\) <input type="text" inputmode="decimal"></label><span class="key"></span></span>
+</div>
+<div class="sol" hidden><h4>Worked solution</h4>
+<p><strong>(a)</strong> Check the four conditions <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=51" data-pages="c56:51-56">pp. 51–56</a>:</p>
+<ol>
+<li>Relative degree: the plant's is 1, and \(z^{-1}\)'s is 1 ✓.</li>
+<li>The plant zero \(-0.8\) is inside the circle ✓.</li>
+<li>The pole at \(z=1\) is marginal; \(1-z^{-1}=\frac{z-1}{z}\) contains it ✓.</li>
+<li>\(G_{cl}(1)=1\) ✓.</li>
+</ol>
+\[C=\frac{1}{G_{ZAS}}\cdot\frac{z^{-1}}{1-z^{-1}}=\frac{(z-1)(z-0.5)}{0.25(z+0.8)}\cdot\frac{1}{z-1}=\mathbf{\frac{4(z-0.5)}{z+0.8}}.\]
+<p>The plant already has an integrator, so \(C\) needs none.</p>
+<p><strong>(b)</strong> \(U=\dfrac{G_{cl}}{G_{ZAS}}R=\dfrac{4(z-0.5)}{z+0.8}\), so \(u=4,\ -5.2,\ 4.16,\ -3.328,\dots\), i.e. \(u(k)=-5.2(-0.8)^{k-1}\) for \(k\ge1\). \(C\) cancels the plant zero at \(-0.8\), so \(u\) keeps alternating and only decays slowly. The samples give \(y(k)=1\) for \(k\ge1\), but the continuous output <strong>ripples between samples</strong> (Example 5.8 <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=66" data-pages="c56:66-67">pp. 66–67</a>).</p>
+<p><strong>(c)</strong> Ripple-free means \(G_{cl}\) keeps <em>all</em> plant zeros, so that \(u\) settles in finitely many steps <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=73" data-pages="c56:73-77">pp. 73–77</a>. From \(G_{cl}(1)=K(1+0.8)=1\), <strong>\(K=1/1.8=5/9=0.5556\)</strong>. Then</p>
+\[1-G_{cl}=\frac{z^2-\frac59z-\frac49}{z^2}=\frac{(z-1)(z+\frac49)}{z^2},\qquad C=\frac{G_{cl}}{G_{ZAS}(1-G_{cl})}=\mathbf{\frac{20}{9}\cdot\frac{z-0.5}{z+0.4444}}.\]
+<p>\(Y=G_{cl}R\) gives \(y=0,\ \tfrac59,\ 1,\ 1\), so <strong>\(y(1)=0.5556\)</strong>. \(U=\frac{G_{cl}}{G_{ZAS}}R=\frac{20}{9}(1-0.5z^{-1})\) gives \(u=\tfrac{20}{9},\ -\tfrac{10}{9},\ 0,\ 0\), so <strong>\(u(0)=2.222\)</strong>. \(u\) reaches 0 (the plant integrator holds \(y=1\)), so there is no ripple. The cost is one extra sample to settle, and a gentler control signal.</p>
+<div class="pit">Common slips: \(K=1/0.8\) (the condition is \(G_{cl}(1)=K(1+0.8)=1\)); saying (a) is ripple-free because \(y(k)=1\) at the samples; adding an integrator to \(C\) for a type-1 plant.</div>
+<ul class="rubric">
+<li><label><input type="checkbox" data-id="d-3-r1" data-marks="1"> (a) four conditions checked</label></li>
+<li><label><input type="checkbox" data-id="d-3-r2" data-marks="2"> (a) \(C(z)=4(z-0.5)/(z+0.8)\)</label></li>
+<li><label><input type="checkbox" data-id="d-3-r3" data-marks="2"> (b) \(u(k)=4,-5.2,4.16,-3.33\)</label></li>
+<li><label><input type="checkbox" data-id="d-3-r4" data-marks="1"> (b) ripple explained (cancelled zero at \(-0.8\), \(u\) does not settle)</label></li>
+<li><label><input type="checkbox" data-id="d-3-r5" data-marks="1"> (c) \(K=5/9\)</label></li>
+<li><label><input type="checkbox" data-id="d-3-r6" data-marks="2"> (c) \(C(z)\) correct</label></li>
+<li><label><input type="checkbox" data-id="d-3-r7" data-marks="1"> (c) \(y(1)=0.556\) and \(u(0)=2.22\), with \(u\to0\)</label></li>
+</ul></div>
+</div>
+
+<div class="box" id="result" hidden></div>
+</div>
+<!--PAPER-END-->
+<p class="mk">Other papers: <a href="quiz-03-mock-c.html">Mock C</a> · <a href="quiz-03-mock-b.html">Mock B (worked steps)</a> · <a href="quiz-03-primer.html">Primer</a></p>
+</main>
+
+<script>
+// Source-page pop-ups: data-pages="c56:73-74" shows quiz3-pages/<stem>-pNNN.jpg
+(() => {
+  const STEM = { c56: 'lecture-notes-chapters-05-06', c14: 'lecture-notes-weeks-01-04' };
+  const NAME = { c56: 'Ch 5–6 notes', c14: 'Weeks 1–4 notes (Ch 4)' };
+  const dlg = document.createElement('dialog'); dlg.className = 'pages'; document.body.append(dlg);
+  dlg.addEventListener('click', e => { if (e.target === dlg || e.target.matches('.close')) dlg.close(); });
+  document.querySelectorAll('a.src[data-pages]').forEach(a => a.addEventListener('click', e => {
+    e.preventDefault();
+    const [k, r] = a.dataset.pages.split(':'); const [p, q] = r.split('-').map(Number);
+    const figs = []; for (let i = p; i <= (q || p); i++)
+      figs.push(`<figure><img loading="lazy" src="quiz3-pages/${STEM[k]}-p${String(i).padStart(3, '0')}.jpg" alt="${NAME[k]} page ${i}"></figure>`);
+    dlg.innerHTML = `<div class="bar"><span><strong>${NAME[k]}, p. ${r.replace('-', '–')}</strong> · <a href="${a.getAttribute('href')}">open PDF</a></span><button type="button" class="close">Close</button></div>` + figs.join('');
+    dlg.showModal(); dlg.scrollTop = 0;
+  }));
+})();
+// Exam engine: timed, answers locked until Finish, then auto-mark MCQs/boxes + self-marked rubric.
+(() => {
+  const KEY = document.title.replace(/\W+/g, '-').toLowerCase() + '-v1';
+  const LIMIT = 45 * 60 * 1000;
+  let st = { start: null, done: false, mcq: {}, num: {}, rub: {} };
+  try { st = Object.assign(st, JSON.parse(localStorage.getItem(KEY)) || {}); } catch (e) {}
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} };
+  const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+  const val = s => { s = String(s).trim().replace(/\s/g, '').replace('−', '-'); if (/^-?\d*\.?\d+\/-?\d*\.?\d+$/.test(s)) { const [a, b] = s.split('/').map(Number); return a / b; } return s === '' ? NaN : Number(s); };
+  const paper = $('.paper'), clock = $('#clock'), startB = $('#start'), finB = $('#finish');
+
+  // restore answers
+  $$('.mcq').forEach(q => q.querySelectorAll('input').forEach(r => {
+    r.checked = st.mcq[q.dataset.id] === r.value;
+    r.onchange = () => { st.mcq[q.dataset.id] = r.value; save(); };
+  }));
+  $$('.num').forEach(n => { const i = n.querySelector('input'); i.value = st.num[n.dataset.id] || ''; i.oninput = () => { st.num[n.dataset.id] = i.value; save(); }; });
+  $$('.rubric input').forEach(c => { c.checked = !!st.rub[c.dataset.id]; c.onchange = () => { st.rub[c.dataset.id] = c.checked; save(); total(); }; });
+
+  function total() {
+    if (!st.done) return;
+    let mcq = 0, mcqMax = 0, rub = 0, rubMax = 0;
+    $$('.mcq').forEach(q => { mcqMax += +q.dataset.marks; if (st.mcq[q.dataset.id] === q.dataset.key) mcq += +q.dataset.marks; });
+    $$('.rubric input').forEach(c => { rubMax += +c.dataset.marks; if (c.checked) rub += +c.dataset.marks; });
+    $('#total').textContent = `${mcq + rub}/${mcqMax + rubMax}`;
+    const r = $('#result'); r.hidden = false;
+    r.innerHTML = `<strong>Score ${mcq + rub}/${mcqMax + rubMax}.</strong> Section A (auto-marked): ${mcq}/${mcqMax}. Section B (your rubric ticks): ${rub}/${rubMax}. Green boxes match the key; red ones show the key beside them. Tick a rubric line only if your written working shows it. Then redo every wrong part on paper without looking.`;
+  }
+  function finish() {
+    st.done = true; save(); clearInterval(timer);
+    finB.hidden = true; startB.hidden = true; clock.textContent = 'Marked';
+    $$('.mcq').forEach(q => {
+      q.querySelectorAll('input').forEach(r => { r.disabled = true; const l = r.closest('label');
+        if (r.value === q.dataset.key) l.classList.add('right'); else if (r.checked) l.classList.add('wrong'); });
+    });
+    $$('.num').forEach(n => {
+      const i = n.querySelector('input'); i.disabled = true;
+      const v = val(i.value), a = val(n.dataset.ans), ok = !isNaN(v) && Math.abs(v - a) <= 0.006 * Math.abs(a) + 1e-9;
+      n.classList.add(ok ? 'right' : 'wrong');
+      n.querySelector('.key').textContent = ok ? '✓' : `✗ key ${+a.toPrecision(4)}`;
+    });
+    $$('.sol').forEach(s => s.hidden = false);
+    window.MathJax?.typesetPromise?.().catch(() => {});
+    total();
+  }
+  let timer = null;
+  function tick() {
+    const left = LIMIT - (Date.now() - st.start);
+    if (left <= 0) { clock.textContent = '00:00'; finish(); return; }
+    const m = Math.floor(left / 60000), s = Math.floor(left / 1000) % 60;
+    clock.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    clock.classList.toggle('low', left < 5 * 60000);
+  }
+  function begin() {
+    paper.hidden = false; startB.hidden = true; finB.hidden = false;
+    if (st.done) { finish(); return; }
+    tick(); timer = setInterval(tick, 1000);
+  }
+  startB.onclick = () => { if (!st.start) { st.start = Date.now(); save(); } begin(); };
+  let armed = false;
+  finB.onclick = () => {
+    if (!armed) { armed = true; finB.textContent = 'Click again to confirm'; setTimeout(() => { armed = false; finB.textContent = 'Finish & mark'; }, 4000); return; }
+    finish();
+  };
+  $('#reset').onclick = () => {
+    if ($('#reset').dataset.armed !== '1') { $('#reset').dataset.armed = '1'; $('#reset').textContent = 'Click again to erase answers'; setTimeout(() => { $('#reset').dataset.armed = ''; $('#reset').textContent = 'Reset'; }, 4000); return; }
+    st = { start: null, done: false, mcq: {}, num: {}, rub: {} }; save(); location.reload();
+  };
+  if (st.start) begin();
+})();
+</script>
+</body>
+</html>

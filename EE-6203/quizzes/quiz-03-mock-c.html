@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="EE6203 Quiz 3 Mock C: a full 45-minute paper in the real format (4 MCQs + 3 written calculation questions on Ch 4-6). Answers stay locked until you finish; then the paper marks itself and shows worked solutions with a rubric.">
+<title>EE6203 Quiz 3 Mock C</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+  options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+};
+</script>
+<script async src="vendor/mathjax/tex-mml-chtml.js" onerror="document.getElementById('math-warning').hidden=false"></script>
+<style>
+:root {
+  color-scheme: light dark;
+  --bg:#f7f8fb; --surface:#fff; --surface-2:#eef3fb; --text:#18202c; --muted:#5f6b7a;
+  --border:#d8dee9; --accent:#245ec7; --accent-soft:#e8f0ff; --ok:#167a3e; --ok-soft:#e5f6ec; --bad:#b3261e; --bad-soft:#fdecea;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#10141b; --surface:#171d26; --surface-2:#202a38; --text:#edf2f8; --muted:#aab4c2;
+    --border:#344052; --accent:#8bb5ff; --accent-soft:#1e3558; --ok:#6fd49a; --ok-soft:#143323; --bad:#ff8a80; --bad-soft:#3b1d1b;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:#10141b; --surface:#171d26; --surface-2:#202a38; --text:#edf2f8; --muted:#aab4c2;
+  --border:#344052; --accent:#8bb5ff; --accent-soft:#1e3558; --ok:#6fd49a; --ok-soft:#143323; --bad:#ff8a80; --bad-soft:#3b1d1b;
+}
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.62; }
+a { color:var(--accent); }
+header.bar { position:sticky; top:0; z-index:5; display:flex; flex-wrap:wrap; align-items:center; gap:.6rem 1rem; padding:.6rem 16px; background:var(--surface); border-bottom:1px solid var(--border); }
+header.bar h1 { font-size:1rem; margin:0; flex:1 1 auto; }
+#clock { font-variant-numeric:tabular-nums; font-weight:700; font-size:1.1rem; }
+#clock.low { color:var(--bad); }
+#total { font-weight:700; color:var(--ok); }
+main { max-width:860px; margin:0 auto; padding:1.2rem 16px 4rem; }
+h2 { border-bottom:2px solid var(--border); padding-bottom:.3rem; display:flex; justify-content:space-between; gap:1rem; margin-top:2.2rem; }
+h2 small, .mk { color:var(--muted); font-weight:400; font-size:.9rem; }
+.box { border-left:4px solid var(--accent); background:var(--accent-soft); padding:.7rem 1rem; border-radius:0 10px 10px 0; margin:1rem 0; }
+.paper[hidden] { display:none; }
+.q { border:1px solid var(--border); background:var(--surface); border-radius:12px; padding:.8rem 1rem; margin:1rem 0; }
+.q .part { margin:.7rem 0 .2rem; }
+.mcq label { display:block; padding:.35rem .6rem; margin:.25rem 0; border:1px solid var(--border); border-radius:8px; cursor:pointer; }
+.mcq label:hover { border-color:var(--accent); }
+.mcq label.right { border-color:var(--ok); background:var(--ok-soft); }
+.mcq label.wrong { border-color:var(--bad); background:var(--bad-soft); }
+.answers { display:flex; flex-wrap:wrap; gap:.4rem 1.2rem; margin:.5rem 0; padding:.5rem .7rem; border:1px dashed var(--border); border-radius:8px; }
+.answers::before { content:"Final answers:"; color:var(--muted); font-size:.9rem; width:100%; }
+.num input { width:7.5rem; padding:.3rem .5rem; border:1px solid var(--border); border-radius:8px; background:var(--bg); color:var(--text); font:inherit; }
+.num.right input { border-color:var(--ok); background:var(--ok-soft); }
+.num.wrong input { border-color:var(--bad); background:var(--bad-soft); }
+.num .key { font-size:.85rem; margin-left:.3rem; }
+.num.right .key { color:var(--ok); } .num.wrong .key { color:var(--bad); }
+.sol { border-left:4px solid var(--ok); background:var(--ok-soft); color:var(--text); padding:.6rem 1rem; border-radius:0 10px 10px 0; margin:.8rem 0; }
+.sol[hidden] { display:none; }
+.sol h4 { margin:.2rem 0 .4rem; color:var(--ok); }
+.pit { border-left:4px solid var(--bad); background:var(--bad-soft); padding:.5rem .9rem; border-radius:0 10px 10px 0; margin:.6rem 0; }
+.rubric { list-style:none; padding:0; margin:.6rem 0 0; border-top:1px dashed var(--border); padding-top:.5rem; }
+.rubric li { margin:.2rem 0; }
+.rubric::before { content:"Mark yourself (tick what your working shows):"; display:block; font-weight:650; margin-bottom:.2rem; }
+button { font:inherit; padding:.35rem .9rem; border:1px solid var(--border); border-radius:8px; background:var(--surface-2); color:var(--text); cursor:pointer; }
+button:hover { border-color:var(--accent); }
+button.primary { border-color:var(--accent); background:var(--accent-soft); font-weight:650; }
+table.tp { border-collapse:collapse; margin:.5rem 0; font-size:.95rem; }
+table.tp td, table.tp th { border:1px solid var(--border); padding:.3rem .6rem; }
+.mjx-container { overflow-x:auto; overflow-y:hidden; max-width:100%; }
+a.src { white-space:nowrap; }
+dialog.pages { width:min(920px,96vw); max-height:92vh; border:1px solid var(--border); border-radius:12px; background:var(--surface); color:var(--text); padding:0; }
+dialog.pages::backdrop { background:rgb(0 0 0 / .55); }
+dialog.pages .bar { position:sticky; top:0; display:flex; justify-content:space-between; align-items:center; gap:1rem; padding:.6rem 1rem; background:var(--surface-2); border-bottom:1px solid var(--border); }
+dialog.pages figure { margin:1rem; }
+dialog.pages img { width:100%; height:auto; border:1px solid var(--border); border-radius:6px; background:#fff; }
+#math-warning { background:var(--bad-soft); color:var(--bad); padding:.6rem 1rem; }
+#result[hidden] { display:none; }
+</style>
+</head>
+<body>
+<div id="math-warning" hidden>Equations could not load. Keep this file next to its <code>vendor/mathjax/</code> folder.</div>
+<header class="bar">
+  <h1>EE6203 Quiz 3 · Mock C</h1>
+  <span id="clock">45:00</span>
+  <span id="total"></span>
+  <button id="start" class="primary">Start the 45-min paper</button>
+  <button id="finish" hidden>Finish &amp; mark</button>
+  <button id="reset">Reset</button>
+</header>
+<main>
+<div class="box"><strong>Real-paper format (unofficial reconstruction).</strong> Section A: 4 MCQs, choose one answer each (3 marks each). Section B: 3 structured questions; show all working on paper and type the key final numbers into the boxes. <strong>40 marks, 45 minutes</strong>, closed book, calculator allowed. Nothing is marked or shown until you press <em>Finish &amp; mark</em> or the timer runs out. Then the MCQs and boxes mark themselves, the worked solutions open, and you tick the rubric against your written working.<br>
+<small>Why this shape: Wen confirmed MCQs plus written questions for Quiz 3 (Week 12 lecture), his Quiz 1 this term was one calculation plus four MCQs, and three seniors recall three calculation questions (Jury K-range, s→z mapping, direct design). See <a href="quiz-03-intel.md">quiz-03-intel.md</a>. Numbers are new and verified by <code>quiz-03-mock-cd-check.py</code>. Answers: 3–4 significant figures or an exact fraction.</small></div>
+
+<!--PAPER-START-->
+<div class="paper" hidden>
+<details class="q"><summary><strong>Transform pairs provided</strong> (as on the real paper)</summary>
+<table class="tp">
+<tr><th>\(X(s)\)</th><th>\(X(z)\)</th></tr>
+<tr><td>\(\dfrac1s\)</td><td>\(\dfrac{z}{z-1}\)</td></tr>
+<tr><td>\(\dfrac1{s^2}\)</td><td>\(\dfrac{Tz}{(z-1)^2}\)</td></tr>
+<tr><td>\(\dfrac1{s+a}\)</td><td>\(\dfrac{z}{z-e^{-aT}}\)</td></tr>
+<tr><td>\(\dfrac{a}{s(s+a)}\)</td><td>\(\dfrac{(1-e^{-aT})z}{(z-1)(z-e^{-aT})}\)</td></tr>
+<tr><td>\(\dfrac{a}{s^2(s+a)}\)</td><td>\(\dfrac{z\big[(aT-1+e^{-aT})z+(1-e^{-aT}-aTe^{-aT})\big]}{a(z-1)^2(z-e^{-aT})}\)</td></tr>
+</table>
+<p class="mk">The ZOH \(\dfrac{1-e^{-Ts}}{s}\) and the z-transform properties are <em>not</em> provided.</p>
+</details>
+
+<h2>Section A · Multiple choice <small>12 marks</small></h2>
+
+<div class="q mcq" data-id="c-a1" data-key="B" data-marks="3">
+<p><strong>A1.</strong> The closed-loop characteristic polynomial \(P(z)=a_0z^3+a_1z^2+a_2z+a_3\) (\(a_0\gt0\)) is tested with the Jury criterion. Which condition must hold at \(z=-1\)?</p>
+<label><input type="radio" name="c-a1" value="A"> (A) \(P(-1)\gt0\)</label>
+<label><input type="radio" name="c-a1" value="B"> (B) \(P(-1)\lt0\)</label>
+<label><input type="radio" name="c-a1" value="C"> (C) \(|P(-1)|\lt a_0\)</label>
+<label><input type="radio" name="c-a1" value="D"> (D) \(P(-1)=0\) is acceptable, since a pole on the unit circle is marginally stable</label>
+<div class="sol" hidden><h4>Answer: B</h4>The rule is \((-1)^nP(-1)\gt0\) <a class="src" href="../resources/lecture-notes-weeks-01-04.pdf#page=166" data-pages="c14:164-166">pp. 164–166</a>. For odd \(n=3\) this is \(P(-1)\lt0\). Reason: with all roots inside the circle, each factor \((-1-p_i)\) is negative for a real root (and a conjugate pair gives a positive product), so the sign is \((-1)^n\). (D) is wrong in this course: stable means strictly inside the unit circle.</div>
+</div>
+
+<div class="q mcq" data-id="c-a2" data-key="D" data-marks="3">
+<p><strong>A2.</strong> An analog controller \(D(s)\) is discretised. Which statement is correct?</p>
+<label><input type="radio" name="c-a2" value="A"> (A) The bilinear rule maps each pole by \(z=e^{sT}\), so its poles equal the pole-zero matched poles.</label>
+<label><input type="radio" name="c-a2" value="B"> (B) Pole-zero matching needs no gain factor, because \(e^{0}=1\) keeps the DC gain automatically.</label>
+<label><input type="radio" name="c-a2" value="C"> (C) In the bilinear rule you must add a factor \((z+1)\) by hand for each zero of \(D(s)\) at infinity.</label>
+<label><input type="radio" name="c-a2" value="D"> (D) The bilinear rule maps the whole left half s-plane into the unit disc, so a stable \(D(s)\) gives a stable \(D(z)\) with \(D(z)\big|_{z=1}=D(s)\big|_{s=0}\).</label>
+<div class="sol" hidden><h4>Answer: D</h4>\(s=\frac2T\frac{z-1}{z+1}\) sends \(\mathrm{Re}\,s\lt0\) to \(|z|\lt1\), and \(z=1\) to \(s=0\), so stability and DC gain carry over with no extra factor <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=7" data-pages="c56:7-8">pp. 7–8</a>. (A) describes pole-zero matching, not bilinear. Bilinear poles differ (frequency warping). (B) is wrong: matching the poles and zeros changes the gain, so \(\alpha\) is fixed by the DC gain <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=14" data-pages="c56:14-15">pp. 14–15</a>. (C) is wrong: the substitution creates the \((z+1)\) factors by itself; adding them by hand is the pole-zero matching rule.</div>
+</div>
+
+<div class="q mcq" data-id="c-a3" data-key="A" data-marks="3">
+<p><strong>A3.</strong> In direct design, \(C(z)=\dfrac{G_{cl}(z)}{G(z)\,[1-G_{cl}(z)]}\). The plant \(G(z)\) has a pole at \(z=1.2\). To keep the loop internally stable you must make sure that</p>
+<label><input type="radio" name="c-a3" value="A"> (A) \(1-G_{cl}(z)\) has a zero at \(z=1.2\)</label>
+<label><input type="radio" name="c-a3" value="B"> (B) \(G_{cl}(z)\) has a zero at \(z=1.2\)</label>
+<label><input type="radio" name="c-a3" value="C"> (C) \(C(z)\) has a zero at \(z=1.2\) so that it cancels the plant pole</label>
+<label><input type="radio" name="c-a3" value="D"> (D) nothing extra: \(G_{cl}(1)=1\) is enough</label>
+<div class="sol" hidden><h4>Answer: A</h4>Condition (iii) <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=53" data-pages="c56:51-56">pp. 51–56</a>: unstable plant poles must be zeros of \(1-G_{cl}\). Then the factor \((z-1.2)\) cancels inside the formula and \(C\) has no zero there. (C) is exactly the cancellation that hides an unstable mode. (B) is the rule for unstable plant <em>zeros</em>, condition (ii).</div>
+</div>
+
+<div class="q mcq" data-id="c-a4" data-key="C" data-marks="3">
+<p><strong>A4.</strong> A 4th-order controller has all four poles clustered near \(z=0.9\) and must run on a processor with short word length. Which implementation is most appropriate?</p>
+<label><input type="radio" name="c-a4" value="A"> (A) Direct programming, because it uses the original coefficients without rounding them</label>
+<label><input type="radio" name="c-a4" value="B"> (B) Standard programming, because using the fewest delays removes coefficient sensitivity</label>
+<label><input type="radio" name="c-a4" value="C"> (C) Series or parallel programming with 1st/2nd-order sections, because pole errors grow when poles are clustered</label>
+<label><input type="radio" name="c-a4" value="D"> (D) Any form works equally well: sensitivity depends only on the sampling period</label>
+<div class="sol" hidden><h4>Answer: C</h4>A pole's error is \(|\Delta p_i|=\left|\sum_j\frac{p_i^{\,n-j}}{\prod_{k\ne i}(p_i-p_k)}\Delta a_j\right|\) <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=117" data-pages="c56:116-119">pp. 116–119</a>. Clustered poles make the product of differences tiny, so small coefficient errors move the poles a lot. Breaking \(C\) into low-order sections keeps each section's polynomial short <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=120" data-pages="c56:120-125">pp. 120–125</a>. Direct and standard programming both use the full high-order coefficients. Standard programming saves memory, not accuracy.</div>
+</div>
+
+<h2>Section B · Structured questions <small>28 marks</small></h2>
+
+<div class="q" id="q1">
+<p><strong>B1.</strong> <span class="mk">(10 marks)</span> A unity-feedback loop has a digital gain \(K\), a ZOH, and the plant \(G_p(s)=\dfrac{1}{s(s+2)}\). The sampling period is \(T=0.2\) s.</p>
+<p class="part"><strong>(a)</strong> Show that the open-loop pulse transfer function is \(G(z)=\dfrac{K(b_1z+b_0)}{(z-1)(z-e^{-0.4})}\) and find \(b_1\), \(b_0\). <span class="mk">[3]</span></p>
+<p class="part"><strong>(b)</strong> Use the Jury test to find the range of \(K\) for closed-loop stability. <span class="mk">[5]</span></p>
+<p class="part"><strong>(c)</strong> With \(K=4\), find \(K_v\) and the steady-state error to a unit ramp. <span class="mk">[2]</span></p>
+<div class="answers">
+<span class="num" data-id="c-1a-b1" data-ans="0.017580"><label>\(b_1=\) <input type="text" inputmode="decimal"></label><span class="key"></span></span>
+<span class="num" data-id="c-1a-b0" data-ans="0.015388"><label>\(b_0=\) <input type="text" inputmode="decimal"></label><span class="key"></span></span>
+<span class="num" data-id="c-1b-kmax" data-ans="21.4245"><label>upper limit of \(K\) = <input type="text" inputmode="decimal"></label><span class="key"></span></span>
+<span class="num" data-id="c-1c-kv" data-ans="2"><label>\(K_v=\) <input type="text" inputmode="decimal"></label><span class="key"></span></span>
+<span class="num" data-id="c-1c-ess" data-ans="0.5"><label>\(e_{ss}=\) <input type="text" inputmode="decimal"></label><span class="key"></span></span>
+</div>
+<div class="sol" hidden><h4>Worked solution</h4>
+<p><strong>(a)</strong> The ZOH gives \(G(z)=(1-z^{-1})\,\mathcal Z\!\left\{\dfrac{K}{s^2(s+2)}\right\}\). Write \(\dfrac{K}{s^2(s+2)}=\dfrac K2\cdot\dfrac{2}{s^2(s+2)}\) to use the table row with \(a=2\), \(aT=0.4\), \(e^{-0.4}=0.6703\):</p>
+\[\mathcal Z\!\left\{\frac{2}{s^2(s+2)}\right\}=\frac{z\,[0.07032z+0.06155]}{2(z-1)^2(z-0.6703)}.\]
+<p>Multiply by \(\frac{z-1}{z}\cdot\frac K2\): \(G(z)=\dfrac{K(0.07032z+0.06155)}{4(z-1)(z-0.6703)}=\dfrac{K(0.01758z+0.01539)}{(z-1)(z-0.6703)}\). Same method as Ex 4.8 <a class="src" href="../resources/lecture-notes-weeks-01-04.pdf#page=174" data-pages="c14:174-175">pp. 174–175</a>.</p>
+<p><strong>(b)</strong> \(P(z)=(z-1)(z-0.6703)+K(0.01758z+0.01539)=z^2+(0.01758K-1.6703)z+(0.6703+0.01539K)\). For \(n=2\) the three conditions are enough <a class="src" href="../resources/lecture-notes-weeks-01-04.pdf#page=166" data-pages="c14:164-166">pp. 164–166</a>:</p>
+<ul>
+<li>\(|a_2|\lt a_0\): \(-1\lt0.6703+0.01539K\lt1\) → \(-108.6\lt K\lt21.42\).</li>
+<li>\(P(1)=0.03297K\gt0\) → \(K\gt0\).</li>
+<li>\(n\) even, \(P(-1)\gt0\): \(1+1.6703+0.6703-0.00219K=3.3406-0.00219K\gt0\) → \(K\lt1524\).</li>
+</ul>
+<p>Intersection: <strong>\(0\lt K\lt21.42\)</strong>. At \(K=21.42\) the poles are a complex pair on \(|z|=1\).</p>
+<p><strong>(c)</strong> \(K_v=\dfrac1T\lim_{z\to1}(1-z^{-1})G(z)=\dfrac{1}{0.2}\cdot\dfrac{K(0.03297)}{0.3297}=\dfrac K2\) <a class="src" href="../resources/lecture-notes-weeks-01-04.pdf#page=186" data-pages="c14:186-187">pp. 186–187</a>. At \(K=4\) (inside the stable range ✓): <strong>\(K_v=2\), \(e_{ss}=1/K_v=0.5\)</strong>. Cross-check: the continuous loop \(K/(s(s+2))\) also has \(K_v=K/2\); a ZOH does not change \(K_v\).</p>
+<div class="pit">Common slips: forgetting the \(\frac K2\) when using the \(\frac{a}{s^2(s+a)}\) row; using \(\frac{a}{s(s+a)}\) (no ZOH integrator); dropping \(1/T\) in \(K_v\) (gives 0.4 instead of 2).</div>
+<ul class="rubric">
+<li><label><input type="checkbox" data-id="c-1-r1" data-marks="1"> (a) ZOH written as \((1-z^{-1})\mathcal Z\{G_p/s\}\)</label></li>
+<li><label><input type="checkbox" data-id="c-1-r2" data-marks="1"> (a) table row used with the right scaling (\(K/2\), \(a=2\))</label></li>
+<li><label><input type="checkbox" data-id="c-1-r3" data-marks="1"> (a) \(b_1\approx0.0176\), \(b_0\approx0.0154\)</label></li>
+<li><label><input type="checkbox" data-id="c-1-r4" data-marks="1"> (b) characteristic equation correct</label></li>
+<li><label><input type="checkbox" data-id="c-1-r5" data-marks="3"> (b) all three conditions correct (1 mark each)</label></li>
+<li><label><input type="checkbox" data-id="c-1-r6" data-marks="1"> (b) final range \(0\lt K\lt21.4\)</label></li>
+<li><label><input type="checkbox" data-id="c-1-r7" data-marks="1"> (c) \(K_v=2\) including \(1/T\)</label></li>
+<li><label><input type="checkbox" data-id="c-1-r8" data-marks="1"> (c) \(e_{ss}=0.5\)</label></li>
+</ul></div>
+</div>
+
+<div class="q" id="q2">
+<p><strong>B2.</strong> <span class="mk">(8 marks)</span> The continuous system \(G(s)=\dfrac{s+2}{(s+1)(s+4)}\) is to be implemented digitally with \(T=0.2\) s.</p>
+<p class="part"><strong>(a)</strong> Find the strictly proper pole-zero matched \(G(z)=\alpha\,\dfrac{(\cdots)}{(\cdots)}\) with the DC gain matched. Give \(\alpha\). <span class="mk">[3]</span></p>
+<p class="part"><strong>(b)</strong> Find \(G(z)\) by the bilinear transformation and verify its DC gain. <span class="mk">[3]</span></p>
+<p class="part"><strong>(c)</strong> Implement your answer to (b) by <em>standard</em> programming: \(h(k)=x(k)+c_1h(k-1)+c_2h(k-2)\), \(y(k)=d_0h(k)+d_1h(k-1)+d_2h(k-2)\). Give \(c_1\), \(c_2\), \(d_0\). <span class="mk">[2]</span></p>
+<div class="answers">
+<span class="num" data-id="c-2a-alpha" data-ans="0.151389"><label>\(\alpha=\) <input type="text" inputmode="decimal"></label><span class="key"></span></span>
+<span class="num" data-id="c-2b-a1" data-ans="96/77"><label>\(c_1=\) <input type="text" inputmode="decimal"></label><span class="key"></span></span>
+<span class="num" data-id="c-2b-a2" data-ans="-27/77"><label>\(c_2=\) <input type="text" inputmode="decimal"></label><span class="key"></span></span>
+<span class="num" data-id="c-2b-b0" data-ans="6/77"><label>\(d_0=\) <input type="text" inputmode="decimal"></label><span class="key"></span></span>
+</div>
+<div class="sol" hidden><h4>Worked solution</h4>
+<p><strong>(a)</strong> Map each pole and zero by \(z=e^{sT}\) <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=14" data-pages="c56:14-17">pp. 14–17</a>: zero \(e^{-0.4}=0.6703\); poles \(e^{-0.2}=0.8187\), \(e^{-0.8}=0.4493\). Here \(n-m=1\), so a strictly proper result adds \(n-m-1=0\) factors \((z+1)\):</p>
+\[G(z)=\alpha\frac{z-0.6703}{(z-0.8187)(z-0.4493)}.\]
+<p>DC gain: \(G(s{=}0)=\frac{2}{4}=0.5\). So \(\alpha\dfrac{0.3297}{(0.1813)(0.5507)}=0.5\), giving <strong>\(\alpha=0.1514\)</strong>.</p>
+<p><strong>(b)</strong> \(\frac2T=10\), so \(s=10\frac{z-1}{z+1}\) <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=7" data-pages="c56:7-8">pp. 7–8</a>. Then \(s+2=\frac{12z-8}{z+1}\), \(s+1=\frac{11z-9}{z+1}\), \(s+4=\frac{14z-6}{z+1}\):</p>
+\[G(z)=\frac{(12z-8)(z+1)}{(11z-9)(14z-6)}=\frac{2(3z-2)(z+1)}{(11z-9)(7z-3)}=\frac{6z^2+2z-4}{77z^2-96z+27}.\]
+<p>DC: \(G(1)=\frac{6+2-4}{77-96+27}=\frac48=0.5\) ✓. (Poles \(0.818\), \(0.429\): close to the matched \(0.819\), \(0.449\); the faster pole is warped more.)</p>
+<p><strong>(c)</strong> Divide top and bottom by \(77z^2\): \(G=\dfrac{\frac{6}{77}+\frac{2}{77}z^{-1}-\frac{4}{77}z^{-2}}{1-\frac{96}{77}z^{-1}+\frac{27}{77}z^{-2}}\). Standard programming <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=108" data-pages="c56:108-110">pp. 108–110</a> flips the denominator signs in the recursion:</p>
+\[h(k)=x(k)+1.2468\,h(k-1)-0.3506\,h(k-2),\qquad y(k)=0.07792\,h(k)+0.02597\,h(k-1)-0.05195\,h(k-2).\]
+<p>So <strong>\(c_1=96/77=1.2468\), \(c_2=-27/77=-0.3506\), \(d_0=6/77=0.0779\)</strong>, with 2 delays.</p>
+<div class="pit">Common slips: adding a \((z+1)\) in (a). That is the <em>proper</em> version, \(\alpha=0.0757\). Forgetting to normalise by 77 in (c). Keeping \(-96/77\) in the recursion instead of flipping it to \(+96/77\).</div>
+<ul class="rubric">
+<li><label><input type="checkbox" data-id="c-2-r1" data-marks="1"> (a) mapped zero and poles</label></li>
+<li><label><input type="checkbox" data-id="c-2-r2" data-marks="1"> (a) no \((z+1)\) factor, with the \(n-m-1\) reason</label></li>
+<li><label><input type="checkbox" data-id="c-2-r3" data-marks="1"> (a) \(\alpha=0.151\)</label></li>
+<li><label><input type="checkbox" data-id="c-2-r4" data-marks="1"> (b) substitution with \(2/T=10\)</label></li>
+<li><label><input type="checkbox" data-id="c-2-r5" data-marks="1"> (b) correct \(G(z)\)</label></li>
+<li><label><input type="checkbox" data-id="c-2-r6" data-marks="1"> (b) DC check \(=0.5\)</label></li>
+<li><label><input type="checkbox" data-id="c-2-r7" data-marks="2"> (c) both standard-programming equations with correct signs and normalisation</label></li>
+</ul></div>
+</div>
+
+<div class="q" id="q3">
+<p><strong>B3.</strong> <span class="mk">(10 marks)</span> A unity-feedback system has a digital controller \(C(z)\) in front of a ZOH and plant with</p>
+\[G_{ZAS}(z)=\frac{0.5(z+0.4)}{(z-1.5)(z-0.2)}.\]
+<p>The reference is a unit step.</p>
+<p class="part"><strong>(a)</strong> Can the desired closed loop \(G_{cl}(z)=z^{-1}\) be used? Check every design condition and justify. <span class="mk">[3]</span></p>
+<p class="part"><strong>(b)</strong> Find the lowest-order \(G_{cl}(z)=a_0z^{-1}+a_1z^{-2}\) that satisfies all the conditions. <span class="mk">[3]</span></p>
+<p class="part"><strong>(c)</strong> Find \(C(z)\) and the output \(y(k)\) for \(k=0,1,2,3\). Comment on the response. <span class="mk">[4]</span></p>
+<div class="answers">
+<span class="num" data-id="c-3b-a0" data-ans="2.5"><label>\(a_0=\) <input type="text" inputmode="decimal"></label><span class="key"></span></span>
+<span class="num" data-id="c-3b-a1" data-ans="-1.5"><label>\(a_1=\) <input type="text" inputmode="decimal"></label><span class="key"></span></span>
+<span class="num" data-id="c-3c-y1" data-ans="2.5"><label>\(y(1)=\) <input type="text" inputmode="decimal"></label><span class="key"></span></span>
+<span class="num" data-id="c-3c-y2" data-ans="1"><label>\(y(2)=\) <input type="text" inputmode="decimal"></label><span class="key"></span></span>
+</div>
+<div class="sol" hidden><h4>Worked solution</h4>
+<p><strong>(a)</strong> The four conditions <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=51" data-pages="c56:51-56">pp. 51–56</a>:</p>
+<ol>
+<li>Realisable: \(G_{ZAS}\) has relative degree \(2-1=1\); \(z^{-1}\) has relative degree 1 ✓.</li>
+<li>Zeros of \(G_{ZAS}\) outside the circle must appear in \(G_{cl}\): the only zero is \(-0.4\), inside ✓.</li>
+<li>Unstable poles of \(G_{ZAS}\) must be zeros of \(1-G_{cl}\): \(1-z^{-1}=\frac{z-1}{z}\) is zero only at \(z=1\), <strong>not at 1.5 ✗</strong>.</li>
+<li>\(G_{cl}(1)=1\) ✓.</li>
+</ol>
+<p><strong>No.</strong> \(C\) would contain a zero at 1.5 that cancels the unstable plant pole, which leaves a hidden unstable mode, so the loop is not internally stable.</p>
+<p><strong>(b)</strong> Two unknowns, two conditions. From (iv), \(G_{cl}(1)=a_0+a_1=1\). From (iii), \(1-G_{cl}(1.5)=0\), i.e. \(1-\frac{a_0}{1.5}-\frac{a_1}{2.25}=0\), or \(1.5a_0+a_1=2.25\). Subtracting gives \(0.5a_0=1.25\), so <strong>\(a_0=2.5\), \(a_1=-1.5\)</strong>. Check: \(1-G_{cl}=\frac{z^2-2.5z+1.5}{z^2}=\frac{(z-1)(z-1.5)}{z^2}\) ✓. Relative degree is still 1 ✓.</p>
+<p><strong>(c)</strong> \(C=\dfrac{G_{cl}}{G_{ZAS}(1-G_{cl})}=\dfrac{2.5z-1.5}{z^2}\cdot\dfrac{(z-1.5)(z-0.2)}{0.5(z+0.4)}\cdot\dfrac{z^2}{(z-1)(z-1.5)}\), so</p>
+\[C(z)=\frac{5(z-0.6)(z-0.2)}{(z-1)(z+0.4)}.\]
+<p>The \((z-1.5)\) cancels inside the formula, between the plant and \(1-G_{cl}\), so \(C\) itself has no zero at 1.5. \(Y=G_{cl}R=(2.5z^{-1}-1.5z^{-2})\frac{z}{z-1}\), which gives <strong>\(y=0,\ 2.5,\ 1,\ 1\)</strong>. The output settles in 2 samples (both closed-loop poles at \(z=0\)) but overshoots by 150 %. That is the price of stabilising an unstable plant with a deadbeat-type design.</p>
+<div class="pit">Common slips: answering "yes" in (a) because \(G_{cl}(1)=1\); putting the 1.5 condition on \(G_{cl}\) instead of \(1-G_{cl}\); writing \(1-G_{cl}(1.5)\) with \(1.5^{-1}\) but forgetting \(1.5^{-2}=1/2.25\).</div>
+<ul class="rubric">
+<li><label><input type="checkbox" data-id="c-3-r1" data-marks="1"> (a) conditions (i), (ii), (iv) checked</label></li>
+<li><label><input type="checkbox" data-id="c-3-r2" data-marks="1"> (a) condition (iii) identified as failing (pole 1.5 not a zero of \(1-G_{cl}\))</label></li>
+<li><label><input type="checkbox" data-id="c-3-r3" data-marks="1"> (a) conclusion with the hidden unstable mode reason</label></li>
+<li><label><input type="checkbox" data-id="c-3-r4" data-marks="1"> (b) both equations set up</label></li>
+<li><label><input type="checkbox" data-id="c-3-r5" data-marks="2"> (b) \(a_0=2.5\), \(a_1=-1.5\)</label></li>
+<li><label><input type="checkbox" data-id="c-3-r6" data-marks="2"> (c) \(C(z)\) correct</label></li>
+<li><label><input type="checkbox" data-id="c-3-r7" data-marks="1"> (c) \(y=0,2.5,1,1\)</label></li>
+<li><label><input type="checkbox" data-id="c-3-r8" data-marks="1"> (c) comment: settles in 2 samples, large overshoot</label></li>
+</ul></div>
+</div>
+
+<div class="box" id="result" hidden></div>
+</div>
+<!--PAPER-END-->
+<p class="mk">Other papers: <a href="quiz-03-mock-d.html">Mock D</a> · <a href="quiz-03-mock-b.html">Mock B (worked steps)</a> · <a href="quiz-03-primer.html">Primer</a></p>
+</main>
+
+<script>
+// Source-page pop-ups: data-pages="c56:73-74" shows quiz3-pages/<stem>-pNNN.jpg
+(() => {
+  const STEM = { c56: 'lecture-notes-chapters-05-06', c14: 'lecture-notes-weeks-01-04' };
+  const NAME = { c56: 'Ch 5–6 notes', c14: 'Weeks 1–4 notes (Ch 4)' };
+  const dlg = document.createElement('dialog'); dlg.className = 'pages'; document.body.append(dlg);
+  dlg.addEventListener('click', e => { if (e.target === dlg || e.target.matches('.close')) dlg.close(); });
+  document.querySelectorAll('a.src[data-pages]').forEach(a => a.addEventListener('click', e => {
+    e.preventDefault();
+    const [k, r] = a.dataset.pages.split(':'); const [p, q] = r.split('-').map(Number);
+    const figs = []; for (let i = p; i <= (q || p); i++)
+      figs.push(`<figure><img loading="lazy" src="quiz3-pages/${STEM[k]}-p${String(i).padStart(3, '0')}.jpg" alt="${NAME[k]} page ${i}"></figure>`);
+    dlg.innerHTML = `<div class="bar"><span><strong>${NAME[k]}, p. ${r.replace('-', '–')}</strong> · <a href="${a.getAttribute('href')}">open PDF</a></span><button type="button" class="close">Close</button></div>` + figs.join('');
+    dlg.showModal(); dlg.scrollTop = 0;
+  }));
+})();
+// Exam engine: timed, answers locked until Finish, then auto-mark MCQs/boxes + self-marked rubric.
+(() => {
+  const KEY = document.title.replace(/\W+/g, '-').toLowerCase() + '-v1';
+  const LIMIT = 45 * 60 * 1000;
+  let st = { start: null, done: false, mcq: {}, num: {}, rub: {} };
+  try { st = Object.assign(st, JSON.parse(localStorage.getItem(KEY)) || {}); } catch (e) {}
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} };
+  const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+  const val = s => { s = String(s).trim().replace(/\s/g, '').replace('−', '-'); if (/^-?\d*\.?\d+\/-?\d*\.?\d+$/.test(s)) { const [a, b] = s.split('/').map(Number); return a / b; } return s === '' ? NaN : Number(s); };
+  const paper = $('.paper'), clock = $('#clock'), startB = $('#start'), finB = $('#finish');
+
+  // restore answers
+  $$('.mcq').forEach(q => q.querySelectorAll('input').forEach(r => {
+    r.checked = st.mcq[q.dataset.id] === r.value;
+    r.onchange = () => { st.mcq[q.dataset.id] = r.value; save(); };
+  }));
+  $$('.num').forEach(n => { const i = n.querySelector('input'); i.value = st.num[n.dataset.id] || ''; i.oninput = () => { st.num[n.dataset.id] = i.value; save(); }; });
+  $$('.rubric input').forEach(c => { c.checked = !!st.rub[c.dataset.id]; c.onchange = () => { st.rub[c.dataset.id] = c.checked; save(); total(); }; });
+
+  function total() {
+    if (!st.done) return;
+    let mcq = 0, mcqMax = 0, rub = 0, rubMax = 0;
+    $$('.mcq').forEach(q => { mcqMax += +q.dataset.marks; if (st.mcq[q.dataset.id] === q.dataset.key) mcq += +q.dataset.marks; });
+    $$('.rubric input').forEach(c => { rubMax += +c.dataset.marks; if (c.checked) rub += +c.dataset.marks; });
+    $('#total').textContent = `${mcq + rub}/${mcqMax + rubMax}`;
+    const r = $('#result'); r.hidden = false;
+    r.innerHTML = `<strong>Score ${mcq + rub}/${mcqMax + rubMax}.</strong> Section A (auto-marked): ${mcq}/${mcqMax}. Section B (your rubric ticks): ${rub}/${rubMax}. Green boxes match the key; red ones show the key beside them. Tick a rubric line only if your written working shows it. Then redo every wrong part on paper without looking.`;
+  }
+  function finish() {
+    st.done = true; save(); clearInterval(timer);
+    finB.hidden = true; startB.hidden = true; clock.textContent = 'Marked';
+    $$('.mcq').forEach(q => {
+      q.querySelectorAll('input').forEach(r => { r.disabled = true; const l = r.closest('label');
+        if (r.value === q.dataset.key) l.classList.add('right'); else if (r.checked) l.classList.add('wrong'); });
+    });
+    $$('.num').forEach(n => {
+      const i = n.querySelector('input'); i.disabled = true;
+      const v = val(i.value), a = val(n.dataset.ans), ok = !isNaN(v) && Math.abs(v - a) <= 0.006 * Math.abs(a) + 1e-9;
+      n.classList.add(ok ? 'right' : 'wrong');
+      n.querySelector('.key').textContent = ok ? '✓' : `✗ key ${+a.toPrecision(4)}`;
+    });
+    $$('.sol').forEach(s => s.hidden = false);
+    window.MathJax?.typesetPromise?.().catch(() => {});
+    total();
+  }
+  let timer = null;
+  function tick() {
+    const left = LIMIT - (Date.now() - st.start);
+    if (left <= 0) { clock.textContent = '00:00'; finish(); return; }
+    const m = Math.floor(left / 60000), s = Math.floor(left / 1000) % 60;
+    clock.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    clock.classList.toggle('low', left < 5 * 60000);
+  }
+  function begin() {
+    paper.hidden = false; startB.hidden = true; finB.hidden = false;
+    if (st.done) { finish(); return; }
+    tick(); timer = setInterval(tick, 1000);
+  }
+  startB.onclick = () => { if (!st.start) { st.start = Date.now(); save(); } begin(); };
+  let armed = false;
+  finB.onclick = () => {
+    if (!armed) { armed = true; finB.textContent = 'Click again to confirm'; setTimeout(() => { armed = false; finB.textContent = 'Finish & mark'; }, 4000); return; }
+    finish();
+  };
+  $('#reset').onclick = () => {
+    if ($('#reset').dataset.armed !== '1') { $('#reset').dataset.armed = '1'; $('#reset').textContent = 'Click again to erase answers'; setTimeout(() => { $('#reset').dataset.armed = ''; $('#reset').textContent = 'Reset'; }, 4000); return; }
+    st = { start: null, done: false, mcq: {}, num: {}, rub: {} }; save(); location.reload();
+  };
+  if (st.start) begin();
+})();
+</script>
+</body>
+</html>

@@ -80,6 +80,7 @@ Classmates' messages, paraphrased with no names. The export is kept outside this
 
 - **Mock B** (`quiz-03-mock-b.*`) copies the recalled 3-question shape: Q1 Jury from an open-loop G(z) with K, plus K_v; Q2 bilinear, then pole-zero matching, then direct programming; Q3 "can G_cl = z⁻¹ be used?" for one plant where it can and one where an outside-circle zero forbids it.
 - **Mock A**: `quiz-03-mock-a.*` gives 30 marks in 45 min: Q1 is short items (True/False with a reason, standing in for possible MCQs) plus a Jury gain range; Q2 maps an analog lead controller by bilinear and pole-zero matching and then realises it by standard programming; Q3 is a ripple-free deadbeat design for a type-1 plant. All numbers are new and checked by `quiz-03-check.py`.
+- **Mocks C and D** (`quiz-03-mock-c.html`, `quiz-03-mock-d.html`, added 7 Nov at the learner's request for "the real quiz, no T/F"): full timed papers in the confirmed format. Section A has 4 single-answer MCQs (3 marks each). Section B has the 3 recalled calculation questions: Jury K-range, s→z mapping plus Ch 6 programming, and direct design. Total 40 marks in 45 min (the mark split is a guess). C: 2nd-order Jury from ZOH + K/(s(s+2)); matched + bilinear + standard programming; unstable plant pole, so G_cl = a0 z⁻¹ + a1 z⁻². D: 3rd-order Jury where the b-row binds; lead controller bilinear/matched + direct programming; z⁻¹ design with ripple, then ripple-free. Keys checked by `quiz-03-mock-cd-check.py`.
 
 ## Open items
 
