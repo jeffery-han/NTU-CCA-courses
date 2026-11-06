@@ -140,6 +140,10 @@ for Kk, ess in ((1, 1.0), (2, 0.5)):
                 + Kk * (0.3679 * (r[k-1] if k > 0 else 0) + 0.2642 * (r[k-2] if k > 1 else 0)))
     close(r[-1] - y[-1], ess)
 close(math.sqrt(0.3679 + 0.2642 * 2), 0.947)
+# P1 start-here pole picture: 0.6+0.6j -> 45 deg -> 8 samples/turn, |p|=0.849
+import cmath
+close(360 / math.degrees(cmath.phase(0.6 + 0.6j)), 8); close(abs(0.6 + 0.6j), 0.849)
+close(sum(0.5**k * 2.0**-k for k in range(200)), 2 / (2 - 0.5))   # Z{p^k} = z/(z-p) at z=2
 # P2 bilinear 2/(s+2), T=0.5 -> (z+1)/(3z-1); pole-zero matched alpha = 1 - e^-1
 Cb = sp.simplify((2 / (s + 2)).subs(s, 4 * (z - 1) / (z + 1)))
 assert sp.simplify(Cb - (z + 1) / (3 * z - 1)) == 0
