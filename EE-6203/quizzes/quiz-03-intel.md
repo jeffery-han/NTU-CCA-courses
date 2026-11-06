@@ -64,6 +64,18 @@ These are final-exam patterns, so they show what Wen tends to set from this mate
 - **Question text:** only paraphrased; no numbers were recalled and no answer keys were posted, so there is nothing to correct.
 - **This year differs:** the scope now includes **Ch 6** (implementation), and Wen's 26S1 Quiz 1 mixed MCQs with calculation. Expect the same three calculation types plus possibly short MCQs on Ch 5–6 concepts (lead/lag, 1-DOF/2-DOF, pole placement, programming forms). That last part is a prediction.
 
+### WeChat class group (`EE6203-26S1`, 930 messages, 24 Aug – 6 Nov 2026; exported locally 2026-11-06)
+
+Classmates' messages, paraphrased with no names. The export is kept outside this repo. Nothing here contradicts the official facts above.
+
+- **Quiz 3 logistics:** classmates agree on Sat 7 Nov, 2:30 pm, and the Quiz 1 seating PDF ("Seating Arrangement for Quiz 1 and Quiz 3", the same file as `quiz-01-03-seating-arrangement.pdf`).
+- **Same recollections as ours:** on 5 Nov the Passion阳 RedNote post was shared as "what Quiz 3 will test". On 6 Nov a classmate posted a topic list merged from "three seniors' posts" (an image the export cannot decrypt). It is very likely the three RedNote posts in the table above. Classmates add that the 24/25 and 26S2 sittings had the same shape. No new recollection or question numbers appeared.
+- **The recall pattern repeated in Quiz 2 (LPH, 5 Oct):** right after that quiz, one classmate said anyone who prepared the recalled paper "got full marks … full copy paste of recall". Others gave K = 4.5 and 0.5 for the last part. This is one person's claim and it concerns a different lecturer, but it supports drilling the recalled Quiz 3 shape (Mock B) as the main rehearsal.
+- **Quiz 1 as sat (31 Aug, Wen):** one calculation question plus four MCQs (one student counted three). A shared answer string was "CBCB". This confirms the RedNote Quiz 1 post, so Wen setting MCQs on Quiz 3 is plausible.
+- **Jury table notation:** one classmate could not find where b, c, q are defined. Another pointed to Ch 4 slides 21–22, roughly PDF pp. 164–165 of `resources/lecture-notes-weeks-01-04.pdf` (Table 4-1, general form of the Jury table). You build the table yourself; it is not given.
+- **Tables handout:** a student-made `Tables_讲义全部表格汇总.pdf` (12 pp.) collects the numbered tables from Wen's Weeks 1–4 notes (z-transform Table 2-1, properties 2-2, Table 2-3, 3-1, Jury 4-1 to 4-3, system types 4-4, static error constants 4-5). A classmate said in August that this is what Wen hands out. Wen's Week 12 remark (transform table given, **not** all properties) outranks that claim, so assume the Jury and error-constant tables are **not** provided.
+- **Attendance:** after Quiz 1, one student who had sat it was shown as absent and had to email the lecturer. A classmate said this happened the previous semester too. Hand the paper in personally and make sure your attendance is recorded.
+
 ## How the mocks use this
 
 - **Mock B** (`quiz-03-mock-b.*`) copies the recalled 3-question shape: Q1 Jury from an open-loop G(z) with K, plus K_v; Q2 bilinear, then pole-zero matching, then direct programming; Q3 "can G_cl = z⁻¹ be used?" for one plant where it can and one where an outside-circle zero forbids it.
