@@ -98,6 +98,73 @@ dialog.pages img { width:100%; height:auto; border:1px solid var(--border); bord
 
 <section id="s1" data-title="1 · Ch 4 stability & error">
 <h2>1 · Ch 4: z-plane stability and steady-state error</h2>
+<details class="box" id="s1-start">
+<summary><strong>Start here: what "stable" and "steady-state error" mean, and where every rule below comes from</strong> (about 8 minutes)</summary>
+<p><strong>1.0.1 The picture: a pole is a pattern that repeats every sample.</strong> In a sampled system, a pole at \(z=p\) adds a term \(p^k\) to the output at sample \(k\). Four sample values of \(p\) show everything:</p>
+<table>
+<tr><th>Pole \(p\)</th><th>\(p^k\) for \(k=0,1,2,3,4\)</th><th>Behaviour</th></tr>
+<tr><td>\(0.5\)</td><td>\(1,\ 0.5,\ 0.25,\ 0.125,\ 0.06\)</td><td>dies out → stable</td></tr>
+<tr><td>\(-0.5\)</td><td>\(1,\ -0.5,\ 0.25,\ -0.125,\ 0.06\)</td><td>flips sign each sample, still dies out → stable</td></tr>
+<tr><td>\(1\)</td><td>\(1,\ 1,\ 1,\ 1,\ 1\)</td><td>never dies → on the edge</td></tr>
+<tr><td>\(1.2\)</td><td>\(1,\ 1.2,\ 1.44,\ 1.73,\ 2.07\)</td><td>grows forever → unstable</td></tr>
+</table>
+<p>Only the <em>size</em> \(|p|\) decides whether \(p^k\) dies out, so the boundary is the circle \(|z|=1\). It is the same rule as "poles in the left half plane" in continuous time. A continuous pole \(s=\sigma+j\omega\) is sampled as \(z=e^{sT}\), whose size is \(|z|=e^{\sigma T}\). That is \(\lt1\) exactly when \(\sigma\lt0\) <a class="src" href="../resources/lecture-notes-weeks-01-04.pdf#page=146" data-pages="c14:146-147">pp. 146–147</a>.</p>
+<p><strong>Which poles?</strong> Those of the <em>closed</em> loop. With unity feedback (\(E=R-Y\), \(Y=GH\,E\)), solving for \(Y\) gives \(\dfrac{Y}{R}=\dfrac{GH}{1+GH}\). The closed-loop poles are the roots of \(1+GH(z)=0\). Write \(GH=N/D\) and multiply by \(D\): the <strong>characteristic equation</strong> is \(P(z)=D(z)+N(z)=0\). In Example 4.8 <a class="src" href="../resources/lecture-notes-weeks-01-04.pdf#page=174" data-pages="c14:174">p. 174</a>, \(D=(z-0.3679)(z-1)=z^2-1.3679z+0.3679\) and \(N=K(0.3679z+0.2642)\), so \(P(z)=z^2+(0.3679K-1.3679)z+(0.3679+0.2642K)\).</p>
+<p><strong>1.0.2 Symbols.</strong></p>
+<table>
+<tr><th>Symbol</th><th>Meaning</th><th>Who sets it</th></tr>
+<tr><td>\(T\)</td><td>sampling period (s)</td><td>given, or a design choice</td></tr>
+<tr><td>\(GH(z)\)</td><td>open-loop pulse transfer function: hold + plant + sensor, sampled</td><td>given / computed with the ZOH</td></tr>
+<tr><td>\(P(z)=a_0z^n+\dots+a_n\)</td><td>characteristic polynomial, numerator of \(1+GH\); its roots are the closed-loop poles</td><td>follows from \(GH\)</td></tr>
+<tr><td>\(n\)</td><td>degree of \(P\) (number of closed-loop poles)</td><td>follows from \(GH\)</td></tr>
+<tr><td>\(K\)</td><td>adjustable loop gain</td><td>you choose it</td></tr>
+<tr><td>\(e(k)=r(k)-y(k)\), \(e_{ss}\)</td><td>tracking error, and its value as \(k\to\infty\)</td><td>result</td></tr>
+<tr><td>\(K_p,K_v,K_a\)</td><td>error constants for step, ramp, acceleration</td><td>result</td></tr>
+</table>
+<p><strong>1.0.3 Why each Jury condition holds (\(n=2\)).</strong> Write the roots as \(z_1,z_2\), so \(P(z)=a_0(z-z_1)(z-z_2)\). Suppose both are inside the circle and see what that forces.</p>
+<ul>
+<li><strong>(1) \(|a_2|\lt a_0\).</strong> Expanding, \(a_2/a_0=z_1z_2\). Two numbers smaller than 1 in size have a product smaller than 1 in size.</li>
+<li><strong>(2) \(P(1)\gt0\).</strong> \(P(1)=a_0(1-z_1)(1-z_2)\). A real root inside the circle is \(\lt1\), so \(1-z_i\gt0\). A complex pair gives \((1-z_1)(1-\bar z_1)=|1-z_1|^2\gt0\). Either way the product is positive.</li>
+<li><strong>(3) \(P(-1)\) has sign \((-1)^n\).</strong> \(P(-1)=a_0(-1-z_1)(-1-z_2)=(-1)^2a_0(1+z_1)(1+z_2)\), and \((1+z_1)(1+z_2)\gt0\) by the same argument with \(-1\) in place of \(1\). For degree \(n\) you pull out \(n\) minus signs, hence "\(\gt0\) for even \(n\), \(\lt0\) for odd" <a class="src" href="../resources/lecture-notes-weeks-01-04.pdf#page=166" data-pages="c14:166">p. 166</a>.</li>
+</ul>
+<p><em>Why these three are enough for \(n=2\).</em> As \(K\) changes, the roots move continuously. To leave the circle they must cross it, and a 2nd-order polynomial with real coefficients can cross in only three ways. Each way switches one condition off:</p>
+<svg viewBox="0 0 520 170" role="img" aria-label="Unit circle with three crossing points: a real root through plus one, a real root through minus one, and a complex pair through the upper and lower circle" style="width:100%;max-width:520px;color:var(--text)">
+<g fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="110" cy="85" r="65"/><path d="M25 85H195M110 10V160" stroke-dasharray="3 3"/></g>
+<g fill="currentColor" font-size="13" font-family="inherit">
+<circle cx="175" cy="85" r="5"/><circle cx="45" cy="85" r="5"/><circle cx="126" cy="22" r="5"/><circle cx="126" cy="148" r="5"/>
+<text x="180" y="78">+1</text><text x="20" y="78">−1</text>
+<text x="230" y="40">real root through z = +1: P(1) = 0 → (2)</text>
+<text x="230" y="85">real root through z = −1: P(−1) = 0 → (3)</text>
+<text x="230" y="130">complex pair: |z|² = a₂/a₀ = 1 → (1)</text></g>
+</svg>
+<p>From degree 3 on, a complex pair can cross while the <em>product of all</em> roots is still below 1 in size, so (1) no longer catches it. That is the job of the table rows in condition (4) <a class="src" href="../resources/lecture-notes-weeks-01-04.pdf#page=164" data-pages="c14:164-165">pp. 164–165</a>.</p>
+<p><strong>1.0.4 Worked: Example 4.8 <a class="src" href="../resources/lecture-notes-weeks-01-04.pdf#page=174" data-pages="c14:174-175">pp. 174–175</a>.</strong> \(P(z)=z^2+(0.3679K-1.3679)z+(0.3679+0.2642K)\), \(a_0=1\).</p>
+<ul>
+<li>(1) \(|0.3679+0.2642K|\lt1\) → \(-5.1755\lt K\lt2.3925\).</li>
+<li>(2) \(P(1)=1+0.3679K-1.3679+0.3679+0.2642K=0.6321K\gt0\) → \(K\gt0\).</li>
+<li>(3) \(P(-1)=1-0.3679K+1.3679+0.3679+0.2642K=2.7358-0.1037K\gt0\) → \(K\lt26.38\).</li>
+</ul>
+<p>Intersect them: \(0\lt K\lt2.3925\). <em>Check with the picture.</em> The upper limit came from (1), so at \(K=2.3925\) a complex pair should sit on the circle. Indeed \(P=z^2-0.4877z+1\) has roots \(0.2439\pm j0.9698\), of size \(\sqrt{0.2439^2+0.9698^2}=1.000\). At \(K=3\) the size is \(1.077\): unstable. The lower limit came from (2), so at \(K=0\) a root sits at \(z=+1\), which is the plant's own integrator pole with no feedback acting on it.</p>
+<p><strong>1.0.5 Steady-state error, derived.</strong> Once the loop is stable, ask how far \(y\) ends up from \(r\). The error is \(E=R-Y=R-GH\,E\), so \(E(z)=\dfrac{R(z)}{1+GH(z)}\). The final value theorem gives the end value of a sequence: \(e_{ss}=\lim_{z\to1}(1-z^{-1})E(z)\). It is \(z\to1\) because \(z=1\) is \(s=0\): zero frequency, "after everything has settled". Now insert each test input <a class="src" href="../resources/lecture-notes-weeks-01-04.pdf#page=186" data-pages="c14:186-188">pp. 186–188</a>:</p>
+<ul>
+<li><strong>Step</strong> \(R=\dfrac{1}{1-z^{-1}}\). The \((1-z^{-1})\) cancels: \(e_{ss}=\dfrac{1}{1+GH(1)}\). Call \(K_p=\lim_{z\to1}GH(z)\).</li>
+<li><strong>Ramp</strong> \(r(kT)=kT\), so \(R=\dfrac{Tz^{-1}}{(1-z^{-1})^2}\). One \((1-z^{-1})\) cancels and one is left: \(e_{ss}=\lim\dfrac{Tz^{-1}}{(1-z^{-1})+(1-z^{-1})GH}\). At \(z=1\) the first term in the denominator is 0, leaving \(\dfrac{T}{\lim(1-z^{-1})GH}\). Call \(K_v=\lim\dfrac{(1-z^{-1})GH}{T}\), so \(e_{ss}=1/K_v\).</li>
+<li><strong>Acceleration</strong> works the same way with two leftover factors and \(T^2\).</li>
+</ul>
+<p><em>Where the \(1/T\) comes from.</em> The sampled ramp is \(kT\), not \(k\). The \(T\) sits in \(R(z)\), and dividing by it makes \(K_v\) a "per second" quantity that matches the continuous-time \(K_v\). <em>Why the \((1-z^{-1})\) factors matter.</em> Each pole of \(GH\) at \(z=1\) is a discrete integrator. It contributes a factor \(\frac{1}{z-1}\) that cancels one \((1-z^{-1})=\frac{z-1}{z}\). The number of such poles is the <strong>system type</strong>:</p>
+<table>
+<tr><th>Poles of \(GH\) at \(z=1\)</th><th>\(K_p\)</th><th>\(K_v\)</th><th>step \(e_{ss}\)</th><th>ramp \(e_{ss}\)</th></tr>
+<tr><td>0 (type 0)</td><td>finite</td><td>0</td><td>\(\frac1{1+K_p}\)</td><td>\(\infty\)</td></tr>
+<tr><td>1 (type 1)</td><td>\(\infty\)</td><td>finite</td><td>0</td><td>\(\frac1{K_v}\)</td></tr>
+<tr><td>2 (type 2)</td><td>\(\infty\)</td><td>\(\infty\)</td><td>0</td><td>0</td></tr>
+</table>
+<p><strong>1.0.6 Worked: Example 4.8 at \(K=1\), \(T=1\).</strong> It is stable, since \(0\lt1\lt2.3925\). \(G\) has one pole at \(z=1\), so it is type 1 and the step error is 0. For the ramp, \((1-z^{-1})G=\frac{z-1}{z}\cdot\frac{0.3679z+0.2642}{(z-0.3679)(z-1)}=\frac{0.3679z+0.2642}{z(z-0.3679)}\). The \((z-1)\) cancelled, so now set \(z=1\): \(\frac{0.6321}{0.6321}=1\). Divide by \(T=1\) to get \(K_v=1\), so the ramp error is \(e_{ss}=1\).</p>
+<p><em>Verify by running the loop.</em> Step the difference equation with \(r(k)=k\): \(e=0,\ 1,\ 1.63,\ 1.63,\ \dots,\ 0.99\) (\(k=20\)), \(1.000\) (\(k=39\)) ✓. The step error goes \(1,\ 0.63,\ 0,\ -0.15,\ \dots\to0\) ✓. Cross-check: this \(G\) is the ZOH version of \(\frac{K}{s(s+1)}\) at \(T=1\), whose continuous \(K_v=K=1\). Sampling with a ZOH keeps the DC behaviour, so the two agree.</p>
+<div class="pit">Pitfall: the final value theorem only applies to a stable loop. At \(K=3\) the formula would give \(K_v=3\) and \(e_{ss}=0.33\), yet the loop is unstable and the error grows without bound. Always run Jury first.</div>
+<p><strong>Method to remember:</strong> \(P(z)=\) numerator of \(1+GH\) → Jury (1)–(3) for \(n=2\), plus the table for \(n\ge3\) → only if stable: count the poles of \(GH\) at \(z=1\) (the type) → cancel \((1-z^{-1})\) <em>before</em> setting \(z=1\) → divide by \(T\) or \(T^2\).</p>
+<div class="q" data-id="p1s" data-ans="0.5"><p>Check: Example 4.8 with \(K=2\) (\(T=1\)). Find the steady-state error for a unit ramp.</p><input type="text" aria-label="ramp error"> <button class="go">Check</button>
+<div class="why">First, stability: \(0\lt2\lt2.3925\) ✓. Next, \((1-z^{-1})G\to\frac{2(0.6321)}{0.6321}=2\), and \(T=1\), so \(K_v=2\) and \(e_{ss}=1/K_v=0.5\). The poles have size \(\sqrt{0.3679+0.5284}=0.947\), close to the circle, so the error approaches 0.5 slowly.</div></div>
+</details>
 <p><strong>Idea.</strong> Sampling maps \(s\) to \(z=e^{sT}\). The left half s-plane lands inside the unit circle, so a sampled loop is stable iff every closed-loop pole has \(|z|\lt 1\). The Jury test checks this from the coefficients, without finding the roots <a class="src" href="../resources/lecture-notes-weeks-01-04.pdf#page=146" data-pages="c14:146-147">pp. 146–147</a>.</p>
 <p><strong>Jury, for \(P(z)=a_0z^n+\dots+a_n\) with \(a_0\gt0\)</strong> <a class="src" href="../resources/lecture-notes-weeks-01-04.pdf#page=166" data-pages="c14:164-166">pp. 164–166</a>:
 (1) \(|a_n|\lt a_0\); (2) \(P(1)\gt0\); (3) \(P(-1)\gt0\) if \(n\) is even, \(\lt0\) if \(n\) is odd; (4) the table rows \(|b_{n-1}|\gt|b_0|,\dots\). <em>For \(n=2\) you only need (1)–(3).</em></p>

@@ -125,6 +125,21 @@ assert sp.solve(Pp.subs(z, 1), K)[0] == -sp.Rational(1, 10)
 # P1 Kv: GH = 0.1(z+0.9)/((z-1)(z-0.6)), T = 0.1
 Kv = sp.limit((1 - 1 / z) * sp.Rational(1, 10) * (z + sp.Rational(9, 10)) / ((z - 1) * (z - sp.Rational(3, 5))) / sp.Rational(1, 10), z, 1)
 close(Kv, 4.75)
+# P1 start-here: Ex 4.8 boundaries, Kv at K=1 and K=2 (T=1), simulated ramp error
+P48 = z**2 + (sp.Float(0.3679) * K - sp.Float(1.3679)) * z + (sp.Float(0.3679) + sp.Float(0.2642) * K)
+close(sp.expand(P48.subs(z, 1)).coeff(K), 0.6321); close(sp.expand(P48.subs(z, -1)).subs(K, 0), 2.7358)
+close((1 - 0.3679) / 0.2642, 2.3925); close(2.7358 / 0.1037, 26.382)
+rts = sp.Poly(P48.subs(K, 2.3925), z).nroots(); assert all(abs(abs(complex(r)) - 1) < 1e-4 for r in rts)
+assert all(abs(complex(r)) > 1.07 for r in sp.Poly(P48.subs(K, 3), z).nroots())
+for Kk, ess in ((1, 1.0), (2, 0.5)):
+    Kv = sp.limit((1 - 1 / z) * Kk * (sp.Float(0.3679) * z + sp.Float(0.2642)) / ((z - sp.Float(0.3679)) * (z - 1)), z, 1)
+    close(1 / Kv, ess)
+    y = [0.0] * 400; r = list(range(400))
+    for k in range(400):
+        y[k] = (-(0.3679 * Kk - 1.3679) * (y[k-1] if k > 0 else 0) - (0.3679 + 0.2642 * Kk) * (y[k-2] if k > 1 else 0)
+                + Kk * (0.3679 * (r[k-1] if k > 0 else 0) + 0.2642 * (r[k-2] if k > 1 else 0)))
+    close(r[-1] - y[-1], ess)
+close(math.sqrt(0.3679 + 0.2642 * 2), 0.947)
 # P2 bilinear 2/(s+2), T=0.5 -> (z+1)/(3z-1); pole-zero matched alpha = 1 - e^-1
 Cb = sp.simplify((2 / (s + 2)).subs(s, 4 * (z - 1) / (z + 1)))
 assert sp.simplify(Cb - (z + 1) / (3 * z - 1)) == 0
