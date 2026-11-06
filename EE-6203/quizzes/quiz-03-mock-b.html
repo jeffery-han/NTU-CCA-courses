@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Unofficial EE6203 Quiz 3 Mock B in the recalled 3-question shape (Jury, s-to-z mapping, direct design): 30 marks, 45 minutes, answer-free. Work on paper, then export for marking.">
-<title>EE6203 Quiz 3 Mock B</title>
+<meta name="description" content="EE6203 Quiz 3 Mock B worked step by step: Jury K-range and Kv, bilinear and pole-zero matching with direct programming, and when G_cl = z^-1 is allowed. Each step is revealed one at a time with the reason for it, and each part ends with a check.">
+<title>EE6203 Mock B Steps</title>
 <script>
 window.MathJax = {
   tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
@@ -16,17 +16,17 @@ window.MathJax = {
 :root {
   color-scheme: light dark;
   --bg:#f7f8fb; --surface:#fff; --surface-2:#eef3fb; --text:#18202c; --muted:#5f6b7a;
-  --border:#d8dee9; --accent:#245ec7; --accent-soft:#e8f0ff; --ok:#167a3e; --warn:#a15c00; --warn-soft:#fff3e0;
+  --border:#d8dee9; --accent:#245ec7; --accent-soft:#e8f0ff; --ok:#167a3e; --ok-soft:#e5f6ec; --bad:#b3261e; --bad-soft:#fdecea;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg:#10141b; --surface:#171d26; --surface-2:#202a38; --text:#edf2f8; --muted:#aab4c2;
-    --border:#344052; --accent:#8bb5ff; --accent-soft:#1e3558; --ok:#6fd49a; --warn:#ffb74d; --warn-soft:#3a2a12;
+    --border:#344052; --accent:#8bb5ff; --accent-soft:#1e3558; --ok:#6fd49a; --ok-soft:#143323; --bad:#ff8a80; --bad-soft:#3b1d1b;
   }
 }
 :root[data-theme="dark"] {
   --bg:#10141b; --surface:#171d26; --surface-2:#202a38; --text:#edf2f8; --muted:#aab4c2;
-  --border:#344052; --accent:#8bb5ff; --accent-soft:#1e3558; --ok:#6fd49a; --warn:#ffb74d; --warn-soft:#3a2a12;
+  --border:#344052; --accent:#8bb5ff; --accent-soft:#1e3558; --ok:#6fd49a; --ok-soft:#143323; --bad:#ff8a80; --bad-soft:#3b1d1b;
 }
 * { box-sizing:border-box; }
 body { margin:0; background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.62; }
@@ -34,8 +34,6 @@ a { color:var(--accent); }
 .app { display:grid; grid-template-columns:270px minmax(0,1fr); }
 nav { position:sticky; top:0; height:100vh; overflow-y:auto; border-right:1px solid var(--border); background:var(--surface); padding:1rem; }
 nav h1 { font-size:1.05rem; margin:.2rem 0 .6rem; }
-#timer { font-size:2rem; font-variant-numeric:tabular-nums; font-weight:700; }
-#timer.low { color:var(--warn); }
 nav a { display:flex; justify-content:space-between; gap:.5rem; padding:.35rem .5rem; border-radius:8px; text-decoration:none; color:var(--text); font-size:.92rem; }
 nav a:hover { background:var(--accent-soft); color:var(--accent); }
 nav .score { color:var(--muted); font-variant-numeric:tabular-nums; }
@@ -43,21 +41,45 @@ nav .score.done { color:var(--ok); font-weight:700; }
 nav .tools { margin-top:1rem; padding-top:.8rem; border-top:1px solid var(--border); font-size:.9rem; }
 nav .tools a { display:block; }
 main { min-width:0; padding:1.5rem 2rem 4rem; max-width:860px; }
-section { margin-bottom:2.4rem; }
+section { margin-bottom:2.6rem; }
 h2 { border-bottom:2px solid var(--border); padding-bottom:.3rem; display:flex; justify-content:space-between; gap:1rem; }
 h2 small { color:var(--muted); font-weight:400; }
-.rules { border-left:4px solid var(--accent); background:var(--accent-soft); padding:.7rem 1rem; border-radius:0 10px 10px 0; }
-.part { border:1px solid var(--border); background:var(--surface); border-radius:12px; padding:.8rem 1rem; margin:.9rem 0; }
-.part .mk { float:right; color:var(--muted); font-size:.9rem; }
-.tf { display:flex; flex-wrap:wrap; align-items:center; gap:.4rem; margin:.4rem 0 .9rem; }
-button { font:inherit; padding:.35rem .8rem; border:1px solid var(--border); border-radius:8px; background:var(--surface-2); color:var(--text); cursor:pointer; }
+h3 { margin:1.6rem 0 .4rem; }
+.box { border-left:4px solid var(--accent); background:var(--accent-soft); padding:.7rem 1rem; border-radius:0 10px 10px 0; margin:1rem 0; }
+.pit { border-left:4px solid var(--bad); background:var(--bad-soft); padding:.6rem 1rem; border-radius:0 10px 10px 0; margin:.8rem 0; }
+.qtext { border:1px solid var(--border); background:var(--surface); border-radius:12px; padding:.7rem 1rem; }
+.qtext .mk { float:right; color:var(--muted); font-size:.9rem; }
+.steps { counter-reset:step; margin:.8rem 0; }
+.step { border:1px solid var(--border); background:var(--surface); border-radius:12px; padding:.7rem 1rem; margin:.6rem 0; }
+.step[hidden] { display:none; }
+.step > .head { font-weight:650; }
+.step > .head::before { counter-increment:step; content:"Step " counter(step) " · "; color:var(--accent); }
+.step .think { color:var(--muted); font-style:italic; margin:.3rem 0; }
+.step .body { margin-top:.4rem; }
+.step .body[hidden] { display:none; }
+.step .why { border-top:1px dashed var(--border); margin-top:.5rem; padding-top:.4rem; }
+.step .why::before { content:"Why: "; font-weight:650; color:var(--accent); }
+.stepbar { display:flex; gap:.4rem; flex-wrap:wrap; margin:.3rem 0 1rem; }
+.checks { border:2px dashed var(--accent); border-radius:14px; padding:1rem; margin:1.2rem 0; }
+.checks h4 { margin:0 0 .5rem; color:var(--accent); }
+.q { margin:.9rem 0; }
+.q input[type=text] { width:8rem; padding:.4rem .6rem; border:1px solid var(--border); border-radius:8px; background:var(--bg); color:var(--text); font:inherit; }
+button { font:inherit; padding:.35rem .8rem; border:1px solid var(--border); border-radius:8px; background:var(--surface-2); color:var(--text); cursor:pointer; margin:.15rem .2rem .15rem 0; }
 button:hover { border-color:var(--accent); }
-button.chosen { border-color:var(--accent); background:var(--accent); color:var(--bg); }
-label.paper { display:inline-flex; align-items:center; gap:.4rem; margin-right:1rem; color:var(--muted); font-size:.93rem; }
-input[type=text] { padding:.35rem .6rem; border:1px solid var(--border); border-radius:8px; background:var(--bg); color:var(--text); font:inherit; width:min(26rem,100%); }
-textarea { width:100%; min-height:14rem; font:13px/1.5 ui-monospace,Menlo,monospace; background:var(--surface); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:.6rem; }
+button.chosen { border-color:var(--accent); background:var(--accent-soft); }
+button.next { border-color:var(--accent); }
+.fb { margin-top:.4rem; padding:.5rem .8rem; border-radius:8px; }
+.fb.ok { background:var(--ok-soft); color:var(--ok); }
+.fb.bad { background:var(--bad-soft); color:var(--bad); }
+.fb .why { color:var(--text); display:block; margin-top:.2rem; }
 .mjx-container { overflow-x:auto; overflow-y:hidden; max-width:100%; }
-#math-warning { background:var(--warn-soft); color:var(--warn); padding:.6rem 1rem; }
+a.src { white-space:nowrap; }
+dialog.pages { width:min(920px,96vw); max-height:92vh; border:1px solid var(--border); border-radius:12px; background:var(--surface); color:var(--text); padding:0; }
+dialog.pages::backdrop { background:rgb(0 0 0 / .55); }
+dialog.pages .bar { position:sticky; top:0; display:flex; justify-content:space-between; align-items:center; gap:1rem; padding:.6rem 1rem; background:var(--surface-2); border-bottom:1px solid var(--border); }
+dialog.pages figure { margin:1rem; }
+dialog.pages img { width:100%; height:auto; border:1px solid var(--border); border-radius:6px; background:#fff; }
+#math-warning { background:var(--bad-soft); color:var(--bad); padding:.6rem 1rem; }
 @media (max-width:860px) {
   .app { grid-template-columns:1fr; }
   nav { position:static; height:auto; border-right:0; border-bottom:1px solid var(--border); }
@@ -70,141 +92,483 @@ textarea { width:100%; min-height:14rem; font:13px/1.5 ui-monospace,Menlo,monosp
 <div id="math-warning" hidden>Equations could not load. Keep this file next to its <code>vendor/mathjax/</code> folder.</div>
 <div class="app">
 <nav>
-  <h1>EE6203 Quiz 3 · Mock B</h1>
-  <div id="timer">45:00</div>
-  <div><button id="t-start">Start</button> <button id="t-pause">Pause</button> <button id="t-reset">Reset</button></div>
-  <div id="toc" style="margin-top:.8rem"></div>
+  <h1>EE6203 Quiz 3 · Mock B, step by step</h1>
+  <div id="toc"></div>
   <div class="tools">
-    <a href="#export">Export answers for marking</a>
     <a href="quiz-03-primer.html">← Primer</a>
-    <a href="quiz-03-mock-a.html">Mock A</a>
-    <a href="#" id="clear">Clear all answers</a>
+    <a href="quiz-03-mock-a.html">Mock A (answer-free, 45 min)</a>
+    <a href="#" id="reset">Reset my progress</a>
   </div>
 </nav>
 <main>
-<div class="rules"><strong>Unofficial practice paper, in the shape students recalled from earlier sittings</strong> (3 calculation questions). 30 marks, 45 minutes, closed book, calculator allowed. Write every derivation <strong>on paper</strong>; that is where the marks are. Tick "done on paper" for each written part, and optionally type your final answer so I can compare. Once time is up, press <em>Export</em> and paste the block into the chat, together with a photo of your working (save it as <code>quizzes/attempts/quiz-03-mock-b-&lt;date&gt;.jpg</code>). There is no answer key on this page.</div>
 
+<div class="box"><strong>How to use this page.</strong> This is Mock B (30 marks, 3 questions, the shape students recalled from earlier sittings) worked out in full. In every part, read the step's <em>Think first</em> prompt and decide the next move yourself, ideally on paper. Then press <em>Show working</em>. The working ends with a <em>Why</em> line that explains the choice. The next step appears only after you open the current one. Each part ends with a check that marks your answer straight away. Your progress is saved in this browser.</div>
+
+<!-- ======================= Q1 ======================= -->
 <section id="q1" data-title="Q1 · Jury K-range">
 <h2>Question 1 <small>10 marks</small></h2>
-<p>A unity-feedback digital loop (sampler, ZOH, plant) has open-loop pulse transfer function
-\[G(z)=\frac{K(0.4261z+0.3608)}{(z-1)(z-0.6065)},\qquad T=1\ \text{s}.\]</p>
-<div class="part" data-part="1a"><span class="mk">7</span>
-<p><strong>(a)</strong> Find the closed-loop characteristic equation and the range of \(K\) for stability.</p>
-<label class="paper"><input type="checkbox" data-paper="1a"> done on paper</label>
-<input type="text" data-final="1a" placeholder="final: CE; K range">
+<div class="qtext">A unity-feedback digital loop (sampler, ZOH, plant) has open-loop pulse transfer function
+\[G(z)=\frac{K(0.4261z+0.3608)}{(z-1)(z-0.6065)},\qquad T=1\ \text{s}.\]
+<span class="mk">7</span><strong>(a)</strong> Find the closed-loop characteristic equation and the range of \(K\) for stability.<br>
+<span class="mk">3</span><strong>(b)</strong> Find \(K_v\) as a function of \(K\), and the steady-state error to a unit ramp when \(K=0.5\).</div>
+<p>This is the same kind of problem as Example 4.8 <a class="src" href="../resources/lecture-notes-weeks-01-04.pdf#page=174" data-pages="c14:174-175">pp. 174–175</a>.</p>
+
+<h3 id="q1a">Part (a): characteristic equation and K-range</h3>
+<div class="steps" data-part="1a">
+<div class="step"><div class="head">Translate the question</div>
+<p class="think">Think first: which equation do the closed-loop poles satisfy, and what does "stable" mean for them in the z-plane?</p>
+<div class="body">
+<p>Here \(G(z)\) already includes the ZOH, so nothing needs to be sampled. With unity feedback the closed loop is \(\dfrac{G}{1+G}\). Its poles are the roots of</p>
+\[1+G(z)=0.\]
+<p>A sampled system is stable when every closed-loop pole lies strictly inside the unit circle, \(|z|\lt1\). So the task is: <em>for which K are both roots of \(1+G=0\) inside the unit circle?</em></p>
+<p class="why">\(z=e^{sT}\) sends the left half s-plane to the inside of the unit circle, so "\(|z|\lt1\)" plays the role that "Re \(s\lt0\)" plays for continuous systems.</p>
+</div></div>
+
+<div class="step"><div class="head">Build the characteristic polynomial P(z)</div>
+<p class="think">Think first: \(1+G=0\) still contains a fraction. What do you multiply by?</p>
+<div class="body">
+<p>Multiply \(1+G=0\) by the denominator \((z-1)(z-0.6065)\):</p>
+\[(z-1)(z-0.6065)+K(0.4261z+0.3608)=0.\]
+<p>Expand the first product: \((z-1)(z-0.6065)=z^2-1.6065z+0.6065\). Then collect powers of \(z\):</p>
+\[P(z)=z^2+(0.4261K-1.6065)\,z+(0.6065+0.3608K)=0.\]
+<p>Label the coefficients as in the Jury test: \(a_0=1\), \(a_1=0.4261K-1.6065\), \(a_2=0.6065+0.3608K\). The degree is \(n=2\).</p>
+<p class="why">The roots of P are exactly the closed-loop poles. Each coefficient is linear in K, so every Jury condition will come out as a simple inequality in K.</p>
+<div class="pit"><strong>Common slip:</strong> writing \((z-1)(z-0.6065)+K=0\). The K multiplies the whole numerator \(0.4261z+0.3608\), so K appears in both \(a_1\) and \(a_2\).</div>
+</div></div>
+
+<div class="step"><div class="head">Choose the test: Jury for n = 2</div>
+<p class="think">Think first: how many Jury conditions does a 2nd-order polynomial need, and what are they?</p>
+<div class="body">
+<p>For \(P(z)=a_0z^n+\dots+a_n\) with \(a_0\gt0\) <a class="src" href="../resources/lecture-notes-weeks-01-04.pdf#page=166" data-pages="c14:164-166">pp. 164–166</a>:</p>
+<p>(1) \(|a_n|\lt a_0\); &nbsp; (2) \(P(1)\gt0\); &nbsp; (3) \(P(-1)\gt0\) for even \(n\) (\(\lt0\) for odd \(n\)); &nbsp; (4) the table rows.</p>
+<p>For \(n=2\) the table adds nothing, so <strong>conditions (1)–(3) are the whole test.</strong></p>
+<p class="why">Finding the roots for every K would be slow. Jury reads stability straight from the coefficients, which is what an exam with a free parameter K needs.</p>
+</div></div>
+
+<div class="step"><div class="head">Condition (1): |a₂| &lt; a₀</div>
+<p class="think">Think first: write the double inequality and solve both sides for K.</p>
+<div class="body">
+\[-1\lt 0.6065+0.3608K\lt 1\]
+<p>Right side: \(0.3608K\lt 0.3935\Rightarrow K\lt 1.0905\). Left side: \(0.3608K\gt-1.6065\Rightarrow K\gt-4.452\).</p>
+\[\Rightarrow\quad -4.452\lt K\lt 1.0905.\]
+<p class="why">For a quadratic with \(a_0=1\), \(a_2\) is the product of the two roots. If the roots are a complex pair, \(a_2=|z|^2\), so \(|a_2|\lt1\) is exactly "the pair is inside the circle".</p>
+</div></div>
+
+<div class="step"><div class="head">Condition (2): P(1) &gt; 0</div>
+<p class="think">Think first: substitute \(z=1\) and collect the K terms.</p>
+<div class="body">
+\[P(1)=1+(0.4261K-1.6065)+(0.6065+0.3608K)=0.7869K\gt0\ \Rightarrow\ K\gt0.\]
+<p>The constants cancel: \(1-1.6065+0.6065=0\). That always happens here, because the open loop has a pole at \(z=1\).</p>
+<p class="why">P(z) is positive for large real z. If \(P(1)\le0\), P has to cross zero somewhere at \(z\ge1\), which means a real root on or outside the circle.</p>
+</div></div>
+
+<div class="step"><div class="head">Condition (3): P(−1) &gt; 0 (n is even)</div>
+<p class="think">Think first: which sign do you need for n = 2? Then substitute \(z=-1\).</p>
+<div class="body">
+\[P(-1)=1-(0.4261K-1.6065)+(0.6065+0.3608K)=3.2130-0.0653K\gt0\ \Rightarrow\ K\lt 49.2.\]
+<p class="why">This is the same idea at the other end of the real axis: it rules out a real root at \(z\le-1\). For even n, \((-1)^n=+1\), so the requirement is \(P(-1)\gt0\).</p>
+</div></div>
+
+<div class="step"><div class="head">Intersect the three ranges, then sanity-check</div>
+<p class="think">Think first: which of the three conditions is the tightest at each end?</p>
+<div class="body">
+<p>The conditions give \((-4.452,\,1.0905)\), \((0,\infty)\) and \((-\infty,\,49.2)\). Their overlap is</p>
+\[\boxed{0\lt K\lt 1.0905}\]
+<p>The lower end comes from \(P(1)\) and the upper end from \(|a_2|\lt1\).</p>
+<p><strong>Check by sampling:</strong> take \(K=0.5\), inside the range. Then \(P=z^2-1.3935z+0.7869\). The discriminant \(1.3935^2-4(0.7869)\lt0\), so the roots are a complex pair with \(|z|=\sqrt{0.7869}=0.887\lt1\). Stable ✓. At \(K=1.0905\), \(a_2=1\), so the pair sits exactly on \(|z|=1\): the loop is on the edge of oscillation.</p>
+<p class="why">A single test value inside the range catches sign slips. The boundary check confirms that the binding condition is the one you think it is.</p>
+<div class="pit"><strong>Common slip:</strong> giving \(K\lt49.2\) as the answer. Every condition must hold at once, so the tightest bound wins.</div>
+</div></div>
 </div>
-<div class="part" data-part="1b"><span class="mk">3</span>
-<p><strong>(b)</strong> Find \(K_v\) as a function of \(K\), and the steady-state error to a unit ramp when \(K=0.5\).</p>
-<label class="paper"><input type="checkbox" data-paper="1b"> done on paper</label>
-<input type="text" data-final="1b" placeholder="Kv; e_ss">
+<div class="stepbar"><button type="button" class="showall" data-for="1a">Show all steps of (a)</button></div>
+<div class="checks"><h4>Check (a)</h4>
+<div class="q" data-id="b-1a-pminus" data-choice="F"><p>True or false: for this \(P(z)\), the stability limit comes from \(P(-1)\gt0\), so the upper limit is \(K=49.2\).</p><button data-v="T">True</button><button data-v="F">False</button>
+<div class="why">False. \(P(-1)\gt0\) only gives \(K\lt49.2\). The condition \(|a_2|\lt1\) is tighter and gives \(K\lt1.0905\). The answer is the intersection of all three conditions.</div></div>
+<div class="q" data-id="b-1a-upper" data-ans="1.386"><p>The open loop is changed to \(\dfrac{K(0.4261z+0.3608)}{(z-1)(z-0.5)}\). Only the pole moved. Use condition (1) to find the new upper limit of K (3 s.f.).</p><input type="text" aria-label="upper K"> <button class="go">Check</button>
+<div class="why">Now \(a_2=0.5+0.3608K\lt1\) gives \(K\lt0.5/0.3608=1.386\).</div></div>
+</div>
+
+<h3 id="q1b">Part (b): K<sub>v</sub> and the ramp error</h3>
+<div class="steps" data-part="1b">
+<div class="step"><div class="head">Pick the right error constant</div>
+<p class="think">Think first: a unit ramp input goes with which constant, and what is its formula?</p>
+<div class="body">
+<p>A ramp goes with the velocity constant <a class="src" href="../resources/lecture-notes-weeks-01-04.pdf#page=186" data-pages="c14:186-187">pp. 186–187</a>:</p>
+\[K_v=\lim_{z\to1}\frac{(1-z^{-1})\,G(z)}{T},\qquad e_{ss}=\frac{1}{K_v}.\]
+<p class="why">The open loop has one pole at \(z=1\) (type 1). A type-1 loop follows a ramp with a constant lag, and \(K_v\) measures that lag.</p>
+</div></div>
+<div class="step"><div class="head">Cancel the z = 1 pole, then take the limit</div>
+<p class="think">Think first: rewrite \(1-z^{-1}\) so that it cancels a factor of the denominator.</p>
+<div class="body">
+<p>\(1-z^{-1}=\dfrac{z-1}{z}\), so</p>
+\[(1-z^{-1})G(z)=\frac{K(0.4261z+0.3608)}{z\,(z-0.6065)}.\]
+<p>At \(z=1\): \(\dfrac{K(0.7869)}{1\times0.3935}=2.000K\). Divide by \(T=1\):</p>
+\[\boxed{K_v=2K}\]
+<p class="why">Without the cancellation the limit would be "0/0". The \((z-1)\) factor is the integrator, and removing it leaves a finite number.</p>
+</div></div>
+<div class="step"><div class="head">Plug in K = 0.5 and check</div>
+<p class="think">Think first: is K = 0.5 inside the stable range from (a)? It must be, or \(e_{ss}\) means nothing.</p>
+<div class="body">
+<p>\(0.5\) lies in \(0\lt K\lt1.0905\) ✓. Then \(K_v=1\), so \(\boxed{e_{ss}=1}\) (one unit of lag behind the unit ramp).</p>
+<p><strong>Cross-check:</strong> this \(G(z)\) is the ZOH sampling of \(K/(s(s+0.5))\). The continuous \(K_v=K/0.5=2K\) is the same. A ZOH does not change \(K_v\).</p>
+<p class="why">A steady-state error is only meaningful for a stable loop. Always confirm that the K you were given is in the range first.</p>
+<div class="pit"><strong>Common slip:</strong> leaving out \(1/T\). Here \(T=1\), so nothing changes, but with \(T=0.1\) the answer would be off by a factor of 10.</div>
+</div></div>
+</div>
+<div class="stepbar"><button type="button" class="showall" data-for="1b">Show all steps of (b)</button></div>
+<div class="checks"><h4>Check (b)</h4>
+<div class="q" data-id="b-1b-ess" data-ans="2"><p>Same loop with \(K=0.25\). What is the steady-state error to a unit ramp?</p><input type="text" aria-label="e_ss"> <button class="go">Check</button>
+<div class="why">\(K_v=2(0.25)=0.5\), so \(e_{ss}=1/0.5=2\). K = 0.25 is inside the stable range, so this is valid.</div></div>
 </div>
 </section>
 
+<!-- ======================= Q2 ======================= -->
 <section id="q2" data-title="Q2 · s → z mapping">
 <h2>Question 2 <small>10 marks</small></h2>
-<p>A continuous system \(G(s)=\dfrac{4}{s^2+2s+4}\) is to be approximated digitally with \(T=0.5\) s.</p>
-<div class="part" data-part="2a"><span class="mk">4</span>
-<p><strong>(a)</strong> Find \(G(z)\) by the bilinear transformation. Check the DC gain and whether \(G(z)\) is stable.</p>
-<label class="paper"><input type="checkbox" data-paper="2a"> done on paper</label>
-<input type="text" data-final="2a" placeholder="G(z); stable?">
+<div class="qtext">A continuous system \(G(s)=\dfrac{4}{s^2+2s+4}\) is to be approximated digitally with \(T=0.5\) s.<br>
+<span class="mk">4</span><strong>(a)</strong> Find \(G(z)\) by the bilinear transformation. Check the DC gain and whether \(G(z)\) is stable.<br>
+<span class="mk">3</span><strong>(b)</strong> Find the strictly proper pole-zero matched \(G(z)\), with the DC gain matched.<br>
+<span class="mk">3</span><strong>(c)</strong> Write the difference equation that implements your answer to (a) by <em>direct programming</em>. How many delay elements does it use, and how many would standard programming use?</div>
+
+<h3 id="q2a">Part (a): bilinear transformation</h3>
+<div class="steps" data-part="2a">
+<div class="step"><div class="head">Write down the substitution</div>
+<p class="think">Think first: what replaces s, and what is the number in front at T = 0.5?</p>
+<div class="body">
+<p>The bilinear (Tustin) rule <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=7" data-pages="c56:7-8">pp. 7–8</a> is</p>
+\[s=\frac{2}{T}\,\frac{z-1}{z+1}=4\,\frac{z-1}{z+1}\qquad(T=0.5).\]
+<p class="why">It comes from approximating an integral by trapezoids. It maps the whole left half s-plane into the unit circle, so a stable \(G(s)\) always gives a stable \(G(z)\).</p>
+</div></div>
+<div class="step"><div class="head">Substitute and clear the fractions</div>
+<p class="think">Think first: \(s^2\) brings a \((z+1)^2\) in the denominator. What should you multiply the top and bottom by?</p>
+<div class="body">
+<p>\(s^2=\dfrac{16(z-1)^2}{(z+1)^2}\). Multiply the numerator and the denominator of \(G\) by \((z+1)^2\):</p>
+\[G(z)=\frac{4(z+1)^2}{16(z-1)^2+2\cdot4(z-1)(z+1)+4(z+1)^2}.\]
+<p>Expand each term: \(16z^2-32z+16\), \(\ 8z^2-8\), \(\ 4z^2+8z+4\). Sum: \(28z^2-24z+12\).</p>
+<p class="why">Multiplying by the highest power of \((z+1)\) turns every term into a polynomial in one move. The numerator 4 must be multiplied too, which is where the \((z+1)^2\) on top comes from.</p>
+<div class="pit"><strong>Common slip:</strong> clearing the denominator and leaving the numerator as plain 4. The result then has the wrong DC gain, and the next step catches it.</div>
+</div></div>
+<div class="step"><div class="head">Simplify</div>
+<p class="think">Think first: is there a common factor?</p>
+<div class="body">
+<p>Divide the top and bottom by 4:</p>
+\[\boxed{G(z)=\frac{(z+1)^2}{7z^2-6z+3}}\]
+<p class="why">A clean form makes the checks and part (c) easier.</p>
+</div></div>
+<div class="step"><div class="head">Check the DC gain</div>
+<p class="think">Think first: DC means \(s=0\). Which z does that correspond to?</p>
+<div class="body">
+<p>\(s=0\) means \(z=1\) under the bilinear rule. \(G(1)=\dfrac{4}{7-6+3}=1\), and \(G(0)=\dfrac44=1\) ✓.</p>
+<p class="why">The bilinear map sends \(s=0\) to \(z=1\) exactly, so the DC gain must match. If it doesn't, there is an algebra slip.</p>
+</div></div>
+<div class="step"><div class="head">Check stability</div>
+<p class="think">Think first: you need \(|z|\) of the roots of \(7z^2-6z+3\). Is there a shortcut that avoids solving?</p>
+<div class="body">
+<p>The discriminant is \(36-84\lt0\), so the poles are a complex pair. For a complex pair, \(|z|^2\) equals the product of the roots, \(c/a=3/7\):</p>
+\[|z|=\sqrt{3/7}=0.655\lt1\quad\Rightarrow\quad\text{stable}.\]
+<p class="why">This agrees with what the bilinear map guarantees: \(G(s)\) has poles \(-1\pm j\sqrt3\), which are stable, so \(G(z)\) has to be stable too.</p>
+</div></div>
 </div>
-<div class="part" data-part="2b"><span class="mk">3</span>
-<p><strong>(b)</strong> Find the strictly proper pole-zero matched \(G(z)\), with the DC gain matched.</p>
-<label class="paper"><input type="checkbox" data-paper="2b"> done on paper</label>
-<input type="text" data-final="2b" placeholder="G(z)">
+<div class="stepbar"><button type="button" class="showall" data-for="2a">Show all steps of (a)</button></div>
+<div class="checks"><h4>Check (a)</h4>
+<div class="q" data-id="b-2a-bil" data-ans="1/7"><p>Map \(G(s)=\dfrac{3}{s+3}\) by the bilinear rule with \(T=0.5\). Where is the pole of \(G(z)\)? (A fraction is fine.)</p><input type="text" aria-label="pole"> <button class="go">Check</button>
+<div class="why">\(s=4\frac{z-1}{z+1}\) gives \(G=\frac{3(z+1)}{4(z-1)+3(z+1)}=\frac{3(z+1)}{7z-1}\). The pole is at \(z=1/7\). DC check: \(G(1)=6/6=1=G(0)\) ✓.</div></div>
 </div>
-<div class="part" data-part="2c"><span class="mk">3</span>
-<p><strong>(c)</strong> Write the difference equation that implements your answer to (a) by <em>direct programming</em>. How many delay elements does it use, and how many would standard programming use?</p>
-<label class="paper"><input type="checkbox" data-paper="2c"> done on paper</label>
-<input type="text" data-final="2c" placeholder="y(k) = ...; delay counts">
+
+<h3 id="q2b">Part (b): pole-zero matching</h3>
+<div class="steps" data-part="2b">
+<div class="step"><div class="head">List the poles and zeros of G(s)</div>
+<p class="think">Think first: solve \(s^2+2s+4=0\). How many finite zeros are there?</p>
+<div class="body">
+<p>\(s=-1\pm j\sqrt3\), so \(\zeta\omega_n=1\) and \(\omega_d=\sqrt3=1.732\). There are no finite zeros, so \(n=2\) and \(m=0\).</p>
+<p class="why">Pole-zero matching <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=14" data-pages="c56:14-15">pp. 14–15</a> maps each pole and zero on its own, so you need them listed first.</p>
+</div></div>
+<div class="step"><div class="head">Map the poles with z = e^{sT}</div>
+<p class="think">Think first: a conjugate pair maps to a quadratic. What are its two coefficients?</p>
+<div class="body">
+<p>\(z=e^{(-1\pm j\sqrt3)(0.5)}=e^{-0.5}e^{\pm j0.866}\): radius \(r=e^{-0.5}=0.6065\), angle \(\theta=0.866\) rad. The pair gives \(z^2-2r\cos\theta\,z+r^2\) (Example 5.2 <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=16" data-pages="c56:16-17">pp. 16–17</a>):</p>
+\[z^2-2e^{-0.5}\cos(0.866)\,z+e^{-1}=z^2-0.7859z+0.3679.\]
+<p class="why">\((z-re^{j\theta})(z-re^{-j\theta})=z^2-2r\cos\theta\,z+r^2\). Using it avoids complex arithmetic.</p>
+<div class="pit"><strong>Common slip:</strong> leaving the calculator in degrees. \(\cos(0.866^\circ)\approx1\) gives \(0.6065\times2=1.213\), which is wrong. The angle is \(\omega_dT\) in <em>radians</em>.</div>
+</div></div>
+<div class="step"><div class="head">Place the zeros at z = −1</div>
+<p class="think">Think first: \(G(s)\) has \(n-m=2\) zeros at infinity. How many go to \(-1\) in the <em>strictly proper</em> version?</p>
+<div class="body">
+<p>Zeros at \(s=\infty\) (the highest frequency) map to \(z=-1\) (the highest discrete frequency). The proper version would add \(n-m=2\). The strictly proper version adds \(n-m-1=\mathbf1\):</p>
+\[G(z)=\alpha\,\frac{z+1}{z^2-0.7859z+0.3679}.\]
+<p class="why">Strictly proper means numerator degree &lt; denominator degree. This leaves a one-sample delay, so the computer has one full period to compute \(u(k)\) before it is needed.</p>
+</div></div>
+<div class="step"><div class="head">Match the DC gain to find α</div>
+<p class="think">Think first: what must \(G(z)\) equal at \(z=1\)?</p>
+<div class="body">
+<p>\(G(s=0)=1\), so set \(G(z=1)=1\):</p>
+\[\alpha\cdot\frac{2}{1-0.7859+0.3679}=\alpha\cdot\frac{2}{0.5820}=1\ \Rightarrow\ \alpha=0.2910.\]
+\[\boxed{G(z)=\frac{0.2910\,(z+1)}{z^2-0.7859z+0.3679}}\]
+<p class="why">Mapping the poles and zeros fixes the shape but not the gain. One extra condition is needed, and the usual choice is DC.</p>
+</div></div>
+</div>
+<div class="stepbar"><button type="button" class="showall" data-for="2b">Show all steps of (b)</button></div>
+<div class="checks"><h4>Check (b)</h4>
+<div class="q" data-id="b-2b-same" data-choice="F"><p>True or false: the bilinear and the pole-zero matched \(G(z)\) have the same poles, because both come from the same \(G(s)\).</p><button data-v="T">True</button><button data-v="F">False</button>
+<div class="why">False. Pole-zero matching uses the exact map \(e^{sT}\), giving \(|z|=e^{-0.5}=0.6065\). Bilinear is an approximation and gives \(|z|=\sqrt{3/7}=0.655\). Both are stable and both have DC gain 1, but the poles differ.</div></div>
+<div class="q" data-id="b-2b-alpha" data-ans="0.8647"><p>Pole-zero match \(G(s)=\dfrac{2}{s+2}\) at \(T=1\), strictly proper, with DC gain matched. \(G(z)=\dfrac{\alpha}{z-e^{-2}}\). Find \(\alpha\) (4 d.p.).</p><input type="text" aria-label="alpha"> <button class="go">Check</button>
+<div class="why">\(n-m-1=0\), so no zero is added. \(G(s=0)=1\), so \(G(1)=\alpha/(1-e^{-2})=\alpha/0.8647=1\Rightarrow\alpha=0.8647\).</div></div>
+</div>
+
+<h3 id="q2c">Part (c): direct programming</h3>
+<div class="steps" data-part="2c">
+<div class="step"><div class="head">Rewrite G in powers of z⁻¹ with a leading 1</div>
+<p class="think">Think first: divide by what, so that the denominator starts with exactly 1?</p>
+<div class="body">
+<p>Divide the top and bottom of \(\dfrac{(z+1)^2}{7z^2-6z+3}\) by \(7z^2\):</p>
+\[G=\frac{\tfrac17\,(1+2z^{-1}+z^{-2})}{1-\tfrac67z^{-1}+\tfrac37z^{-2}}.\]
+<p class="why">\(z^{-1}\) means "one sample ago", and that is what a computer can store. A leading 1 in the denominator lets you solve for \(y(k)\) directly.</p>
+</div></div>
+<div class="step"><div class="head">Cross-multiply and read off the recursion</div>
+<p class="think">Think first: move every \(y\) term except \(y(k)\) to the right. Watch the signs.</p>
+<div class="body">
+<p>\(Y(1-\tfrac67z^{-1}+\tfrac37z^{-2})=\tfrac17X(1+2z^{-1}+z^{-2})\). Turn each \(z^{-i}\) into a delay of \(i\) samples, then solve for \(y(k)\) <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=106" data-pages="c56:104-107">pp. 104–107</a>:</p>
+\[\boxed{y(k)=\tfrac67\,y(k-1)-\tfrac37\,y(k-2)+\tfrac17\big[x(k)+2x(k-1)+x(k-2)\big]}\]
+<p class="why">Direct programming is just this recursion, \(y(k)=-a_1y(k-1)-a_2y(k-2)+b_0x(k)+\dots\). Here \(a_1=-\tfrac67\), so \(-a_1=+\tfrac67\).</p>
+<div class="pit"><strong>Common slip:</strong> copying \(-\tfrac67\) onto the right-hand side. Moving a term across the equals sign flips its sign.</div>
+</div></div>
+<div class="step"><div class="head">Count the delays, then check the recursion</div>
+<p class="think">Think first: list every past value the program has to remember.</p>
+<div class="body">
+<p>Direct programming stores \(x(k-1),x(k-2),y(k-1),y(k-2)\): \(\mathbf{n+m=4}\) delays. Standard programming <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=108" data-pages="c56:108-110">pp. 108–110</a> runs both sides through one internal signal and needs only \(\mathbf{n=2}\).</p>
+<p><strong>DC check:</strong> with \(x\equiv1\) and \(y\equiv y_\infty\): \(y_\infty(1-\tfrac67+\tfrac37)=\tfrac47\), so \(y_\infty\cdot\tfrac47=\tfrac47\) and \(y_\infty=1\) ✓, matching \(G(1)=1\).</p>
+<p class="why">Putting a constant through the recursion is a 10-second test that catches a sign error in the coefficients.</p>
+</div></div>
+</div>
+<div class="stepbar"><button type="button" class="showall" data-for="2c">Show all steps of (c)</button></div>
+<div class="checks"><h4>Check (c)</h4>
+<div class="q" data-id="b-2c-coef" data-ans="0.5"><p>\(C(z)=\dfrac{2-1.2z^{-1}}{1-0.5z^{-1}}\). In the direct-programming equation, what is the coefficient of \(u(k-1)\) in \(u(k)=\ ?\,u(k-1)+\dots\)</p><input type="text" aria-label="coefficient"> <button class="go">Check</button>
+<div class="why">\(a_1=-0.5\), so the coefficient is \(-a_1=+0.5\): \(u(k)=0.5u(k-1)+2e(k)-1.2e(k-1)\).</div></div>
+<div class="q" data-id="b-2c-delays" data-ans="2"><p>For the same \(C(z)\), how many delays does direct programming use?</p><input type="text" aria-label="delays"> <button class="go">Check</button>
+<div class="why">\(n+m=1+1=2\) (\(e(k-1)\) and \(u(k-1)\)). Standard programming would need \(n=1\).</div></div>
 </div>
 </section>
 
+<!-- ======================= Q3 ======================= -->
 <section id="q3" data-title="Q3 · can z⁻¹ track?">
 <h2>Question 3 <small>10 marks</small></h2>
-<p>Unity feedback with a digital controller \(C(z)\) in front of \(G_{ZAS}(z)\). The desired closed loop is \(G_{cl}(z)=z^{-1}\).</p>
-<div class="part" data-part="3a"><span class="mk">5</span>
-<p><strong>(a)</strong> \(G_{ZAS}(z)=\dfrac{0.2(z+0.6)}{(z-0.8)(z-0.4)}\). Can \(G_{cl}=z^{-1}\) be used, and will the output track a step? If so, find \(C(z)\).</p>
-<label class="paper"><input type="checkbox" data-paper="3a"> done on paper</label>
-<input type="text" data-final="3a" placeholder="yes/no + why; C(z)">
+<div class="qtext">Unity feedback with a digital controller \(C(z)\) in front of \(G_{ZAS}(z)\). The desired closed loop is \(G_{cl}(z)=z^{-1}\).<br>
+<span class="mk">5</span><strong>(a)</strong> \(G_{ZAS}(z)=\dfrac{0.2(z+0.6)}{(z-0.8)(z-0.4)}\). Can \(G_{cl}=z^{-1}\) be used, and will the output track a step? If so, find \(C(z)\).<br>
+<span class="mk">5</span><strong>(b)</strong> Repeat for \(G_{ZAS}(z)=\dfrac{0.1(z+1.5)}{(z-1)(z-0.5)}\). If \(z^{-1}\) is unacceptable, explain why, choose a valid \(G_{cl}\), and find \(C(z)\) and the output \(y(k)\), \(k=0..3\).</div>
+
+<h3 id="q3a">Part (a): a plant where z⁻¹ works</h3>
+<div class="steps" data-part="3a">
+<div class="step"><div class="head">Get the controller formula</div>
+<p class="think">Think first: start from \(G_{cl}=\dfrac{CG}{1+CG}\) and solve for C.</p>
+<div class="body">
+<p>Cross-multiply: \(G_{cl}(1+CG)=CG\), so \(G_{cl}=CG(1-G_{cl})\), which gives <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=49" data-pages="c56:49-50">pp. 49–50</a></p>
+\[C(z)=\frac{1}{G_{ZAS}(z)}\,\frac{G_{cl}(z)}{1-G_{cl}(z)}\qquad(5.11)\]
+<p class="why">Direct design works backwards: pick the closed loop you want, then solve for the controller. The formula always produces a C, so the real question is whether that C is acceptable. The four conditions answer that.</p>
+</div></div>
+<div class="step"><div class="head">Condition (i): causality (relative degree)</div>
+<p class="think">Think first: relative degree = denominator degree − numerator degree. Compare the plant with \(z^{-1}=1/z\).</p>
+<div class="body">
+<p>The four conditions are on <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=56" data-pages="c56:51-56">pp. 51–56</a>. The plant has degree 2 − 1 = <strong>1</strong>. \(G_{cl}=1/z\) has degree 1 − 0 = <strong>1</strong>. Since \(1\ge1\), condition (i) holds ✓.</p>
+<p class="why">The plant needs one sample before any input shows up at its output. A closed loop cannot respond faster than its plant, so \(G_{cl}\) needs at least that much delay. Otherwise C would have to see the future.</p>
+</div></div>
+<div class="step"><div class="head">Conditions (ii) and (iii): unstable zeros and poles</div>
+<p class="think">Think first: are any plant zeros or poles on or outside the unit circle?</p>
+<div class="body">
+<p>Zero at \(-0.6\): \(|{-0.6}|\lt1\), so (ii) asks nothing ✓. Poles at \(0.8\) and \(0.4\), both inside, so (iii) asks nothing ✓.</p>
+<p class="why">C contains \(1/G_{ZAS}\), so it cancels every plant zero and pole. Cancelling something <em>stable</em> is harmless. Cancelling something unstable hides a growing mode inside the loop. Part (b) shows this happening.</p>
+</div></div>
+<div class="step"><div class="head">Condition (iv): does the output track a step?</div>
+<p class="think">Think first: evaluate \(G_{cl}\) at \(z=1\). What does \(Y=z^{-1}R\) mean in time?</p>
+<div class="body">
+<p>\(G_{cl}(1)=1\) ✓, so the steady-state step error is zero. In fact \(y(k)=r(k-1)\): the output is the input delayed by one sample, so for a step \(y=0,1,1,1,\dots\). This is deadbeat <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=64" data-pages="c56:64-65">pp. 64–65</a>.</p>
+<p><strong>Answer: yes</strong>, \(z^{-1}\) can be used and the output tracks the step.</p>
+<p class="why">\(z=1\) is DC, so \(G_{cl}(1)\) is the closed-loop DC gain. A gain of 1 means \(y(\infty)=r(\infty)\).</p>
+</div></div>
+<div class="step"><div class="head">Compute C(z)</div>
+<p class="think">Think first: simplify \(\dfrac{z^{-1}}{1-z^{-1}}\) before multiplying by \(1/G_{ZAS}\).</p>
+<div class="body">
+<p>\(\dfrac{z^{-1}}{1-z^{-1}}=\dfrac{1}{z-1}\). Then</p>
+\[C=\frac{(z-0.8)(z-0.4)}{0.2(z+0.6)}\cdot\frac{1}{z-1}=\boxed{\frac{5(z-0.8)(z-0.4)}{(z-1)(z+0.6)}}\]
+<p class="why">The plant is type 0 (no pole at \(z=1\)), so C supplies the integrator \(1/(z-1)\) that removes the step error. C's other pole, \(-0.6\), is the cancelled plant zero. Being on the negative real axis, it makes \(u(k)\) alternate, so expect some ripple between samples. Ripple-free deadbeat removes that.</p>
+</div></div>
 </div>
-<div class="part" data-part="3b"><span class="mk">5</span>
-<p><strong>(b)</strong> Repeat for \(G_{ZAS}(z)=\dfrac{0.1(z+1.5)}{(z-1)(z-0.5)}\). If \(z^{-1}\) is unacceptable, explain why, choose a valid \(G_{cl}\), and find \(C(z)\) and the output \(y(k)\) for \(k=0,\dots,3\).</p>
-<label class="paper"><input type="checkbox" data-paper="3b"> done on paper</label>
-<input type="text" data-final="3b" placeholder="why; G_cl; C(z); y(0..3)">
+<div class="stepbar"><button type="button" class="showall" data-for="3a">Show all steps of (a)</button></div>
+<div class="checks"><h4>Check (a)</h4>
+<div class="q" data-id="b-3a-reldeg" data-ans="2"><p>A plant is \(G_{ZAS}=\dfrac{0.3}{z(z-0.5)}\), with everything inside the circle. What is the smallest m for which \(G_{cl}=z^{-m}\) is causal?</p><input type="text" aria-label="m"> <button class="go">Check</button>
+<div class="why">Relative degree = 2 − 0 = 2, so \(m\ge2\). With \(z^{-1}\), (5.11) gives \(C=\frac{z(z-0.5)}{0.3(z-1)}\): numerator degree 2 above denominator degree 1, so C would need a future error value.</div></div>
+<div class="q" data-id="b-3a-integ" data-choice="T"><p>True or false: in part (a) the pole of C at \(z=1\) is needed because the plant is type 0.</p><button data-v="T">True</button><button data-v="F">False</button>
+<div class="why">True. For a constant output with zero error, something in the loop must keep producing a constant from a zero input, and that is an integrator. The plant has none, so C supplies it. Formula (5.11) adds it automatically through \(1/(1-G_{cl})\).</div></div>
+</div>
+
+<h3 id="q3b">Part (b): a plant where z⁻¹ fails</h3>
+<div class="steps" data-part="3b">
+<div class="step"><div class="head">Run the four conditions on the new plant</div>
+<p class="think">Think first: where is the zero this time? Where are the poles?</p>
+<div class="body">
+<p>(i) Relative degree 2 − 1 = 1, and \(z^{-1}\) has 1 ✓.<br>
+(ii) Zero at \(-1.5\): \(|{-1.5}|\gt1\), <strong>outside</strong> the circle. So \(G_{cl}\) must contain \((z+1.5)\), and \(z^{-1}\) does not ✗.<br>
+(iii) Pole at \(1\), on the circle: \(1-G_{cl}\) must vanish at \(z=1\). Pole \(0.5\) is fine.<br>
+(iv) \(G_{cl}(1)=1\) ✓.</p>
+<p>So \(z^{-1}\) fails condition (ii).</p>
+<p class="why">Checking all four conditions in order is what earns the marks, and it shows at once which one breaks.</p>
+</div></div>
+<div class="step"><div class="head">Show what goes wrong if you use z⁻¹ anyway</div>
+<p class="think">Think first: compute C from (5.11) and look at its poles.</p>
+<div class="body">
+\[C_{bad}=\frac{(z-1)(z-0.5)}{0.1(z+1.5)}\cdot\frac{1}{z-1}=\frac{10(z-0.5)}{z+1.5}.\]
+<p>C has a pole at \(-1.5\), outside the circle. On paper \(Y=z^{-1}R\) looks perfect, but the control signal is \(U=Y/G_{ZAS}\), and that contains \(\dfrac{1}{z+1.5}\). So \(u(k)\) grows like \((-1.5)^k\) and saturates the actuator. The loop is input-output stable but <strong>not asymptotically stable</strong> <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=52" data-pages="c56:52">p. 52</a>.</p>
+<p class="why">This is why "\(G_{cl}(1)=1\), so it tracks" is not enough. The examiner wants you to name the hidden unstable mode.</p>
+</div></div>
+<div class="step"><div class="head">Choose a valid G<sub>cl</sub>: keep the bad zero</div>
+<p class="think">Think first: what is the simplest \(G_{cl}\) that contains \((1+1.5z^{-1})\) and still has relative degree ≥ 1?</p>
+<div class="body">
+\[G_{cl}=K\,z^{-1}(1+1.5z^{-1})=K\,\frac{z+1.5}{z^2}.\]
+<p>Relative degree 2 − 1 = 1 ✓. The bad zero now sits in \(G_{cl}\), so C no longer has to cancel it.</p>
+<p class="why">You cannot remove a zero outside the circle. The only option is to accept it in the closed loop. The price is one extra sample of settling.</p>
+</div></div>
+<div class="step"><div class="head">Fix K from condition (iv)</div>
+<p class="think">Think first: \(G_{cl}(1)=1\). Is it \(1.5K\) or something else?</p>
+<div class="body">
+\[G_{cl}(1)=K(1+1.5)=2.5K=1\ \Rightarrow\ \boxed{K=0.4}.\]
+<div class="pit"><strong>Common slip:</strong> \(1.5K=1\). You have to evaluate the whole factor \((1+1.5z^{-1})\) at \(z=1\), not only the zero.</div>
+<p class="why">K is the only free number. Condition (iv) sets it so that the DC gain is 1.</p>
+</div></div>
+<div class="step"><div class="head">Check condition (iii) for the pole at z = 1</div>
+<p class="think">Think first: does \(1-G_{cl}\) vanish at \(z=1\)? Factor it.</p>
+<div class="body">
+\[1-G_{cl}=\frac{z^2-0.4z-0.6}{z^2}=\frac{(z-1)(z+0.6)}{z^2}.\]
+<p>It contains \((z-1)\) ✓. That is automatic: \(G_{cl}(1)=1\) forces \(1-G_{cl}\) to vanish at \(z=1\).</p>
+<p class="why">If (iii) held trivially, nothing extra is needed for the marginal plant pole. Factoring \(1-G_{cl}\) now also prepares the next step.</p>
+</div></div>
+<div class="step"><div class="head">Compute C(z)</div>
+<p class="think">Think first: substitute into (5.11) and cancel. Which factors cancel?</p>
+<div class="body">
+\[C=\frac{G_{cl}}{G_{ZAS}(1-G_{cl})}=\frac{0.4(z+1.5)}{z^2}\cdot\frac{(z-1)(z-0.5)}{0.1(z+1.5)}\cdot\frac{z^2}{(z-1)(z+0.6)}=\boxed{\frac{4(z-0.5)}{z+0.6}}\]
+<p>\((z+1.5)\) cancels between \(G_{cl}\) and \(1/G_{ZAS}\), so it never becomes a pole of C. \((z-1)\) and \(z^2\) cancel too. C's only pole is \(-0.6\), which is stable ✓.</p>
+<p class="why">Compare with \(C_{bad}\): its pole at \(-1.5\) is gone. That was the whole purpose of putting the zero into \(G_{cl}\). C needs no integrator because the plant already has one at \(z=1\).</p>
+</div></div>
+<div class="step"><div class="head">Find y(k) for k = 0..3 (and confirm u is bounded)</div>
+<p class="think">Think first: \(Y=G_{cl}R\) with \(G_{cl}=0.4z^{-1}+0.6z^{-2}\). Write \(y(k)\) in terms of \(r\).</p>
+<div class="body">
+<p>\(y(k)=0.4\,r(k-1)+0.6\,r(k-2)\). For a unit step:</p>
+\[y(0)=0,\quad y(1)=0.4,\quad y(2)=0.4+0.6=1,\quad y(3)=1.\]
+<p><strong>Control signal:</strong> \(U=\dfrac{G_{cl}}{G_{ZAS}}R=\dfrac{4(z-0.5)}{z}=4-2z^{-1}\), so \(u=4,-2,0,0,\dots\) Bounded ✓. It settles at 0, as it should for a type-1 plant holding a constant output.</p>
+<p class="why">Reading the coefficients of \(G_{cl}\) as a moving sum of past inputs gives \(y(k)\) without long division. Checking \(u\) proves the hidden instability is gone.</p>
+</div></div>
+</div>
+<div class="stepbar"><button type="button" class="showall" data-for="3b">Show all steps of (b)</button></div>
+<div class="checks"><h4>Check (b)</h4>
+<div class="q" data-id="b-3b-K" data-ans="1/3"><p>Another plant has a zero at \(z=-2\) (and is otherwise like (b)). You choose \(G_{cl}=Kz^{-1}(1+2z^{-1})\). Find K.</p><input type="text" aria-label="K"> <button class="go">Check</button>
+<div class="why">\(G_{cl}(1)=K(1+2)=3K=1\Rightarrow K=1/3\).</div></div>
+<div class="q" data-id="b-3b-y1" data-ans="0.4"><p>Back to (b) as given. What is \(y(1)\)?</p><input type="text" aria-label="y(1)"> <button class="go">Check</button>
+<div class="why">\(y(1)=0.4\,r(0)=0.4\). The output reaches 1 only at \(k=2\), one sample later than plain deadbeat.</div></div>
+<div class="q" data-id="b-3b-why" data-choice="F"><p>True or false: in (b), \(G_{cl}=z^{-1}\) is acceptable because \(G_{cl}(1)=1\) gives zero steady-state error.</p><button data-v="T">True</button><button data-v="F">False</button>
+<div class="why">False. The output would track, but C would cancel the zero at \(-1.5\) with an unstable pole, and \(u(k)\) would grow like \((-1.5)^k\). Condition (ii) is violated.</div></div>
 </div>
 </section>
 
-<section id="export" data-title="Export">
-<h2>Export for marking</h2>
-<p>Press Export, copy the block, and paste it into a chat together with your paper photo(s).</p>
-<button id="do-export">Export</button> <button id="copy">Copy</button>
-<p><textarea id="out" readonly></textarea></p>
+<section id="recap" data-title="Recap">
+<h2>Method to remember</h2>
+<ul>
+<li><strong>Jury K-range:</strong> \(1+G=0\) → clear fractions → \(P(z)\). For \(n=2\): \(|a_2|\lt a_0\), \(P(1)\gt0\), \(P(-1)\gt0\). Intersect the ranges, then test one K inside.</li>
+<li><strong>\(K_v\):</strong> write \(1-z^{-1}=(z-1)/z\), cancel the integrator, set \(z=1\), divide by \(T\). Confirm K is stable before quoting \(e_{ss}\).</li>
+<li><strong>Bilinear:</strong> \(s=\frac2T\frac{z-1}{z+1}\). Multiply top and bottom by \((z+1)^n\). Check \(G(1)=G(0)\).</li>
+<li><strong>Pole-zero matching:</strong> map poles by \(e^{sT}\) (radians!), add \(n-m-1\) zeros at \(-1\) for strictly proper, and fix \(\alpha\) by DC gain.</li>
+<li><strong>Direct programming:</strong> divide so the denominator starts with 1, then flip the signs of \(a_i\). Delays: direct \(n+m\), standard \(n\).</li>
+<li><strong>Direct design:</strong> \(C=\frac1{G}\frac{G_{cl}}{1-G_{cl}}\). Check (i) relative degree, (ii) bad zeros kept in \(G_{cl}\), (iii) bad poles in \(1-G_{cl}\), (iv) \(G_{cl}(1)=1\). A zero outside the circle → \(G_{cl}=Kz^{-1}(1-\beta z^{-1})\) with \(K\) from \(G_{cl}(1)=1\).</li>
+</ul>
 </section>
 </main>
 </div>
 
 <script>
+// Source-page pop-ups: data-pages="c56:73-74" shows quiz3-pages/<stem>-pNNN.jpg
 (() => {
-  const KEY = 'ee6203-quiz3-mock-b-v1', DUR = 45 * 60;
-  let st = { tf: {}, paper: {}, final: {}, elapsed: 0 };
+  const STEM = { c56: 'lecture-notes-chapters-05-06', c14: 'lecture-notes-weeks-01-04' };
+  const NAME = { c56: 'Ch 5–6 notes', c14: 'Weeks 1–4 notes (Ch 4)' };
+  const dlg = document.createElement('dialog'); dlg.className = 'pages'; document.body.append(dlg);
+  dlg.addEventListener('click', e => { if (e.target === dlg || e.target.matches('.close')) dlg.close(); });
+  document.querySelectorAll('a.src[data-pages]').forEach(a => a.addEventListener('click', e => {
+    e.preventDefault();
+    const [k, r] = a.dataset.pages.split(':'); const [p, q] = r.split('-').map(Number);
+    const figs = []; for (let i = p; i <= (q || p); i++)
+      figs.push(`<figure><img loading="lazy" src="quiz3-pages/${STEM[k]}-p${String(i).padStart(3, '0')}.jpg" alt="${NAME[k]} page ${i}"></figure>`);
+    dlg.innerHTML = `<div class="bar"><span><strong>${NAME[k]}, p. ${r.replace('-', '–')}</strong> · <a href="${a.getAttribute('href')}">open PDF</a></span><button type="button" class="close">Close</button></div>` + figs.join('');
+    dlg.showModal(); dlg.scrollTop = 0;
+  }));
+})();
+// Step reveals + checks, saved per browser
+(() => {
+  const KEY = 'ee6203-quiz3-mock-b-steps-v1';
+  let st = { steps: {}, q: {} };
   try { st = Object.assign(st, JSON.parse(localStorage.getItem(KEY)) || {}); } catch (e) {}
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} };
-  const PARTS = ['1a', '1b', '2a', '2b', '2c', '3a', '3b'];
-  const STEM = { 1: 'w-map unit circle→LHP', 2: 'lag widens bandwidth', 3: 'deadbeat m=3', 4: 'standard prog 5 delays', 5: '1-DOF S+T=1', 6: 'feedback moves bad zero' };
+  const typeset = el => window.MathJax?.typesetPromise?.([el]).catch(() => {});
+  const num = s => { s = String(s).trim().replace(/\s/g, ''); if (/^-?\d+(\.\d+)?\/-?\d+(\.\d+)?$/.test(s)) { const [a, b] = s.split('/').map(Number); return a / b; } return s === '' ? NaN : Number(s); };
 
-  // T/F buttons
-  document.querySelectorAll('.tf').forEach(div => {
-    const i = div.dataset.tf;
-    ['True', 'False'].forEach(v => {
-      const b = document.createElement('button'); b.textContent = v; b.type = 'button';
-      if (st.tf[i] === v) b.classList.add('chosen');
-      b.onclick = () => { st.tf[i] = st.tf[i] === v ? undefined : v; div.querySelectorAll('button').forEach(x => x.classList.toggle('chosen', st.tf[i] === x.textContent)); save(); score(); };
-      div.append(b);
-    });
-  });
-  document.querySelectorAll('[data-paper]').forEach(c => { c.checked = !!st.paper[c.dataset.paper]; c.onchange = () => { st.paper[c.dataset.paper] = c.checked; save(); score(); }; });
-  document.querySelectorAll('[data-final]').forEach(t => { t.value = st.final[t.dataset.final] || ''; t.oninput = () => { st.final[t.dataset.final] = t.value; save(); }; });
-
-  // sidebar
-  const toc = document.getElementById('toc');
-  const secs = [...document.querySelectorAll('main section')];
-  secs.forEach(s => { const a = document.createElement('a'); a.href = '#' + s.id; a.innerHTML = `<span>${s.dataset.title}</span><span class="score" data-for="${s.id}"></span>`; toc.append(a); });
-  function score() {
-    secs.forEach(s => {
-      const el = toc.querySelector(`[data-for="${s.id}"]`); if (s.id === 'export') return;
-      let done = 0, tot = 0;
-      s.querySelectorAll('.tf').forEach(d => { tot++; if (st.tf[d.dataset.tf]) done++; });
-      s.querySelectorAll('[data-paper]').forEach(c => { tot++; if (st.paper[c.dataset.paper]) done++; });
-      el.textContent = `${done}/${tot}`; el.classList.toggle('done', done === tot);
+  // Steps: step i is visible once steps 0..i-1 are opened; each body opens on "Show working".
+  const groups = [...document.querySelectorAll('.steps')];
+  function render(g) {
+    const id = g.dataset.part, n = st.steps[id] || 0;
+    [...g.querySelectorAll('.step')].forEach((s, i) => {
+      s.hidden = i > n;
+      s.querySelector('.body').hidden = i >= n;
+      const btn = s.querySelector('button.next');
+      if (btn) btn.hidden = i < n;
     });
   }
-  score();
+  groups.forEach(g => {
+    const id = g.dataset.part;
+    g.querySelectorAll('.step').forEach((s, i) => {
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'next'; b.textContent = 'Show working';
+      b.onclick = () => { st.steps[id] = Math.max(st.steps[id] || 0, i + 1); save(); render(g); score(); };
+      s.querySelector('.think').after(b);
+    });
+    render(g);
+  });
+  document.querySelectorAll('.showall').forEach(b => b.onclick = () => {
+    const g = document.querySelector(`.steps[data-part="${b.dataset.for}"]`);
+    st.steps[b.dataset.for] = g.querySelectorAll('.step').length; save(); render(g); score();
+  });
 
-  // timer
-  const tEl = document.getElementById('timer'); let iv = null;
-  const fmt = sec => { const r = Math.max(0, DUR - sec); return `${String(Math.floor(r / 60)).padStart(2, '0')}:${String(r % 60).padStart(2, '0')}`; };
-  const draw = () => { tEl.textContent = st.elapsed >= DUR ? "TIME'S UP" : fmt(st.elapsed); tEl.classList.toggle('low', DUR - st.elapsed <= 300); };
-  document.getElementById('t-start').onclick = () => { if (iv) return; iv = setInterval(() => { st.elapsed++; draw(); if (st.elapsed % 10 === 0) save(); if (st.elapsed >= DUR) { clearInterval(iv); iv = null; save(); } }, 1000); };
-  document.getElementById('t-pause').onclick = () => { clearInterval(iv); iv = null; save(); };
-  document.getElementById('t-reset').onclick = () => { clearInterval(iv); iv = null; st.elapsed = 0; save(); draw(); };
-  draw();
+  // Sidebar with progress: steps opened + checks correct
+  const sections = [...document.querySelectorAll('main section')];
+  const toc = document.getElementById('toc');
+  sections.forEach(sec => { const a = document.createElement('a'); a.href = '#' + sec.id; a.innerHTML = `<span>${sec.dataset.title}</span><span class="score" data-for="${sec.id}"></span>`; toc.append(a); });
+  function score() {
+    sections.forEach(sec => {
+      const qs = [...sec.querySelectorAll('.q')], gs = [...sec.querySelectorAll('.steps')]; if (!qs.length) return;
+      const tot = qs.length + gs.reduce((t, g) => t + g.querySelectorAll('.step').length, 0);
+      const done = qs.filter(q => st.q[q.dataset.id]?.ok).length + gs.reduce((t, g) => t + (st.steps[g.dataset.part] || 0), 0);
+      const el = toc.querySelector(`[data-for="${sec.id}"]`); el.textContent = `${done}/${tot}`; el.classList.toggle('done', done === tot);
+    });
+  }
 
-  // export
-  document.getElementById('do-export').onclick = () => {
-    const m = Math.floor(st.elapsed / 60), s = st.elapsed % 60;
-    const L = [
-      'EE6203 Quiz 3 — Mock B attempt (unofficial practice paper)',
-      'Key + rubric: EE-6203/quizzes/quiz-03-mock-b.md   (marks: Q1 10 [a 7, b 3], Q2 10 [a 4, b 3, c 3], Q3 10 [a 5, b 5]; total 30)',
-      `Exported: ${new Date().toISOString().slice(0, 16).replace('T', ' ')}   Elapsed on timer: ${m} min ${s} s of 45`,
-      '',
-    ];
-    PARTS.forEach(p => L.push(`Q${p[0]}(${p[1]}): on paper: ${st.paper[p] ? 'yes' : 'NO'}; typed final: ${(st.final[p] || '').trim() || '<blank>'}`));
-    L.push('', 'Paper photos: quizzes/attempts/quiz-03-mock-b-<date>*.jpg (attach or name the path)');
-    document.getElementById('out').value = L.join('\n');
+  // Checks
+  const show = (q, ok) => {
+    let fb = q.querySelector('.fb'); if (!fb) { fb = document.createElement('div'); q.append(fb); }
+    const why = q.querySelector('.why'); why.hidden = false;
+    fb.className = 'fb ' + (ok ? 'ok' : 'bad');
+    fb.textContent = ok ? 'Correct.' : `Not quite. Answer: ${q.dataset.ans || q.querySelector(`[data-v="${q.dataset.choice}"]`).textContent}.`;
+    fb.append(why); typeset(fb);
   };
-  document.getElementById('copy').onclick = async () => { const o = document.getElementById('out'); if (!o.value) document.getElementById('do-export').click(); try { await navigator.clipboard.writeText(o.value); } catch (e) { o.select(); document.execCommand('copy'); } };
-  document.getElementById('clear').onclick = e => { e.preventDefault(); if (!document.getElementById('clear').dataset.armed) { document.getElementById('clear').dataset.armed = 1; document.getElementById('clear').textContent = 'Click again to clear'; return; } st = { tf: {}, paper: {}, final: {}, elapsed: 0 }; save(); location.reload(); };
+  document.querySelectorAll('.q').forEach(q => {
+    q.querySelector('.why').hidden = true;
+    const id = q.dataset.id;
+    if (q.dataset.ans) {
+      const inp = q.querySelector('input'), go = q.querySelector('.go');
+      const check = () => { const v = num(inp.value), a = num(q.dataset.ans); if (isNaN(v)) return; const ok = Math.abs(v - a) <= 0.01 * Math.max(1, Math.abs(a)); st.q[id] = { v: inp.value, ok }; save(); show(q, ok); score(); };
+      go.onclick = check; inp.onkeydown = e => { if (e.key === 'Enter') check(); };
+      if (st.q[id]) { inp.value = st.q[id].v; show(q, st.q[id].ok); }
+    } else {
+      q.querySelectorAll('button[data-v]').forEach(b => {
+        b.onclick = () => { q.querySelectorAll('button').forEach(x => x.classList.remove('chosen')); b.classList.add('chosen'); const ok = b.dataset.v === q.dataset.choice; st.q[id] = { v: b.dataset.v, ok }; save(); show(q, ok); score(); };
+        if (st.q[id]?.v === b.dataset.v) { b.classList.add('chosen'); show(q, st.q[id].ok); }
+      });
+    }
+  });
+  document.getElementById('reset').onclick = e => { e.preventDefault(); st = { steps: {}, q: {} }; save(); location.reload(); };
+  score();
 })();
 </script>
 </body>

@@ -187,3 +187,19 @@ close(ys[1], 0.08); close(ys[2], 0.32); close(ys[3], 0.5408)
 close(sp.limit(g_ * (1 - x / 2) / Rc_ - Sc_ / Rc_ * GY_, x, 1), -1 / 6)
 r1_, s0_, g_ = pp((1 - x / 2)**2); close(s0_, 0.5625); close(r1_, 0.4375); close(g_, 1 / 12)
 print('all Quiz 3 keys verified')
+
+# ---------------- Mock B step-by-step page checks ----------------
+close((1 - 0.5) / b0, 1.386)                                  # b-1a-upper: pole moved to 0.5
+close(1 / (2 * 0.25), 2)                                      # b-1b-ess
+assert sp.simplify((3 / (s + 3)).subs(s, 4 * (z - 1) / (z + 1)) - 3 * (z + 1) / (7 * z - 1)) == 0  # b-2a-bil -> 1/7
+close(1 - math.exp(-2), 0.8647)                               # b-2b-alpha
+Cd = sp.simplify(((2 - sp.Rational(6, 5) * x) / (1 - x / 2)).subs(x, 1 / z))
+assert sp.Poly(sp.fraction(sp.factor(Cd))[1], z).all_coeffs()[-1] / sp.Poly(sp.fraction(sp.factor(Cd))[1], z).all_coeffs()[0] == -sp.Rational(1, 2)  # b-2c-coef: -a1 = 0.5
+assert sp.simplify(((sp.Rational(1, 7) * (1 + 2 * x + x**2)) / (1 - sp.Rational(6, 7) * x + sp.Rational(3, 7) * x**2)).subs(x, 1)) == 1  # 2c DC check
+n_, d_ = sp.fraction(sp.factor(sp.Rational(3, 10) / (z * (z - sp.Rational(1, 2)))))
+assert sp.degree(d_, z) - sp.degree(n_, z) == 2               # b-3a-reldeg
+assert sp.Rational(1, 3) * (1 + 2) == 1                       # b-3b-K
+assert sp.factor(1 - Gcl2) == sp.factor((z - 1) * (z + sp.Rational(3, 5)) / z**2)
+close(math.sqrt(0.6065 + 0.3608 * 0.5), 0.887)                # 1a sanity sample K=0.5
+assert (0.4261 * 0.5 - 1.6065)**2 - 4 * (0.6065 + 0.3608 * 0.5) < 0
+print('Mock B step page keys verified')
