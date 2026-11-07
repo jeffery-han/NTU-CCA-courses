@@ -522,24 +522,34 @@ commercial use.
 %-----------------------------------------------------------------
 \section{What I learned from this review}
 
-\yours{DRAFT --- rewrite in your own words and keep only what is true for
-you.}
-
 \begin{itemize}
-  \item The classical material in EE6221 has not been replaced by AI; it has
-  moved to a different place in the stack.  Kinematics and dynamics now
-  appear as the structure of the whole-body controller, as balance
-  quantities such as the centre of mass fed into a learned policy, and as
-  the retargeting that maps human motion onto a robot's joints.  State
-  estimation of the floating base is still a filtering problem.
-  \item The most important design decision in a modern humanoid is how to
-  split the control problem by timescale.  This is a familiar control idea
-  (cascaded loops), now applied to neural networks.
-  \item Data, not algorithms, is currently the binding constraint, which is
-  why so much recent research is really about finding new sources of data.
-  \item I learned to separate evidence types: a peer-reviewed paper, a
-  preprint and a company video support claims to very different degrees.
-  \yours{Add one or two specific things that surprised you.}
+  \item \textbf{The course material is still there, just in a new place.}
+  Before this review I expected AI to have replaced classical robotics.  It
+  has not.  The kinematics we did in class (frames, D--H parameters,
+  forward kinematics) is what retargeting uses to map a human motion onto
+  the robot's joints.  Dynamics and balance quantities such as the centre of
+  mass are fed into the learned whole-body controller.  Estimating where the
+  robot's floating base is and how fast it moves is still a filtering
+  problem, like the Kalman filter in Part~2.
+  \item \textbf{Timescale is the key design choice.}  Every strong system I
+  read about splits the work into a slow planner, a middle layer and a fast
+  controller.  This is the cascaded-loop idea from control, only now each
+  loop is a neural network.
+  \item \textbf{Data is the real bottleneck.}  Many recent papers look like
+  algorithm papers, but what they really do is find new data: human video,
+  simulation, or a cheaper way to teleoperate.
+  \item \textbf{Not all sources are equal.}  I learned to check what kind of
+  evidence I was reading.  A peer-reviewed paper, a preprint, a project
+  page and a company video support a claim to very different degrees, and
+  most humanoid ``results'' are in the last two groups.
+  \item \textbf{What surprised me most.}  First, GPT-6 Astra beat a model
+  trained on robot data (74.8\% against 28.0\% success in simulation)
+  without any robot training at all, yet one call took about 18.6~s.  The
+  smartest part of the system is also the slowest, so it can only work if
+  fast controllers sit below it.  Second, in the RoboHarm test the general
+  models refused very few unsafe physical commands, even though they refuse
+  harmful requests in chat.  I had assumed their safety training would carry
+  over to the robot, and it does not.
 \end{itemize}
 
 %-----------------------------------------------------------------
