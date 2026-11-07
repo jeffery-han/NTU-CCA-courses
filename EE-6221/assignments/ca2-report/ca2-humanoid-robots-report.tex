@@ -571,8 +571,23 @@ commercial use.
   the body.  Without it, there would be nothing well defined for the model
   to train on or to output.
   \item \textbf{Interest in a career in robotics and intelligent systems:}
-  \yours{Did it increase? Which part of the stack (control, perception,
-  learning, safety) would you want to work on, and why?}
+  Yes, it increased.  I have always wanted to work in AI infrastructure:
+  the systems that make large models possible to train and run.  Before
+  this assignment I saw that mainly as a software and language-model topic.
+  This review showed me that embodied intelligence needs the same work, and
+  at an even larger scale.  The numbers in Sections~3 and~4 make this
+  concrete: one GPT-6 Astra call takes about 18.6~s, one agent episode uses
+  about 30.9 million tokens (about US\$36), and the fast controllers must
+  fit on an onboard computer with a limited power budget.  Robot data is
+  also scarce and expensive to collect.  A humanoid is improved in a cycle:
+  train the model, deploy it, collect new data from what the robot does,
+  especially its failures, and retrain.  Every step of that cycle depends
+  on infrastructure: training clusters, data pipelines for video and sensor
+  logs, simulation at scale, and model compression so that inference is fast
+  enough on the robot.  Optimizing these steps decides how fast the whole
+  cycle turns, and so how fast humanoids improve.  This gave me a clear way
+  to combine my interest in AI infrastructure with robotics, and that is
+  the direction I would like to pursue.
 \end{itemize}
 
 %-----------------------------------------------------------------
