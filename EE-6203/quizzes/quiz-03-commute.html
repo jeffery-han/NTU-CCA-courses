@@ -1,0 +1,248 @@
+<title>EE6203 Quiz 3 Commute Sheet</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one narrow reading column, priority-ordered; formulas in boxed mono blocks; reveals for drills */
+:root{
+  --bg:#F3F5F8; --card:#FFFFFF; --ink:#13203A; --mute:#5A6478; --pen:#2350B8; --trap:#B42318; --ok:#1F7A4D; --line:#D9DEE7;
+  --body:"Atkinson Hyperlegible",-apple-system,system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0F1522; --card:#172033; --ink:#E6EBF4; --mute:#9AA6BC; --pen:#7FA3FF; --trap:#FF8A7A; --ok:#5FD39A; --line:#2A3550; color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0F1522; --card:#172033; --ink:#E6EBF4; --mute:#9AA6BC; --pen:#7FA3FF; --trap:#FF8A7A; --ok:#5FD39A; --line:#2A3550; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font:17px/1.55 var(--body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 60px}
+main{max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+h1{font-size:1.5rem;line-height:1.2;margin:0;text-wrap:balance}
+h2{font-size:1.15rem;margin:0;text-wrap:balance;display:flex;gap:.5em;align-items:baseline}
+h2 .n{font:600 .8rem var(--mono);color:var(--pen)}
+h3{font-size:1rem;margin:.6em 0 0}
+p,ul,ol{margin:0}
+ul,ol{padding-left:1.2em;display:flex;flex-direction:column;gap:4px}
+section{display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--line);padding-top:18px}
+.sub{color:var(--mute);font-size:.92rem}
+pre{font:14px/1.5 var(--mono);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin:0;overflow-x:auto;white-space:pre}
+code{font-family:var(--mono);font-size:.9em}
+.trap{color:var(--trap);font-weight:700}
+.tag{font:600 .72rem var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}
+.rules{background:var(--card);border:2px solid var(--pen);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+details{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+summary{cursor:pointer;font-weight:700;color:var(--pen)}
+details[open] summary{margin-bottom:8px}
+details>div{display:flex;flex-direction:column;gap:8px}
+.ok{color:var(--ok);font-weight:700}
+nav{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:.9rem}
+nav a{color:var(--pen)}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--pen);outline-offset:2px}
+</style>
+
+<main>
+<header style="display:flex;flex-direction:column;gap:6px">
+  <span class="tag">EE6203 · Quiz 3 · Sat 7 Nov · LT 2A · 2:30 pm</span>
+  <h1>Commute sheet: the marks you've been losing, in priority order</h1>
+  <p class="sub">Built from your Mock A (10.5/30) and Mock D (6/40) mistakes. Read it top to bottom on the way. When you arrive, do the drills at the end on paper.</p>
+  <nav><a href="#deadbeat">1 Deadbeat</a><a href="#jury">2 Jury</a><a href="#mapping">3 s→z</a><a href="#code">4 Diff. eqns</a><a href="#error">5 Error</a><a href="#concepts">6 One-liners</a><a href="#drills">Drills</a></nav>
+</header>
+
+<div class="rules">
+  <span class="tag">In the room</span>
+  <p><b>Never leave a part blank.</b> 15 of your lost marks were blanks. Writing the formula alone earns marks.</p>
+  <p><b>Every True/False answer needs a one-line reason</b>, or it scores half.</p>
+  <p><b>Finish the algebra:</b> normalise to K(z−z₀)/(z−p₀), divide through completely, and write strict &lt; in ranges.</p>
+</div>
+
+<section id="deadbeat">
+  <h2><span class="n">1</span>Deadbeat design (10 marks, blank twice)</h2>
+  <p>Goal: the output reaches the step exactly after a few samples. You pick the closed loop G<sub>cl</sub>, then solve for the controller C that produces it.</p>
+<pre>Plant G(z), step R = 1/(1 − z⁻¹)
+
+Gcl = C·G / (1 + C·G)
+ ⇒  C = Gcl / [ G·(1 − Gcl) ]
+
+Y = Gcl·R        U = (Gcl/G)·R</pre>
+  <h3>Choosing G<sub>cl</sub>: the four conditions</h3>
+  <ol>
+    <li><b>Delay:</b> G<sub>cl</sub> needs at least the plant's relative degree d. Start with z⁻ᵈ.</li>
+    <li><b>Never cancel a bad zero</b> (on or outside the unit circle). G<sub>cl</sub> must keep it.</li>
+    <li><b>Unstable or marginal poles</b> such as z = 1: 1 − G<sub>cl</sub> must contain them.</li>
+    <li><b>G<sub>cl</sub>(1) = 1</b>, which gives zero steady-state error.</li>
+  </ol>
+<pre>Plain:        Gcl = z⁻ᵈ
+Ripple-free:  Gcl = K·z⁻ᵈ·(1 + b·z⁻¹)
+              (keep EVERY plant zero)
+              Gcl(1)=1  ⇒  K = 1/(1 + b)</pre>
+  <p><b>Why plain ripples:</b> C cancels the plant zero at −b. If that zero is near −1, u(k) alternates in sign and decays slowly, so y wobbles between samples even though y(k) = 1 at every sample.</p>
+  <p><b>Why ripple-free works:</b> keeping the zero turns U into a finite polynomial, so u settles to its final value (0 for a type-1 plant) in a few steps.</p>
+
+  <h3>Worked: Mock D B3</h3>
+<pre>G = 0.25(z+0.8) / ((z−1)(z−0.5)),  d = 1
+
+(a) Gcl = z⁻¹ (plain)
+  C = 4(z − 0.5)/(z + 0.8)
+  u = 4, −5.2, 4.16, −3.33 …  → ripple
+
+(c) Gcl = K z⁻¹(1 + 0.8z⁻¹)
+  K = 1/1.8 = 5/9 = 0.5556
+  1 − Gcl = (z−1)(z + 4/9)/z²
+  C = (20/9)(z − 0.5)/(z + 0.4444)
+  y = 0, 0.5556, 1, 1
+  u = 2.222, −1.111, 0, 0   ✓ settles</pre>
+  <h3>Worked: Mock A Q3</h3>
+<pre>G = 0.0496(z+0.8192)/((z−1)(z−0.5488))
+Gcl = K z⁻¹(1 + 0.8192z⁻¹)
+K = 1/1.8192 = 0.5497
+1 − Gcl = (z−1)(z + 0.4503)/z²
+C = 11.08(z − 0.5488)/(z + 0.4503)
+y = 0, 0.5497, 1, 1
+u = 11.08, −6.08, 0, 0</pre>
+  <p class="sub"><span class="trap">Traps:</span> using K = 1/b instead of 1/(1+b); calling the plain design "ripple-free" because y(k) = 1 at the samples; adding an integrator to C when the plant already has the pole at z = 1. Plant order = number of poles (Mock A had 2, not 1).</p>
+</section>
+
+<section id="jury">
+  <h2><span class="n">2</span>Jury test (you stopped early)</h2>
+<pre>P(z) = a₀zⁿ + a₁zⁿ⁻¹ + … + aₙ ,  a₀ &gt; 0
+
+(1) |aₙ| &lt; a₀
+(2) P(1) &gt; 0
+(3) n even: P(−1) &gt; 0
+    n odd:  P(−1) &lt; 0
+n = 2: stop here.
+n = 3: ALSO build the b row:
+  b₀ = aₙ·a₁ − a₀·aₙ₋₁   (= a₃a₁ − a₀a₂)
+  b₂ = aₙ² − a₀²          (= a₃² − 1)
+(4) |b₂| &gt; |b₀|</pre>
+  <p><b>Mock D B1:</b> P = z³ − 1.5z² + 0.5z + K. Conditions (1)–(3) give 0 &lt; K &lt; 1. The b row gives b₀ = −1.5K − 0.5 and b₂ = K² − 1, so |b₂| &gt; |b₀| becomes K² + 1.5K − 0.5 &lt; 0, i.e. K &lt; 0.2808. <b>Answer: 0 &lt; K &lt; 0.2808.</b></p>
+  <p><b>Mock A Q1b (n = 2):</b> P(1) = 0.6K &gt; 0, P(−1) = 3.2 − 0.2K &gt; 0, |0.6 + 0.2K| &lt; 1. <b>0 &lt; K &lt; 2</b>, strict. At K = 2, P = z² − 0.8z + 1, so the poles are e<sup>±jθ</sup> with cos θ = 0.4, θ = 1.159 rad, and the output oscillates at ω = θ/T = 5.80 rad/s.</p>
+  <p class="sub"><span class="trap">Trap:</span> closed brackets [0, 2]. At either end a pole sits on the unit circle, which is only marginally stable.</p>
+</section>
+
+<section id="mapping">
+  <h2><span class="n">3</span>Analog → digital (finish the algebra)</h2>
+  <h3>Bilinear (Tustin)</h3>
+<pre>s = (2/T)·(z−1)/(z+1)
+Multiply every factor by (z+1); it cancels.
+Then NORMALISE:
+  (22z − 18)/(7z − 3)
+  = (22/7)·(z − 18/22)/(z − 3/7)
+  = 3.143·(z − 0.8182)/(z − 0.4286)
+Check: D(z=1) must equal D(s=0).</pre>
+  <h3>Pole-zero matching</h3>
+<pre>Each pole and zero:  z = e^(sT)
+Zeros at s = ∞ → factors (z + 1):
+  proper result:          n − m factors
+  strictly proper result: n − m − 1
+Gain α:  D(z=1) = D(s=0)
+  α = D(s=0)·(1 − p₁)/(1 − z₁)</pre>
+  <p><b>Mock D B2(b):</b> z₁ = e<sup>−0.2</sup> = 0.8187, p₁ = e<sup>−0.8</sup> = 0.4493. α = 1 × 0.5507 / 0.1813 = <b>3.038</b>. You stopped at 0.55 without dividing.</p>
+  <p class="sub"><span class="trap">Trap (Mock A):</span> P-Z matching is not the ZOH formula. Map the zero as well, and set the DC gain.</p>
+</section>
+
+<section id="code">
+  <h2><span class="n">4</span>Difference equations and delay counts</h2>
+<pre>Divide top and bottom by the leading z term:
+D = (b₀ + b₁z⁻¹) / (1 + a₁z⁻¹)
+
+Direct:
+u(k) = −a₁u(k−1) + b₀e(k) + b₁e(k−1)
+       ↑ the denominator sign FLIPS
+
+Mock D: D = (22/7 − 18/7 z⁻¹)/(1 − 3/7 z⁻¹)
+u(k) = (3/7)u(k−1) + (22/7)e(k) − (18/7)e(k−1)
+step: u(0) = 3.143, u(1) = 1.918</pre>
+<pre>Standard programming:  n delays
+Direct programming:    n + m delays
+(3 poles, 2 zeros → standard 3, direct 5)</pre>
+<pre>Standard form (Mock A Q2c):
+h(k) = e(k) − a₁h(k−1)
+u(k) = b₀h(k) + b₁h(k−1)</pre>
+</section>
+
+<section id="error">
+  <h2><span class="n">5</span>Steady-state error</h2>
+<pre>Type = number of poles at z = 1
+Kp = lim z→1  G(z)
+Kv = (1/T)·lim z→1 (z−1)/z · G(z)
+
+step:  e_ss = 1/(1 + Kp)
+ramp:  e_ss = 1/Kv</pre>
+  <p class="sub"><span class="trap">Trap (Mock D A1):</span> G = 0.5(z+0.5)/((z−0.5)(z−0.2)) has no pole at z = 1, so it is type 0 and the step error is not 0. Kp = 1.875 and e<sub>ss</sub> = 0.348. Don't forget the 1/T in Kv.</p>
+</section>
+
+<section id="concepts">
+  <h2><span class="n">6</span>One-liners for MCQ and True/False</h2>
+  <ul>
+    <li><b>Why the w-plane:</b> G(e<sup>jωT</sup>) is not rational in ω, but G(w) is, so Bode asymptote rules apply. It maps the inside of the unit circle onto the left half-plane (True). It does <i>not</i> stabilise anything and does <i>not</i> remove warping.</li>
+    <li><b>Lead</b> adds phase and widens bandwidth (faster). <b>Lag</b> raises low-frequency gain (smaller steady-state error) and is slower. "Lag to widen bandwidth" is False.</li>
+    <li><b>Relative degree:</b> write everything in powers of z first. A factor z⁻³ adds 3.</li>
+    <li><b>1-DOF:</b> S + T = 1, so tracking and disturbance rejection can't be shaped separately (True). <b>2-DOF</b> adds a separate block on r, so R<sub>c</sub>, S<sub>c</sub> place the poles and T<sub>c</sub>, γ shape the response to r.</li>
+    <li><b>A bad (unstable) plant zero can never be cancelled or moved by feedback</b>, in any structure (False if a question claims otherwise).</li>
+  </ul>
+</section>
+
+<section id="drills">
+  <h2><span class="n">★</span>After you arrive: drills on paper</h2>
+  <p class="sub">Do each one on paper before you open the answer. If time is short, do Drill 1 first.</p>
+
+  <details><summary>Drill 1 · ripple-free deadbeat (do this one first)</summary><div>
+    <p>G<sub>ZAS</sub> = 0.5(z + 0.6) / ((z − 1)(z − 0.4)), unit step. Find K, C(z), y(0..3), u(0..3).</p>
+  </div></details>
+  <details><summary>Answer 1</summary><div>
+<pre>d = 1, zero at −0.6 → keep it
+Gcl = K z⁻¹(1 + 0.6z⁻¹), K = 1/1.6 = 0.625
+1 − Gcl = (z−1)(z + 0.375)/z²
+C = 1.25(z − 0.4)/(z + 0.375)
+U = (Gcl/G)R = 1.25(1 − 0.4z⁻¹)
+y = 0, 0.625, 1, 1
+u = 1.25, −0.5, 0, 0</pre>
+  </div></details>
+
+  <details><summary>Drill 2 · Jury, n = 3</summary><div>
+    <p>P(z) = z³ − 1.2z² + 0.2z + K. Find the stable range of K.</p>
+  </div></details>
+  <details><summary>Answer 2</summary><div>
+<pre>(1) |K| &lt; 1
+(2) P(1) = K &gt; 0
+(3) odd: P(−1) = K − 2.4 &lt; 0 → K &lt; 2.4
+(4) b₀ = −1.2K − 0.2, b₂ = K² − 1
+    1 − K² &gt; 1.2K + 0.2
+    K² + 1.2K − 0.8 &lt; 0 → K &lt; 0.4770
+Answer: 0 &lt; K &lt; 0.4770</pre>
+  </div></details>
+
+  <details><summary>Drill 3 · bilinear, P-Z, code</summary><div>
+    <p>D(s) = 3(s + 1)/(s + 5), T = 0.2 s. (a) Bilinear D(z) in K(z − z₀)/(z − p₀) form. (b) Pole-zero matched α. (c) Direct difference equation, then u(0) and u(1) for a unit step e.</p>
+  </div></details>
+  <details><summary>Answer 3</summary><div>
+<pre>(a) 2/T = 10
+    s+1 → (11z − 9)/(z+1)
+    s+5 → (15z − 5)/(z+1)
+    D = (33z − 27)/(15z − 5)
+      = 2.2(z − 0.8182)/(z − 0.3333)
+    DC: D(1) = 0.6 = D(s=0) ✓
+(b) z₁ = e^−0.2 = 0.8187, p₁ = e^−1 = 0.3679
+    α = 0.6·0.6321/0.1813 = 2.092
+(c) D = (2.2 − 1.8z⁻¹)/(1 − (1/3)z⁻¹)
+    u(k) = (1/3)u(k−1) + 2.2e(k) − 1.8e(k−1)
+    u(0) = 2.2, u(1) = 1.133</pre>
+  </div></details>
+
+  <details><summary>Drill 4 · True/False, each with a reason</summary><div>
+    <ol>
+      <li>A controller with 2 poles and 1 zero needs 3 delays in standard programming.</li>
+      <li>If G has one pole at z = 1, the steady-state error to a unit step is 0.</li>
+      <li>The plain deadbeat design gives y(k) = 1 for k ≥ d, so it has no ripple.</li>
+    </ol>
+  </div></details>
+  <details><summary>Answer 4</summary><div>
+    <ol>
+      <li>False. Standard programming needs n = 2 delays; 3 is the direct-programming count.</li>
+      <li>True. A type-1 loop has Kp = ∞, so e<sub>ss</sub> = 1/(1+Kp) = 0.</li>
+      <li>False. Samples hitting 1 says nothing about the output between samples. If C cancels a plant zero, u keeps oscillating, so y ripples between samples.</li>
+    </ol>
+  </div></details>
+</section>
+
+<p class="sub">Sources: your Mock A/D keys (<code>quiz-03-mock-a.md</code>, <code>quiz-03-mock-d.html</code>); Wen's notes Ch 4 pp. 164–166, 186–188; Ch 5 pp. 7–8, 14–15, 23–24, 51–56, 66–77, 104–107. Drill numbers checked numerically. Unofficial.</p>
+</main>
