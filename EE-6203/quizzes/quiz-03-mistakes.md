@@ -18,3 +18,17 @@ The other 11.5 were wrong answers, missing reasons, or missing steps.
 | 6 | Q1b, 1.5 marks | `[0,2]` | Closed interval: at K = 0 (pole at z = 1) and at K = 2 (\|z\| = 1) the loop is only marginally stable. Part (ii) blank | concept: strict inequalities | Jury gives strict `<`, so write `0 < K < 2` | R3 open |
 | 7 | Q1(a)3, 1 mark | False (key: True) | Relative degree of the whole G is 3 once both z^-3 and the denominator are converted to powers of z | concept | m = relative degree after writing G in powers of z | R1 open |
 | 8 | Q1(a)4, 1 mark | True (key: False) | Gave the direct-programming count (5); standard needs 3 | concept (same as #5) | Standard = n delays | R2 open |
+
+## Mock D, first sit (printout 2026-11-07 12:46; `attempts/quiz-03-mock-d-2026-11-07.pdf`)
+
+Score **6/40** (A 6/12, B rubric not ticked). B3 (10 marks) **blank** — the deadbeat question is blank in both mocks.
+
+| # | Item | Written | What went wrong | Rule |
+|---|---|---|---|---|
+| D1 | B3 deadbeat, 10 marks | blank | Same gap as Mock A Q3 | Gcl = z^-d (plain) or K z^-d·(plant zeros) (ripple-free), K from Gcl(1)=1; C = Gcl/[G(1−Gcl)]; U = (Gcl/G)R, Y = Gcl·R |
+| D2 | B1(a) Jury, 3rd order | K < 1 | Stopped after \|a3\|<a0, P(1), P(−1); never built the b row | n = 3 needs \|b2\| > \|b0\|, b0 = a3a1 − a0a2, b2 = a3² − a0² → K < 0.2808 |
+| D3 | B2(a) bilinear | Kd 1, z0 18, p0 3 | Algebra right ((22z−18)/(7z−3)) but not normalised | Divide out leading coefficients: Kd = 22/7, z0 = 18/22, p0 = 3/7 |
+| D4 | B2(b) P-Z α | 0.55 | Stopped at 1 − e^-0.8; forgot to divide by 1 − e^-0.2 | α = D(s=0)·(1−p1)/(1−z1) = 3.038 |
+| D5 | B2(c) u(0), u(1) | −7, 3 | Difference equation wrong | Divide by leading z coeff; denominator signs flip: u(k) = (3/7)u(k−1) + (22/7)e(k) − (18/7)e(k−1) |
+| D6 | A1 step error | 0 | Assumed type 1; G has no pole at z = 1 | Type = poles at z = 1; type 0 → e_ss = 1/(1+Kp) |
+| D7 | A3 why w-plane | "stabilise G" | — | G(e^{jωT}) not rational in ω; G(w) is, so Bode asymptotes work |
