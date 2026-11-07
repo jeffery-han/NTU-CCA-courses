@@ -32,7 +32,9 @@ control stack that turns camera images and a spoken instruction into
 coordinated motion of every joint.  I compare commercial platforms (Boston
 Dynamics Atlas, Figure 03, Apptronik Apollo, Unitree G1) and recent research
 on learned whole-body control and vision-language-action (VLA) models
-(GR00T N1, $\pi_0$, Gemini Robotics 1.5, Helix 02, FAST, HuGe).  I argue that
+(GR00T N1, $\pi_0$, Gemini Robotics 1.5, Helix 02, FAST, HuGe), as well as
+recent tests of OpenAI's general-purpose GPT-6 Astra model used as a robot
+brain.  I argue that
 the best current solution is a \emph{hierarchical, learned} architecture in
 which a slow reasoning model, a fast visuomotor policy, and a very fast
 whole-body controller are trained to work together, as exemplified by
@@ -212,6 +214,46 @@ and is trained further to output robot actions.  The key systems are:
   pick-and-drop task.
 \end{itemize}
 
+\subsection{General-purpose frontier models as the robot brain}\label{sec:astra}
+
+A newer idea, which appeared in late 2026, skips robot-specific training
+entirely.  Instead, a general-purpose frontier model, OpenAI's GPT-6 Astra,
+is connected to a robot and asked to control it directly.  Several research
+groups tested this within a few weeks of each other:
+
+\begin{itemize}
+  \item \textbf{HomeBody} (Stanford and Caltech, September
+  2026)~\cite{homebody-2026} runs a Unitree G1 humanoid with Astra.  Astra
+  does not output joint commands.  It picks a skill (grasp, navigate, open a
+  drawer) and its target through a structured tool call, and the skills run
+  on a local laptop GPU.  The robot tidied an unfamiliar kitchen, but the
+  authors note pauses between skills caused by Astra's reasoning latency,
+  extra API cost, and overheating finger servos.  It is a project page with
+  code, not a paper with measured results.
+  \item \textbf{Astranomy} (NVIDIA, October 2026)~\cite{astranomy-2026}
+  tests Astra as a robot policy in simulation without any robot training.
+  Used as an agent with tools, it reached a 74.8\% success rate on the
+  RoboLab-120 benchmark, against 28.0\% for $\pi_0$'s successor
+  $\pi_{0.5}$.  The cost is speed and money: a single direct call takes about
+  18.6~s on average, and the agent version uses about 30.9 million tokens
+  (about US\$36) per episode.
+  \item \textbf{SenseNova's joint study} (October 2026)~\cite{sensenova-2026}
+  evaluates Astra on 8 robot configurations and 12 benchmarks, including
+  humanoids.  It finds that the best setup uses Astra as a slow ``System~2''
+  planner coordinating a fast ``System~1'' controller such as $\pi_{0.5}$,
+  which it calls ``costly but effective''.  The authors conclude that Astra
+  is not yet practical embodied intelligence, because of cost, execution
+  time and weak recovery from irreversible failures.
+\end{itemize}
+
+\noindent
+These results show that a general model can understand scenes and plan
+tasks surprisingly well with no robot training.  But it is far too slow to
+close a balance or grasping loop.  In every humanoid example it sits at the
+top of the stack and calls faster controllers below it.  All three sources
+are preprints or project pages, and I did not find an official technical
+report from OpenAI describing Astra's design.
+
 \subsection{Comparison}
 
 Table~\ref{tab:compare} summarises the solutions against the criteria in the
@@ -240,6 +282,9 @@ FAST & Pre-trained WBC + constrained residual adaptation & Fast adaptation
 without forgetting; CoM-aware balance & Preprint; sim and real \\
 HuGe & VLA $\rightarrow$ latent motion tokens $\rightarrow$ WBC & Scales data
 with egocentric human video & Preprint; benchmark + G1 \\
+GPT-6 Astra (third-party use) & General frontier model as planner, calling
+skills or a fast policy & No robot training needed; strong task planning;
+but slow and costly & Preprints, project pages \\
 \bottomrule
 \end{tabularx}
 \caption{Comparison of the reviewed humanoid solutions.}
@@ -283,7 +328,9 @@ for four reasons.
   \item \textbf{The research community has converged on it.}  GR00T~N1's
   dual-system design, Gemini Robotics~1.5's split between reasoning and
   action, and HuGe's ``VLA outputs tokens for a pre-trained WBC'' interface
-  are all variants of the same hierarchy.  When independent groups arrive at
+  are all variants of the same hierarchy.  Even the GPT-6 Astra studies
+  (Section~\ref{sec:astra}) ended up placing the general model on top as
+  System~2, with faster controllers below it.  When independent groups arrive at
   the same structure, that is good evidence the structure is right, even if
   the details differ.
 \end{enumerate}
@@ -425,6 +472,21 @@ Next-generation whole-body control system of humanoid robots,''
 Y.~Liu \emph{et al.}, ``HuGe: Scaling humanoid generalist
 vision-language-action models with egocentric experience,''
 arXiv:2610.34186, Oct.\ 2026.
+
+\bibitem{homebody-2026}
+G.~Huh, C.~Gu, T.~E. Truong, C.~K. Liu and G.~Tevet, ``HomeBody,'' project
+page, Stanford University and Caltech, Sep.\ 2026.
+\url{https://tml.stanford.edu/homebody/}
+
+\bibitem{astranomy-2026}
+J.~X. Yang, A.~Khetan and S.~Zhang, ``Astranomy: An empirical study of GPT-6
+Astra as a native robot policy,'' NVIDIA Research, CoRL 2026 late-breaking
+result, Oct.\ 2026.
+\url{https://research.nvidia.com/labs/srl/projects/astranomy/}
+
+\bibitem{sensenova-2026}
+SenseNova Joint Research Team \emph{et al.}, ``Has GPT-6-Astra achieved
+embodied intelligence?,'' arXiv:2610.22471, Oct.\ 2026.
 
 \bibitem{motionvla-2026}
 ``MotionVLA: Vision-language-action model for humanoid motion,''
