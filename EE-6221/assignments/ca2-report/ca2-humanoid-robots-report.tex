@@ -9,6 +9,7 @@
 \usepackage{enumitem}
 \usepackage{xcolor}
 \usepackage{url}
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\-}
 \usepackage[colorlinks=true,linkcolor=black,citecolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
 \setlist{itemsep=2pt,topsep=4pt}
 \setlength{\parskip}{4pt}
@@ -33,15 +34,17 @@ coordinated motion of every joint.  I compare commercial platforms (Boston
 Dynamics Atlas, Figure 03, Apptronik Apollo, Unitree G1) and recent research
 on learned whole-body control and vision-language-action (VLA) models
 (GR00T N1, $\pi_0$, Gemini Robotics 1.5, Helix 02, FAST, HuGe), as well as
-recent tests of OpenAI's general-purpose GPT-6 Astra model used as a robot
-brain.  I also compare where each brain can run (on the robot or in the
+recent tests of general-purpose frontier models, mainly OpenAI's GPT-6 Astra
+but also Claude, Gemini and Grok, used as a robot brain.  I also compare where each brain can run (on the robot or in the
 cloud) and how fast it can react, since many applications require offline,
 on-device operation within a fixed latency budget.  I argue that
 the best current solution is a \emph{hierarchical, learned} architecture in
 which a slow reasoning model, a fast visuomotor policy, and a very fast
 whole-body controller are trained to work together, as exemplified by
 Figure's Helix 02, while Atlas is the most deployment-ready hardware.  I then
-discuss the main open challenges (data, reliability, safety certification,
+discuss why humanoids are still mostly at the pilot stage while AI agents
+are already used widely in software, the main open challenges (data,
+reliability, safety certification,
 energy, and evaluation), likely future directions, and what I learned.
 \end{abstract}
 
@@ -219,9 +222,10 @@ and is trained further to output robot actions.  The key systems are:
 \subsection{General-purpose frontier models as the robot brain}\label{sec:astra}
 
 A newer idea, which appeared in late 2026, skips robot-specific training
-entirely.  Instead, a general-purpose frontier model, OpenAI's GPT-6 Astra,
-is connected to a robot and asked to control it directly.  Several research
-groups tested this within a few weeks of each other:
+entirely.  Instead, a general-purpose frontier model, the same kind of model
+behind today's chatbots and AI agents, is connected to a robot and asked to
+control it.  The most tested example is OpenAI's GPT-6 Astra, which several
+research groups studied within a few weeks of each other:
 
 \begin{itemize}
   \item \textbf{HomeBody} (Stanford and Caltech, September
@@ -256,6 +260,39 @@ top of the stack and calls faster controllers below it.  All three sources
 are preprints or project pages, and I did not find an official technical
 report from OpenAI describing Astra's design.
 
+\paragraph{Other frontier models.}  Astra is not the only general model
+being tried as a robot brain.
+\begin{itemize}
+  \item \textbf{Gemini.}  Google builds its own robotics models on top of
+  Gemini.  Gemini Robotics-ER~1.5 is a Gemini model tuned for
+  embodied reasoning and used as the planner above the Gemini Robotics VLA
+  (Section~\ref{sec:vla})~\cite{gemini-15}.
+  \item \textbf{Claude.}  Robocurve compared Claude Fable~5, Fable~5.1 and
+  Astra on the same pair of 6-DoF YAM arms, with the model sending
+  end-effector poses directly~\cite{robocurve-astra}.  On placing a block in
+  a bowl (20 trials each), Astra succeeded 19 times, Fable~5.1 8 times and
+  Fable~5 once.  On a harder puzzle task, Astra and Fable~5.1 each succeeded
+  only 2 times in 20.  The authors note the runs were not interleaved, used
+  different rigs, and were graded by an operator, so this is a small, early
+  comparison.  Earlier, Anthropic's Project Fetch (November 2025) used
+  Claude differently: as a coding assistant, it helped a team of four
+  people program a robot dog and finish 7 of 8 tasks, against 6 of 8 for a
+  team without it~\cite{project-fetch}.
+  \item \textbf{Grok.}  Tesla plans to use xAI's Grok as the conversational
+  ``brain'' of its Optimus humanoid, while a vision network adapted from
+  Tesla's self-driving software handles perception and
+  movement~\cite{grok-optimus,investorplace-optimus}.  Musk has said that
+  for a Grok-level conversation Optimus needs a Wi-Fi or cellular connection
+  to the cloud~\cite{optimus-wiki}, which is exactly the on-device versus
+  cloud trade-off discussed in Section~\ref{sec:deploy}.  This is a plan,
+  not a published or tested system.
+\end{itemize}
+
+\noindent
+The pattern is the same for every company: the general model supplies
+language understanding and planning, and something faster and more
+specialised moves the body.
+
 \subsection{Comparison}
 
 Table~\ref{tab:compare} summarises the solutions against the criteria in the
@@ -284,9 +321,10 @@ FAST & Pre-trained WBC + constrained residual adaptation & Fast adaptation
 without forgetting; CoM-aware balance & Preprint; sim and real \\
 HuGe & VLA $\rightarrow$ latent motion tokens $\rightarrow$ WBC & Scales data
 with egocentric human video & Preprint; benchmark + G1 \\
-GPT-6 Astra (third-party use) & General frontier model as planner, calling
-skills or a fast policy & No robot training needed; strong task planning;
-but slow and costly & Preprints, project pages \\
+General frontier models (GPT-6 Astra, Claude Fable, Gemini-ER, Grok) &
+General model as planner, calling skills or a fast policy & No robot
+training needed; strong task planning; but slow and costly & Preprints,
+project pages, small lab tests; Grok only announced \\
 \bottomrule
 \end{tabularx}
 \caption{Comparison of the reviewed humanoid solutions.}
@@ -453,6 +491,37 @@ report) are better references for how the architecture works.
 %-----------------------------------------------------------------
 \section{Challenges in improving humanoid robots}
 
+\paragraph{Why are there so few real applications?}  LLMs and AI agents are
+already part of everyday software work, such as writing code and answering
+customers.  Humanoids, which use the same kind of models as their
+``brain'', are still mostly at the pilot stage.  The public record is small.
+Agility Robotics and the logistics company GXO signed what they called the
+first humanoid Robot-as-a-Service contract in 2024~\cite{agility-wiki}.
+Figure reports about 740 robots operating by the end of June 2026, which is a
+company figure~\cite{figure-wiki}.  Tesla is still installing its first
+Optimus production lines, and analysts expect external sales no earlier than
+the second half of 2027~\cite{investorplace-optimus}.
+
+In my view the gap comes from four differences between software agents and
+robots:
+\begin{itemize}
+  \item \textbf{Mistakes cost more.}  A wrong line of code can be reviewed,
+  tested and undone.  A wrong physical action can break equipment or hurt
+  someone, and it cannot be undone.
+  \item \textbf{Each copy costs money.}  A software agent can be copied to a
+  million users almost for free.  Every robot is hardware that must be built,
+  charged, maintained and insured.
+  \item \textbf{The bar is a working alternative.}  A humanoid must beat a
+  fixed automation cell or a human worker on total cost and reliability, and
+  both already work well.
+  \item \textbf{There is less data and less certainty.}  Robot data is scarce,
+  and there is no safety standard yet for certifying the robot.
+\end{itemize}
+The challenges below are the technical side of this gap.  Note that LLM
+progress does reach robots quickly, but only at the top of the stack, as the
+planner.  The body, the fast control loops and safety are what still limit
+commercial use.
+
 \begin{enumerate}
   \item \textbf{Data scarcity and embodiment gap.}  Language models learned
   from trillions of words; humanoid policies have thousands of hours of
@@ -472,6 +541,15 @@ report) are better references for how the architecture works.
   dynamically stable industrial mobile robots, ISO~25785-1, is still in
   development~\cite{iso-25785}.  It is also unclear how to certify a neural
   network controller whose behaviour cannot be fully specified in advance.
+  General models make this harder.  In Robocurve's RoboHarm test (September
+  2026), Claude Fable~5.1, GPT-6 Astra and the robot model MolmoAct2
+  controlled real arms and were each given 5 instructions a safe robot
+  should refuse, 20 times each~\cite{roboharm}.  Fable refused 20 of 100,
+  all on one task (stabbing a doll); Astra refused 2; MolmoAct2 refused none.
+  Fable and Astra each pushed a metal screwdriver into a toaster 6 and 7
+  times out of 20.  The chatbot safety training of these models does not
+  carry over to physical actions, so a separate safety layer on the robot is
+  still needed.
   \item \textbf{Hands and touch.}  Dexterous manipulation still lags far
   behind locomotion.  Multi-fingered hands are fragile and costly, and
   tactile sensing is only now being integrated into learned policies
@@ -595,6 +673,43 @@ devices,'' blog post, 24 Jun.\ 2025.
 NVIDIA, ``Introducing NVIDIA Jetson Thor, the ultimate platform for physical
 AI,'' NVIDIA Technical Blog, 25 Aug.\ 2025.
 \url{https://developer.nvidia.com/blog/introducing-nvidia-jetson-thor-the-ultimate-platform-for-physical-ai/}
+
+\bibitem{robocurve-astra}
+A.~Menon, S.~Machcha, S.~Zou, T.~K. Chan and J.~Chooi, ``GPT-6 Astra on
+robotic manipulation,'' Robocurve, 4 Sep.\ 2026.
+\url{https://openai.robocurve.org/gpt-6-astra/}
+
+\bibitem{roboharm}
+E.~Sun, S.~Machcha, S.~Zou, T.~K. Chan and J.~Chooi, ``RoboHarm: Do frontier
+robot policies refuse unsafe instructions?,'' Robocurve, 18 Sep.\ 2026.
+\url{https://robocurve.org/roboharm/}
+
+\bibitem{project-fetch}
+Anthropic Frontier Red Team, ``Project Fetch: Can Claude train a robot
+dog?,'' Anthropic, 12 Nov.\ 2025.
+\url{https://www.anthropic.com/research/project-fetch-robot-dog}
+
+\bibitem{grok-optimus}
+K.~Singh, ``Tesla to integrate xAI's Grok into Optimus, helping bring the
+robot to life,'' Not a Tesla App, 9 Jul.\ 2025.
+\url{https://www.notateslaapp.com/news/2874/tesla-to-integrate-xais-grok-into-optimus-helping-bring-the-robot-to-life}
+
+\bibitem{investorplace-optimus}
+J.~Rose, ``Tesla Optimus, Grok, and TSLA stock: Inside the physical-AI bet
+that now defines Tesla,'' InvestorPlace, 7 Sep.\ 2026.
+\url{https://investorplace.com/dailylive/2026/09/tesla-optimus-grok-and-tsla-stock-inside-the-physical-ai-bet-that-now-defines-tesla/}
+
+\bibitem{optimus-wiki}
+``Optimus (robot),'' Wikipedia, accessed 7 Nov.\ 2026.
+\url{https://en.wikipedia.org/wiki/Optimus_(robot)}
+
+\bibitem{figure-wiki}
+``Figure AI,'' Wikipedia, accessed 7 Nov.\ 2026.
+\url{https://en.wikipedia.org/wiki/Figure_AI}
+
+\bibitem{agility-wiki}
+``Agility Robotics,'' Wikipedia, accessed 7 Nov.\ 2026.
+\url{https://en.wikipedia.org/wiki/Agility_Robotics}
 
 \bibitem{homebody-2026}
 G.~Huh, C.~Gu, T.~E. Truong, C.~K. Liu and G.~Tevet, ``HomeBody,'' project
