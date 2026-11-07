@@ -7,6 +7,7 @@
 \usepackage{tabularx}
 \usepackage{array}
 \usepackage{enumitem}
+\usepackage{float}
 \usepackage{xcolor}
 \usepackage{url}
 \expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\-}
@@ -28,26 +29,26 @@ Robot Brains and the Limits of Real-World Deployment}
 \begin{abstract}
 \noindent
 This report reviews the current state of general-purpose humanoid robots,
-with a focus on one technology that decides whether they are useful: the
-control stack that turns camera images and a spoken instruction into
-coordinated motion of every joint.  I compare commercial platforms (Boston
-Dynamics Atlas, Figure 03, Apptronik Apollo, Unitree G1) and recent research
-on learned whole-body control and vision-language-action (VLA) models
-(GR00T N1, $\pi_0$, Gemini Robotics 1.5, Helix 02, FAST, HuGe), as well as
-recent tests of general-purpose frontier models, mainly OpenAI's GPT-6 Astra
-but also Claude, Gemini and Grok, used as a robot brain.  I also compare where each brain can run (on the robot or in the
-cloud) and how fast it can react, since many applications require offline,
-on-device operation within a fixed latency budget.  I argue that
-the best current solution is a \emph{hierarchical, learned} architecture in
-which a slow reasoning model, a fast visuomotor policy, and a very fast
-whole-body controller are trained to work together, as exemplified by
-Figure's Helix 02, while Atlas is the most deployment-ready hardware.  I then
-discuss why humanoids are still mostly at the pilot stage while AI agents
-are already used widely in software, the main open challenges (data,
-reliability, safety certification,
-energy, and evaluation), likely future directions, and what I learned.
+concentrating on the control stack that turns camera images and a spoken
+instruction into coordinated motion of every joint.  I compare commercial
+platforms (Boston Dynamics Atlas, Figure~03, Apptronik Apollo, Unitree~G1),
+recent research on learned whole-body control and vision-language-action (VLA)
+models (GR00T~N1, $\pi_0$, Gemini Robotics 1.5, Helix~02, FAST, HuGe), and the
+newer practice of using a general-purpose frontier model as the robot's brain,
+mainly OpenAI's GPT-6 Astra but also Claude, Gemini and Grok.  For each I ask
+where the model runs, on the robot or in the cloud, and how fast it reacts,
+because many applications need offline, on-device operation inside a fixed
+latency budget.  In my view the best current solution is a \emph{hierarchical,
+learned} architecture in which a slow reasoning model, a fast visuomotor policy
+and a very fast whole-body controller are trained to work together, as in
+Figure's Helix~02, with Atlas the most deployment-ready hardware.  I also
+discuss why humanoids are still mostly at the pilot stage while AI agents are
+already used widely in software, the main open challenges (data, reliability,
+safety certification, energy and evaluation), likely future directions and what
+I learned.
 \end{abstract}
 
+\setcounter{tocdepth}{1}
 \tableofcontents
 \newpage
 
@@ -55,41 +56,38 @@ energy, and evaluation), likely future directions, and what I learned.
 \section{Introduction and scope}
 
 A humanoid robot has a human-like body: two legs, a torso, two arms and, in
-most current designs, multi-fingered hands.  The case for this form is
-practical rather than aesthetic.  Factories, warehouses and homes were built
-for human bodies, so a robot with the same reach, height and hand shape can in
-principle use existing tools, shelves and doorways without redesigning the
-workplace.  The same argument explains why humanoids are hard: a body with
-50 or more actuated joints that must balance on two small feet is
-underactuated, has highly coupled dynamics, and must keep doing so while the
-hands interact with unknown objects.
+most current designs, multi-fingered hands.  The case for the form is
+practical.  Factories, warehouses and homes were built for human bodies, so a
+robot with the same reach, height and hand shape can in principle use existing
+tools, shelves and doorways without redesigning the workplace.  The same line
+of argument explains why humanoids are hard: a body with 50 or more actuated
+joints that must balance on two small feet is underactuated, has highly coupled
+dynamics, and must keep doing so while the hands interact with unknown objects.
 
 For many years the hardware was the bottleneck.  Today several companies can
 build reliable humanoid bodies, and the limiting factor has moved to the
 ``brain'': how the robot perceives a scene, decides what to do, and converts
-that decision into stable whole-body motion.  This review therefore treats the
-overall humanoid solution but concentrates on that control stack.  It connects
-directly to EE6221: forward and inverse kinematics of redundant arms, robot
-dynamics and control, vision sensors and pose estimation, sensor fusion with
-the Kalman filter, and vision-based control all appear as layers inside a
+that decision into stable whole-body motion.  I review the overall humanoid
+solution here, but the control stack is the part I examine in detail.  It
+connects directly to EE6221: forward and inverse kinematics of redundant arms,
+robot dynamics and control, vision sensors and pose estimation, sensor fusion
+with the Kalman filter, and vision-based control all appear as layers inside a
 modern humanoid.
 
-\paragraph{Method.}
 I compared systems using public technical reports, peer-reviewed or preprint
-papers, and official company announcements.  Company announcements are
-treated as \emph{claims}; I note where results lack independent
-verification.  Each solution is judged on five criteria:
-(i)~breadth of tasks it can perform without task-specific programming,
-(ii)~length and reliability of autonomous operation,
-(iii)~data efficiency and ability to transfer across robots,
-(iv)~readiness for real deployment (hardware maturity, safety, integration),
-and (v)~openness and quality of the evidence.
+papers, and official company announcements.  Company announcements are treated
+as \emph{claims}, and I note where a result lacks independent verification.
+Each solution is judged on five criteria: breadth of tasks it can perform
+without task-specific programming; length and reliability of autonomous
+operation; data efficiency and ability to transfer across robots; readiness for
+real deployment (hardware maturity, safety, integration); and openness and
+quality of the evidence.
 
 %-----------------------------------------------------------------
 \section{Background: the layers of a humanoid control stack}
 
-It is useful to describe any humanoid as a stack of loops running at very
-different rates.
+Any humanoid is a stack of loops running at very different rates, from the
+joint loop at the bottom to the task planner at the top.
 
 \begin{enumerate}[label=\textbf{L\arabic*}]
   \item \textbf{Actuation and state estimation} (about 1\,kHz).  Joint torque
@@ -115,32 +113,31 @@ model predictive control (MPC) of a simplified centroidal model, and a
 quadratic-program WBC that resolves the redundancy of the kinematic chain
 (the same null-space idea used for redundant manipulators, but with contact
 and balance constraints added).  L3 and L4 were hand-written state machines.
-The common thread of the last two years is that \emph{every layer above L1 is
-being replaced or augmented by learned models}, and the key design question is
-how those learned layers are divided and connected.
+Over the last two years every layer above L1 has been replaced or augmented by
+learned models, which makes the way those layers are divided and connected the
+design question that matters most.
 
 %-----------------------------------------------------------------
 \section{Review of the state of the art}
 
 \subsection{Hardware platforms}
 
-\textbf{Boston Dynamics Atlas} (product version, January 2026) is the most
+Boston Dynamics' Atlas (product version, January 2026) is the most
 deployment-ready body: 56 degrees of freedom, 50\,kg payload, water
 resistance, operation from $-20$ to $40\,^\circ$C, autonomous battery swapping,
 and connection to factory software through the Orbit fleet platform.  All
 2026 production goes to Hyundai and Google DeepMind~\cite{bd-atlas-2026}.
-\textbf{Figure~03} (October 2025) was redesigned for volume manufacturing and
-homes, with palm cameras and tactile hands, and is the body for
-Helix~02~\cite{figure-03}.  \textbf{Apptronik Apollo} is one of the robots
-used by Gemini Robotics~1.5~\cite{gemini-15}, and the low-cost
-\textbf{Unitree G1} has become the common research
-platform~\cite{huge-2026,motionvla-2026}.
+Figure~03 (October 2025) was redesigned for volume manufacturing and homes,
+with palm cameras and tactile hands, and is the body for
+Helix~02~\cite{figure-03}.  Apptronik's Apollo is one of the robots used by
+Gemini Robotics~1.5~\cite{gemini-15}, and the low-cost Unitree~G1 has become
+the common research platform~\cite{huge-2026,motionvla-2026}.
 
 \subsection{Learned whole-body control}
 
 Reinforcement learning in GPU-parallel simulation, followed by sim-to-real
-transfer, is now the standard way to obtain robust humanoid locomotion.  The
-newest trend is the \emph{behaviour foundation model}, a whole-body
+transfer, is now the standard way to obtain robust humanoid locomotion.  A
+newer line of work is the \emph{behaviour foundation model}, a whole-body
 controller pre-trained on large motion datasets so it can be reused across
 tasks~\cite{bfm-survey}.  FAST~\cite{fast-2026} adds a small, constrained
 residual policy for new motions and centre-of-mass objectives, which shows
@@ -149,105 +146,89 @@ that learned controllers still benefit from classical balance quantities.
 \subsection{Vision-language-action models}\label{sec:vla}
 
 A VLA model starts from a vision-language model pre-trained on internet data
-and is trained further to output robot actions.
-\begin{itemize}
-  \item \textbf{$\pi_0$} (Physical Intelligence, 2024)~\cite{pi0}: a
-  vision-language backbone with a flow-matching action expert, trained across
-  many robot types; it set the recipe later models follow.
-  \item \textbf{GR00T N1} (NVIDIA, 2025)~\cite{groot-n1}: an open-weight
-  humanoid model with a dual-system design, a vision-language ``System~2''
-  and a diffusion action ``System~1''.
-  \item \textbf{Gemini Robotics 1.5} (Google DeepMind, 2025)~\cite{gemini-15}:
-  a VLA plus a separate embodied-reasoning planner, with motion transfer that
-  runs the same skill on different robots, including Apollo.
-  \item \textbf{Helix 02} (Figure, 2026)~\cite{helix-02}: adds a learned
-  whole-body controller (``System~0'') beneath Helix's System~1 and System~2.
-  Figure showed a four-minute autonomous dishwasher task across a kitchen and
-  later claimed multi-hour shifts; these are company claims without
-  independent evaluation.
-  \item \textbf{HuGe} (October 2026)~\cite{huge-2026}: pre-trains humanoid VLAs
-  on over 2{,}000\,h of egocentric human and robot video, outputting motion
-  tokens for a pre-trained whole-body controller; on a real G1 the human data
-  improved pick-and-drop success.
-\end{itemize}
+and is trained further to output robot actions.  $\pi_0$ (Physical
+Intelligence, 2024)~\cite{pi0} is a vision-language backbone with a
+flow-matching action expert, trained across many robot types, and it set the
+recipe later models follow.  GR00T~N1 (NVIDIA, 2025)~\cite{groot-n1} is an
+open-weight humanoid model with a dual-system design: a vision-language
+``System~2'' and a diffusion action ``System~1''.  Gemini Robotics~1.5 (Google
+DeepMind, 2025)~\cite{gemini-15} pairs a VLA with a separate embodied-reasoning
+planner and adds motion transfer, which runs the same skill on different
+robots, including Apollo.  Helix~02 (Figure, 2026)~\cite{helix-02} adds a
+learned whole-body controller (``System~0'') beneath Helix's System~1 and
+System~2; Figure showed a four-minute autonomous dishwasher task across a
+kitchen and later claimed multi-hour shifts, and both are company claims
+without independent evaluation.  HuGe (October 2026)~\cite{huge-2026}
+pre-trains humanoid VLAs on over 2{,}000\,h of egocentric human and robot video
+and outputs motion tokens for a pre-trained whole-body controller; on a real G1
+the human data improved pick-and-drop success.
 
 \subsection{General-purpose frontier models as the robot brain}\label{sec:astra}
 
 A newer idea, which appeared in late 2026, skips robot-specific training
-entirely.  Instead, a general-purpose frontier model, the same kind of model
-behind today's chatbots and AI agents, is connected to a robot and asked to
-control it.  The most tested example is OpenAI's GPT-6 Astra, which several
-research groups studied within a few weeks of each other:
+entirely.  A general-purpose frontier model, the same kind of model behind
+today's chatbots and AI agents, is connected to a robot and asked to control
+it.  The most tested example is OpenAI's GPT-6 Astra, which several research
+groups studied within a few weeks of each other.
 
-\begin{itemize}
-  \item \textbf{HomeBody} (Stanford and Caltech, September
-  2026)~\cite{homebody-2026} runs a Unitree G1 humanoid with Astra.  Astra
-  does not output joint commands.  It picks a skill (grasp, navigate, open a
-  drawer) and its target through a structured tool call, and the skills run
-  on a local laptop GPU.  The robot tidied an unfamiliar kitchen, but the
-  authors note pauses between skills caused by Astra's reasoning latency,
-  extra API cost, and overheating finger servos.  It is a project page with
-  code, not a paper with measured results.
-  \item \textbf{Astranomy} (NVIDIA, October 2026)~\cite{astranomy-2026}
-  tests Astra as a robot policy in simulation without any robot training.
-  Used as an agent with tools, it reached a 74.8\% success rate on the
-  RoboLab-120 benchmark, against 28.0\% for $\pi_0$'s successor
-  $\pi_{0.5}$.  The cost is speed and money: a single direct call takes about
-  18.6~s on average, and the agent version uses about 30.9 million tokens
-  (about US\$36) per episode.
-  \item \textbf{SenseNova's joint study} (October 2026)~\cite{sensenova-2026}
-  evaluates Astra on 8 robot configurations and 12 benchmarks, including
-  humanoids.  It finds that the best setup uses Astra as a slow ``System~2''
-  planner coordinating a fast ``System~1'' controller such as $\pi_{0.5}$,
-  which it calls ``costly but effective''.  The authors conclude that Astra
-  is not yet practical embodied intelligence, because of cost, execution
-  time and weak recovery from irreversible failures.
-\end{itemize}
+HomeBody (Stanford and Caltech, September 2026)~\cite{homebody-2026} runs a
+Unitree G1 with Astra.  Astra does not output joint commands: it picks a skill
+(grasp, navigate, open a drawer) and its target through a structured tool call,
+and the skills run on a local laptop GPU.  The robot tidied an unfamiliar
+kitchen, but the authors note pauses between skills caused by Astra's reasoning
+latency, extra API cost and overheating finger servos.  It is a project page
+with code, not a paper with measured results.
 
-\noindent
-These results show that a general model can understand scenes and plan
-tasks surprisingly well with no robot training.  But it is far too slow to
-close a balance or grasping loop.  In every humanoid example it sits at the
-top of the stack and calls faster controllers below it.  All three sources
-are preprints or project pages, and I did not find an official technical
-report from OpenAI describing Astra's design.
+Astranomy (NVIDIA, October 2026)~\cite{astranomy-2026} tests Astra as a robot
+policy in simulation without any robot training.  Used as an agent with tools,
+it reached a 74.8\% success rate on the RoboLab-120 benchmark, against 28.0\%
+for $\pi_0$'s successor $\pi_{0.5}$.  The cost is speed and money: a single
+direct call takes about 18.6~s on average, and the agent version uses about
+30.9 million tokens (about US\$36) per episode.
 
-\paragraph{Other frontier models.}  Astra is not the only general model
-being tried as a robot brain.
-\begin{itemize}
-  \item \textbf{Gemini.}  Google builds its own robotics models on top of
-  Gemini.  Gemini Robotics-ER~1.5 is a Gemini model tuned for
-  embodied reasoning and used as the planner above the Gemini Robotics VLA
-  (Section~\ref{sec:vla})~\cite{gemini-15}.
-  \item \textbf{Claude.}  Robocurve compared Claude Fable~5, Fable~5.1 and
-  Astra on the same pair of 6-DoF YAM arms, with the model sending
-  end-effector poses directly~\cite{robocurve-astra}.  On placing a block in
-  a bowl (20 trials each), Astra succeeded 19 times, Fable~5.1 8 times and
-  Fable~5 once.  On a harder puzzle task, Astra and Fable~5.1 each succeeded
-  only 2 times in 20.  The authors note the runs were not interleaved, used
-  different rigs, and were graded by an operator, so this is a small, early
-  comparison.
-  \item \textbf{Grok.}  Tesla plans to use xAI's Grok as the conversational
-  ``brain'' of its Optimus humanoid, while a vision network adapted from
-  Tesla's self-driving software handles perception and
-  movement~\cite{grok-optimus,investorplace-optimus}.  Musk has said that
-  for a Grok-level conversation Optimus needs a Wi-Fi or cellular connection
-  to the cloud~\cite{optimus-wiki}, which is exactly the on-device versus
-  cloud trade-off discussed in Section~\ref{sec:deploy}.  This is a plan,
-  not a published or tested system.
-\end{itemize}
+SenseNova's joint study (October 2026)~\cite{sensenova-2026} evaluates Astra on
+8 robot configurations and 12 benchmarks, including humanoids.  It finds that
+the best setup uses Astra as a slow ``System~2'' planner coordinating a fast
+``System~1'' controller such as $\pi_{0.5}$, which it calls ``costly but
+effective''.  The authors conclude that Astra is not yet practical embodied
+intelligence, because of cost, execution time and weak recovery from
+irreversible failures.
 
-\noindent
-The pattern is the same for every company: the general model supplies
-language understanding and planning, and something faster and more
-specialised moves the body.
+A general model can therefore understand scenes and plan tasks surprisingly
+well with no robot training.  It is far too slow, though, to close a balance or
+grasping loop, so in every humanoid example it sits at the top of the stack and
+calls faster controllers below it.  All three sources are preprints or project
+pages, and I did not find an official technical report from OpenAI describing
+Astra's design.
+
+Other general models are being tried as a robot brain in the same way.  Google
+builds its own robotics models on top of Gemini: Gemini Robotics-ER~1.5 is a
+Gemini model tuned for embodied reasoning and used as the planner above the
+Gemini Robotics VLA (Section~\ref{sec:vla})~\cite{gemini-15}.  Robocurve
+compared Claude Fable~5, Fable~5.1 and Astra on the same pair of 6-DoF YAM
+arms, with the model sending end-effector poses
+directly~\cite{robocurve-astra}.  On placing a block in a bowl (20 trials
+each), Astra succeeded 19 times, Fable~5.1 8 times and Fable~5 once; on a
+harder puzzle task, Astra and Fable~5.1 each succeeded only 2 times in 20.
+The authors note the runs were not interleaved, used different rigs, and were
+graded by an operator, so this is a small, early comparison.  Tesla plans to
+use xAI's Grok as the conversational ``brain'' of its Optimus humanoid, while a
+vision network adapted from Tesla's self-driving software handles perception
+and movement~\cite{grok-optimus,investorplace-optimus}.  Musk has said that for
+a Grok-level conversation Optimus needs a Wi-Fi or cellular connection to the
+cloud~\cite{optimus-wiki}, which is the on-device versus cloud trade-off of
+Section~\ref{sec:deploy}.  That is a plan, not a published or tested system.
+
+In every case the general model supplies language understanding and planning,
+while something faster and more specialised moves the body.
 
 \subsection{Comparison}
 
 Table~\ref{tab:compare} summarises the solutions against the criteria in the
 introduction.
 
-\begin{table}[h]
+
+\begin{table}[H]
 \centering\small
 \renewcommand{\arraystretch}{1.25}
 \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{2.3cm}
@@ -283,15 +264,18 @@ project pages, small lab tests; Grok only announced \\
 %-----------------------------------------------------------------
 \section{Deployment constraints: where the brain runs and how fast it must react}\label{sec:deploy}
 
-Section~3 compared the solutions by what they can do.  Before using one, two
-practical questions also matter.  First, what is the \emph{latency budget},
-the longest allowed delay between a change in the environment and the
-robot's response?  Second, must the brain run \emph{on-device}, on the
-robot's own computer, and must it work \emph{offline}, with no network
-connection?  The answers depend on the application, and they decide which
-models can be used at all.
+Two practical questions decide whether a solution from Section~3 can be used at
+all.  First, what is the \emph{latency budget}, the longest allowed delay
+between a change in the environment and the robot's response?  Second, must
+the brain run \emph{on-device}, on the robot's own computer, and must it work
+\emph{offline}, with no network connection?  The answers depend on the
+application, and they rule out some models entirely.
 
-\begin{table}[h]
+Table~\ref{tab:budget} gives my estimate of the budget for the situations that
+matter most.
+
+
+\begin{table}[H]
 \centering\small
 \renewcommand{\arraystretch}{1.25}
 \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.0cm}
@@ -318,9 +302,10 @@ based on the loop rates in Section~2, not values from a single source.}
 \end{table}
 
 Table~\ref{tab:sizes} lists what each source states about model size, speed
-and where it runs.  Many companies do not publish these numbers.
+and where the model runs; many companies do not publish these numbers.
 
-\begin{table}[h]
+
+\begin{table}[H]
 \centering\small
 \renewcommand{\arraystretch}{1.25}
 \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{2.3cm}
@@ -352,245 +337,218 @@ each source.}
 \label{tab:sizes}
 \end{table}
 
-\noindent
-Three points follow from the two tables.
-
-\begin{enumerate}
-  \item \textbf{Smaller networks run faster, and the pattern is very
-  regular.}  Helix~02's 10M-parameter System~0 runs at 1\,kHz, Helix's
-  80M-parameter System~1 at 200\,Hz, the 2--7B models at about 7--10\,Hz,
-  and the cloud frontier model Astra takes about 18.6\,s per decision.  Each
-  step up in size buys more reasoning but costs about an order of magnitude
-  in speed.
-  \item \textbf{The latency budget decides which layer a model can be.}
-  Anything that must react within about 100\,ms has to be a small network on
-  the robot.  Only task planning can tolerate cloud delay, which is why every
-  Astra system in Section~\ref{sec:astra} used Astra as the planner only.
-  \item \textbf{An offline requirement rules out cloud models completely.}
-  Then the top layer must be a model of a few billion parameters that fits on
-  the robot's computer, as in Helix's onboard 7B System~2 or Gemini Robotics
-  On-Device, which is designed to work with intermittent or zero
-  connectivity.  For scale, NVIDIA's Jetson AGX Thor, a computer built for
-  humanoids, gives up to 2{,}070 TFLOPS (sparse FP4) within a 40--130\,W
-  power budget and 128\,GB of memory~\cite{jetson-thor}.  That is enough for
-  several-billion-parameter models, but it uses battery power that would
-  otherwise move the robot.
-\end{enumerate}
 
 \noindent
-This gives a second reason for the hierarchical stack.  Because the layers
-are separate, the fast layers can stay on the robot while the slow planner
-runs in the cloud when a network is available.  I suggest that a practical
-design should also carry a smaller onboard planner as a fallback, so the
-robot keeps working, more simply, when the connection drops.
+The trade between model size and reaction speed is regular.  Helix~02's
+10M-parameter System~0 runs at 1\,kHz, Helix's 80M-parameter System~1 at
+200\,Hz, the 2--7B models at about 7--10\,Hz, and the cloud frontier model
+Astra takes about 18.6\,s per decision.  Each step up in size buys more
+reasoning and costs about an order of magnitude in speed.
+
+The latency budget then decides which layer a model can be.  Anything that
+must react within about 100\,ms has to be a small network on the robot.  Only
+task planning can tolerate cloud delay, which is why every Astra system in
+Section~\ref{sec:astra} used Astra as the planner only.
+
+An offline requirement rules out cloud models completely, so the top layer
+must be a model of a few billion parameters that fits on the robot's computer,
+as in Helix's onboard 7B System~2 or Gemini Robotics On-Device, which is
+designed to work with intermittent or zero connectivity.  For scale, NVIDIA's
+Jetson AGX Thor, a computer built for humanoids, gives up to 2{,}070 TFLOPS
+(sparse FP4) within a 40--130\,W power budget and 128\,GB of
+memory~\cite{jetson-thor}.  That is enough for several-billion-parameter
+models, but it uses battery power that would otherwise move the robot.
+
+The split also gives a second argument for the hierarchical stack: because the
+layers are separate, the fast layers can stay on the robot while the slow
+planner runs in the cloud when a network is available.  I would also put a
+smaller onboard planner in the design as a fallback, so the robot keeps
+working, more simply, when the connection drops.
 
 %-----------------------------------------------------------------
 \section{The best solution and why}
 
 In my view the best current solution is the \textbf{hierarchical learned
 stack}: a slow reasoning model (System~2), a fast visuomotor policy
-(System~1) and a learned whole-body controller (System~0), trained so that
-the layers share a common interface.  The most complete published example is
+(System~1) and a learned whole-body controller (System~0), trained so that the
+layers share a common interface.  The most complete published example is
 \textbf{Figure's Helix~02 on Figure~03}.  For a factory buyer today,
 \textbf{Atlas} is the most deployment-ready body, and its pairing with
-DeepMind's models points to the same architecture.  I choose this solution
-for four reasons.
+DeepMind's models points to the same architecture.  I choose this solution for
+four reasons.
 
-\begin{enumerate}
-  \item \textbf{It matches the physics of the problem.}  Balance must be
-  corrected within milliseconds, grasping within tens of milliseconds, and
-  task planning within seconds.  One network running at one rate cannot
-  serve all three.  The three-tier design gives each timescale its own loop.
-  This is the same principle as the cascaded inner and outer loops we study
-  in control, applied to learned components.  Section~\ref{sec:deploy}
-  shows that the same split also decides where each layer can run: the fast
-  loops on the robot, and the slow planner on the robot or in the cloud.
-  \item \textbf{It joins walking and manipulation.}  Older humanoids switched
-  between separate locomotion and arm controllers, so they walked, stopped and
-  only then reached.  A learned System~0 lets the robot walk while carrying and
-  balance during contact; the dishwasher demonstration is the strongest public
-  evidence of this.
-  \item \textbf{It scales with data, not engineering.}  A new task needs
-  demonstrations rather than a new controller, and GR00T~N1 and HuGe show that
-  human video and synthetic data can supplement scarce robot data.
-  \item \textbf{Independent groups converged on it.}  GR00T~N1, Gemini
-  Robotics~1.5, HuGe and even the GPT-6 Astra studies
-  (Section~\ref{sec:astra}) all place a slow planner above faster
-  controllers.
-\end{enumerate}
+It matches the physics of the problem.  Balance must be corrected within
+milliseconds, grasping within tens of milliseconds, and task planning within
+seconds, and one network running at one rate cannot serve all three.  The
+three-tier design gives each timescale its own loop, which is the same
+principle as the cascaded inner and outer loops we study in control, applied to
+learned components.  Section~\ref{sec:deploy} shows that the same split also
+decides where each layer can run: the fast loops on the robot, the slow planner
+on the robot or in the cloud.
 
-\noindent
-I rank Helix~02 first as an integrated system but with a clear
-qualification: its evidence is company demonstrations, with no public
-benchmark or paper.  If openness and reproducibility are weighted more
-heavily, GR00T~N1 (open weights) and Gemini Robotics~1.5 (detailed technical
-report) are better references for how the architecture works.
+It joins walking and manipulation.  Older humanoids switched between separate
+locomotion and arm controllers, so they walked, stopped and only then reached.
+A learned System~0 lets the robot walk while carrying and balance during
+contact; the dishwasher demonstration is the strongest public evidence of this.
+
+It scales with data rather than engineering.  A new task needs demonstrations
+instead of a new controller, and GR00T~N1 and HuGe show that human video and
+synthetic data can supplement scarce robot data.
+
+Independent groups converged on it.  GR00T~N1, Gemini Robotics~1.5, HuGe and
+even the GPT-6 Astra studies in Section~\ref{sec:astra} all place a slow
+planner above faster controllers.
+
+Helix~02 therefore ranks first as an integrated system, with a clear
+qualification: its evidence is company demonstrations, with no public benchmark
+or paper.  If openness and reproducibility are weighted more heavily,
+GR00T~N1 (open weights) and Gemini Robotics~1.5 (detailed technical report)
+are better references for how the architecture works.
 
 %-----------------------------------------------------------------
 \section{Challenges in improving humanoid robots}
 
-\paragraph{Why are there so few real applications?}  LLMs and AI agents are
-already part of everyday software work, such as writing code and answering
-customers.  Humanoids, which use the same kind of models as their
-``brain'', are still mostly at the pilot stage.  The public record is small.
-Agility Robotics and the logistics company GXO signed what they called the
-first humanoid Robot-as-a-Service contract in 2024~\cite{agility-wiki}.
+LLMs and AI agents are already part of everyday software work, writing code
+and answering customers.  Humanoids run the same kind of model as their
+``brain'' and are still mostly at the pilot stage.  The public record is
+small.  Agility Robotics and the logistics company GXO signed what they called
+the first humanoid Robot-as-a-Service contract in 2024~\cite{agility-wiki}.
 Figure reports about 740 robots operating by the end of June 2026, which is a
 company figure~\cite{figure-wiki}.  Tesla is still installing its first
 Optimus production lines, and analysts expect external sales no earlier than
 the second half of 2027~\cite{investorplace-optimus}.
 
-In my view the gap comes from four differences between software agents and
-robots:
-\begin{itemize}
-  \item \textbf{Mistakes cost more.}  A wrong line of code can be reviewed,
-  tested and undone.  A wrong physical action can break equipment or hurt
-  someone, and it cannot be undone.
-  \item \textbf{Each copy costs money.}  A software agent can be copied to a
-  million users almost for free.  Every robot is hardware that must be built,
-  charged, maintained and insured.
-  \item \textbf{The bar is a working alternative.}  A humanoid must beat a
-  fixed automation cell or a human worker on total cost and reliability, and
-  both already work well.
-  \item \textbf{There is less data and less certainty.}  Robot data is scarce,
-  and there is no safety standard yet for certifying the robot.
-\end{itemize}
-The challenges below are the technical side of this gap.  Note that LLM
-progress does reach robots quickly, but only at the top of the stack, as the
-planner.  The body, the fast control loops and safety are what still limit
+Four differences between software agents and robots account for most of the
+gap.  A wrong line of code can be reviewed, tested and undone, while a wrong
+physical action can break equipment or hurt someone and cannot be undone.  A
+software agent can be copied to a million users almost for free, while every
+robot is hardware that must be built, charged, maintained and insured.  A
+humanoid also has to beat a working alternative, a fixed automation cell or a
+human worker, on total cost and reliability, and both already work well.
+Finally, robot data is scarce, and there is no safety standard yet for
+certifying the robot.
+
+LLM progress does reach robots quickly, but only at the top of the stack, as
+the planner.  The body, the fast control loops and safety are what still limit
 commercial use.
 
-\begin{enumerate}
-  \item \textbf{Data scarcity and embodiment gap.}  Language models learned
-  from trillions of words; humanoid policies have thousands of hours of
-  demonstrations.  Teleoperation is slow and expensive, and human video does
-  not contain the robot's joint torques or contact forces.  HuGe's need for
-  simulation replay and arm re-rendering shows how much work is required just
-  to make human data usable.
-  \item \textbf{Reliability in the long tail.}  A demo succeeding once is
-  very different from 99.9\% success over an eight-hour shift.  Learned
-  policies can fail in surprising ways when lighting, objects or clutter
-  differ from training data, and these failures are hard to predict in
-  advance.
-  \item \textbf{Safety and certification.}  A humanoid that falls when power
-  is lost is a new hazard class.  Existing standards do not cover it:
-  ISO~10218 does not address mobility, ISO~3691-4 excludes these robots, and
-  ISO~13482 is not for industrial sites.  The dedicated standard for
-  dynamically stable industrial mobile robots, ISO~25785-1, is still in
-  development~\cite{iso-25785}.  It is also unclear how to certify a neural
-  network controller whose behaviour cannot be fully specified in advance.
-  General models make this harder.  In Robocurve's RoboHarm test (September
-  2026), Claude Fable~5.1, GPT-6 Astra and the robot model MolmoAct2
-  controlled real arms and were each given 5 instructions a safe robot
-  should refuse, 20 times each~\cite{roboharm}.  Fable refused 20 of 100,
-  all on one task (stabbing a doll); Astra refused 2; MolmoAct2 refused none.
-  Fable and Astra each pushed a metal screwdriver into a toaster 6 and 7
-  times out of 20.  The chatbot safety training of these models does not
-  carry over to physical actions, so a separate safety layer on the robot is
-  still needed.
-  \item \textbf{Hands and touch.}  Dexterous hands are fragile and costly, and
-  tactile sensing is only now entering learned policies.
-  \item \textbf{Energy and cost.}  Onboard compute competes with the battery
-  used for motion (Section~\ref{sec:deploy}), and unit cost must fall far
-  enough to beat an automation cell or a human worker.
-  \item \textbf{Evaluation.}  Most impressive results are company videos;
-  without shared benchmarks and independent tests, systems are hard to
-  compare.
-\end{enumerate}
+Data is scarce and the embodiment gap is wide.  Language models learned from
+trillions of words, while humanoid policies have thousands of hours of
+demonstrations.  Teleoperation is slow and expensive, and human video does not
+contain the robot's joint torques or contact forces; HuGe's need for simulation
+replay and arm re-rendering shows how much work is required just to make human
+data usable.
+
+Reliability over a long shift is a second problem.  A demo succeeding once is
+very different from 99.9\% success over an eight-hour shift.  Learned policies
+can fail in surprising ways when lighting, objects or clutter differ from
+training data, and those failures are hard to predict in advance.
+
+Safety and certification are unsettled.  A humanoid that falls when power is
+lost is a new hazard class, and existing standards do not cover it: ISO~10218
+does not address mobility, ISO~3691-4 excludes these robots, and ISO~13482 is
+not for industrial sites.  The dedicated standard for dynamically stable
+industrial mobile robots, ISO~25785-1, is still in
+development~\cite{iso-25785}.  It is also unclear how to certify a neural
+network controller whose behaviour cannot be fully specified in advance, and
+general models make this harder.  In Robocurve's RoboHarm test (September
+2026), Claude Fable~5.1, GPT-6 Astra and the robot model MolmoAct2 controlled
+real arms and were each given 5 instructions a safe robot should refuse, 20
+times each~\cite{roboharm}.  Fable refused 20 of 100, all on one task (stabbing
+a doll); Astra refused 2; MolmoAct2 refused none.  Fable and Astra each pushed
+a metal screwdriver into a toaster 6 and 7 times out of 20.  The chatbot safety
+training of these models does not carry over to physical actions, so a separate
+safety layer on the robot is still needed.
+
+Dexterous hands remain fragile and costly, and tactile sensing is only now
+entering learned policies.  Onboard compute also competes with the battery used
+for motion (Section~\ref{sec:deploy}), and unit cost must fall far enough to
+beat an automation cell or a human worker.  Evaluation is the last gap: most
+impressive results are company videos, and without shared benchmarks and
+independent tests, systems are hard to compare.
 
 %-----------------------------------------------------------------
 \section{Future directions}
 
-\begin{itemize}
-  \item \textbf{Data from humans and simulation.}  Egocentric human video (as
-  in HuGe), synthetic data and world models should reduce dependence on slow
-  teleoperation.
-  \item \textbf{Learning from deployment.}  Fleets connected through software
-  such as Orbit can pool corrections, so one robot's lesson improves all of
-  them.
-  \item \textbf{Learning plus model-based guarantees.}  Learned policies wrapped
-  by verifiable safety filters (balance or collision constraints, as FAST's
-  centre-of-mass objectives hint) are the likely route to certification.
-  \item \textbf{Standards and benchmarks.}  Completing ISO~25785-1 and shared
-  benchmarks such as HumanoidArena will move the field from demos to
-  measurable progress.
-  \item \textbf{Efficient on-board models.}  Distilled VLAs and dedicated
-  accelerators will let more of the stack run offline within the latency
-  budgets of Section~\ref{sec:deploy}.
-\end{itemize}
+Data collection comes first: egocentric human video (as in HuGe), synthetic
+data and world models should reduce the dependence on slow teleoperation.
+Fleets connected through software such as Orbit can pool corrections, so one
+robot's lesson improves all of them.  Learned policies wrapped by verifiable
+safety filters (balance or collision constraints, as FAST's centre-of-mass
+objectives hint) are the likely route to certification.  Completing
+ISO~25785-1 and shared benchmarks such as HumanoidArena would move the field
+from demos to measurable progress, and distilled VLAs on dedicated
+accelerators will let more of the stack run offline within the latency budgets
+of Section~\ref{sec:deploy}.
 
 %-----------------------------------------------------------------
 \section{What I learned from this review}
 
-\begin{itemize}
-  \item \textbf{The course material is still there, just in a new place.}
-  Before this review I expected AI to have replaced classical robotics.  It
-  has not.  The kinematics we did in class (frames, D--H parameters,
-  forward kinematics) is what retargeting uses to map a human motion onto
-  the robot's joints.  Dynamics and balance quantities such as the centre of
-  mass are fed into the learned whole-body controller.  Estimating where the
-  robot's floating base is and how fast it moves is still a filtering
-  problem, like the Kalman filter in Part~2.
-  \item \textbf{Timescale is the key design choice.}  Every strong system I
-  read about splits the work into a slow planner, a middle layer and a fast
-  controller.  This is the cascaded-loop idea from control, only now each
-  loop is a neural network.
-  \item \textbf{Data is the real bottleneck.}  Many recent papers look like
-  algorithm papers, but what they really do is find new data: human video,
-  simulation, or a cheaper way to teleoperate.
-  \item \textbf{Not all sources are equal.}  I learned to check what kind of
-  evidence I was reading.  A peer-reviewed paper, a preprint, a project
-  page and a company video support a claim to very different degrees, and
-  most humanoid ``results'' are in the last two groups.
-  \item \textbf{What surprised me most.}  First, GPT-6 Astra beat a model
-  trained on robot data (74.8\% against 28.0\% success in simulation)
-  without any robot training at all, yet one call took about 18.6~s.  The
-  smartest part of the system is also the slowest, so it can only work if
-  fast controllers sit below it.  Second, in the RoboHarm test the general
-  models refused very few unsafe physical commands, even though they refuse
-  harmful requests in chat.  I had assumed their safety training would carry
-  over to the robot, and it does not.
-\end{itemize}
+The course material is still in use, in new places.  I expected AI to have
+replaced classical robotics; it has not.  The kinematics we did in class
+(frames, D--H parameters, forward kinematics) is what retargeting uses to map a
+human motion onto the robot's joints, and dynamics and balance quantities such
+as the centre of mass are fed into the learned whole-body controller.
+Estimating where the robot's floating base is and how fast it moves is still a
+filtering problem, like the Kalman filter in Part~2.
+
+Timescale is the main design choice.  Every strong system I read about splits
+the work into a slow planner, a middle layer and a fast controller, which is
+the cascaded-loop idea from control, only now each loop is a neural network.
+
+Data turned out to be the bottleneck.  Many recent papers look like algorithm
+papers, but what they do is find new data: human video, simulation, or a
+cheaper way to teleoperate.
+
+Not all sources are equal.  I learned to check what kind of evidence I was
+reading.  A peer-reviewed paper, a preprint, a project page and a company video
+support a claim to very different degrees, and most humanoid ``results'' are in
+the last two groups.
+
+Two things surprised me.  First, GPT-6 Astra beat a model trained on robot data
+(74.8\% against 28.0\% success in simulation) without any robot training at
+all, yet one call took about 18.6~s; the smartest part of the system is also
+the slowest, so it can only work with fast controllers below it.  Second, in
+the RoboHarm test the general models refused very few unsafe physical commands,
+even though they refuse harmful requests in chat.  I had assumed their safety
+training would carry over to the robot, and it does not.
 
 %-----------------------------------------------------------------
 \section{Effect of this assignment on my understanding and interest}
 
-\begin{itemize}
-  \item \textbf{Understanding of robotics and intelligent systems:} Yes, it
-  increased.  In the lectures, kinematics, sensors and filtering felt like
-  separate topics.  This review showed me how they connect.  Moving an arm
-  to a certain place is described by frames, transforms and joint angles.
-  What the sensors perceive is turned into the same kind of description:
-  a camera image becomes an object pose, and noisy measurements are fused
-  into a state estimate.  These expressions are the structured data that a
-  robot ``brain'' learns from and produces.  A VLA model is trained on
-  camera images paired with joint or end-effector targets, and its output
-  is again a target pose or joint command that the lower-level controller
-  can follow.  So the mathematics from the course is not replaced by
-  learning; it is the common language between perception, the brain and
-  the body.  Without it, there would be nothing well defined for the model
-  to train on or to output.
-  \item \textbf{Interest in a career in robotics and intelligent systems:}
-  Yes, it increased.  I have always wanted to work in AI infrastructure:
-  the systems that make large models possible to train and run.  Before
-  this assignment I saw that mainly as a software and language-model topic.
-  This review showed me that embodied intelligence needs the same work, and
-  at an even larger scale.  The numbers in Sections~3 and~4 make this
-  concrete: one GPT-6 Astra call takes about 18.6~s, one agent episode uses
-  about 30.9 million tokens (about US\$36), and the fast controllers must
-  fit on an onboard computer with a limited power budget.  Robot data is
-  also scarce and expensive to collect.  A humanoid is improved in a cycle:
-  train the model, deploy it, collect new data from what the robot does,
-  especially its failures, and retrain.  Every step of that cycle depends
-  on infrastructure: training clusters, data pipelines for video and sensor
-  logs, simulation at scale, and model compression so that inference is fast
-  enough on the robot.  Optimizing these steps decides how fast the whole
-  cycle turns, and so how fast humanoids improve.  This gave me a clear way
-  to combine my interest in AI infrastructure with robotics, and that is
-  the direction I would like to pursue.
-\end{itemize}
+My understanding of robotics and intelligent systems did increase.  In the
+lectures, kinematics, sensors and filtering felt like separate topics, and
+this review showed me how they connect.  Moving an arm to a certain place is
+described by frames, transforms and joint angles, and what the sensors perceive
+is turned into the same kind of description: a camera image becomes an object
+pose, and noisy measurements are fused into a state estimate.  These
+expressions are the structured data that a robot ``brain'' learns from and
+produces.  A VLA model is trained on camera images paired with joint or
+end-effector targets, and its output is again a target pose or joint command
+that the lower-level controller can follow.  Learning has not replaced the
+mathematics from the course; it is the common language between perception, the
+brain and the body.  Without it, there would be nothing well defined for the
+model to train on or to output.
+
+My interest in a career in robotics and intelligent systems also increased.  I
+have always wanted to work in AI infrastructure, the systems that make large
+models possible to train and run, and before this assignment I saw that mainly
+as a software and language-model topic.  This review showed me that embodied
+intelligence needs the same work at an even larger scale.  The numbers in
+Sections~3 and~4 make it concrete: one GPT-6 Astra call takes about 18.6~s,
+one agent episode uses about 30.9 million tokens (about US\$36), and the fast
+controllers must fit on an onboard computer with a limited power budget, while
+robot data is scarce and expensive to collect.  A humanoid improves in a
+cycle: train the model, deploy it, collect new data from what the robot does,
+especially its failures, and retrain.  Every step of that cycle depends on
+infrastructure: training clusters, data pipelines for video and sensor logs,
+simulation at scale, and model compression so that inference is fast enough on
+the robot.  Optimising these steps decides how fast the cycle turns, and so how
+fast humanoids improve.  That gives me a clear way to combine my interest in AI
+infrastructure with robotics, and it is the direction I would like to pursue.
 
 %-----------------------------------------------------------------
+
 \begin{thebibliography}{99}
 
 \bibitem{bd-atlas-2026}
@@ -708,5 +666,6 @@ committee draft, under development.
 \url{https://www.iso.org/standard/91469.html}
 
 \end{thebibliography}
+
 
 \end{document}
