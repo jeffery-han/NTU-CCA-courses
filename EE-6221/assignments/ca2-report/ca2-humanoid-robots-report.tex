@@ -34,7 +34,9 @@ Dynamics Atlas, Figure 03, Apptronik Apollo, Unitree G1) and recent research
 on learned whole-body control and vision-language-action (VLA) models
 (GR00T N1, $\pi_0$, Gemini Robotics 1.5, Helix 02, FAST, HuGe), as well as
 recent tests of OpenAI's general-purpose GPT-6 Astra model used as a robot
-brain.  I argue that
+brain.  I also compare where each brain can run (on the robot or in the
+cloud) and how fast it can react, since many applications require offline,
+on-device operation within a fixed latency budget.  I argue that
 the best current solution is a \emph{hierarchical, learned} architecture in
 which a slow reasoning model, a fast visuomotor policy, and a very fast
 whole-body controller are trained to work together, as exemplified by
@@ -292,6 +294,110 @@ but slow and costly & Preprints, project pages \\
 \end{table}
 
 %-----------------------------------------------------------------
+\section{Deployment constraints: where the brain runs and how fast it must react}\label{sec:deploy}
+
+Section~3 compared the solutions by what they can do.  Before using one, two
+practical questions also matter.  First, what is the \emph{latency budget},
+the longest allowed delay between a change in the environment and the
+robot's response?  Second, must the brain run \emph{on-device}, on the
+robot's own computer, and must it work \emph{offline}, with no network
+connection?  The answers depend on the application, and they decide which
+models can be used at all.
+
+\begin{table}[h]
+\centering\small
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.0cm}
+  >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{2.4cm}
+  >{\raggedright\arraybackslash}p{3.6cm}}
+\toprule
+Situation & Example & Latency budget & Where the brain can run \\
+\midrule
+Balance, fall recovery & Slipping or being pushed & about 1--10\,ms &
+On-device only \\
+Contact and grasp correction & An object slips in the hand & about
+10--50\,ms & On-device \\
+Reacting to people & A person steps into the robot's path & about
+100\,ms & On-device \\
+Task planning & ``Tidy the kitchen'' & about 1--10\,s & Cloud is acceptable
+if a network is available \\
+Offline sites & Factory with no internet or strict data privacy; disaster
+site & Whole stack & Everything on-device, so smaller models \\
+\bottomrule
+\end{tabularx}
+\caption{Indicative latency budgets by situation.  These are my estimates,
+based on the loop rates in Section~2, not values from a single source.}
+\label{tab:budget}
+\end{table}
+
+Table~\ref{tab:sizes} lists what each source states about model size, speed
+and where it runs.  Many companies do not publish these numbers.
+
+\begin{table}[h]
+\centering\small
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{2.3cm}
+  >{\raggedright\arraybackslash}p{2.3cm} >{\raggedright\arraybackslash}X
+  >{\raggedright\arraybackslash}p{2.7cm} >{\raggedright\arraybackslash}p{2.4cm}}
+\toprule
+System & Parameters & Rate / delay & Where it runs & Training data \\
+\midrule
+Helix~\cite{helix-2025} & S2: 7B; S1: 80M & S2: 7--9\,Hz; S1: 200\,Hz &
+Fully onboard, embedded low-power GPUs & About 500\,h teleoperation \\
+Helix 02~\cite{helix-02} & S0: 10M; others not disclosed & S1: 200\,Hz;
+S0: 1\,kHz & Not stated & Over 1{,}000\,h human motion (for S0) \\
+GR00T N1~\cite{groot-n1} & 2.2B (1.34B in the VLM) & VLM: 10\,Hz; action
+head: 120\,Hz; 63.9\,ms per 16-action chunk & Timed on an L40 data-centre
+GPU & Real, human-video and synthetic \\
+$\pi_0$~\cite{pi0} & 3.3B & Up to 50\,Hz & Mobile robot: off-board over
+Wi-Fi & About 10{,}000\,h demonstrations \\
+Gemini Robotics On-Device~\cite{gemini-ondevice} & Not disclosed &
+``Low-latency'', no figure & On the robot; works with no network &
+Adapts from 50--100 demos \\
+HuGe~\cite{huge-2026} & Qwen-based VLM; total not stated & 50\,Hz action
+timeline & Not stated & Over 2{,}000\,h egocentric video \\
+GPT-6 Astra~\cite{astranomy-2026} & Not disclosed & About 18.6\,s per call &
+Cloud API & No robot-specific training \\
+\bottomrule
+\end{tabularx}
+\caption{Size, speed and location of the reviewed robot brains, as stated in
+each source.}
+\label{tab:sizes}
+\end{table}
+
+\noindent
+Three points follow from the two tables.
+
+\begin{enumerate}
+  \item \textbf{Smaller networks run faster, and the pattern is very
+  regular.}  Helix~02's 10M-parameter System~0 runs at 1\,kHz, Helix's
+  80M-parameter System~1 at 200\,Hz, the 2--7B models at about 7--10\,Hz,
+  and the cloud frontier model Astra takes about 18.6\,s per decision.  Each
+  step up in size buys more reasoning but costs about an order of magnitude
+  in speed.
+  \item \textbf{The latency budget decides which layer a model can be.}
+  Anything that must react within about 100\,ms has to be a small network on
+  the robot.  Only task planning can tolerate cloud delay, which is why every
+  Astra system in Section~\ref{sec:astra} used Astra as the planner only.
+  \item \textbf{An offline requirement rules out cloud models completely.}
+  Then the top layer must be a model of a few billion parameters that fits on
+  the robot's computer, as in Helix's onboard 7B System~2 or Gemini Robotics
+  On-Device, which is designed to work with intermittent or zero
+  connectivity.  For scale, NVIDIA's Jetson AGX Thor, a computer built for
+  humanoids, gives up to 2{,}070 TFLOPS (sparse FP4) within a 40--130\,W
+  power budget and 128\,GB of memory~\cite{jetson-thor}.  That is enough for
+  several-billion-parameter models, but it uses battery power that would
+  otherwise move the robot.
+\end{enumerate}
+
+\noindent
+This gives a second reason for the hierarchical stack.  Because the layers
+are separate, the fast layers can stay on the robot while the slow planner
+runs in the cloud when a network is available.  I suggest that a practical
+design should also carry a smaller onboard planner as a fallback, so the
+robot keeps working, more simply, when the connection drops.
+
+%-----------------------------------------------------------------
 \section{The best solution and why}
 
 In my view the best current solution is the \textbf{hierarchical learned
@@ -309,7 +415,9 @@ for four reasons.
   task planning within seconds.  One network running at one rate cannot
   serve all three.  The three-tier design gives each timescale its own loop.
   This is the same principle as the cascaded inner and outer loops we study
-  in control, applied to learned components.
+  in control, applied to learned components.  Section~\ref{sec:deploy}
+  shows that the same split also decides where each layer can run: the fast
+  loops on the robot, and the slow planner on the robot or in the cloud.
   \item \textbf{It removes the brittle hand-written boundary between walking
   and manipulation.}  In older humanoids, locomotion and arm control were
   separate controllers joined by a state machine, which is why many demos
@@ -472,6 +580,21 @@ Next-generation whole-body control system of humanoid robots,''
 Y.~Liu \emph{et al.}, ``HuGe: Scaling humanoid generalist
 vision-language-action models with egocentric experience,''
 arXiv:2610.34186, Oct.\ 2026.
+
+\bibitem{helix-2025}
+Figure AI, ``Helix: A vision-language-action model for generalist humanoid
+control,'' company announcement, 20 Feb.\ 2025.
+\url{https://www.figure.ai/news/helix}
+
+\bibitem{gemini-ondevice}
+Google DeepMind, ``Gemini Robotics On-Device brings AI to local robotic
+devices,'' blog post, 24 Jun.\ 2025.
+\url{https://deepmind.google/discover/blog/gemini-robotics-on-device-brings-ai-to-local-robotic-devices/}
+
+\bibitem{jetson-thor}
+NVIDIA, ``Introducing NVIDIA Jetson Thor, the ultimate platform for physical
+AI,'' NVIDIA Technical Blog, 25 Aug.\ 2025.
+\url{https://developer.nvidia.com/blog/introducing-nvidia-jetson-thor-the-ultimate-platform-for-physical-ai/}
 
 \bibitem{homebody-2026}
 G.~Huh, C.~Gu, T.~E. Truong, C.~K. Liu and G.~Tevet, ``HomeBody,'' project
