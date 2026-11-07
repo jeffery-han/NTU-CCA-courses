@@ -18,7 +18,7 @@
 
 \title{\textbf{EE6221 CA2 Assignment}\\[4pt]
 \large State of the Art of General-Purpose Humanoid Robots:\\
-From Whole-Body Control to Vision-Language-Action ``Robot Brains''}
+Robot Brains and the Limits of Real-World Deployment}
 \author{Han Chang \quad \yours{Matric No.}}
 \date{November 2026}
 
@@ -124,99 +124,51 @@ how those learned layers are divided and connected.
 
 \subsection{Hardware platforms}
 
-\textbf{Boston Dynamics Atlas (product version).}  Unveiled at CES on
-5~January~2026, the electric Atlas is presented as a production machine
-rather than a research prototype~\cite{bd-atlas-2026}.  The company states
-56~degrees of freedom with fully rotational joints, a 50\,kg payload, 2.3\,m
-reach, water resistance and operation from $-20$ to $40\,^\circ$C.  Atlas can
-walk to a station and swap its own battery, so a low battery does not end a
-shift.  It runs autonomously, by teleoperation or from a tablet, and connects
-to factory software (MES/WMS) through Boston Dynamics' Orbit platform, which
-also lets one robot's learned task be copied across a fleet.  All 2026
-production is committed to Hyundai's Robotics Metaplant Application Center
-and to Google DeepMind, which is integrating its foundation models into Atlas.
-
-\textbf{Figure 03.}  Figure's third-generation robot, announced in October
-2025, was redesigned for volume manufacturing and for homes, with a soft
-textile and foam exterior, a new sensor suite, and hands with palm cameras
-and tactile sensing~\cite{figure-03}.  Figure has published few hard
-specifications; its significance in this review is as the body for the
-Helix~02 control model (Section~\ref{sec:vla}).
-
-\textbf{Apptronik Apollo} is a general-purpose humanoid that Google DeepMind
-uses as one of the embodiments of Gemini Robotics~1.5~\cite{gemini-15}.
-
-\textbf{Unitree G1} is a low-cost humanoid that has become a common research
-platform; for example, both HuGe~\cite{huge-2026} and
-MotionVLA~\cite{motionvla-2026} report real-robot experiments on it.  Cheap,
-widely available hardware matters because it lets university groups test
-learned controllers on a real body instead of only in simulation.
+\textbf{Boston Dynamics Atlas} (product version, January 2026) is the most
+deployment-ready body: 56 degrees of freedom, 50\,kg payload, water
+resistance, operation from $-20$ to $40\,^\circ$C, autonomous battery swapping,
+and connection to factory software through the Orbit fleet platform.  All
+2026 production goes to Hyundai and Google DeepMind~\cite{bd-atlas-2026}.
+\textbf{Figure~03} (October 2025) was redesigned for volume manufacturing and
+homes, with palm cameras and tactile hands, and is the body for
+Helix~02~\cite{figure-03}.  \textbf{Apptronik Apollo} is one of the robots
+used by Gemini Robotics~1.5~\cite{gemini-15}, and the low-cost
+\textbf{Unitree G1} has become the common research
+platform~\cite{huge-2026,motionvla-2026}.
 
 \subsection{Learned whole-body control}
 
-Reinforcement learning (RL) in GPU-parallel simulation, followed by
-sim-to-real transfer, is now the dominant way to obtain robust locomotion and
-whole-body motion for humanoids.  The newest trend is the \emph{behaviour
-foundation model} (BFM): a whole-body controller pre-trained on large motion
-datasets, often retargeted human motion capture, so that it learns a general
-repertoire of skills and can be adapted to new tasks zero-shot or with little
-data.  Yuan et al.'s survey, published in IEEE TPAMI in
-2026~\cite{bfm-survey}, organises this field by pre-training approach and
-identifies its open problems: retraining cost for each new scenario, the gap
-between simulated and real dynamics, and safe adaptation.
-
-FAST (Wang et al., February 2026)~\cite{fast-2026} is a representative recent
-method.  It keeps a pre-trained tracking policy and adds a small
-\emph{residual} policy for motions outside the training distribution, with
-orthogonality (Parseval) and KL constraints so that adapting to a new motion
-does not erase old skills.  It also adds centre-of-mass observations and
-objectives, which explicitly brings a classical balance quantity back into a
-learned controller.  I find this telling: the best learned controllers are not
-ignoring model-based insight but feeding it to the network.
+Reinforcement learning in GPU-parallel simulation, followed by sim-to-real
+transfer, is now the standard way to obtain robust humanoid locomotion.  The
+newest trend is the \emph{behaviour foundation model}, a whole-body
+controller pre-trained on large motion datasets so it can be reused across
+tasks~\cite{bfm-survey}.  FAST~\cite{fast-2026} adds a small, constrained
+residual policy for new motions and centre-of-mass objectives, which shows
+that learned controllers still benefit from classical balance quantities.
 
 \subsection{Vision-language-action models}\label{sec:vla}
 
 A VLA model starts from a vision-language model pre-trained on internet data
-and is trained further to output robot actions.  The key systems are:
-
+and is trained further to output robot actions.
 \begin{itemize}
-  \item \textbf{$\pi_0$} (Physical Intelligence, 2024)~\cite{pi0} attaches a
-  flow-matching ``action expert'' to a vision-language backbone so it can
-  produce smooth, high-rate continuous actions, and trains across many robot
-  types.  It established the general recipe that later humanoid models
-  follow.
-  \item \textbf{GR00T N1} (NVIDIA, March 2025)~\cite{groot-n1} is an open
-  humanoid foundation model with a \emph{dual-system} design: a
-  vision-language module (``System~2'') interprets the scene and the
-  instruction, and a diffusion-transformer action module (``System~1'')
-  generates fluid motor actions.  It is trained on a mixture of real robot
-  teleoperation, human videos and synthetic data, and the weights are public.
-  \item \textbf{Gemini Robotics 1.5} (Google DeepMind, October
-  2025)~\cite{gemini-15} pairs a VLA with a separate embodied-reasoning model
-  (Gemini Robotics-ER~1.5) that plans and checks progress.  The VLA can
-  ``think'' in natural language before acting, and a \emph{motion transfer}
-  mechanism lets skills learned on one robot run on ALOHA, a bi-arm Franka
-  and the Apollo humanoid without robot-specific post-training.
-  \item \textbf{Helix 02} (Figure, early 2026)~\cite{helix-02} extends
-  Figure's original upper-body Helix model to the whole body.  It adds a
-  learned whole-body controller (``System~0'') trained on over 1{,}000 hours
-  of human motion data and sim-to-real RL, beneath the existing System~1
-  visuomotor policy and System~2 reasoning model.  Figure demonstrated a
-  four-minute, uninterrupted, fully autonomous task of unloading and
-  reloading a dishwasher across a kitchen, which it describes as the longest
-  and most complex autonomous humanoid task to date, and later claimed
-  multi-hour autonomous work shifts.  These are company claims without
+  \item \textbf{$\pi_0$} (Physical Intelligence, 2024)~\cite{pi0}: a
+  vision-language backbone with a flow-matching action expert, trained across
+  many robot types; it set the recipe later models follow.
+  \item \textbf{GR00T N1} (NVIDIA, 2025)~\cite{groot-n1}: an open-weight
+  humanoid model with a dual-system design, a vision-language ``System~2''
+  and a diffusion action ``System~1''.
+  \item \textbf{Gemini Robotics 1.5} (Google DeepMind, 2025)~\cite{gemini-15}:
+  a VLA plus a separate embodied-reasoning planner, with motion transfer that
+  runs the same skill on different robots, including Apollo.
+  \item \textbf{Helix 02} (Figure, 2026)~\cite{helix-02}: adds a learned
+  whole-body controller (``System~0'') beneath Helix's System~1 and System~2.
+  Figure showed a four-minute autonomous dishwasher task across a kitchen and
+  later claimed multi-hour shifts; these are company claims without
   independent evaluation.
-  \item \textbf{HuGe} (Liu et al., October 2026)~\cite{huge-2026} targets the
-  main bottleneck, data.  It pre-trains humanoid VLAs on over 2{,}000 hours
-  of \emph{egocentric} human and robot video.  The VLA outputs latent motion
-  tokens for a pre-trained whole-body controller plus hand commands.  To
-  bridge the difference between a human and a robot body, it creates
-  pseudo-proprioceptive states by replaying motions in simulation and
-  re-renders the arms in the camera images during fine-tuning.  It reports
-  state-of-the-art results on the HumanoidArena benchmark, and on a real
-  Unitree G1 the egocentric data significantly improved success on a
-  pick-and-drop task.
+  \item \textbf{HuGe} (October 2026)~\cite{huge-2026}: pre-trains humanoid VLAs
+  on over 2{,}000\,h of egocentric human and robot video, outputting motion
+  tokens for a pre-trained whole-body controller; on a real G1 the human data
+  improved pick-and-drop success.
 \end{itemize}
 
 \subsection{General-purpose frontier models as the robot brain}\label{sec:astra}
@@ -274,10 +226,7 @@ being tried as a robot brain.
   Fable~5 once.  On a harder puzzle task, Astra and Fable~5.1 each succeeded
   only 2 times in 20.  The authors note the runs were not interleaved, used
   different rigs, and were graded by an operator, so this is a small, early
-  comparison.  Earlier, Anthropic's Project Fetch (November 2025) used
-  Claude differently: as a coding assistant, it helped a team of four
-  people program a robot dog and finish 7 of 8 tasks, against 6 of 8 for a
-  team without it~\cite{project-fetch}.
+  comparison.
   \item \textbf{Grok.}  Tesla plans to use xAI's Grok as the conversational
   ``brain'' of its Optimus humanoid, while a vision network adapted from
   Tesla's self-driving software handles perception and
@@ -456,29 +405,18 @@ for four reasons.
   in control, applied to learned components.  Section~\ref{sec:deploy}
   shows that the same split also decides where each layer can run: the fast
   loops on the robot, and the slow planner on the robot or in the cloud.
-  \item \textbf{It removes the brittle hand-written boundary between walking
-  and manipulation.}  In older humanoids, locomotion and arm control were
-  separate controllers joined by a state machine, which is why many demos
-  showed a robot walking, stopping, and only then reaching.  Helix~02's
-  System~0 lets the upper layers command whole-body motion directly, so
-  walking while carrying, bending while reaching, and balancing during
-  contact become one behaviour.  The dishwasher demonstration, with dozens of
-  sequential loco-manipulation actions and no resets, is the strongest public
-  evidence of long-horizon whole-body autonomy I found.
-  \item \textbf{It scales with data rather than with engineering effort.}
-  Adding a new task means collecting demonstrations, not writing a new
-  controller.  Independent research supports this direction: GR00T~N1 and
-  HuGe show that human video and synthetic data can supplement scarce robot
-  data, and the BFM literature shows the WBC layer itself can be pre-trained
-  once and reused.
-  \item \textbf{The research community has converged on it.}  GR00T~N1's
-  dual-system design, Gemini Robotics~1.5's split between reasoning and
-  action, and HuGe's ``VLA outputs tokens for a pre-trained WBC'' interface
-  are all variants of the same hierarchy.  Even the GPT-6 Astra studies
-  (Section~\ref{sec:astra}) ended up placing the general model on top as
-  System~2, with faster controllers below it.  When independent groups arrive at
-  the same structure, that is good evidence the structure is right, even if
-  the details differ.
+  \item \textbf{It joins walking and manipulation.}  Older humanoids switched
+  between separate locomotion and arm controllers, so they walked, stopped and
+  only then reached.  A learned System~0 lets the robot walk while carrying and
+  balance during contact; the dishwasher demonstration is the strongest public
+  evidence of this.
+  \item \textbf{It scales with data, not engineering.}  A new task needs
+  demonstrations rather than a new controller, and GR00T~N1 and HuGe show that
+  human video and synthetic data can supplement scarce robot data.
+  \item \textbf{Independent groups converged on it.}  GR00T~N1, Gemini
+  Robotics~1.5, HuGe and even the GPT-6 Astra studies
+  (Section~\ref{sec:astra}) all place a slow planner above faster
+  controllers.
 \end{enumerate}
 
 \noindent
@@ -550,46 +488,35 @@ commercial use.
   times out of 20.  The chatbot safety training of these models does not
   carry over to physical actions, so a separate safety layer on the robot is
   still needed.
-  \item \textbf{Hands and touch.}  Dexterous manipulation still lags far
-  behind locomotion.  Multi-fingered hands are fragile and costly, and
-  tactile sensing is only now being integrated into learned policies
-  (for example the palm cameras and tactile sensors of Figure~03).
-  \item \textbf{Energy, compute and cost.}  Running large VLA models on board
-  at high rates competes with the battery used for motion.  Battery
-  swapping, as on Atlas, works around limited runtime rather than solving it.
-  Unit cost must also fall far enough for a humanoid to beat a fixed
-  automation cell or a human worker on total cost.
-  \item \textbf{Evaluation.}  Much of the most impressive work is shown only
-  in company videos.  Without shared benchmarks and independent testing, it
-  is difficult to compare systems or know which advance actually caused an
-  improvement.
+  \item \textbf{Hands and touch.}  Dexterous hands are fragile and costly, and
+  tactile sensing is only now entering learned policies.
+  \item \textbf{Energy and cost.}  Onboard compute competes with the battery
+  used for motion (Section~\ref{sec:deploy}), and unit cost must fall far
+  enough to beat an automation cell or a human worker.
+  \item \textbf{Evaluation.}  Most impressive results are company videos;
+  without shared benchmarks and independent tests, systems are hard to
+  compare.
 \end{enumerate}
 
 %-----------------------------------------------------------------
 \section{Future directions}
 
 \begin{itemize}
-  \item \textbf{Scaling data from humans and simulation.}  Egocentric human
-  video (as in HuGe), large synthetic datasets, and world models that predict
-  future observations should reduce dependence on teleoperation.
+  \item \textbf{Data from humans and simulation.}  Egocentric human video (as
+  in HuGe), synthetic data and world models should reduce dependence on slow
+  teleoperation.
   \item \textbf{Learning from deployment.}  Fleets connected through software
-  such as Orbit can pool experience, so a correction learned by one robot
-  improves all of them.  Reinforcement learning on real deployment data is a
-  natural next step after imitation learning.
-  \item \textbf{Combining learning with model-based guarantees.}  FAST's
-  centre-of-mass objectives suggest a hybrid future: learned policies for
-  flexibility, wrapped by model-based safety filters (for example
-  balance or collision constraints solved as a small optimisation) that can
-  be verified and certified.
-  \item \textbf{Richer sensing.}  Tactile skins, in-hand cameras and force
-  sensing fused with vision, using the estimation tools of this course, will
-  be needed for reliable contact-rich work.
-  \item \textbf{Standards and benchmarks.}  Completing ISO~25785-1 and
-  creating shared simulation and real-world benchmarks (HumanoidArena is an
-  early example) will move the field from demos to measurable progress.
-  \item \textbf{Efficient on-board models.}  Smaller, distilled VLAs and
-  dedicated accelerators will cut power and latency so that more of the stack
-  runs locally without a network connection.
+  such as Orbit can pool corrections, so one robot's lesson improves all of
+  them.
+  \item \textbf{Learning plus model-based guarantees.}  Learned policies wrapped
+  by verifiable safety filters (balance or collision constraints, as FAST's
+  centre-of-mass objectives hint) are the likely route to certification.
+  \item \textbf{Standards and benchmarks.}  Completing ISO~25785-1 and shared
+  benchmarks such as HumanoidArena will move the field from demos to
+  measurable progress.
+  \item \textbf{Efficient on-board models.}  Distilled VLAs and dedicated
+  accelerators will let more of the stack run offline within the latency
+  budgets of Section~\ref{sec:deploy}.
 \end{itemize}
 
 %-----------------------------------------------------------------
@@ -683,11 +610,6 @@ robotic manipulation,'' Robocurve, 4 Sep.\ 2026.
 E.~Sun, S.~Machcha, S.~Zou, T.~K. Chan and J.~Chooi, ``RoboHarm: Do frontier
 robot policies refuse unsafe instructions?,'' Robocurve, 18 Sep.\ 2026.
 \url{https://robocurve.org/roboharm/}
-
-\bibitem{project-fetch}
-Anthropic Frontier Red Team, ``Project Fetch: Can Claude train a robot
-dog?,'' Anthropic, 12 Nov.\ 2025.
-\url{https://www.anthropic.com/research/project-fetch-robot-dog}
 
 \bibitem{grok-optimus}
 K.~Singh, ``Tesla to integrate xAI's Grok into Optimus, helping bring the
