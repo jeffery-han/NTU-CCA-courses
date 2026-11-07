@@ -555,14 +555,21 @@ commercial use.
 %-----------------------------------------------------------------
 \section{Effect of this assignment on my understanding and interest}
 
-\yours{This section must be your own honest answer; the points below are
-prompts only.}
-
 \begin{itemize}
-  \item \textbf{Understanding of robotics and intelligent systems:}
-  \yours{Did it increase? Which link between the lectures (kinematics,
-  dynamics and control, vision sensors, Kalman filtering, vision-based
-  control) and real humanoids became clearer?}
+  \item \textbf{Understanding of robotics and intelligent systems:} Yes, it
+  increased.  In the lectures, kinematics, sensors and filtering felt like
+  separate topics.  This review showed me how they connect.  Moving an arm
+  to a certain place is described by frames, transforms and joint angles.
+  What the sensors perceive is turned into the same kind of description:
+  a camera image becomes an object pose, and noisy measurements are fused
+  into a state estimate.  These expressions are the structured data that a
+  robot ``brain'' learns from and produces.  A VLA model is trained on
+  camera images paired with joint or end-effector targets, and its output
+  is again a target pose or joint command that the lower-level controller
+  can follow.  So the mathematics from the course is not replaced by
+  learning; it is the common language between perception, the brain and
+  the body.  Without it, there would be nothing well defined for the model
+  to train on or to output.
   \item \textbf{Interest in a career in robotics and intelligent systems:}
   \yours{Did it increase? Which part of the stack (control, perception,
   learning, safety) would you want to work on, and why?}
