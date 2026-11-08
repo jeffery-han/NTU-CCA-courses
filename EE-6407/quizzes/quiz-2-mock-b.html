@@ -1,0 +1,677 @@
+<!doctype html>
+<html lang="en" data-theme="system">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EE6407 Quiz 2 Mock B</title>
+<meta name="description" content="Answer-free interactive mock for EE6407 Quiz 2 (machine-learning part): 10 True/False, 4 calculations, 1 evaluation question. Sit it under exam conditions, then export the answer sheet for grading.">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)']],
+      displayMath: [['\\[', '\\]']],
+      processEscapes: true
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    startup: { typeset: true }
+  };
+</script>
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --surface-2: #eef1f5;
+  --text: #14181f;
+  --muted: #5b6472;
+  --border: #d8dee7;
+  --accent: #1f6feb;
+  --accent-soft: #e5efff;
+  --success: #17794b;
+  --success-soft: #e2f5ec;
+  --warning: #9a6200;
+  --warning-soft: #fdf1dc;
+  --danger: #b32130;
+  --danger-soft: #fdeaec;
+  --shadow: 0 1px 2px rgba(16, 24, 40, .05), 0 8px 24px rgba(16, 24, 40, .06);
+  --radius: 14px;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1117; --surface: #161b23; --surface-2: #1d232d;
+    --text: #e7ecf3; --muted: #99a3b3; --border: #2a323e;
+    --accent: #6ea8ff; --accent-soft: #17233a;
+    --success: #56d39b; --success-soft: #10281f;
+    --warning: #e5b567; --warning-soft: #2b2113;
+    --danger: #ff8189; --danger-soft: #2e1519;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 28px rgba(0, 0, 0, .35);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1117; --surface: #161b23; --surface-2: #1d232d;
+  --text: #e7ecf3; --muted: #99a3b3; --border: #2a323e;
+  --accent: #6ea8ff; --accent-soft: #17233a;
+  --success: #56d39b; --success-soft: #10281f;
+  --warning: #e5b567; --warning-soft: #2b2113;
+  --danger: #ff8189; --danger-soft: #2e1519;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 28px rgba(0, 0, 0, .35);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.62;
+  font-size: 16.5px;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 880px; margin: 0 auto; padding: 24px 20px 120px; }
+a { color: var(--accent); }
+code { font-family: var(--mono); font-size: .9em; background: var(--surface-2); padding: .08em .35em; border-radius: 5px; }
+pre {
+  font-family: var(--mono); font-size: .86em; background: var(--surface-2);
+  border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px;
+  overflow-x: auto; line-height: 1.55;
+}
+h1 { font-size: 1.7rem; line-height: 1.25; margin: 0 0 .5rem; }
+h2 { font-size: 1.28rem; margin: 2.4rem 0 .4rem; padding-top: .6rem; border-top: 2px solid var(--border); }
+h3 { font-size: 1.06rem; margin: 1.5rem 0 .3rem; }
+h4 { font-size: .96rem; margin: 1rem 0 .3rem; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.sub { color: var(--muted); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+select, .btn, input[type="text"], textarea {
+  font: inherit; font-size: .92rem;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border); border-radius: 9px;
+  padding: 7px 12px;
+}
+select, .btn { cursor: pointer; }
+.btn:hover { border-color: var(--accent); }
+.btn-danger { color: var(--danger); }
+.btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 600; }
+.btn-primary:hover { filter: brightness(1.08); }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px 18px;
+  margin: 14px 0;
+}
+.notice { background: var(--warning-soft); border: 1px solid color-mix(in srgb, var(--warning) 40%, var(--border)); border-radius: 12px; padding: 12px 15px; margin: 14px 0; }
+.notice.info { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 35%, var(--border)); }
+.notice h3 { margin-top: .2rem; }
+.notice p:last-child, .notice ul:last-child { margin-bottom: 0; }
+
+/* sticky status bar: timer + progress */
+.statusbar {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center;
+  background: color-mix(in srgb, var(--surface) 93%, transparent);
+  backdrop-filter: blur(9px);
+  border: 1px solid var(--border); border-radius: 12px;
+  padding: 9px 14px; margin: 14px 0 4px;
+  box-shadow: var(--shadow);
+  font-size: .9rem;
+}
+.statusbar .grow { flex: 1 1 auto; }
+#clock { font-family: var(--mono); font-size: 1.06rem; font-weight: 700; letter-spacing: .02em; }
+#clock.over { color: var(--danger); }
+.pill {
+  display: inline-block; background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: 999px; padding: 1px 10px; font-size: .82rem; color: var(--muted);
+}
+.pill strong { color: var(--text); }
+
+/* True/False items */
+.tf { border-top: 1px solid var(--border); padding: 13px 0 11px; display: flex; gap: 13px; align-items: flex-start; }
+.tf:first-of-type { border-top: 0; }
+.tf .num { font-family: var(--mono); font-weight: 700; color: var(--muted); min-width: 2.1em; padding-top: 2px; }
+.tf .body { flex: 1 1 auto; min-width: 0; }
+.tf .stem { margin: 0 0 8px; }
+.tf .opts { display: flex; gap: 8px; }
+.tf .opts button {
+  font: inherit; font-weight: 700; font-size: .88rem;
+  min-width: 54px; padding: 5px 0;
+  background: var(--surface); color: var(--muted);
+  border: 1px solid var(--border); border-radius: 9px; cursor: pointer;
+}
+.tf .opts button:hover { border-color: var(--accent); color: var(--text); }
+.tf .opts button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* free response */
+.field { margin: 12px 0; }
+.field label { display: block; font-size: .87rem; color: var(--muted); margin-bottom: 4px; font-weight: 600; }
+.field input[type="text"], .field textarea { width: 100%; font-family: var(--mono); font-size: .9rem; }
+.field textarea { min-height: 170px; resize: vertical; line-height: 1.6; font-family: inherit; font-size: .95rem; }
+.field .hint { font-size: .8rem; color: var(--muted); margin-top: 3px; }
+.parents { white-space: pre; }
+
+table.data { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: .9rem; }
+table.data th, table.data td { border: 1px solid var(--border); padding: 5px 9px; text-align: right; }
+table.data th:first-child, table.data td:first-child { text-align: left; }
+table.data th { background: var(--surface-2); }
+
+.marks { float: right; color: var(--muted); font-size: .85rem; font-weight: 600; }
+
+/* export */
+#export-out { width: 100%; min-height: 300px; font-family: var(--mono); font-size: .8rem; line-height: 1.5; white-space: pre; }
+#copy-status { font-size: .87rem; color: var(--success); font-weight: 600; }
+
+footer { margin-top: 46px; padding-top: 16px; border-top: 1px solid var(--border); font-size: .87rem; color: var(--muted); }
+#math-warning { display: none; }
+.paper { display: flex; gap: 8px; align-items: center; margin: 10px 0 2px; font-size: .9rem; color: var(--muted); }
+.paper input { width: 18px; height: 18px; }
+.paper.on { color: var(--success); font-weight: 600; }
+@media (max-width: 560px) {
+  .tf { flex-direction: column; gap: 6px; }
+  .statusbar { font-size: .84rem; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>EE6407 Quiz 2 — Mock Paper B</h1>
+<p class="sub">Machine-learning part &middot; 10 True/False + 4 calculations + 1 evaluation question &middot; 70 marks &middot; 60 minutes &middot; closed book</p>
+
+<div id="math-warning" class="notice">
+  <strong>Equations are not rendering.</strong> This page loads MathJax from
+  <code>vendor/mathjax/tex-mml-chtml.js</code>. Open the file with that relative path intact,
+  or serve the <code>EE-6407</code> folder over a local HTTP server. The questions are still readable without it.
+</div>
+
+<div class="statusbar">
+  <span id="clock">00:00</span>
+  <button class="btn" id="timer-toggle">Start</button>
+  <span class="pill">Section A <strong><span id="p-tf">0</span>/10</strong></span>
+  <span class="pill">Typed fields <strong><span id="p-fr">0</span></strong></span>
+  <span class="grow"></span>
+  <label class="sr-only" for="theme">Theme</label>
+  <select id="theme">
+    <option value="system">Auto</option>
+    <option value="light">Light</option>
+    <option value="dark">Dark</option>
+  </select>
+</div>
+
+<div class="notice info">
+  <h3 style="margin-bottom:.3rem">How to use this</h3>
+  <p style="margin:.3rem 0">
+    This page contains <strong>no answers</strong>. Sit it in one hour, closed book. The real quiz is
+    handwritten, so do Sections B and C <strong>on paper</strong>: tick &ldquo;answered on paper&rdquo;,
+    type only the final numbers if you like, and photograph your sheets into
+    <code>EE-6407/quizzes/attempts/</code>. Then press <strong>Build answer sheet</strong> and paste the block
+    into Claude Code with &ldquo;grade this&rdquo;.
+  </p>
+  <p style="margin:.3rem 0">Your work autosaves in this browser. The key and rubric are in
+    <code>quiz-2-mock-b.md</code>; read it <em>after</em> you submit.</p>
+  <p style="margin:.3rem 0 0" class="sub">
+    Unofficial practice paper (2026-11-08). The format is a prediction modelled on Quiz 1 and the ML exam questions;
+    the scope (Weeks 5&ndash;12) follows the Week 11 lecture announcement. See <code>quiz-2-intel.md</code>.
+    If any formula feels shaky, do the 15-minute <a href="quiz-2-primer.html">primer</a> first, then come back.
+  </p>
+</div>
+
+<h2>Section A &mdash; True / False <span class="marks">10 &times; 2 = 20 marks</span></h2>
+<p class="sub">Choose True or False, then write a one-line reason on paper. The reason earns the second mark.</p>
+<div class="card" id="tf-list"></div>
+
+<h2>Section B &mdash; Calculations</h2>
+
+<h3>B1. Fisher linear discriminant <span class="marks">10 marks</span></h3>
+<div class="card">
+  <p>Two classes in two dimensions:</p>
+  <table class="data">
+    <tr><th>Class</th><th>Samples \((x_1, x_2)\)</th></tr>
+    <tr><td>\(\omega_1\)</td><td>(1, 1), (2, 3), (3, 2)</td></tr>
+    <tr><td>\(\omega_2\)</td><td>(5, 3), (6, 5), (7, 4)</td></tr>
+  </table>
+  <p><strong>(a)</strong> Find the class means and the within-class scatter matrix \(S_W\).
+  <strong>(b)</strong> Design the Fisher linear discriminant \(g(\mathbf{x}) = \mathbf{w}^T\mathbf{x} + w_0\), with the threshold
+  placed at the midpoint of the projected means, and state the decision rule.
+  Classify \((3.5,\,5)\) and \((4.5,\,0)\).
+  <strong>(c)</strong> The class means differ in \(x_2\). Explain in one or two sentences why your \(\mathbf{w}\) gives \(x_2\) the weight it does.</p>
+  <label class="paper"><input type="checkbox" data-paper="B1"> I answered B1 on paper (working + final answers written by hand)</label>
+  <div class="field"><label for="b1m">Means m1, m2</label><input type="text" id="b1m" data-fr="B1-means" placeholder="m1 = (.,.), m2 = (.,.)" autocomplete="off" spellcheck="false"></div>
+  <div class="field"><label for="b1s">S_W</label><input type="text" id="b1s" data-fr="B1-Sw" placeholder="[[.,.],[.,.]]" autocomplete="off" spellcheck="false"></div>
+  <div class="field"><label for="b1w">w and w0</label><input type="text" id="b1w" data-fr="B1-w" placeholder="w = (.,.), w0 = ." autocomplete="off" spellcheck="false"></div>
+  <div class="field"><label for="b1c">Classes of (3.5,5) and (4.5,0)</label><input type="text" id="b1c" data-fr="B1-class" placeholder="" autocomplete="off" spellcheck="false"></div>
+  <div class="field"><label for="b1e">(c) Why x2 gets that weight</label><textarea id="b1e" data-fr="B1-why" style="min-height:110px" placeholder="" spellcheck="false"></textarea></div>
+</div>
+
+<h3>B2. Soft-margin SVM: recovering w and b <span class="marks">10 marks</span></h3>
+<div class="card">
+  <p>A soft-margin SVM with \(C = 1.5\) was trained, and the solver returned these Lagrange multipliers:</p>
+  <table class="data">
+    <tr><th>Sample</th><th>\(\mathbf{x}_i\)</th><th>\(d_i\)</th><th>\(\alpha_i\)</th></tr>
+    <tr><td>1</td><td>(2, 2)</td><td>+1</td><td>1.0</td></tr>
+    <tr><td>2</td><td>(3, 1)</td><td>+1</td><td>0.75</td></tr>
+    <tr><td>3</td><td>(1, 1)</td><td>&minus;1</td><td>0.25</td></tr>
+    <tr><td>4</td><td>(2, 1)</td><td>&minus;1</td><td>1.5</td></tr>
+    <tr><td>5</td><td>(4, 4)</td><td>+1</td><td>0</td></tr>
+    <tr><td>6</td><td>(0, 0)</td><td>&minus;1</td><td>0</td></tr>
+  </table>
+  <p><strong>(a)</strong> Verify the equality constraint on the \(\alpha_i\).
+  <strong>(b)</strong> Compute the weight vector \(\mathbf{w}\).
+  <strong>(c)</strong> Which samples are support vectors? Which of them lie exactly on the margin?
+  <strong>(d)</strong> Compute the bias \(b\), stating which samples you use and why.
+  <strong>(e)</strong> Classify \((3,\,0.5)\) and \((1,\,1.5)\).
+  <strong>(f)</strong> Where does sample 4 lie relative to the decision boundary, and what is its slack \(\xi_4\)?</p>
+  <label class="paper"><input type="checkbox" data-paper="B2"> I answered B2 on paper (working + final answers written by hand)</label>
+  <div class="field"><label for="b2w">w</label><input type="text" id="b2w" data-fr="B2-w" placeholder="(.,.)" autocomplete="off" spellcheck="false"></div>
+  <div class="field"><label for="b2sv">Support vectors / which are on the margin</label><input type="text" id="b2sv" data-fr="B2-SVs" placeholder="" autocomplete="off" spellcheck="false"></div>
+  <div class="field"><label for="b2b">b (and the samples used)</label><input type="text" id="b2b" data-fr="B2-b" placeholder="" autocomplete="off" spellcheck="false"></div>
+  <div class="field"><label for="b2c">Classes of (3,0.5) and (1,1.5); position + slack of sample 4</label><input type="text" id="b2c" data-fr="B2-class" placeholder="" autocomplete="off" spellcheck="false"></div>
+</div>
+
+<h3>B3. Classification tree: choosing the root split <span class="marks">10 marks</span></h3>
+<div class="card">
+  <p>A root node holds 16 training samples, 8 from \(\omega_1\) and 8 from \(\omega_2\). Two candidate binary questions:</p>
+  <table class="data">
+    <tr><th>Question</th><th>Left child (\(\omega_1\), \(\omega_2\))</th><th>Right child (\(\omega_1\), \(\omega_2\))</th></tr>
+    <tr><td>A</td><td>(6, 2)</td><td>(2, 6)</td></tr>
+    <tr><td>B</td><td>(4, 0)</td><td>(4, 8)</td></tr>
+  </table>
+  <p>Compute the impurity drop \(\Delta i\) of each question using <strong>(a)</strong> entropy impurity,
+  <strong>(b)</strong> Gini impurity and <strong>(c)</strong> misclassification impurity, and say which question
+  each measure selects. <strong>(d)</strong> Comment on the result of (c).
+  Give values to 4 decimal places. You may use \(\log_2 3 \approx 1.585\).</p>
+  <label class="paper"><input type="checkbox" data-paper="B3"> I answered B3 on paper (working + final answers written by hand)</label>
+  <div class="field"><label for="b3a">(a) Entropy: drop A, drop B, choice</label><input type="text" id="b3a" data-fr="B3-entropy" placeholder="" autocomplete="off" spellcheck="false"></div>
+  <div class="field"><label for="b3b">(b) Gini: drop A, drop B, choice</label><input type="text" id="b3b" data-fr="B3-gini" placeholder="" autocomplete="off" spellcheck="false"></div>
+  <div class="field"><label for="b3c">(c) Misclassification: drop A, drop B, choice</label><input type="text" id="b3c" data-fr="B3-miscl" placeholder="" autocomplete="off" spellcheck="false"></div>
+  <div class="field"><label for="b3d">(d) Comment</label><textarea id="b3d" data-fr="B3-comment" style="min-height:110px" placeholder="" spellcheck="false"></textarea></div>
+</div>
+
+<h3>B4. Feature ranking and hierarchical clustering <span class="marks">10 marks (4 + 6)</span></h3>
+<div class="card">
+  <p><strong>(a)</strong> Rank the two features by <strong>Fisher's ratio</strong> (variances computed by dividing by the number of samples):</p>
+  <table class="data">
+    <tr><th>Feature</th><th>\(\omega_1\)</th><th>\(\omega_2\)</th></tr>
+    <tr><td>\(f_1\)</td><td>1, 2, 3</td><td>4, 5, 6</td></tr>
+    <tr><td>\(f_2\)</td><td>0, 4, 8</td><td>6, 10, 14</td></tr>
+  </table>
+  <p><strong>(b)</strong> Five points: A(0,0), B(0,1), C(0,3), D(3,0), E(6,1). Using the <strong>Manhattan</strong>
+  distance (Minkowski, \(q = 1\)), write the distance matrix. Then run agglomerative hierarchical clustering with
+  <strong>single linkage</strong> and with <strong>complete linkage</strong>. For each, give the merge sequence with merge heights,
+  and the two clusters obtained by cutting the dendrogram at two clusters.</p>
+  <label class="paper"><input type="checkbox" data-paper="B4"> I answered B4 on paper (working + final answers written by hand)</label>
+  <div class="field"><label for="b4a">(a) FR(f1), FR(f2), ranking</label><input type="text" id="b4a" data-fr="B4a-FR" placeholder="" autocomplete="off" spellcheck="false"></div>
+  <div class="field"><label for="b4s">(b) Single linkage: merges (heights) and 2-cluster cut</label><input type="text" id="b4s" data-fr="B4b-single" placeholder="" autocomplete="off" spellcheck="false"></div>
+  <div class="field"><label for="b4c">(b) Complete linkage: merges (heights) and 2-cluster cut</label><input type="text" id="b4c" data-fr="B4b-complete" placeholder="" autocomplete="off" spellcheck="false"></div>
+</div>
+
+<h2>Section C &mdash; Evaluation <span class="marks">10 marks</span></h2>
+<div class="card">
+  <p>A screening test set has 1000 samples, of which <strong>50 are positive</strong>. Classifier A predicts
+  <em>negative</em> for every sample. Classifier B gives TP = 40, FN = 10, FP = 60, TN = 890.</p>
+  <p><strong>(a)</strong> Compute accuracy, precision, recall and F1 for both classifiers.
+  <strong>(b)</strong> Which classifier would you deploy, and why does accuracy mislead here?
+  <strong>(c)</strong> If you estimated these numbers by k-fold cross-validation, what precaution would you take with the folds, and why?</p>
+  <label class="paper"><input type="checkbox" data-paper="C"> I answered C on paper (working + final answers written by hand)</label>
+  <div class="field"><label for="ca">(a) Classifier A: acc / precision / recall / F1</label><input type="text" id="ca" data-fr="C-A" placeholder="" autocomplete="off" spellcheck="false"></div>
+  <div class="field"><label for="cb">(a) Classifier B: acc / precision / recall / F1</label><input type="text" id="cb" data-fr="C-B" placeholder="" autocomplete="off" spellcheck="false"></div>
+  <div class="field"><label for="c1">(b) + (c) Your argument</label>
+    <textarea id="c1" data-fr="C1" placeholder="A few sentences each."></textarea>
+    <div class="hint"><span id="c1-words">0</span> words</div></div>
+</div>
+
+<h2>Submit for grading</h2>
+<div class="card">
+  <p>Press the button, then copy everything in the box and paste it into Claude Code with
+  &ldquo;grade this&rdquo;. The block is self-contained &mdash; it names the paper, so grading works
+  even in a fresh conversation.</p>
+  <p style="display:flex; gap:10px; flex-wrap:wrap; align-items:center">
+    <button class="btn btn-primary" id="build">Build answer sheet</button>
+    <button class="btn" id="copy">Copy to clipboard</button>
+    <span id="copy-status"></span>
+  </p>
+  <textarea id="export-out" readonly placeholder="Your answer sheet will appear here." spellcheck="false"></textarea>
+  <p class="hint" style="margin-top:6px">Clicking inside the box selects everything, so &#8984;C / Ctrl-C works even if the clipboard button is blocked by your browser.</p>
+</div>
+
+<div class="card">
+  <p style="margin:0"><button class="btn btn-danger" id="reset">Clear all answers and reset the timer</button></p>
+</div>
+
+<footer>
+  <p><strong>Related files.</strong>
+    <a href="quiz-2-mock-b.md">quiz-2-mock-b.md</a> (answer key + rubric &mdash; open after submitting) &middot;
+    <a href="quiz-2-mock.html">Quiz 2 Mock Paper (sit first)</a> &middot;
+    <a href="quiz-2-primer.html">Quiz 2 primer</a> &middot;
+    <a href="quiz-2-intel.md">scope and format evidence</a>
+  </p>
+  <p>Unofficial practice material. Verify quiz logistics on NTULearn.</p>
+</footer>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var STORE_KEY = 'ee6407-quiz2-mock-b-v1';
+  var THEME_KEY = 'ee6407-theme';
+
+  /* ---------- Section A items. Stems double as the short labels in the export. ---------- */
+  var TF = [
+    { q: 'Temperature in degrees Celsius is ratio data, so it is meaningful to say that 30&nbsp;&deg;C is twice as hot as 15&nbsp;&deg;C.',
+      tag: 'deg C is ratio data (30 = 2 x 15)' },
+    { q: 'For a <em>nominal</em> feature with some missing values, replacing each missing value with the mean of the observed values is an appropriate imputation.',
+      tag: 'impute nominal feature with mean' },
+    { q: 'For Gaussian class-conditional densities, the naive Bayes assumption is equivalent to replacing each class covariance matrix by its diagonal.',
+      tag: 'Gaussian NB = diagonal covariance' },
+    { q: 'In Fisher linear discriminant analysis, multiplying both \\(\\mathbf{w}\\) and \\(w_0\\) by the same positive constant changes the predicted class of some samples.',
+      tag: 'scaling LDA w, w0 by k>0 changes predictions' },
+    { q: 'If a training sample with \\(\\alpha_i = 0\\) is deleted and the SVM is retrained on the remaining data, the decision boundary does not change.',
+      tag: 'delete alpha=0 sample -> SVM boundary unchanged' },
+    { q: 'In a soft-margin SVM, every support vector with \\(\\alpha_i = C\\) lies exactly on the margin.',
+      tag: 'alpha=C SVs lie exactly on margin' },
+    { q: 'For a two-class tree node containing 50% of each class, the entropy impurity and the Gini impurity are both equal to 1.',
+      tag: '50/50 node: entropy = Gini = 1' },
+    { q: 'In 10-fold cross-validation, each sample is used for testing exactly once and for training exactly nine times.',
+      tag: '10-fold CV: test once, train nine times' },
+    { q: 'With the number of training samples held fixed, adding more features can increase a classifier&rsquo;s error on test data.',
+      tag: 'fixed N: more features can raise test error' },
+    { q: 'k-means clustering with Euclidean distance reaches the same final clusters whatever the initial centroids are.',
+      tag: 'k-means independent of initial centroids' }
+  ];
+
+  var state = { tf: {}, fr: {}, elapsed: 0, running: false };
+
+  /* ---------- storage ---------- */
+  function load() {
+    try {
+      var raw = localStorage.getItem(STORE_KEY);
+      if (!raw) return;
+      var o = JSON.parse(raw);
+      if (o && typeof o === 'object') {
+        state.tf = o.tf || {};
+        state.fr = o.fr || {};
+        state.elapsed = typeof o.elapsed === 'number' ? o.elapsed : 0;
+      }
+    } catch (e) { /* private mode, blocked storage: run without persistence */ }
+  }
+  function save() {
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify({
+        tf: state.tf, fr: state.fr, elapsed: state.elapsed
+      }));
+    } catch (e) { /* ignore */ }
+  }
+
+  /* ---------- theme ---------- */
+  var themeSel = document.getElementById('theme');
+  try {
+    var savedTheme = localStorage.getItem(THEME_KEY);
+    if (savedTheme) { document.documentElement.setAttribute('data-theme', savedTheme); themeSel.value = savedTheme; }
+  } catch (e) { /* ignore */ }
+  themeSel.addEventListener('change', function () {
+    document.documentElement.setAttribute('data-theme', themeSel.value);
+    try { localStorage.setItem(THEME_KEY, themeSel.value); } catch (e) { /* ignore */ }
+  });
+
+  /* ---------- timer ---------- */
+  var clockEl = document.getElementById('clock');
+  var toggleEl = document.getElementById('timer-toggle');
+  var LIMIT = 60 * 60;
+
+  function fmt(s) {
+    var m = Math.floor(s / 60), r = s % 60;
+    return (m < 10 ? '0' : '') + m + ':' + (r < 10 ? '0' : '') + r;
+  }
+  function paintClock() {
+    clockEl.textContent = fmt(state.elapsed);
+    clockEl.classList.toggle('over', state.elapsed > LIMIT);
+    toggleEl.textContent = state.running ? 'Pause' : (state.elapsed > 0 ? 'Resume' : 'Start');
+  }
+  setInterval(function () {
+    if (!state.running) return;
+    state.elapsed += 1;
+    paintClock();
+    if (state.elapsed % 10 === 0) save();
+  }, 1000);
+  toggleEl.addEventListener('click', function () {
+    state.running = !state.running;
+    paintClock();
+    save();
+  });
+
+  /* ---------- progress counters ---------- */
+  var pTf = document.getElementById('p-tf');
+  var pFr = document.getElementById('p-fr');
+  function paintProgress() {
+    var n = 0, i;
+    for (i = 0; i < TF.length; i++) { if (state.tf[i] === 'T' || state.tf[i] === 'F') n++; }
+    pTf.textContent = n;
+    var fields = document.querySelectorAll('[data-fr]'), done = 0;
+    for (i = 0; i < fields.length; i++) {
+      if (String(fields[i].value || '').trim() !== '') done++;
+    }
+    pFr.textContent = done;
+  }
+
+  /* ---------- build Section A ---------- */
+  var list = document.getElementById('tf-list');
+  TF.forEach(function (item, i) {
+    var row = document.createElement('div');
+    row.className = 'tf';
+    row.innerHTML =
+      '<div class="num">' + (i + 1) + '.</div>' +
+      '<div class="body">' +
+        '<p class="stem">' + item.q + '</p>' +
+        '<div class="opts" role="group" aria-label="Item ' + (i + 1) + '">' +
+          '<button type="button" data-v="T" aria-pressed="false">True</button>' +
+          '<button type="button" data-v="F" aria-pressed="false">False</button>' +
+        '</div>' +
+      '</div>';
+    var btns = row.querySelectorAll('.opts button');
+    function paint() {
+      for (var k = 0; k < btns.length; k++) {
+        btns[k].setAttribute('aria-pressed', state.tf[i] === btns[k].getAttribute('data-v') ? 'true' : 'false');
+      }
+    }
+    for (var k = 0; k < btns.length; k++) {
+      btns[k].addEventListener('click', function () {
+        var v = this.getAttribute('data-v');
+        // clicking the selected answer again clears it
+        state.tf[i] = (state.tf[i] === v) ? null : v;
+        paint();
+        paintProgress();
+        save();
+      });
+    }
+    paint();
+    list.appendChild(row);
+  });
+
+  /* ---------- free-response fields ---------- */
+  var frFields = document.querySelectorAll('[data-fr]');
+  Array.prototype.forEach.call(frFields, function (el) {
+    var key = el.getAttribute('data-fr');
+    if (state.fr[key]) el.value = state.fr[key];
+    el.addEventListener('input', function () {
+      state.fr[key] = el.value;
+      paintProgress();
+      if (key === 'C1') paintWords();
+      save();
+    });
+  });
+
+  var paperBoxes = document.querySelectorAll('[data-paper]');
+  function paintPaper() {
+    Array.prototype.forEach.call(paperBoxes, function (cb) {
+      cb.checked = state.fr['paper-' + cb.getAttribute('data-paper')] === 'yes';
+      cb.parentNode.classList.toggle('on', cb.checked);
+    });
+  }
+  Array.prototype.forEach.call(paperBoxes, function (cb) {
+    cb.addEventListener('change', function () {
+      state.fr['paper-' + cb.getAttribute('data-paper')] = cb.checked ? 'yes' : '';
+      paintPaper(); save();
+    });
+  });
+
+  var c1 = document.getElementById('c1');
+  var c1w = document.getElementById('c1-words');
+  function paintWords() {
+    var t = String(c1.value || '').trim();
+    c1w.textContent = t === '' ? 0 : t.split(/\s+/).length;
+  }
+
+  /* ---------- export ---------- */
+  var FR_ORDER = [
+    ['B1-means', 'B1 means'], ['B1-Sw', 'B1 S_W'], ['B1-w', 'B1 w, w0'], ['B1-class', 'B1 test classes'], ['B1-why', 'B1(c) why x2 weight'],
+    ['B2-w', 'B2 w'], ['B2-SVs', 'B2 support vectors / on margin'], ['B2-b', 'B2 b'], ['B2-class', 'B2 test classes + sample 4'],
+    ['B3-entropy', 'B3(a) entropy'], ['B3-gini', 'B3(b) Gini'], ['B3-miscl', 'B3(c) misclassification'], ['B3-comment', 'B3(d) comment'],
+    ['B4a-FR', 'B4(a) Fisher ratio'], ['B4b-single', 'B4(b) single linkage'], ['B4b-complete', 'B4(b) complete linkage'],
+    ['C-A', 'C(a) classifier A'], ['C-B', 'C(a) classifier B']
+  ];
+  var PAPER = ['B1', 'B2', 'B3', 'B4', 'C'];
+
+  function stripTags(s) {
+    var d = document.createElement('div');
+    d.innerHTML = s;
+    return (d.textContent || '').replace(/\s+/g, ' ').trim();
+  }
+
+  function buildSheet() {
+    var L = [];
+    var now = new Date();
+    var stamp = now.getFullYear() + '-' +
+      String(now.getMonth() + 1).padStart(2, '0') + '-' +
+      String(now.getDate()).padStart(2, '0') + ' ' +
+      String(now.getHours()).padStart(2, '0') + ':' +
+      String(now.getMinutes()).padStart(2, '0');
+
+    L.push('===== BEGIN EE6407 QUIZ 2 ANSWER SHEET =====');
+    L.push('Course     : EE6407  (repo path EE-6407/)');
+    L.push('Paper      : EE6407 Quiz 2 - Mock Paper B, ML part (EE-6407/quizzes/quiz-2-mock-b.html)');
+    L.push('Key file   : EE-6407/quizzes/quiz-2-mock-b.md  (answer key + marking rubric)');
+    L.push('Marks      : Section A 10x2=20, B1 10, B2 10, B3 10, B4 10, C 10  -> total 70');
+    L.push('On paper   : ' + (PAPER.filter(function (k) { return state.fr['paper-' + k] === 'yes'; }).join(', ') || 'none') + '  (photos expected in EE-6407/quizzes/attempts/)');
+    L.push('Submitted  : ' + stamp);
+    L.push('Time taken : ' + fmt(state.elapsed) + ' (mm:ss), suggested limit 60:00');
+    L.push('');
+    L.push('--- SECTION A  (True/False, 2 marks each) ---');
+    TF.forEach(function (item, i) {
+      var v = state.tf[i];
+      var mark = (v === 'T' || v === 'F') ? v : '-';
+      L.push('A' + String(i + 1).padStart(2, '0') + '  [' + mark + ']  ' + stripTags(item.tag) +
+             ((mark === '-') ? '   <-- LEFT BLANK' : ''));
+    });
+    L.push('');
+    L.push('--- SECTIONS B + C(a)  (typed finals only; working is on paper where ticked) ---');
+    FR_ORDER.forEach(function (pair) {
+      var val = String(state.fr[pair[0]] || '').trim();
+      if (val === '') {
+        L.push(pair[1] + ': <blank>');
+      } else if (val.indexOf('\n') >= 0) {
+        L.push(pair[1] + ':');
+        val.split('\n').forEach(function (line) { L.push('    ' + line); });
+      } else {
+        L.push(pair[1] + ': ' + val);
+      }
+    });
+    L.push('');
+    L.push('--- SECTION C(b)+(c) argument ---');
+    var c = String(state.fr['C1'] || '').trim();
+    if (c === '') {
+      L.push('<blank>');
+    } else {
+      c.split('\n').forEach(function (line) { L.push(line); });
+    }
+    L.push('');
+    L.push('===== END EE6407 QUIZ 2 ANSWER SHEET =====');
+    L.push('Please mark each part against the rubric, give a total out of 70, and diagnose every mistake.');
+    return L.join('\n');
+  }
+
+  var out = document.getElementById('export-out');
+  var status = document.getElementById('copy-status');
+
+  document.getElementById('build').addEventListener('click', function () {
+    out.value = buildSheet();
+    status.textContent = '';
+    out.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // pause the clock: the paper is done
+    if (state.running) { state.running = false; paintClock(); save(); }
+  });
+
+  out.addEventListener('click', function () {
+    if (out.value) { out.focus(); out.select(); }
+  });
+
+  document.getElementById('copy').addEventListener('click', function () {
+    if (!out.value) out.value = buildSheet();
+    out.focus();
+    out.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    if (ok) {
+      status.textContent = 'Copied — now paste it into Claude Code.';
+    } else if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(out.value).then(function () {
+        status.textContent = 'Copied — now paste it into Claude Code.';
+      }, function () {
+        status.textContent = 'Copy blocked — the text is selected, press ⌘C / Ctrl-C.';
+      });
+    } else {
+      status.textContent = 'Copy blocked — the text is selected, press ⌘C / Ctrl-C.';
+    }
+  });
+
+  /* ---------- reset ---------- */
+  document.getElementById('reset').addEventListener('click', function () {
+    if (!window.confirm('Clear every answer and reset the timer for Quiz 2 Mock B?')) return;
+    try { localStorage.removeItem(STORE_KEY); } catch (e) { /* ignore */ }
+    location.reload();
+  });
+
+  /* ---------- go ---------- */
+  load();
+  Array.prototype.forEach.call(frFields, function (el) {
+    var key = el.getAttribute('data-fr');
+    if (state.fr[key]) el.value = state.fr[key];
+  });
+  // repaint Section A from restored state
+  var rows = list.querySelectorAll('.tf');
+  Array.prototype.forEach.call(rows, function (row, i) {
+    var btns = row.querySelectorAll('.opts button');
+    for (var k = 0; k < btns.length; k++) {
+      btns[k].setAttribute('aria-pressed', state.tf[i] === btns[k].getAttribute('data-v') ? 'true' : 'false');
+    }
+  });
+  paintClock();
+  paintProgress();
+  paintWords();
+  paintPaper();
+
+  /* ---------- MathJax, vendored so the page works offline ---------- */
+  var warned = false;
+  function warn() {
+    if (warned) return;
+    warned = true;
+    if (!window.MathJax || !window.MathJax.typesetPromise) {
+      document.getElementById('math-warning').style.display = 'block';
+    }
+  }
+  var s = document.createElement('script');
+  s.src = 'vendor/mathjax/tex-mml-chtml.js';
+  s.async = true;
+  s.onerror = warn;
+  document.head.appendChild(s);
+  setTimeout(warn, 3500);
+})();
+</script>
+</body>
+</html>
