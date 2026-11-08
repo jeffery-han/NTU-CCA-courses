@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en" data-theme="system">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EE6407 Quiz 2 Primer</title>
+<meta name="description" content="One-page primer for EE6407 Quiz 2: the core formula per ML topic plus a quick check each.">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)']],
+      displayMath: [['\\[', '\\]']],
+      processEscapes: true
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    startup: { typeset: true }
+  };
+</script>
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --surface-2: #eef1f5;
+  --text: #14181f;
+  --muted: #5b6472;
+  --border: #d8dee7;
+  --accent: #1f6feb;
+  --accent-soft: #e5efff;
+  --success: #17794b;
+  --success-soft: #e2f5ec;
+  --warning: #9a6200;
+  --warning-soft: #fdf1dc;
+  --danger: #b32130;
+  --danger-soft: #fdeaec;
+  --shadow: 0 1px 2px rgba(16, 24, 40, .05), 0 8px 24px rgba(16, 24, 40, .06);
+  --radius: 14px;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1117; --surface: #161b23; --surface-2: #1d232d;
+    --text: #e7ecf3; --muted: #99a3b3; --border: #2a323e;
+    --accent: #6ea8ff; --accent-soft: #17233a;
+    --success: #56d39b; --success-soft: #10281f;
+    --warning: #e5b567; --warning-soft: #2b2113;
+    --danger: #ff8189; --danger-soft: #2e1519;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 28px rgba(0, 0, 0, .35);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1117; --surface: #161b23; --surface-2: #1d232d;
+  --text: #e7ecf3; --muted: #99a3b3; --border: #2a323e;
+  --accent: #6ea8ff; --accent-soft: #17233a;
+  --success: #56d39b; --success-soft: #10281f;
+  --warning: #e5b567; --warning-soft: #2b2113;
+  --danger: #ff8189; --danger-soft: #2e1519;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 28px rgba(0, 0, 0, .35);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.62;
+  font-size: 16.5px;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 880px; margin: 0 auto; padding: 24px 20px 120px; }
+a { color: var(--accent); }
+code { font-family: var(--mono); font-size: .9em; background: var(--surface-2); padding: .08em .35em; border-radius: 5px; }
+pre {
+  font-family: var(--mono); font-size: .86em; background: var(--surface-2);
+  border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px;
+  overflow-x: auto; line-height: 1.55;
+}
+h1 { font-size: 1.7rem; line-height: 1.25; margin: 0 0 .5rem; }
+h2 { font-size: 1.28rem; margin: 2.4rem 0 .4rem; padding-top: .6rem; border-top: 2px solid var(--border); }
+h3 { font-size: 1.06rem; margin: 1.5rem 0 .3rem; }
+h4 { font-size: .96rem; margin: 1rem 0 .3rem; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.sub { color: var(--muted); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+select, .btn, input[type="text"], textarea {
+  font: inherit; font-size: .92rem;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border); border-radius: 9px;
+  padding: 7px 12px;
+}
+select, .btn { cursor: pointer; }
+.btn:hover { border-color: var(--accent); }
+.btn-danger { color: var(--danger); }
+.btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 600; }
+.btn-primary:hover { filter: brightness(1.08); }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px 18px;
+  margin: 14px 0;
+}
+.notice { background: var(--warning-soft); border: 1px solid color-mix(in srgb, var(--warning) 40%, var(--border)); border-radius: 12px; padding: 12px 15px; margin: 14px 0; }
+.notice.info { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 35%, var(--border)); }
+.notice h3 { margin-top: .2rem; }
+.notice p:last-child, .notice ul:last-child { margin-bottom: 0; }
+
+/* sticky status bar: timer + progress */
+.statusbar {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center;
+  background: color-mix(in srgb, var(--surface) 93%, transparent);
+  backdrop-filter: blur(9px);
+  border: 1px solid var(--border); border-radius: 12px;
+  padding: 9px 14px; margin: 14px 0 4px;
+  box-shadow: var(--shadow);
+  font-size: .9rem;
+}
+.statusbar .grow { flex: 1 1 auto; }
+#clock { font-family: var(--mono); font-size: 1.06rem; font-weight: 700; letter-spacing: .02em; }
+#clock.over { color: var(--danger); }
+.pill {
+  display: inline-block; background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: 999px; padding: 1px 10px; font-size: .82rem; color: var(--muted);
+}
+.pill strong { color: var(--text); }
+
+/* True/False items */
+.tf { border-top: 1px solid var(--border); padding: 13px 0 11px; display: flex; gap: 13px; align-items: flex-start; }
+.tf:first-of-type { border-top: 0; }
+.tf .num { font-family: var(--mono); font-weight: 700; color: var(--muted); min-width: 2.1em; padding-top: 2px; }
+.tf .body { flex: 1 1 auto; min-width: 0; }
+.tf .stem { margin: 0 0 8px; }
+.tf .opts { display: flex; gap: 8px; }
+.tf .opts button {
+  font: inherit; font-weight: 700; font-size: .88rem;
+  min-width: 54px; padding: 5px 0;
+  background: var(--surface); color: var(--muted);
+  border: 1px solid var(--border); border-radius: 9px; cursor: pointer;
+}
+.tf .opts button:hover { border-color: var(--accent); color: var(--text); }
+.tf .opts button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* free response */
+.field { margin: 12px 0; }
+.field label { display: block; font-size: .87rem; color: var(--muted); margin-bottom: 4px; font-weight: 600; }
+.field input[type="text"], .field textarea { width: 100%; font-family: var(--mono); font-size: .9rem; }
+.field textarea { min-height: 170px; resize: vertical; line-height: 1.6; font-family: inherit; font-size: .95rem; }
+.field .hint { font-size: .8rem; color: var(--muted); margin-top: 3px; }
+.parents { white-space: pre; }
+
+table.data { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: .9rem; }
+table.data th, table.data td { border: 1px solid var(--border); padding: 5px 9px; text-align: right; }
+table.data th:first-child, table.data td:first-child { text-align: left; }
+table.data th { background: var(--surface-2); }
+
+.marks { float: right; color: var(--muted); font-size: .85rem; font-weight: 600; }
+
+/* export */
+#export-out { width: 100%; min-height: 300px; font-family: var(--mono); font-size: .8rem; line-height: 1.5; white-space: pre; }
+#copy-status { font-size: .87rem; color: var(--success); font-weight: 600; }
+
+footer { margin-top: 46px; padding-top: 16px; border-top: 1px solid var(--border); font-size: .87rem; color: var(--muted); }
+#math-warning { display: none; }
+@media (max-width: 560px) {
+  .tf { flex-direction: column; gap: 6px; }
+  .statusbar { font-size: .84rem; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>EE6407 Quiz 2 — Primer</h1>
+<p class="sub">Ten minutes, one card per topic. Pass the quick check and move on. Once every card is green, go to the <a href="quiz-2-mock.html">mock paper</a>.</p>
+<div id="math-warning" class="notice"><strong>Equations are not rendering.</strong> Open this page from the course folder so <code>../notes/vendor/mathjax/</code> resolves.</div>
+<div class="notice info"><p style="margin:0">The topics and emphasis come from the lecture transcripts (<a href="../resources/transcripts-raw/">Weeks 5&ndash;11</a>). Phrases marked &ldquo;exam&rdquo; are the lecturer's own words. Feature selection and clustering are taught in Weeks 12&ndash;13; those transcripts are not available locally, so these two cards follow past final-exam patterns. Score: <strong><span id="score">0</span>/9</strong> <button class="btn" id="reset" style="padding:2px 10px">reset</button></p></div>
+
+<div class="card" data-k="1"><h3>1. Data preparation <span class="marks">wk 6</span></h3>
+<p>The four data types are nominal, ordinal, interval and ratio. You cannot do arithmetic on nominal data, so fill a missing nominal value with the <em>mode</em>, ideally per class. A box plot uses \(\text{IQR}=Q_3-Q_1\) and fences at \(Q_1-1.5\,\text{IQR}\) and \(Q_3+1.5\,\text{IQR}\). The whisker ends at the nearest actual data value inside the fence. Scaling: min&ndash;max \(\frac{x-\min}{\max-\min}\), or z-score \(\frac{x-\mu}{\sigma}\).</p>
+<p><strong>Check:</strong> \(Q_1=20,\ Q_3=30\). What is the upper fence? <input type="text" size="8"> <button class="btn">check</button> <span class="fb"></span></p></div>
+
+<div class="card" data-k="2"><h3>2. Bayes / Naive Bayes <span class="marks">wk 7 &middot; &ldquo;you must know this&rdquo;</span></h3>
+<p>Decide on the largest \(P(\omega)\,p(x\mid\omega)\); the evidence \(p(x)\) only normalises. Naive Bayes multiplies the per-feature probabilities: \(P(\omega)\prod_j P(x_j\mid\omega)\). For a feature observed as &ldquo;N&rdquo;, use \(1-P(Y\mid\omega)\). A zero count wipes out the whole product, so use Laplace smoothing \(\frac{n+1}{N+k}\) (k = number of values; the text example uses vocabulary size). MLE for a Gaussian gives the sample mean and covariance.</p>
+<p><strong>Check:</strong> Priors are 0.5 / 0.5. For class A the two features have \(P=0.2\) and \(0.5\); for class B, \(0.4\) and \(0.1\). What is the score of the winning class? <input type="text" size="8"> <button class="btn">check</button> <span class="fb"></span></p></div>
+
+<div class="card" data-k="3"><h3>3. Fisher LDA <span class="marks">wk 8 &middot; &ldquo;tested in past years&rdquo;</span></h3>
+<p>\(S_i=\sum_{x\in\omega_i}(x-m_i)(x-m_i)^T\), \(S_W=S_1+S_2\), \(\mathbf w=S_W^{-1}(\mathbf m_1-\mathbf m_2)\), \(w_0=-\tfrac12\mathbf w^T(\mathbf m_1+\mathbf m_2)\), \(g(x)=\mathbf w^Tx+w_0\). Decide class 1 if \(g>0\), and <em>check the sign by evaluating \(g(\mathbf m_1)\)</em>. Inverse of a 2&times;2 matrix: \(\frac{1}{ad-bc}\begin{bmatrix}d&-b\\-c&a\end{bmatrix}\). The distance to the boundary is \(g/\lVert\mathbf w\rVert\).</p>
+<p><strong>Check:</strong> \(S_W=\mathrm{diag}(2,4)\), \(\mathbf m_1-\mathbf m_2=(2,4)\). What is the second component of \(\mathbf w\)? <input type="text" size="8"> <button class="btn">check</button> <span class="fb"></span></p></div>
+
+<div class="card" data-k="4"><h3>4. Linear SVM <span class="marks">wk 9 &middot; &ldquo;b calculation often in the exam&rdquo;</span></h3>
+<p>The constraints are \(d_i(\mathbf w^Tx_i+b)\ge 1-\xi_i\), and the margin width is \(2/\lVert\mathbf w\rVert\). From the dual: \(\mathbf w=\sum\alpha_i d_i x_i\) and \(\sum\alpha_i d_i=0\). Compute \(b=d_i-\mathbf w^Tx_i\), averaged <strong>only over the SVs with \(0<\alpha_i<C\)</strong>. SVs with \(\alpha_i=C\) sit inside the margin, so they are excluded. Slack: \(\xi=1-d\,f(x)\).</p>
+<p><strong>Check:</strong> If \(\mathbf w=(1,2)\), what is the margin width (3 d.p.)? <input type="text" size="8"> <button class="btn">check</button> <span class="fb"></span></p></div>
+
+<div class="card" data-k="5"><h3>5. Decision trees <span class="marks">wk 10</span></h3>
+<p>Gini \(=1-\sum p_k^2\) (maximum 0.5 for two classes). Entropy \(=-\sum p_k\log_2 p_k\) (maximum 1). A split is scored by the <em>size-weighted</em> child impurity; impurity drop = parent &minus; weighted children. For a continuous feature, sort the values and try the midpoints between neighbours. Gain ratio corrects the bias toward splits with many branches. Random forest = bootstrap samples + random feature subsets + majority vote.</p>
+<p><strong>Check:</strong> What is the Gini of a node with proportions (0.7, 0.3)? <input type="text" size="8"> <button class="btn">check</button> <span class="fb"></span></p></div>
+
+<div class="card" data-k="6"><h3>6. Evaluation <span class="marks">wk 11</span></h3>
+<p>Precision \(=\frac{TP}{TP+FP}\). Recall (sensitivity) \(=\frac{TP}{TP+FN}\). Specificity \(=\frac{TN}{TN+FP}\). FPR \(=1-\)specificity. F1 = harmonic mean of precision and recall. Resampling schemes: holdout, stratified, k-fold, LOOCV (N models), repeated k-fold. ROC plots TPR against FPR as the threshold varies; AUC is the area under it.</p>
+<p><strong>Check:</strong> TP = 30, FP = 10. What is the precision? <input type="text" size="8"> <button class="btn">check</button> <span class="fb"></span></p></div>
+
+<div class="card" data-k="7"><h3>7. Regression <span class="marks">wk 11</span></h3>
+<p>OLS: \(\theta=(X^TX)^{-1}X^Ty\). Ridge: \(\theta=(X^TX+\lambda I)^{-1}X^Ty\). Lasso uses an L1 penalty and has no closed form. Metrics: MSE, RMSE, MAE, and \(R^2=1-\frac{RSS}{TSS}\). \(R^2\) never decreases when you add a variable, which is why adjusted \(R^2\) penalises extra variables.</p>
+<p><strong>Check:</strong> RSS = 20, TSS = 100. What is \(R^2\)? <input type="text" size="8"> <button class="btn">check</button> <span class="fb"></span></p></div>
+
+<div class="card" data-k="8"><h3>8. Feature selection <span class="marks">wk 12</span></h3>
+<p>A <em>filter</em> scores subsets with a separability measure: Fisher ratio \(\frac{(m_1-m_2)^2}{\sigma_1^2+\sigma_2^2}\), Mahalanobis distance, or scatter-based \(\mathrm{tr}(S_W^{-1}S_B)\). A <em>wrapper</em> puts the classifier in the loop. Search strategies: exhaustive (\(2^d\)), sequential forward selection, sequential backward elimination. Stop at k features or when the score stops improving.</p>
+<p><strong>Check:</strong> Class means are 0 and 3, variances 1 and 2. What is the Fisher ratio? <input type="text" size="8"> <button class="btn">check</button> <span class="fb"></span></p></div>
+
+<div class="card" data-k="9"><h3>9. Clustering <span class="marks">wk 12&ndash;13</span></h3>
+<p>k-means alternates assign-to-nearest and recompute-means until nothing moves. HAC distance between clusters: single linkage = min pairwise distance, complete = max, average = mean. DBSCAN takes eps and MinPts and labels each point core, border or noise; it needs no k and handles non-convex shapes. Silhouette \(s=\frac{b-a}{\max(a,b)}\).</p>
+<p><strong>Check:</strong> What is the single-linkage distance between \(\{1,2\}\) and \(\{6,9\}\)? <input type="text" size="8"> <button class="btn">check</button> <span class="fb"></span></p></div>
+
+<p style="text-align:center;margin-top:28px"><a class="btn btn-primary" href="quiz-2-mock.html" style="text-decoration:none">Sit the mock &rarr;</a></p>
+<footer><p>Unofficial study aid. Verify the quiz logistics on NTULearn.</p></footer>
+</div>
+<script>
+(function () {
+  var KEY = 'ee6407-quiz2-primer-v1', ANS = { 1: 45, 2: 0.05, 3: 1, 4: 0.894, 5: 0.42, 6: 0.75, 7: 0.8, 8: 3, 9: 4 };
+  var done = {}; try { done = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) {}
+  function score() { document.getElementById('score').textContent = Object.keys(done).filter(function (k) { return done[k]; }).length; }
+  Array.prototype.forEach.call(document.querySelectorAll('.card[data-k]'), function (c) {
+    var k = c.getAttribute('data-k'), inp = c.querySelector('input'), fb = c.querySelector('.fb');
+    function mark(ok) { fb.textContent = ok ? '✓ correct' : '✗ not yet — reread the card'; fb.style.color = ok ? 'var(--success)' : 'var(--danger)'; c.style.borderColor = ok ? 'var(--success)' : ''; }
+    if (done[k]) { inp.value = ANS[k]; mark(true); }
+    c.querySelector('button').addEventListener('click', function () {
+      var ok = Math.abs(parseFloat(inp.value) - ANS[k]) < 0.002; done[k] = ok; mark(ok);
+      try { localStorage.setItem(KEY, JSON.stringify(done)); } catch (e) {} score();
+    });
+  });
+  document.getElementById('reset').addEventListener('click', function () { try { localStorage.removeItem(KEY); } catch (e) {} location.reload(); });
+  score();
+  var s = document.createElement('script'); s.src = 'vendor/mathjax/tex-mml-chtml.js'; s.async = true;
+  s.onerror = function () { document.getElementById('math-warning').style.display = 'block'; }; document.head.appendChild(s);
+})();
+</script>
+</body>
+</html>
