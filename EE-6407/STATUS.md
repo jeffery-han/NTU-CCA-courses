@@ -89,6 +89,7 @@
   - `quizzes/quiz-2-mock-b-check.py`: asserts every numeric key; passes.
   - `quizzes/quiz-2-intel.md`: local scope and format evidence (Week 5, 8, 9, 10 and 11 transcripts; 2023–24 ML exam walkthroughs; archive worked examples). It notes that the ML slides, the Week 12 transcript and any Quiz 2 past paper are missing locally.
   - Unofficial.
+- **Quiz 2 train-test-retrain cycle (added 2026-11-10):** `quizzes/quiz-2-cycle.html` (Mock C). Train: guided step-checked breakdowns T1–T6 (shared past-paper confusion matrix, recalled 25-26 S1 word problem, worked example 9.3.1 Fisher, 1-D k-means, Gini wildcard, peaking). Test: new 100-mark / 60-min paper (Q1 confusion matrix + prevalence shift, Q2 2-D k-means, Q3 Fisher ratio with an unsquared-σ trap + peaking). Retrain: rubric self-marking unlocks per-topic random variant generators; a topic closes after 2 correct in a row. `localStorage` key `ee6407-quiz2-cycle-v1`. Key/rubric `quizzes/quiz-2-cycle.md`; `quizzes/quiz-2-cycle-check.mjs` verifies all keys + 8000 generated problems (passes). Citation pop-ups use `quizzes/quiz-2-cycle-pages/` (worked examples 7.2, 9.3.1, 10.4.4). Format/scope basis: unofficial student recollections (ML LN 6–10 up to k-means; two big calculations; confusion matrix every sitting); not verified against NTULearn.
 - **ML notes still not written:** `notes/beginner-notes.tex` and `notes/notes.tex` remain Quiz-1-only. Fold Quiz 2 mistakes into them after grading.
 
 ## File-organization record

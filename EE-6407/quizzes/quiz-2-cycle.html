@@ -1,0 +1,594 @@
+<!doctype html>
+<html lang="en" data-theme="system">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EE6407 Quiz 2 Cycle</title>
+<meta name="description" content="Train, test, retrain: guided breakdowns of past Quiz 2 items, a fresh timed mock, then rubric self-marking and fresh-number retraining on every missed topic.">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']], processEscapes: true },
+    options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] },
+    startup: { typeset: true }
+  };
+</script>
+<script src="vendor/mathjax/tex-mml-chtml.js" async></script>
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: #f6f7f9; --surface: #ffffff; --surface-2: #eef1f5; --text: #14181f; --muted: #5b6472;
+  --border: #d8dee7; --accent: #1f6feb; --accent-soft: #e5efff; --success: #17794b; --success-soft: #e2f5ec;
+  --warning: #9a6200; --warning-soft: #fdf1dc; --danger: #b32130; --danger-soft: #fdeaec;
+  --radius: 12px; --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1117; --surface: #161b23; --surface-2: #1d232d; --text: #e7ecf3; --muted: #99a3b3; --border: #2a323e;
+    --accent: #6ea8ff; --accent-soft: #17233a; --success: #56d39b; --success-soft: #10281f;
+    --warning: #e5b567; --warning-soft: #2b2113; --danger: #ff8189; --danger-soft: #2e1519;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1117; --surface: #161b23; --surface-2: #1d232d; --text: #e7ecf3; --muted: #99a3b3; --border: #2a323e;
+  --accent: #6ea8ff; --accent-soft: #17233a; --success: #56d39b; --success-soft: #10281f;
+  --warning: #e5b567; --warning-soft: #2b2113; --danger: #ff8189; --danger-soft: #2e1519;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+.app { display: grid; grid-template-columns: 270px minmax(0, 1fr); }
+nav.side { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 18px 14px; border-right: 1px solid var(--border); background: var(--surface); font-size: 14px; }
+nav.side h1 { font-size: 17px; margin: 0 0 4px; }
+nav.side .sub { color: var(--muted); font-size: 12.5px; margin-bottom: 12px; }
+nav.side .grp { font-size: 11.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 14px 0 4px; }
+nav.side a.lk { display: flex; justify-content: space-between; gap: 6px; padding: 4px 8px; border-radius: 8px; color: var(--text); text-decoration: none; }
+nav.side a.lk:hover { background: var(--surface-2); }
+nav.side .sc { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+nav.side .sc.full { color: var(--success); font-weight: 600; }
+nav.side .tools { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+main { min-width: 0; padding: 28px clamp(16px, 4vw, 48px) 80px; max-width: 920px; }
+h2 { margin: 40px 0 8px; font-size: 24px; }
+h3 { margin: 26px 0 6px; font-size: 19px; }
+.phase { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); margin-right: 6px; vertical-align: middle; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; margin: 14px 0; }
+.note { background: var(--warning-soft); border-color: transparent; font-size: 14.5px; }
+.muted { color: var(--muted); }
+table { border-collapse: collapse; margin: 8px 0; font-size: 15px; }
+th, td { border: 1px solid var(--border); padding: 5px 10px; text-align: center; }
+th { background: var(--surface-2); font-weight: 600; }
+.step { border-left: 3px solid var(--border); padding: 6px 0 6px 12px; margin: 10px 0; }
+.step.ok { border-left-color: var(--success); }
+.step.bad { border-left-color: var(--danger); }
+.step.hidden { display: none; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 6px; }
+input[type=text] { font: inherit; font-family: var(--mono); width: 150px; padding: 5px 8px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); }
+textarea { font: inherit; width: 100%; min-height: 110px; padding: 8px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); }
+button { font: inherit; font-size: 14px; padding: 5px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); cursor: pointer; }
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+button:disabled { opacity: .5; cursor: default; }
+.fb { font-size: 14.5px; }
+.fb.ok { color: var(--success); }
+.fb.bad { color: var(--danger); }
+.why { display: none; background: var(--surface-2); border-radius: 8px; padding: 8px 12px; margin-top: 6px; font-size: 15px; }
+.why.show { display: block; }
+.locked { opacity: .45; pointer-events: none; filter: grayscale(1); }
+.cp { display: flex; gap: 10px; align-items: flex-start; padding: 6px 0; border-bottom: 1px dashed var(--border); }
+.cp:last-child { border-bottom: 0; }
+.cp .m { font-family: var(--mono); color: var(--muted); min-width: 34px; }
+.tag { font-size: 11.5px; padding: 1px 7px; border-radius: 999px; background: var(--surface-2); color: var(--muted); margin-left: 4px; }
+.status { font-weight: 600; }
+.status.open { color: var(--danger); }
+.status.closed { color: var(--success); }
+.status.opt { color: var(--muted); }
+.timer { font-family: var(--mono); font-size: 20px; }
+a.cite { color: var(--accent); cursor: pointer; }
+dialog { max-width: min(900px, 94vw); border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text); padding: 14px; }
+dialog img { width: 100%; display: block; margin: 8px 0; border: 1px solid var(--border); background: #fff; }
+dialog::backdrop { background: rgba(0,0,0,.5); }
+pre.export { white-space: pre-wrap; font-size: 13px; background: var(--surface-2); padding: 10px; border-radius: 8px; max-height: 360px; overflow: auto; }
+@media (max-width: 860px) {
+  .app { grid-template-columns: 1fr; }
+  nav.side { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--border); }
+  nav.side #toc { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+<nav class="side">
+  <h1>Quiz 2 Cycle</h1>
+  <div class="sub">EE6407 · ML part · train → test → retrain</div>
+  <div id="toc"></div>
+  <div class="grp">Test clock</div>
+  <div class="timer" id="sideTimer">60:00</div>
+  <div class="tools">
+    <button id="exportBtn">Export</button>
+    <button id="themeBtn">Theme</button>
+    <button id="resetBtn">Reset all</button>
+  </div>
+  <div class="grp">Other pages</div>
+  <a class="lk" href="quiz-2-primer.html">Primer</a>
+  <a class="lk" href="quiz-2-mock.html">Mock A</a>
+  <a class="lk" href="quiz-2-mock-b.html">Mock B</a>
+</nav>
+
+<main>
+<h1 style="margin-top:0">EE6407 Quiz 2: train, test, retrain</h1>
+<p>Treat this like fitting a model. In <b>Train</b> you work through past Quiz 2 items one step at a time, and each step is checked as you go. In <b>Test</b> you sit a new paper you have never seen, on paper, under a timer, with no answers visible. In <b>Retrain</b> you mark yourself against the rubric. Every topic where you lost marks then gets new problems with fresh numbers until you get two right in a row.</p>
+
+<div class="card note">
+<b>What the paper probably looks like (unofficial).</b> These details come from classmates' WeChat messages and RedNote recollections, so check them against the course email.
+<ul style="margin:6px 0 0">
+<li>The paper is handwritten, 60 minutes, 10 % of the course. The scope relayed from the course email is <b>ML Lecture Notes 6–10, with deck 10 only up to k-means</b>. Students report that hierarchical clustering was said to be out of scope; this is unconfirmed.</li>
+<li>Every recalled past paper had <b>two big calculation questions</b>, and the <b>confusion matrix</b> appeared every time. The other topics recalled are Fisher's ratio with feature ranking, the <b>peaking phenomenon</b> as a short answer, and single-linkage hierarchical clustering (which is out of scope this term). The lecturer called <b>k-means</b> "very important" and asked students to understand each step.</li>
+<li>In Week 1 the lecturer said he might change the format, so the Gini-split drill is included as a wildcard.</li>
+</ul>
+</div>
+
+<p class="muted" style="font-size:14px">How to enter numbers: decimals (<code>0.8936</code>), percentages (<code>89.36</code>) and fractions (<code>7/3</code>) are all accepted. Answers within about 0.1 % count as correct. Your progress is saved in this browser.</p>
+
+<!-- ======================= TRAIN ======================= -->
+<h2 id="train"><span class="phase">Phase 1</span>Train</h2>
+<p>Each module is a past or worked item broken into steps. A step only opens after the one before it is right, or after you choose to reveal it. Read the "why" line every time, because the method is what you are learning.</p>
+<div id="trainModules"></div>
+
+<!-- ======================= TEST ======================= -->
+<h2 id="test"><span class="phase">Phase 2</span>Test: Mock C</h2>
+<div class="card">
+<p style="margin-top:0"><b>Conditions:</b> 60 minutes, 100 marks, closed book, no calculator (the numbers are chosen to work by hand), with all working written on paper. Keep fractions exact while you work and give final answers to 4 decimal places.</p>
+<div class="row"><button class="primary" id="startBtn">Start the 60-min clock</button><button id="pauseBtn">Pause</button><span class="timer" id="mainTimer">60:00</span></div>
+</div>
+
+<div id="testPaper">
+<h3 id="q1">Q1. Classifier evaluation (40 marks)</h3>
+<p>A screening model is tested on 400 patients: <b>160 have the disease</b> (positive) and <b>240 do not</b>. The model <b>misses 25</b> of the diseased patients and <b>wrongly flags 30</b> of the healthy ones.</p>
+<ol type="a">
+<li>Construct the confusion matrix, with <b>rows = predicted class</b> and <b>columns = actual class</b>. Label TP, FP, FN and TN. <i>(8)</i></li>
+<li>Compute the accuracy, error rate, sensitivity (recall), specificity, precision and F-score. Show the formula and substitution for each. <i>(24)</i></li>
+<li>The hospital then tests on a population with <b>twice as many healthy patients</b> (480). The model behaves the same within each class. Which of your six metrics stay the same and which change? Give the new precision and F-score, and explain the difference in one sentence. <i>(8)</i></li>
+</ol>
+
+<h3 id="q2">Q2. k-means clustering (40 marks)</h3>
+<p>Cluster the seven points below into <b>k = 2</b> groups with k-means, using Euclidean distance. The initial centroids are \(c_1 = A\) and \(c_2 = B\).</p>
+<table><tr><th>Point</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th></tr>
+<tr><td>\((x, y)\)</td><td>(1, 1)</td><td>(2, 1)</td><td>(1, 3)</td><td>(5, 4)</td><td>(6, 5)</td><td>(4, 5)</td><td>(3, 3)</td></tr></table>
+<ol type="a">
+<li>Iteration 1: compute each point's distance to both centroids (squared distances are fine), assign the points, and compute the new centroids. <i>(14)</i></li>
+<li>Iteration 2: reassign the points and update the centroids. Say which point changes cluster and why. <i>(14)</i></li>
+<li>Show that the algorithm has converged and state the final clusters. <i>(6)</i></li>
+<li>Compute the within-cluster sum of squared errors (SSE) of the final partition. <i>(6)</i></li>
+</ol>
+
+<h3 id="q3">Q3. Feature selection (20 marks)</h3>
+<p>The table gives each feature's class means and <b>standard deviations</b> for a two-class problem.</p>
+<table><tr><th>Feature</th><th>\(m_1\)</th><th>\(m_2\)</th><th>\(\sigma_1\)</th><th>\(\sigma_2\)</th></tr>
+<tr><td>\(x_1\)</td><td>4.0</td><td>6.0</td><td>0.6</td><td>0.8</td></tr>
+<tr><td>\(x_2\)</td><td>2.0</td><td>2.5</td><td>0.3</td><td>0.4</td></tr>
+<tr><td>\(x_3\)</td><td>10.0</td><td>13.0</td><td>1.5</td><td>1.5</td></tr>
+<tr><td>\(x_4\)</td><td>7.0</td><td>7.6</td><td>0.3</td><td>0.4</td></tr></table>
+<ol type="a">
+<li>Compute Fisher's ratio for each feature and rank the features from most to least discriminative. <i>(12)</i></li>
+<li>Describe the <b>peaking phenomenon</b> and explain why it motivates feature selection. <i>(8)</i></li>
+</ol>
+</div>
+
+<div class="card">
+<b>Record your attempt.</b> Tick each question you answered on paper. You can also type your final numbers here for the export.
+<div class="row" id="paperTicks"></div>
+<textarea id="testNotes" placeholder="Optional: final answers, e.g. Q1 acc 0.8625 ..."></textarea>
+<div class="row"><button class="primary" id="submitBtn">I'm done: submit and unlock Retrain</button><span class="fb" id="submitFb"></span></div>
+</div>
+
+<!-- ======================= RETRAIN ======================= -->
+<h2 id="retrain"><span class="phase">Phase 3</span>Retrain</h2>
+<div id="retrainWrap" class="locked">
+<p>This phase has two steps:</p>
+<ol>
+<li><b>Mark your paper.</b> Go through the rubric and tick only the checkpoints your written answer actually earns. A checkpoint you didn't attempt stays unticked; write "blank" next to it on your paper so you can tell running out of time apart from not knowing.</li>
+<li><b>Retrain.</b> Every topic with an unticked checkpoint becomes <span class="status open">open</span>. Generate fresh problems for it until you get <b>two right in a row</b>, and it closes. Before you generate, read the rule for that topic.</li>
+</ol>
+<div class="card"><b>Score: <span id="scoreOut">0</span> / 100</b> <span class="muted" id="scoreBreak"></span></div>
+<div id="rubric"></div>
+<h3 id="queue">Retrain queue</h3>
+<div id="retrainCards"></div>
+</div>
+</main>
+</div>
+
+<dialog id="srcDlg"><div class="row" style="justify-content:space-between"><b id="srcTitle"></b><span><a id="srcOpen" target="_blank">Open PDF</a> <button id="srcClose">Close</button></span></div><div id="srcImgs"></div></dialog>
+
+<script>
+// GEN-START (pure helpers + generators; unit-tested by quiz-2-cycle-check.mjs)
+function parseNum(s) {
+  s = String(s).trim().replace(/%$/, '').replace(/,/g, '');
+  if (!s) return NaN;
+  const f = s.match(/^(-?[\d.]+)\s*\/\s*(-?[\d.]+)$/);
+  if (f) return parseFloat(f[1]) / parseFloat(f[2]);
+  return /^-?[\d.]+(e-?\d+)?$/i.test(s) ? parseFloat(s) : NaN;
+}
+function close(input, ans) {
+  let x = parseNum(input);
+  if (Number.isNaN(x)) return false;
+  const tol = Math.max(0.0006, Math.abs(ans) * 0.001);
+  if (Math.abs(x - ans) <= tol) return true;
+  if (ans > 0 && ans <= 1 && x > 1 && Math.abs(x / 100 - ans) <= tol) return true;  // percent entry
+  return false;
+}
+function mkRng(seed) { let s = seed >>> 0 || 1; return () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296; }
+function ri(r, a, b) { return a + Math.floor(r() * (b - a + 1)); }
+function f4(x) { return (Math.round(x * 10000) / 10000).toString(); }
+
+function genCM(r) {
+  const TP = ri(r, 40, 150), FN = ri(r, 4, 30), FP = ri(r, 4, 30), TN = ri(r, 40, 150);
+  const rowsPred = r() < 0.5, N = TP + FN + FP + TN;
+  const P = TP / (TP + FP), R = TP / (TP + FN);
+  const head = rowsPred
+    ? '<tr><th></th><th>Actual +</th><th>Actual −</th></tr><tr><th>Predicted +</th><td>' + TP + '</td><td>' + FP + '</td></tr><tr><th>Predicted −</th><td>' + FN + '</td><td>' + TN + '</td></tr>'
+    : '<tr><th></th><th>Predicted +</th><th>Predicted −</th></tr><tr><th>Actual +</th><td>' + TP + '</td><td>' + FN + '</td></tr><tr><th>Actual −</th><td>' + FP + '</td><td>' + TN + '</td></tr>';
+  return {
+    prompt: '<p>Watch the orientation: in this table the <b>rows are the ' + (rowsPred ? 'predicted' : 'actual') + ' class</b>.</p><table>' + head + '</table>',
+    fields: [['Accuracy', (TP + TN) / N], ['Sensitivity / recall', R], ['Specificity', TN / (TN + FP)], ['Precision', P], ['F-score', 2 * P * R / (P + R)]],
+    key: 'TP=' + TP + ', FP=' + FP + ', FN=' + FN + ', TN=' + TN + ', N=' + N + '. Precision = TP/(TP+FP) looks across the predicted-positive cells; recall = TP/(TP+FN) looks across the actual-positive cells. F = 2TP/(2TP+FP+FN) = ' + f4(2 * TP / (2 * TP + FP + FN)) + '.'
+  };
+}
+function genFR(r) {
+  const ds = [0.1, 0.2, 0.3];
+  const cls = () => { const m = ri(r, 10, 40) / 10, a = ds[ri(r, 0, 2)], b = ds[ri(r, 0, 2)];
+    const xs = [m + a, m - a, m + b, m - b].map(v => Math.round(v * 10) / 10);
+    for (let i = 3; i > 0; i--) { const j = ri(r, 0, i); [xs[i], xs[j]] = [xs[j], xs[i]]; }
+    return { xs, m, v: (a * a + b * b) / 2 }; };
+  let c1 = cls(), c2 = cls();
+  while (Math.abs(c1.m - c2.m) < 0.3) c2 = cls();
+  const R = (c1.m - c2.m) ** 2 / (c1.v + c2.v);
+  return {
+    prompt: '<p>Compute Fisher\'s ratio for this one feature. Use the population variance, dividing by N as in worked example 9.3.1.</p><table><tr><th>Class 1</th>' + c1.xs.map(x => '<td>' + x + '</td>').join('') + '</tr><tr><th>Class 2</th>' + c2.xs.map(x => '<td>' + x + '</td>').join('') + '</tr></table>',
+    fields: [['m₁', c1.m], ['m₂', c2.m], ['σ₁²', c1.v], ['σ₂²', c2.v], ['R = (m₁−m₂)²/(σ₁²+σ₂²)', R]],
+    key: 'm₁=' + f4(c1.m) + ', m₂=' + f4(c2.m) + ', σ₁²=' + f4(c1.v) + ', σ₂²=' + f4(c2.v) + ' → R=' + f4(R) + '. Divide by N=4 (not N−1), and square the difference of means.'
+  };
+}
+function kmeans1d(xs, c) {
+  c = c.slice(); let assign = null, it = 0;
+  for (;;) {
+    it++;
+    const a = xs.map(x => { const d0 = Math.abs(x - c[0]), d1 = Math.abs(x - c[1]); if (d0 === d1) throw new Error('tie'); return d0 < d1 ? 0 : 1; });
+    if (!a.includes(0) || !a.includes(1)) throw new Error('empty');
+    const nc = [0, 1].map(j => { const g = xs.filter((_, i) => a[i] === j); return g.reduce((s, v) => s + v, 0) / g.length; });
+    if (assign && a.every((v, i) => v === assign[i])) { c = nc; assign = a; break; }
+    c = nc; assign = a;
+    if (it > 20) throw new Error('no converge');
+  }
+  const sse = xs.reduce((s, x, i) => s + (x - c[assign[i]]) ** 2, 0);
+  return { c, assign, iters: it, sse };
+}
+function genKM(r) {
+  for (;;) {
+    const set = new Set(); while (set.size < 6) set.add(ri(r, 0, 20));
+    const xs = [...set].sort((a, b) => a - b);
+    const i0 = ri(r, 0, 2), i1 = ri(r, i0 + 1, 3);   // two low-ish starts force at least one reassignment often
+    let res; try { res = kmeans1d(xs, [xs[i0], xs[i1]]); } catch (e) { continue; }
+    if (res.iters < 3) continue;                       // insist on a real reassignment
+    const lo = Math.min(...res.c), hi = Math.max(...res.c);
+    return {
+      prompt: '<p>Run 1-D k-means with k = 2 on <b>' + xs.join(', ') + '</b>. The initial centroids are <b>' + xs[i0] + '</b> and <b>' + xs[i1] + '</b>. Iterate until no point changes cluster.</p>',
+      fields: [['Final lower centroid', lo], ['Final upper centroid', hi], ['SSE', res.sse]],
+      key: 'Converged after ' + res.iters + ' assignment passes (the last pass changes nothing). Clusters: {' + xs.filter((_, i) => res.c[res.assign[i]] === lo).join(', ') + '} and {' + xs.filter((_, i) => res.c[res.assign[i]] === hi).join(', ') + '}; centroids ' + f4(lo) + ' and ' + f4(hi) + '; SSE ' + f4(res.sse) + '. Recompute every centroid as the mean of its members before the next assignment.'
+    };
+  }
+}
+function gini(p, n) { const t = p + n; return t ? 1 - (p / t) ** 2 - (n / t) ** 2 : 0; }
+function genGini(r) {
+  const p = ri(r, 3, 9), n = ri(r, 3, 9), a = ri(r, 0, p), b = ri(r, 0, n);
+  if (a + b === 0 || a + b === p + n) return genGini(r);
+  const t = p + n, w = ((a + b) / t) * gini(a, b) + ((t - a - b) / t) * gini(p - a, n - b);
+  return {
+    prompt: '<p>A node holds <b>' + p + ' positives and ' + n + ' negatives</b>. A split sends <b>' + a + '+ / ' + b + '−</b> to the left and <b>' + (p - a) + '+ / ' + (n - b) + '−</b> to the right.</p>',
+    fields: [['Root Gini', gini(p, n)], ['Weighted child Gini', w], ['Gini decrease (gain)', gini(p, n) - w]],
+    key: 'Gini = 1 − Σpᵢ². Root ' + f4(gini(p, n)) + '; left ' + f4(gini(a, b)) + ', right ' + f4(gini(p - a, n - b)) + '; weight each child by its share of the samples → ' + f4(w) + '; gain ' + f4(gini(p, n) - w) + '.'
+  };
+}
+// GEN-END
+
+/* ---------------- storage ---------------- */
+const KEY = 'ee6407-quiz2-cycle-v1';
+let S = {};
+try { S = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { S = {}; }
+S.train = S.train || {}; S.paper = S.paper || {}; S.rubric = S.rubric || {}; S.re = S.re || {}; S.peakTrain = S.peakTrain || {};
+S.elapsed = S.elapsed || 0;
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+const $ = id => document.getElementById(id);
+function typeset(el) { if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise(el ? [el] : undefined).catch(() => {}); }
+
+/* ---------------- source pop-ups ---------------- */
+const SRC = {
+  'ws-7-2-metrics': { title: 'Worked example 7.2: Performance evaluation metrics', pdf: '../resources/public-archive-2026-08-24/worked-slide-examples/2.ML/7.2%20Performance%20Evaluation%20Metrics.pdf' },
+  'ws-9-3-1-fisher': { title: 'Worked example 9.3.1: Fisher\'s ratio', pdf: '../resources/public-archive-2026-08-24/worked-slide-examples/2.ML/9.3.1%20Fisher\'s%20Ratio.pdf' },
+  'ws-10-4-4-kmeans': { title: 'Worked example 10.4.4: k-means steps', pdf: '../resources/public-archive-2026-08-24/worked-slide-examples/2.ML/10.4.4%20K-means-step.pdf' }
+};
+function cite(stem, a, b, label) {
+  return '<a class="cite" href="' + SRC[stem].pdf + '#page=' + a + '" data-pages="' + stem + ':' + a + '-' + b + '">' + label + '</a>';
+}
+document.addEventListener('click', e => {
+  const a = e.target.closest('a[data-pages]'); if (!a) return;
+  e.preventDefault();
+  const [stem, rng] = a.dataset.pages.split(':'), [p, q] = rng.split('-').map(Number);
+  $('srcTitle').textContent = SRC[stem].title; $('srcOpen').href = SRC[stem].pdf + '#page=' + p;
+  $('srcImgs').innerHTML = '';
+  for (let i = p; i <= q; i++) { const im = new Image(); im.alt = SRC[stem].title + ' page ' + i; im.src = 'quiz-2-cycle-pages/' + stem + '-p' + String(i).padStart(3, '0') + '.jpg'; $('srcImgs').appendChild(im); }
+  $('srcDlg').showModal();
+});
+$('srcClose').onclick = () => $('srcDlg').close();
+
+/* ---------------- TRAIN content ---------------- */
+const TRAIN = [
+ { id: 't1', title: 'T1. Reading a confusion matrix (shared past paper, Q2)',
+   intro: '<p><b>Big picture.</b> A confusion matrix sorts every test sample by two questions: what the classifier <i>said</i> (predicted) and what the sample <i>really is</i> (actual). The course convention, from ' + cite('ws-7-2-metrics', 1, 2, 'worked example 7.2') + ', puts <b>predicted classes in rows and actual classes in columns</b>, which gives</p>\\[\\begin{array}{c|cc} & \\text{Actual}+ & \\text{Actual}- \\\\ \\hline \\text{Pred}+ & TP & FP \\\\ \\text{Pred}- & FN & TN\\end{array}\\]<p>The first letter says whether the prediction was right (True/False). The second letter is what the classifier predicted (Positive/Negative). So an FN is a sample the classifier called negative, wrongly, which means it is actually positive.</p><p><b>Item</b> (shared past paper, unofficial transcription): rows = predicted, columns = actual, with [[126, 11], [15, 100]].</p>',
+   steps: [
+    ['TP = ?', 126, 'Top-left cell: predicted positive and actually positive.'],
+    ['FP = ?', 11, 'Top-right cell: predicted positive but actually negative. A false alarm.'],
+    ['FN = ?', 15, 'Bottom-left cell: predicted negative but actually positive. A miss.'],
+    ['N = ?', 252, 'Add all four cells: 126 + 11 + 15 + 100.'],
+    ['Accuracy = (TP+TN)/N = ?', 226 / 252, 'Accuracy is the share of all samples on the diagonal: 226/252 = 0.8968.'],
+    ['Precision = TP/(TP+FP) = ?', 126 / 137, 'Precision divides by the <b>predicted-positive row</b>: of everything flagged positive, how much really was? 126/137 = 0.9197.'],
+    ['Recall (sensitivity) = TP/(TP+FN) = ?', 126 / 141, 'Recall divides by the <b>actual-positive column</b>: of all real positives, how many were caught? 126/141 = 0.8936. Mixing up these two denominators is the most common way to lose marks.'],
+    ['Specificity = TN/(TN+FP) = ?', 100 / 111, 'Specificity is recall for the negative class: 100/(100+11) = 0.9009. The actual-negative column is the denominator.'],
+    ['F-score = 2PR/(P+R) = ?', 252 / 278, 'This is the harmonic mean of precision and recall, which simplifies to 2TP/(2TP+FP+FN) = 252/278 = 0.9065. That shortcut is a quick check on your arithmetic.']
+   ] },
+ { id: 't2', title: 'T2. Word problem → matrix (recalled 25-26 S1 item)',
+   intro: '<p>The paper may give you a story instead of a table. Turn each sentence into a cell, and then use the class totals to fill in the rest.</p><p><b>Item</b> (recalled from 25-26 S1, unofficial): a professor tests a model on <b>250 positive and 150 negative</b> samples. <b>10 positives are predicted negative</b> and <b>15 negatives are predicted positive</b>.</p>',
+   steps: [
+    ['FN = ?', 10, '"Positives predicted negative" are misses, so they are false negatives.'],
+    ['TP = ?', 240, 'The actual-positive column sums to 250, so TP = 250 − FN = 240.'],
+    ['TN = ?', 135, 'The actual-negative column sums to 150, so TN = 150 − FP = 150 − 15.'],
+    ['Precision = ?', 240 / 255, 'TP/(TP+FP) = 240/255 = 0.9412.'],
+    ['Recall = ?', 240 / 250, 'TP/(TP+FN) = 240/250 = 0.96.'],
+    ['F-score = ?', 480 / 505, '2TP/(2TP+FP+FN) = 480/505 = 0.9505. This agrees with 2PR/(P+R).']
+   ] },
+ { id: 't3', title: 'T3. Fisher\'s ratio (worked example 9.3.1)',
+   intro: '<p><b>Idea.</b> A feature separates two classes well when the class means are far apart <i>relative to</i> how spread out each class is. Fisher\'s ratio measures exactly that:</p>\\[R = \\frac{(m_1 - m_2)^2}{\\sigma_1^2 + \\sigma_2^2}\\]<p>The numerator is the gap between the means, squared. The denominator is the within-class spread, as <b>variances</b>. A bigger R means a more useful feature, so you rank features by R. The course\'s ' + cite('ws-9-3-1-fisher', 1, 1, 'worked example 9.3.1') + ' divides by N when computing the variance.</p><p><b>Item:</b> class C₁ = {1.2, 1, 0.9, 1.1} and class C₂ = {2.2, 2.3, 2.1, 2}.</p>',
+   steps: [
+    ['m₁ = ?', 1.05, '(1.2+1+0.9+1.1)/4 = 4.2/4.'],
+    ['m₂ = ?', 2.15, '(2.2+2.3+2.1+2)/4 = 8.6/4.'],
+    ['σ₁² = ?', 0.0125, 'Square each deviation from 1.05: 0.0225, 0.0025, 0.0225, 0.0025. Their sum is 0.05, and 0.05/4 = 0.0125.'],
+    ['σ₂² = ?', 0.0125, 'The deviations from 2.15 are ±0.05 and ±0.15. The squares sum to 0.05, and 0.05/4 = 0.0125.'],
+    ['R = ?', 48.4, '(1.05 − 2.15)² / (0.0125 + 0.0125) = 1.21/0.025 = 48.4. <b>Trap:</b> if the paper gives standard deviations, square them before adding.']
+   ] },
+ { id: 't4', title: 'T4. k-means by hand',
+   intro: '<p><b>The loop</b>, from ' + cite('ws-10-4-4-kmeans', 1, 1, 'worked example 10.4.4') + ':</p><ol><li>Choose k.</li><li>Choose k initial centres.</li><li>Assign each point to its nearest centre.</li><li>Recompute each centre as the mean of its members.</li><li>Repeat steps 3–4 until no point changes cluster.</li></ol><p>The algorithm stops when an assignment pass changes nothing. That last pass is how you <i>prove</i> convergence on paper, so always write it out. Each step can only lower the SSE, but the result depends on the starting centres.</p><p><b>Item:</b> the points 1, 2, 4, 7, 8, 10 with k = 2 and initial centroids 1 and 4.</p>',
+   steps: [
+    ['Iteration 1: new centroid of cluster 1 = ?', 1.5, 'Point 1 is nearest to centre 1, and point 2 is too (distance 1 vs 2). Points 4, 7, 8 and 10 are nearest to centre 4. The mean of {1, 2} is 1.5.'],
+    ['Iteration 1: new centroid of cluster 2 = ?', 7.25, 'Mean of {4, 7, 8, 10} = 29/4.'],
+    ['Iteration 2: which cluster does point 4 join (1 or 2)?', 1, '|4 − 1.5| = 2.5 is less than |4 − 7.25| = 3.25, so point 4 moves to cluster 1. A point can switch clusters only because the centroids moved.'],
+    ['Iteration 2: centroid of cluster 1 = ?', 7 / 3, 'Mean of {1, 2, 4} = 7/3 ≈ 2.3333.'],
+    ['Iteration 2: centroid of cluster 2 = ?', 25 / 3, 'Mean of {7, 8, 10} = 25/3 ≈ 8.3333.'],
+    ['Iteration 3 changes nothing. Final SSE = ?', 28 / 3, 'Cluster 1: (1−7/3)² + (2−7/3)² + (4−7/3)² = (16+1+25)/9 = 42/9. Cluster 2: (1/9)(16+1+25) = 42/9. The total is 84/9 = 9.3333.']
+   ] },
+ { id: 't5', title: 'T5. Gini split (wildcard)',
+   intro: '<p>Week 11 listed classification trees as in scope, so a Gini question could appear. Gini impurity is</p>\\[G = 1 - \\sum_i p_i^2,\\]<p>which is 0 for a pure node and 0.5 at most for two classes. The quality of a split is the root impurity minus the <b>weighted</b> average of the children\'s impurities, where each child is weighted by its share of the samples.</p><p><b>Item:</b> the root has 5+ / 3−. A split sends 4+ / 0− to the left and 1+ / 3− to the right.</p>',
+   steps: [
+    ['Root Gini = ?', 30 / 64, '1 − (5/8)² − (3/8)² = 1 − 34/64 = 0.46875.'],
+    ['Right child Gini = ?', 0.375, '1 − (1/4)² − (3/4)² = 1 − 10/16.'],
+    ['Weighted child Gini = ?', 0.1875, '(4/8)·0 + (4/8)·0.375. Weight each child by its sample share; do not take a plain average.'],
+    ['Gini gain = ?', 0.28125, '0.46875 − 0.1875.']
+   ] }
+];
+const PEAK_POINTS = [
+  'The number of training samples N is fixed (finite).',
+  'Adding features first lowers the error, because there is more information to separate the classes.',
+  'Beyond some critical number of features the error rises again. That turning point is the "peak" in performance.',
+  'The reason: more features mean more parameters to estimate from the same N, so the estimates get worse (the curse of dimensionality).',
+  'The best number of features grows with N, which is why we select or reduce features instead of using them all.'
+];
+const PEAK_MODEL = 'For a classifier trained on a fixed, finite number of samples N, adding features first improves performance because each feature adds discriminatory information. Past a critical dimensionality, performance gets worse instead: every extra feature adds parameters (means, variances, covariances) that must be estimated from the same N samples. The estimates become unreliable and the classifier overfits, which is the curse of dimensionality. Performance therefore rises to a peak and then falls. With more data the peak moves to a higher dimensionality. This is why we pick a small, highly discriminative feature subset (for example by ranking features with Fisher\'s ratio) instead of using every feature.';
+
+function stepHTML(mid, i, st, n) {
+  const id = mid + '-' + i, s = S.train[id] || {};
+  return '<div class="step ' + (s.ok ? 'ok' : '') + '" id="st-' + id + '"><div><b>Step ' + (i + 1) + '/' + n + '.</b> ' + st[0] + '</div>' +
+    '<div class="row"><input type="text" id="in-' + id + '" value="' + (s.v || '').replace(/"/g, '') + '" aria-label="' + st[0] + '">' +
+    '<button data-chk="' + id + '">Check</button><button data-rev="' + id + '">Reveal</button><span class="fb" id="fb-' + id + '"></span></div>' +
+    '<div class="why ' + (s.ok || s.rev ? 'show' : '') + '" id="why-' + id + '">' + st[2] + '</div></div>';
+}
+function renderTrain() {
+  let h = '';
+  TRAIN.forEach(m => {
+    h += '<div class="card" id="' + m.id + '"><h3 style="margin-top:0">' + m.title + '</h3>' + m.intro;
+    m.steps.forEach((st, i) => { h += stepHTML(m.id, i, st, m.steps.length); });
+    h += '</div>';
+  });
+  h += '<div class="card" id="t6"><h3 style="margin-top:0">T6. Peaking phenomenon (short answer)</h3><p>Recollections say this was asked in two past sittings. Write your answer from memory first, then reveal the five points the marker will look for and tick the ones you actually wrote.</p>' +
+       '<textarea id="peakTxt" placeholder="Your paragraph...">' + (S.peakTxt || '') + '</textarea><div class="row"><button id="peakRev">Reveal the marking points</button></div><div id="peakBox" class="' + (S.peakRevealed ? '' : 'why') + '" style="margin-top:8px"></div></div>';
+  $('trainModules').innerHTML = h;
+  renderPeakBox();
+  TRAIN.forEach(m => gateSteps(m));
+  $('peakTxt').oninput = e => { S.peakTxt = e.target.value; save(); };
+  $('peakRev').onclick = () => { S.peakRevealed = true; save(); renderPeakBox(); };
+}
+function renderPeakBox() {
+  const box = $('peakBox'); if (!S.peakRevealed) { box.className = 'why'; return; }
+  box.className = '';
+  box.innerHTML = PEAK_POINTS.map((p, i) => '<label class="cp"><input type="checkbox" data-peak="' + i + '"' + (S.peakTrain[i] ? ' checked' : '') + '> <span>' + p + '</span></label>').join('') +
+    '<details style="margin-top:8px"><summary>Model answer</summary><p>' + PEAK_MODEL + '</p></details>';
+  box.querySelectorAll('[data-peak]').forEach(cb => cb.onchange = () => { S.peakTrain[cb.dataset.peak] = cb.checked; save(); updateToc(); });
+}
+function gateSteps(m) {
+  let open = true;
+  m.steps.forEach((_, i) => {
+    const el = $('st-' + m.id + '-' + i);
+    el.classList.toggle('hidden', !open);
+    const s = S.train[m.id + '-' + i] || {};
+    open = !!(s.ok || s.rev);
+  });
+}
+document.addEventListener('click', e => {
+  const c = e.target.dataset.chk, rv = e.target.dataset.rev;
+  if (!c && !rv) return;
+  const id = c || rv, [mid, i] = id.split('-'), m = TRAIN.find(t => t.id === mid), st = m.steps[+i];
+  S.train[id] = S.train[id] || {};
+  const box = $('st-' + id), fb = $('fb-' + id);
+  if (c) {
+    const v = $('in-' + id).value; S.train[id].v = v;
+    const ok = close(v, st[1]);
+    if (ok) S.train[id].ok = true; else S.train[id].miss = (S.train[id].miss || 0) + 1;
+    box.classList.toggle('ok', ok); box.classList.toggle('bad', !ok);
+    fb.className = 'fb ' + (ok ? 'ok' : 'bad'); fb.textContent = ok ? 'Correct.' : 'Not quite. Re-check the step, or reveal it.';
+    if (ok) $('why-' + id).classList.add('show');
+  } else {
+    S.train[id].rev = true; $('why-' + id).classList.add('show');
+    fb.className = 'fb'; fb.textContent = 'Answer: ' + f4(st[1]);
+  }
+  save(); gateSteps(m); updateToc(); typeset($('st-' + id));
+});
+
+/* ---------------- TEST ---------------- */
+const QS = [['q1', 'Q1 confusion matrix'], ['q2', 'Q2 k-means'], ['q3', 'Q3 Fisher + peaking']];
+$('paperTicks').innerHTML = QS.map(([k, l]) => '<label><input type="checkbox" data-paper="' + k + '"' + (S.paper[k] ? ' checked' : '') + '> ' + l + '</label>').join(' &nbsp; ');
+document.querySelectorAll('[data-paper]').forEach(cb => cb.onchange = () => { S.paper[cb.dataset.paper] = cb.checked; save(); });
+$('testNotes').value = S.testNotes || '';
+$('testNotes').oninput = e => { S.testNotes = e.target.value; save(); };
+let tick = null;
+function fmt(sec) { const r = Math.max(0, 3600 - sec); return String(Math.floor(r / 60)).padStart(2, '0') + ':' + String(r % 60).padStart(2, '0'); }
+function showTime() { $('mainTimer').textContent = $('sideTimer').textContent = fmt(S.elapsed) + (S.elapsed >= 3600 ? ' (time)' : ''); }
+$('startBtn').onclick = () => { if (tick) return; S.started = S.started || new Date().toISOString(); tick = setInterval(() => { S.elapsed++; showTime(); if (S.elapsed % 10 === 0) save(); }, 1000); };
+$('pauseBtn').onclick = () => { clearInterval(tick); tick = null; save(); };
+$('submitBtn').onclick = () => { clearInterval(tick); tick = null; S.submitted = true; save(); unlock(); location.hash = '#retrain'; };
+
+/* ---------------- RETRAIN: rubric ---------------- */
+const RUBRIC = [
+ ['q1', 'cm', 8, 'The matrix in rows = predicted, columns = actual: TP = 135, FP = 30 (top row); FN = 25, TN = 210 (bottom row).'],
+ ['q1', 'cm', 4, 'Accuracy = (135+210)/400 = 0.8625.'],
+ ['q1', 'cm', 4, 'Error rate = (30+25)/400 = 0.1375, i.e. 1 − accuracy.'],
+ ['q1', 'cm', 4, 'Sensitivity = recall = 135/160 = 0.8438.'],
+ ['q1', 'cm', 4, 'Specificity = 210/240 = 0.8750.'],
+ ['q1', 'cm', 4, 'Precision = 135/(135+30) = 0.8182.'],
+ ['q1', 'cm', 4, 'F-score = 2PR/(P+R) = 270/325 = 0.8308.'],
+ ['q1', 'cm', 4, '(c) Sensitivity and specificity are <b>unchanged</b>, because each is a rate within one actual class (column). The reason must be stated.'],
+ ['q1', 'cm', 4, '(c) With FP = 60 and TN = 420: precision falls to 135/195 = 0.6923 and F to 270/355 = 0.7606, because precision\'s denominator includes the FPs. Accuracy moves to 555/640 = 0.8672 and error to 0.1328.'],
+ ['q2', 'km', 6, 'Iteration 1 assignment (squared distances to A(1,1) | B(2,1)): A 0|1 → c₁; B 1|0 → c₂; C 4|5 → c₁; D 25|18, E 41|32, F 25|20, G 8|5 → c₂.'],
+ ['q2', 'km', 8, 'Iteration 1 centroids: c₁ = mean{A, C} = (1, 2); c₂ = mean{B, D, E, F, G} = (20/5, 18/5) = (4, 3.6).'],
+ ['q2', 'km', 6, 'Iteration 2: <b>B moves to c₁</b> (d² = 2 vs 10.76). G stays with c₂ (5 vs 1.36). The others don\'t change.'],
+ ['q2', 'km', 8, 'Iteration 2 centroids: c₁ = mean{A, B, C} = (4/3, 5/3) ≈ (1.3333, 1.6667); c₂ = mean{D, E, F, G} = (4.5, 4.25).'],
+ ['q2', 'km', 6, 'Iteration 3: no point changes cluster (squared distances: B 8/9 ≈ 0.89 vs 16.81 → c₁; G 41/9 ≈ 4.56 vs 3.81 → c₂), so the algorithm stops. Final clusters {A, B, C} and {D, E, F, G}.'],
+ ['q2', 'km', 6, 'SSE = 30/9 + 7.75 = 10/3 + 31/4 = 133/12 ≈ 11.0833.'],
+ ['q3', 'fr', 8, 'Fisher ratios, with σ squared: x₁ = 4/(0.36+0.64) = <b>4</b>; x₂ = 0.25/0.25 = <b>1</b>; x₃ = 9/4.5 = <b>2</b>; x₄ = 0.36/0.25 = <b>1.44</b> (2 marks each).'],
+ ['q3', 'fr', 4, 'Ranking x₁ > x₃ > x₄ > x₂. (If σ is left unsquared you get x₃ first, a sign of the variance trap.)'],
+ ['q3', 'peak', 8, 'Peaking: a fixed N; error falls and then rises as features are added; more parameters estimated from the same N (curse of dimensionality); the optimum dimensionality grows with N; therefore select features. Roughly 2 marks per point, 8 maximum.']
+];
+const TOPICS = {
+  cm: { name: 'Confusion-matrix metrics', gen: genCM, rule: 'Rule: Precision divides by the <b>predicted</b>-positive count and recall by the <b>actual</b>-positive count. Before computing anything, find which axis is predicted and which is actual.' },
+  km: { name: 'k-means iteration', gen: genKM, rule: 'Rule: assign every point → recompute every centroid as a mean → repeat. Convergence is a full pass with no reassignment, and you must show that pass.' },
+  fr: { name: 'Fisher\'s ratio', gen: genFR, rule: 'Rule: R = (m₁−m₂)² / (σ₁²+σ₂²). Square the standard deviations and divide the variance by N. Rank by R, not by the gap between the means.' },
+  gini: { name: 'Gini split (wildcard)', gen: genGini, rule: 'Rule: Gini = 1 − Σp². The split score is the root Gini minus the sample-weighted child Gini.' },
+  peak: { name: 'Peaking phenomenon', gen: null, rule: 'Rule: fixed N → error falls, then rises → too many parameters for N → optimum grows with N → select features.' }
+};
+function renderRubric() {
+  let h = '';
+  QS.forEach(([q, l]) => {
+    h += '<div class="card"><h3 style="margin-top:0">' + l + '</h3>';
+    RUBRIC.forEach((r, i) => { if (r[0] !== q) return;
+      h += '<label class="cp"><input type="checkbox" data-rb="' + i + '"' + (S.rubric[i] ? ' checked' : '') + '><span class="m">' + r[2] + '</span><span>' + r[3] + ' <span class="tag">' + TOPICS[r[1]].name + '</span></span></label>'; });
+    h += '</div>';
+  });
+  $('rubric').innerHTML = h;
+  document.querySelectorAll('[data-rb]').forEach(cb => cb.onchange = () => { S.rubric[cb.dataset.rb] = cb.checked; save(); score(); renderRetrain(); updateToc(); });
+  score(); typeset($('rubric'));
+}
+function score() {
+  let t = 0; const per = {};
+  RUBRIC.forEach((r, i) => { per[r[0]] = per[r[0]] || [0, 0]; per[r[0]][1] += r[2]; if (S.rubric[i]) { t += r[2]; per[r[0]][0] += r[2]; } });
+  $('scoreOut').textContent = t;
+  $('scoreBreak').textContent = '(' + QS.map(([q]) => q.toUpperCase() + ' ' + per[q][0] + '/' + per[q][1]).join(' · ') + ')';
+  return t;
+}
+function openTopics() { const o = new Set(); RUBRIC.forEach((r, i) => { if (!S.rubric[i]) o.add(r[1]); }); return o; }
+function topicState(k) {
+  const re = S.re[k] || {}; if (re.closed) return 'closed';
+  if (openTopics().has(k)) return 'open';
+  return 'opt';
+}
+
+/* ---------------- RETRAIN: generators ---------------- */
+const live = {};
+function renderRetrain() {
+  let h = '';
+  Object.entries(TOPICS).forEach(([k, t]) => {
+    const st = topicState(k), re = S.re[k] || {};
+    const label = st === 'closed' ? 'closed' : st === 'open' ? 'open: retrain needed' : 'optional';
+    h += '<div class="card" id="re-' + k + '"><h3 style="margin-top:0">' + t.name + ' · <span class="status ' + st + '">' + label + '</span></h3><p>' + t.rule + '</p>';
+    if (t.gen) {
+      h += '<p class="muted" style="font-size:14px">Current streak: <b>' + (re.streak || 0) + '</b> / 2 · problems tried: ' + (re.tries || 0) + '</p><div class="row"><button data-gen="' + k + '" class="primary">New problem</button></div><div id="prob-' + k + '"></div>';
+    } else {
+      h += '<p>Close the book and write the paragraph again. Then check it against the five points in <a href="#t6">T6</a>. Close this topic when your rewrite covers all five.</p><div class="row"><button data-peakclose="1">My rewrite covers all five</button></div>';
+    }
+    h += '</div>';
+  });
+  $('retrainCards').innerHTML = h;
+  Object.keys(live).forEach(k => drawProblem(k));
+}
+function drawProblem(k) {
+  const p = live[k], box = $('prob-' + k); if (!p || !box) return;
+  const vals = p.vals || [], res = p.res || [];
+  box.innerHTML = '<div class="step">' + p.prompt + p.fields.map((f, i) => '<div class="row"><span style="min-width:220px">' + f[0] + '</span><input type="text" id="gf-' + k + '-' + i + '" value="' + (vals[i] || '').replace(/"/g, '') + '"' +
+      (p.done ? ' style="border-color:var(--' + (res[i] ? 'success' : 'danger') + ')"' : '') + '>' + (p.done && !res[i] ? ' <span class="muted">→ ' + f4(f[1]) + '</span>' : '') + '</div>').join('') +
+    '<div class="row"><button data-gchk="' + k + '"' + (p.done ? ' disabled' : '') + '>Check all</button><span class="fb ' + (p.msg ? (p.ok ? 'ok' : 'bad') : '') + '">' + (p.msg || '') + '</span></div>' +
+    '<div class="why' + (p.done ? ' show' : '') + '">' + p.key + '</div></div>';
+  typeset(box);
+}
+document.addEventListener('click', e => {
+  const g = e.target.dataset.gen, gc = e.target.dataset.gchk;
+  if (e.target.dataset.peakclose) { S.re.peak = { closed: true }; save(); renderRetrain(); updateToc(); return; }
+  if (g) { live[g] = TOPICS[g].gen(mkRng(Date.now() ^ (Math.random() * 1e9))); drawProblem(g); return; }
+  if (gc) {
+    const p = live[gc]; if (!p || p.done) return;
+    p.vals = p.fields.map((_, i) => $('gf-' + gc + '-' + i).value);
+    p.res = p.fields.map((f, i) => close(p.vals[i], f[1]));
+    const all = p.res.every(Boolean), re = S.re[gc] = S.re[gc] || {};
+    re.tries = (re.tries || 0) + 1; re.streak = all ? (re.streak || 0) + 1 : 0;
+    if (re.streak >= 2) re.closed = true;
+    p.done = true; p.ok = all;
+    p.msg = all ? (re.closed ? 'Correct, two in a row: topic closed.' : 'Correct. One more for the streak.') : 'Not all correct, so the streak resets. Read the key, then generate another problem.';
+    save(); renderRetrain(); updateToc();
+  }
+});
+function unlock() {
+  if (!S.submitted) return;
+  $('retrainWrap').classList.remove('locked');
+  renderRubric(); renderRetrain();
+}
+
+/* ---------------- TOC + export + misc ---------------- */
+function updateToc() {
+  const items = [];
+  TRAIN.forEach(m => { const n = m.steps.length, d = m.steps.filter((_, i) => (S.train[m.id + '-' + i] || {}).ok).length; items.push([m.id, m.title.split('.')[0] + '. ' + m.title.split('. ')[1].split(' (')[0], d + '/' + n, d === n]); });
+  const pk = PEAK_POINTS.filter((_, i) => S.peakTrain[i]).length; items.push(['t6', 'T6. Peaking', pk + '/5', pk === 5]);
+  let h = '<div class="grp">Phase 1 · Train</div>' + items.map(([id, l, sc, f]) => '<a class="lk" href="#' + id + '"><span>' + l + '</span><span class="sc' + (f ? ' full' : '') + '">' + sc + '</span></a>').join('');
+  h += '<div class="grp">Phase 2 · Test</div>' + QS.map(([q, l]) => '<a class="lk" href="#' + q + '"><span>' + l + '</span><span class="sc">' + (S.paper[q] ? '✓' : '') + '</span></a>').join('');
+  h += '<div class="grp">Phase 3 · Retrain</div><a class="lk" href="#retrain"><span>Self-mark</span><span class="sc">' + (S.submitted ? score() + '/100' : 'locked') + '</span></a>';
+  if (S.submitted) h += Object.entries(TOPICS).map(([k, t]) => { const st = topicState(k); return '<a class="lk" href="#re-' + k + '"><span>' + t.name + '</span><span class="sc' + (st === 'closed' ? ' full' : '') + '">' + (st === 'closed' ? 'closed' : st === 'open' ? 'open' : '–') + '</span></a>'; }).join('');
+  $('toc').innerHTML = h;
+}
+$('exportBtn').onclick = () => {
+  const lines = ['EE6407 Quiz 2 Cycle (Mock C), export ' + new Date().toISOString(),
+    'Key/rubric: EE-6407/quizzes/quiz-2-cycle.md · paper 100 marks / 60 min',
+    'Elapsed: ' + Math.floor(S.elapsed / 60) + ' min ' + (S.elapsed % 60) + ' s; submitted: ' + !!S.submitted, '',
+    'TRAIN steps (correct / revealed / wrong tries):'];
+  TRAIN.forEach(m => m.steps.forEach((st, i) => { const s = S.train[m.id + '-' + i] || {}; lines.push('  ' + m.id + '.' + (i + 1) + ' ' + st[0] + ' → ' + (s.ok ? 'OK' : s.rev ? 'REVEALED' : '<blank>') + (s.miss ? ' (wrong tries ' + s.miss + ')' : '')); }));
+  lines.push('  t6 peaking points ticked: ' + PEAK_POINTS.filter((_, i) => S.peakTrain[i]).length + '/5');
+  lines.push('', 'TEST answered on paper: ' + QS.map(([q]) => q + '=' + (S.paper[q] ? 'yes' : 'no')).join(', '), 'Typed notes: ' + (S.testNotes || '<blank>'), '');
+  if (S.submitted) {
+    lines.push('SELF-MARK: ' + score() + '/100. Missed checkpoints:');
+    RUBRIC.forEach((r, i) => { if (!S.rubric[i]) lines.push('  [' + r[0] + ', ' + r[2] + ' marks] ' + r[3].replace(/<[^>]+>/g, '')); });
+    lines.push('', 'RETRAIN:'); Object.entries(TOPICS).forEach(([k, t]) => { const re = S.re[k] || {}; lines.push('  ' + t.name + ': ' + topicState(k) + ', tries ' + (re.tries || 0) + ', streak ' + (re.streak || 0)); });
+  }
+  const txt = lines.join('\n');
+  const pre = document.createElement('pre'); pre.className = 'export'; pre.textContent = txt;
+  $('srcTitle').textContent = 'Export (copy this into the chat)'; $('srcOpen').removeAttribute('href'); $('srcImgs').innerHTML = ''; $('srcImgs').appendChild(pre);
+  $('srcDlg').showModal();
+  try { navigator.clipboard.writeText(txt); } catch (e) {}
+};
+$('resetBtn').onclick = () => { if (!window.confirm('Erase all progress on this page?')) return; try { localStorage.removeItem(KEY); } catch (e) {} location.reload(); };
+const THEME_KEY = 'ee6407-theme';
+try { const t = localStorage.getItem(THEME_KEY); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+$('themeBtn').onclick = () => { const r = document.documentElement, n = r.dataset.theme === 'dark' ? 'light' : 'dark'; r.dataset.theme = n; try { localStorage.setItem(THEME_KEY, n); } catch (e) {} };
+
+renderTrain(); showTime(); unlock(); updateToc();
+</script>
+</body>
+</html>
