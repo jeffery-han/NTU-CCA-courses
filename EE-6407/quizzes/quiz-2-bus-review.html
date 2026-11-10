@@ -1,0 +1,700 @@
+<title>EE6407 Quiz 2 Bus Review</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@500&family=Space+Grotesk:wght@600;700&display=swap">
+<style>
+/* Layout: one narrow reading column for a phone held on a bus; sticky score bar with section chips; each topic = "know this" then tap-to-answer checks. */
+:root {
+  --bg: #eef2f6; --surface: #ffffff; --ink: #16202b; --muted: #566270; --line: #d6dde6;
+  --accent: #1d5fc0; --accent-soft: #e2ebf9;
+  --good: #1b7543; --good-soft: #e0f2e7; --bad: #b0341d; --bad-soft: #fbe5df;
+  --flag: #855600; --flag-soft: #fcefd3;
+  --f-body: "Atkinson Hyperlegible", system-ui, -apple-system, sans-serif;
+  --f-head: "Space Grotesk", "Atkinson Hyperlegible", system-ui, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0e131a; --surface: #161d27; --ink: #e5eaf1; --muted: #98a3b2; --line: #283241;
+  --accent: #82b2ff; --accent-soft: #1a2a44;
+  --good: #63d293; --good-soft: #122e1e; --bad: #ff8d77; --bad-soft: #391913;
+  --flag: #efc164; --flag-soft: #31260e; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #0e131a; --surface: #161d27; --ink: #e5eaf1; --muted: #98a3b2; --line: #283241;
+  --accent: #82b2ff; --accent-soft: #1a2a44;
+  --good: #63d293; --good-soft: #122e1e; --bad: #ff8d77; --bad-soft: #391913;
+  --flag: #efc164; --flag-soft: #31260e; color-scheme: dark; }
+
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 17px; line-height: 1.55; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
+.wrap { max-width: 40rem; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+header.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--surface); border-bottom: 1px solid var(--line); }
+.bar .wrap { padding-block: 10px 8px; display: grid; gap: 8px; }
+.bar-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.bar h1 { font-family: var(--f-head); font-size: 1.05rem; margin: 0; letter-spacing: -0.01em; }
+.score { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--accent); white-space: nowrap; }
+.chips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin-inline: -4px; padding-inline: 4px; }
+.chips::-webkit-scrollbar { display: none; }
+.chips a { flex: none; font-size: 0.85rem; text-decoration: none; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; }
+.chips a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+main .wrap { padding-block: 20px 48px; display: grid; gap: 36px; }
+.intro p { margin: 0 0 8px; color: var(--muted); }
+.intro strong { color: var(--ink); }
+
+section { display: grid; gap: 14px; scroll-margin-top: 110px; }
+h2 { font-family: var(--f-head); font-size: 1.45rem; line-height: 1.2; margin: 0; text-wrap: balance; letter-spacing: -0.015em; }
+.eyebrow { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0 0 4px; }
+h3 { font-size: 1rem; margin: 6px 0 0; }
+p, ul { margin: 0; }
+ul { padding-left: 1.2em; display: grid; gap: 6px; }
+.flag { background: var(--flag-soft); color: var(--ink); border-radius: 10px; padding: 10px 14px; font-size: 0.95rem; }
+.flag b { color: var(--flag); }
+.f { font-family: var(--f-mono); font-size: 0.88rem; background: var(--accent-soft); border-radius: 8px; padding: 10px 12px; overflow-x: auto; white-space: pre; line-height: 1.6; }
+.src { font-size: 0.8rem; color: var(--muted); }
+table.cm { border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: 0.95rem; }
+.cm th, .cm td { border: 1px solid var(--line); padding: 6px 12px; text-align: center; }
+.cm th { font-weight: 400; color: var(--muted); font-size: 0.85rem; }
+.cm td { font-weight: 700; }
+.tablebox { overflow-x: auto; }
+
+.checks { display: grid; gap: 12px; }
+.q { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: grid; gap: 10px; }
+.q.ok { border-color: var(--good); }
+.q.no { border-color: var(--bad); }
+.q .stem { font-weight: 700; }
+.q .hint { font-size: 0.85rem; color: var(--muted); font-weight: 400; }
+.opts { display: grid; gap: 8px; }
+.opts.tf { grid-template-columns: 1fr 1fr; }
+.opt { font: inherit; font-size: 0.98rem; text-align: left; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 11px 14px; min-height: 46px; cursor: pointer; }
+.opts.tf .opt { text-align: center; }
+.opt:disabled { cursor: default; }
+.opt.right { background: var(--good-soft); border-color: var(--good); color: var(--ink); }
+.opt.wrong { background: var(--bad-soft); border-color: var(--bad); color: var(--ink); text-decoration: line-through; }
+.why { font-size: 0.95rem; border-top: 1px dashed var(--line); padding-top: 10px; }
+.why .tag { font-weight: 700; }
+.q.ok .why .tag { color: var(--good); }
+.q.no .why .tag { color: var(--bad); }
+
+details.say { background: var(--surface); border: 1px dashed var(--accent); border-radius: 14px; padding: 12px 14px; }
+details.say summary { cursor: pointer; font-weight: 700; color: var(--accent); }
+details.say[open] summary { margin-bottom: 8px; }
+details.say p, details.say ul { font-size: 0.95rem; }
+
+.tools { display: flex; flex-wrap: wrap; gap: 10px; }
+.tools button { font: inherit; font-size: 0.9rem; padding: 9px 14px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.tools button.danger { color: var(--bad); }
+footer { font-size: 0.8rem; color: var(--muted); }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+
+<header class="bar">
+  <div class="wrap">
+    <div class="bar-top">
+      <h1>Quiz 2 · Bus Review</h1>
+      <span class="score" id="score">0 / 0</span>
+    </div>
+    <nav class="chips" aria-label="Topics">
+      <a href="#metrics">Metrics</a>
+      <a href="#trees">Trees</a>
+      <a href="#features">Feature selection</a>
+      <a href="#clusters">Clustering</a>
+      <a href="#earlier">Bayes · LDA · SVM</a>
+      <a href="#door">At the door</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+<div class="intro">
+  <p><strong>EE6407 Quiz 2, machine-learning part.</strong> Each topic gives you the ideas first, then quick checks. Any numbers are small enough to do in your head.</p>
+  <p>Amber boxes mark the slips from your Mock C attempt. Read those twice.</p>
+  <p class="src">Quiz Tue 10 Nov, 9:30–10:30 pm (lecturer, Week 5 and Week 11 transcripts). Confirm the venue on NTULearn. Scope per the Week 11 transcript: classification trees, feature selection and clustering, on top of the earlier ML topics.</p>
+</div>
+
+<!-- ============ METRICS ============ -->
+<section id="metrics">
+  <div><p class="eyebrow">Evaluation · appears every sitting</p><h2>Confusion matrix and metrics</h2></div>
+  <div class="tablebox">
+    <table class="cm">
+      <tr><th></th><th>Predicted +</th><th>Predicted −</th></tr>
+      <tr><th>Actual +</th><td>TP</td><td>FN</td></tr>
+      <tr><th>Actual −</th><td>FP</td><td>TN</td></tr>
+    </table>
+  </div>
+  <div class="f">Recall = Sensitivity = TPR = TP / (TP + FN)   ← actual + row
+Precision          = TP / (TP + FP)   ← predicted + column
+Specificity        = TN / (TN + FP)   ← actual − row
+FPR = FP / (FP + TN) = 1 − specificity
+Accuracy = (TP + TN) / N,   error = 1 − accuracy
+F1 = 2·P·R / (P + R)   (harmonic mean)</div>
+  <ul>
+    <li><b>Recall</b> asks: of the real positives, how many did I catch?</li>
+    <li><b>Precision</b> asks: when I say “positive”, how often am I right?</li>
+    <li>A rate that divides by one <b>actual</b> row (recall, specificity) depends only on that class. So it doesn't move when the other class gets bigger.</li>
+    <li>Precision, accuracy and F1 mix both actual rows, so they do change when the class balance changes.</li>
+  </ul>
+  <div class="flag"><b>Your slip:</b> precision and recall were swapped, and specificity was left out. Write the denominator first, in words: “recall: out of the actual positives”. Then fill in the numbers. Memory hook: <b>R</b>ecall = <b>R</b>ow, <b>P</b>recision = <b>P</b>redicted.</div>
+  <div class="flag"><b>Class-count change:</b> the classifier stays the same, so doubling the actual negatives doubles FP <i>and</i> TN. Recall stays the same, and so does specificity (TN/(TN+FP) keeps its ratio). Precision falls, because FP grows while TP doesn't. Accuracy moves toward specificity.</div>
+
+  <div class="checks">
+    <div class="q" data-id="m1" data-answer="b">
+      <p class="stem">Recall's denominator is…</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">TP + FP (everything predicted positive)</button>
+        <button class="opt" data-opt="b">TP + FN (everything actually positive)</button>
+        <button class="opt" data-opt="c">TN + FP (everything actually negative)</button>
+        <button class="opt" data-opt="d">N (all samples)</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> Recall walks along the actual-positive row: TP + FN. Predicted positives (TP + FP) belong to precision.</p>
+    </div>
+
+    <div class="q" data-id="m2" data-answer="c">
+      <p class="stem">TP = 8, FP = 2, FN = 8. What is the precision?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">0.5</button>
+        <button class="opt" data-opt="b">0.2</button>
+        <button class="opt" data-opt="c">0.8</button>
+        <button class="opt" data-opt="d">0.67</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> Precision = 8 / (8 + 2) = 0.8. If you picked 0.5, that's recall, 8 / (8 + 8). It's the same swap as in Mock C.</p>
+    </div>
+
+    <div class="q" data-id="m3" data-answer="a">
+      <p class="stem">Same classifier, but the new test set has twice as many actual negatives. Which metric stays the same?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">Specificity</button>
+        <button class="opt" data-opt="b">Precision</button>
+        <button class="opt" data-opt="c">Accuracy</button>
+        <button class="opt" data-opt="d">F1</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> TN and FP both double, so TN/(TN+FP) keeps its value. Recall doesn't move either, because the positive row is untouched. The other three all involve FP or TN together with TP.</p>
+    </div>
+
+    <div class="q" data-id="m4" data-answer="t">
+      <p class="stem">True or false: doubling the actual negatives lowers precision (assume FP &gt; 0). <span class="hint">Say why before you tap.</span></p>
+      <div class="opts tf">
+        <button class="opt" data-opt="t">True</button>
+        <button class="opt" data-opt="f">False</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> True. TP stays put while FP doubles, so TP/(TP+FP) shrinks.</p>
+    </div>
+
+    <div class="q" data-id="m5" data-answer="d">
+      <p class="stem">Screening for a dangerous disease, where missing a sick patient is the costly mistake. Which metric do you most want high?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">Precision</button>
+        <button class="opt" data-opt="b">Specificity</button>
+        <button class="opt" data-opt="c">Accuracy</button>
+        <button class="opt" data-opt="d">Recall (sensitivity)</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> A missed patient is a false negative. High recall means few FN.</p>
+    </div>
+
+    <div class="q" data-id="m6" data-answer="b">
+      <p class="stem">A spam filter, where sending a real email to spam is the costly mistake. Which metric matters most?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">Recall</button>
+        <button class="opt" data-opt="b">Precision</button>
+        <button class="opt" data-opt="c">FPR should be high</button>
+        <button class="opt" data-opt="d">F1 only</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> A real email flagged as spam is a false positive. Precision punishes FP.</p>
+    </div>
+
+    <div class="q" data-id="m7" data-answer="f">
+      <p class="stem">True or false: on a dataset that is 99% negative, accuracy is a good single measure of a classifier.</p>
+      <div class="opts tf">
+        <button class="opt" data-opt="t">True</button>
+        <button class="opt" data-opt="f">False</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> False. A model that always answers “negative” scores 99% accuracy and has zero recall. Report recall, precision and F1 as well.</p>
+    </div>
+
+    <div class="q" data-id="m8" data-answer="c">
+      <p class="stem">Leave-one-out cross-validation on 50 samples trains how many models?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">1</button>
+        <button class="opt" data-opt="b">10</button>
+        <button class="opt" data-opt="c">50</button>
+        <button class="opt" data-opt="d">49</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> One model per left-out sample, so N = 50. (Stratified k-fold keeps the class proportions the same in every fold. An ROC curve plots TPR against FPR as the threshold changes, and AUC = 0.5 means random guessing.)</p>
+    </div>
+  </div>
+  <p class="src">Sources: Week 11 transcript (evaluation); Mock C Q1 and the past-paper confusion matrix in <code>quiz-2-cycle.html</code>.</p>
+</section>
+
+<!-- ============ TREES ============ -->
+<section id="trees">
+  <div><p class="eyebrow">Week 10</p><h2>Decision trees and impurity</h2></div>
+  <div class="f">Gini           = 1 − Σ pₖ²         two-class max 0.5
+Entropy        = −Σ pₖ log₂ pₖ     two-class max 1
+Misclassific.  = 1 − maxₖ pₖ       two-class max 0.5
+Pure node: all three = 0
+
+Weighted child = (n_L/n)·I_L + (n_R/n)·I_R
+Impurity drop  = I_parent − weighted child</div>
+  <ul>
+    <li>Pick the split with the <b>largest drop</b>, which is the same as the smallest weighted child impurity.</li>
+    <li>The question tells you which impurity measure to use (lecturer, Week 10).</li>
+    <li>For a continuous feature, sort the values and try the <b>midpoints</b> between neighbours as thresholds.</li>
+    <li><b>Gain ratio</b> divides the gain by the split's own entropy. That stops it from favouring features with many values, such as an ID number.</li>
+    <li><b>Random forest</b> = bootstrap samples + a random feature subset at each split + a majority vote. The randomness makes the trees less alike, which reduces variance.</li>
+  </ul>
+  <div class="flag"><b>Your slip:</b> weighted Gini had to be shown to you in Train. Weight each child by its <b>sample count</b>. A plain average of the two children is wrong whenever the child sizes differ.</div>
+
+  <div class="checks">
+    <div class="q" data-id="t1" data-answer="b">
+      <p class="stem">What is the Gini of a node holding 5 class-A and 5 class-B samples?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">0</button>
+        <button class="opt" data-opt="b">0.5</button>
+        <button class="opt" data-opt="c">1</button>
+        <button class="opt" data-opt="d">0.25</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> 1 − (0.5² + 0.5²) = 1 − 0.5 = 0.5. That is the worst case for two classes. Entropy here would be 1.</p>
+    </div>
+
+    <div class="q" data-id="t2" data-answer="a">
+      <p class="stem">A split sends 8 samples left (Gini 0.5) and 2 samples right (Gini 0). What is the weighted child Gini?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">0.4</button>
+        <button class="opt" data-opt="b">0.25</button>
+        <button class="opt" data-opt="c">0.5</button>
+        <button class="opt" data-opt="d">0.1</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> (8/10)·0.5 + (2/10)·0 = 0.4. The 0.25 answer is the plain-average trap: it treats a 2-sample child as if it counted as much as an 8-sample one.</p>
+    </div>
+
+    <div class="q" data-id="t3" data-answer="c">
+      <p class="stem">Parent Gini 0.48, weighted child Gini 0.30. What is the impurity drop?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">0.78</button>
+        <button class="opt" data-opt="b">0.30</button>
+        <button class="opt" data-opt="c">0.18</button>
+        <button class="opt" data-opt="d">−0.18</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> Drop = parent − weighted children = 0.48 − 0.30 = 0.18. A good split makes this positive and large.</p>
+    </div>
+
+    <div class="q" data-id="t4" data-answer="b">
+      <p class="stem">Plain information gain is biased toward which kind of feature?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">Binary features</button>
+        <button class="opt" data-opt="b">Features with many distinct values, such as an ID</button>
+        <button class="opt" data-opt="c">Continuous features only</button>
+        <button class="opt" data-opt="d">Features with missing values</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> Splitting on an ID gives pure one-sample leaves and maximal gain, yet it tells you nothing. Gain ratio corrects for this.</p>
+    </div>
+
+    <div class="q" data-id="t5" data-answer="t">
+      <p class="stem">True or false: for a feature with sorted values 2, 4, 7, the candidate thresholds are 3 and 5.5.</p>
+      <div class="opts tf">
+        <button class="opt" data-opt="t">True</button>
+        <button class="opt" data-opt="f">False</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> True. They are the midpoints between neighbouring sorted values.</p>
+    </div>
+
+    <div class="q" data-id="t6" data-answer="d">
+      <p class="stem">Besides bootstrapping, what makes the trees in a random forest differ from one another?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">Each tree uses a different impurity measure</button>
+        <button class="opt" data-opt="b">Each tree is pruned to a different depth</button>
+        <button class="opt" data-opt="c">Each tree is trained on the test set</button>
+        <button class="opt" data-opt="d">A random subset of features at each split</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> Random feature subsets at each split make the trees less alike, so averaging their votes cuts more variance.</p>
+    </div>
+  </div>
+  <p class="src">Sources: Week 10 transcript (impurity measures); Mock C T5 and the Gini drills in <code>quiz-2-cycle.html</code>.</p>
+</section>
+
+<!-- ============ FEATURE SELECTION ============ -->
+<section id="features">
+  <div><p class="eyebrow">Week 12</p><h2>Feature selection and peaking</h2></div>
+  <div class="f">Fisher ratio (one feature, two classes):
+FDR = (m₁ − m₂)² / (σ₁² + σ₂²)
+larger FDR → better class separation</div>
+  <ul>
+    <li><b>Filter</b>: score features with a separability measure (Fisher ratio, Mahalanobis distance, tr(S<sub>W</sub>⁻¹S<sub>B</sub>), mutual information). It is fast and doesn't depend on any classifier.</li>
+    <li><b>Wrapper</b>: train the actual classifier on each candidate subset and score its accuracy. It is slower, but tuned to that classifier.</li>
+    <li><b>Search</b>: exhaustive search tries 2<sup>d</sup> subsets. <b>SFS</b> starts empty and adds the best feature each step. <b>SBS</b> starts with every feature and removes the one whose loss hurts least. SFS can't take a feature back out once added (the nesting effect).</li>
+  </ul>
+  <h3>Peaking phenomenon</h3>
+  <p>Keep the number of training samples N fixed and add features. Accuracy first rises, peaks, then falls. Each extra feature adds parameters to estimate (means, variances, covariances) from the same N samples. Those estimates become unreliable, so the classifier gets worse. The conclusion is to select a small, informative feature subset, or to collect more data, which moves the peak to the right.</p>
+  <div class="flag"><b>Your slips:</b> the Fisher ratios were right, but you never wrote the final ranking. End with an explicit order such as “x₂ &gt; x₄ &gt; x₁ &gt; x₃”. Also, if the question gives σ (standard deviation), <b>square it</b> before you add.</div>
+
+  <div class="checks">
+    <div class="q" data-id="f1" data-answer="c">
+      <p class="stem">Class means 0 and 3, standard deviations σ₁ = 1 and σ₂ = 2. What is the Fisher ratio?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">3</button>
+        <button class="opt" data-opt="b">1</button>
+        <button class="opt" data-opt="c">1.8</button>
+        <button class="opt" data-opt="d">0.6</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> 3² / (1² + 2²) = 9/5 = 1.8. Picking 3 means you added σ's instead of variances (9/3). That was the trap in Mock C Q3.</p>
+    </div>
+
+    <div class="q" data-id="f2" data-answer="b">
+      <p class="stem">Fisher ratios: x₁ = 0.8, x₂ = 2.5, x₃ = 0.1, x₄ = 1.6. Using a scalar filter, which two features do you keep?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">x₁, x₃</button>
+        <button class="opt" data-opt="b">x₂, x₄</button>
+        <button class="opt" data-opt="c">x₁, x₂</button>
+        <button class="opt" data-opt="d">x₃, x₄</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> Ranking: x₂ &gt; x₄ &gt; x₁ &gt; x₃. Keep the top two. In the quiz, write that full ranking line.</p>
+    </div>
+
+    <div class="q" data-id="f3" data-answer="a">
+      <p class="stem">With fixed N, why does accuracy eventually drop as you add features?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">More parameters must be estimated from the same samples, so the estimates become unreliable</button>
+        <button class="opt" data-opt="b">The new features are always pure noise</button>
+        <button class="opt" data-opt="c">The classifier runs out of memory</button>
+        <button class="opt" data-opt="d">Distances become exactly zero</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> That is the core of peaking. The features may well be useful; what fails is estimating more parameters from limited data.</p>
+    </div>
+
+    <div class="q" data-id="f4" data-answer="t">
+      <p class="stem">True or false: with more training samples, the peak moves to a larger number of features.</p>
+      <div class="opts tf">
+        <button class="opt" data-opt="t">True</button>
+        <button class="opt" data-opt="f">False</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> True. More data means each parameter is estimated reliably, so you can afford more features before it hurts.</p>
+    </div>
+
+    <div class="q" data-id="f5" data-answer="d">
+      <p class="stem">Which approach retrains the classifier for every candidate subset?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">Filter with Fisher ratio</button>
+        <button class="opt" data-opt="b">Filter with mutual information</button>
+        <button class="opt" data-opt="c">Scatter-matrix criterion</button>
+        <button class="opt" data-opt="d">Wrapper</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> A wrapper puts the classifier inside the search loop. Filters never train it.</p>
+    </div>
+
+    <div class="q" data-id="f6" data-answer="b">
+      <p class="stem">SFS on 4 features. How many single-feature subsets does the first step compare?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">1</button>
+        <button class="opt" data-opt="b">4</button>
+        <button class="opt" data-opt="c">16</button>
+        <button class="opt" data-opt="d">6</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> It tries each feature on its own: 4 candidates. Step 2 then tries the 3 remaining features added to the winner.</p>
+    </div>
+  </div>
+  <details class="say">
+    <summary>Say it out loud: explain peaking in three sentences</summary>
+    <ul>
+      <li>With fixed N, adding features first improves and then worsens performance.</li>
+      <li>Each feature adds parameters estimated from the same N samples, so the estimates grow unreliable and the classifier overfits.</li>
+      <li>So select a small set of discriminative features, or get more samples.</li>
+    </ul>
+  </details>
+  <p class="src">Sources: past-final walkthroughs 2023–24 (peaking, filter selection); worked example 9.3.1 (Fisher's ratio); Mock C Q3.</p>
+</section>
+
+<!-- ============ CLUSTERING ============ -->
+<section id="clusters">
+  <div><p class="eyebrow">Weeks 12–13</p><h2>Clustering</h2></div>
+  <h3>k-means</h3>
+  <ul>
+    <li><b>Assign</b>: compute each point's distance to <b>every</b> centroid and send the point to the nearest one.</li>
+    <li><b>Update</b>: each centroid becomes the mean of its members, coordinate by coordinate. Update <b>all</b> centroids.</li>
+    <li><b>Repeat</b> until no point changes cluster.</li>
+    <li>SSE = Σ over clusters Σ over members ‖x − c‖², using squared Euclidean distance to the point's <i>own</i> centroid.</li>
+    <li>The result depends on the initial centroids (a local minimum). You must choose k in advance (plot SSE against k and look for the elbow), and the method prefers round, similar-sized clusters.</li>
+  </ul>
+  <div class="f">squared distance (x,y)→(a,b) = (x−a)² + (y−b)²
+Manhattan = |x−a| + |y−b|</div>
+  <div class="flag"><b>Your slips:</b> one written comparison used the same centroid on both sides. Always write both distances, d(P, c₁) and d(P, c₂). Point C's squared distance was written as 3 when it was 4. Square each difference, then add.</div>
+
+  <h3>Hierarchical (HAC), DBSCAN, silhouette</h3>
+  <ul>
+    <li><b>HAC</b>: start with every point as its own cluster and repeatedly merge the closest pair. <b>Single</b> linkage uses the minimum pairwise distance, which tends to chain clusters together. <b>Complete</b> uses the maximum, which gives compact clusters. <b>Average</b> uses the mean. Cut the dendrogram to get k clusters.</li>
+    <li><b>DBSCAN</b> takes eps and MinPts. A <b>core</b> point has at least MinPts neighbours within eps. A <b>border</b> point is within eps of a core point but isn't core itself. Everything else is <b>noise</b>. It needs no k and finds clusters of any shape.</li>
+    <li><b>Silhouette</b> s = (b − a) / max(a, b). Here a = mean distance to the point's own cluster and b = mean distance to the nearest other cluster. Near 1 is good, near 0 sits on a boundary, and a negative value means the point is probably in the wrong cluster.</li>
+  </ul>
+
+  <div class="checks">
+    <div class="q" data-id="c1" data-answer="b">
+      <p class="stem">1-D k-means, centroids at 1 and 6. Where does the point 4 go?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">Centroid 1 (distance 3)</button>
+        <button class="opt" data-opt="b">Centroid 6 (distance 2)</button>
+        <button class="opt" data-opt="c">It's a tie</button>
+        <button class="opt" data-opt="d">It becomes a new cluster</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> |4 − 1| = 3 and |4 − 6| = 2, so it goes to 6. Write both numbers in the quiz.</p>
+    </div>
+
+    <div class="q" data-id="c2" data-answer="a">
+      <p class="stem">A cluster holds (0,0), (2,4) and (4,2). What is its new centroid?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">(2, 2)</button>
+        <button class="opt" data-opt="b">(3, 3)</button>
+        <button class="opt" data-opt="c">(2, 4)</button>
+        <button class="opt" data-opt="d">(6, 6)</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> x: (0+2+4)/3 = 2. y: (0+4+2)/3 = 2. Average each coordinate separately.</p>
+    </div>
+
+    <div class="q" data-id="c3" data-answer="c">
+      <p class="stem">Squared Euclidean distance from (1,1) to (3,1)?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">2</button>
+        <button class="opt" data-opt="b">3</button>
+        <button class="opt" data-opt="c">4</button>
+        <button class="opt" data-opt="d">16</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> (3−1)² + (1−1)² = 4 + 0 = 4. The plain distance is 2. SSE uses the squared value.</p>
+    </div>
+
+    <div class="q" data-id="c4" data-answer="d">
+      <p class="stem">SSE in k-means measures…</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">the distance between the two centroids</button>
+        <button class="opt" data-opt="b">the number of points that changed cluster</button>
+        <button class="opt" data-opt="c">the squared distance from each point to every centroid</button>
+        <button class="opt" data-opt="d">the sum of squared distances from each point to its own centroid</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> Only the point's own centroid counts. A lower SSE means tighter clusters.</p>
+    </div>
+
+    <div class="q" data-id="c5" data-answer="f">
+      <p class="stem">True or false: k-means always reaches the lowest possible SSE.</p>
+      <div class="opts tf">
+        <button class="opt" data-opt="t">True</button>
+        <button class="opt" data-opt="f">False</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> False. It converges to a local minimum that depends on the initial centroids. That's why people rerun it with several starts.</p>
+    </div>
+
+    <div class="q" data-id="c6" data-answer="b">
+      <p class="stem">1-D clusters {1, 2} and {6, 9}. What is the single-linkage distance?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">8</button>
+        <button class="opt" data-opt="b">4</button>
+        <button class="opt" data-opt="c">6</button>
+        <button class="opt" data-opt="d">5.5</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> The closest pair is 2 and 6, giving 4. Complete linkage would take the farthest pair, 1 and 9, giving 8.</p>
+    </div>
+
+    <div class="q" data-id="c7" data-answer="t">
+      <p class="stem">True or false: single linkage tends to form long, chained clusters.</p>
+      <div class="opts tf">
+        <button class="opt" data-opt="t">True</button>
+        <button class="opt" data-opt="f">False</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> True. A single close pair is enough to merge two clusters, so clusters grow like a chain.</p>
+    </div>
+
+    <div class="q" data-id="c8" data-answer="c">
+      <p class="stem">Which method needs no k, handles odd shapes and labels outliers as noise?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">k-means</button>
+        <button class="opt" data-opt="b">HAC with complete linkage</button>
+        <button class="opt" data-opt="c">DBSCAN</button>
+        <button class="opt" data-opt="d">k-medoids</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> DBSCAN grows clusters from dense core points. Points that are not core and not near a core point become noise.</p>
+    </div>
+
+    <div class="q" data-id="c9" data-answer="a">
+      <p class="stem">A point has a = 2 (own cluster) and b = 6 (nearest other cluster). What is its silhouette?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">≈ 0.67</button>
+        <button class="opt" data-opt="b">≈ −0.67</button>
+        <button class="opt" data-opt="c">3</button>
+        <button class="opt" data-opt="d">≈ 0.33</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> (6 − 2) / max(2, 6) = 4/6 ≈ 0.67. That's well clustered.</p>
+    </div>
+
+    <div class="q" data-id="c10" data-answer="d">
+      <p class="stem">Manhattan distance from (1,2) to (4,6)?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">5</button>
+        <button class="opt" data-opt="b">25</button>
+        <button class="opt" data-opt="c">4</button>
+        <button class="opt" data-opt="d">7</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> |4−1| + |6−2| = 3 + 4 = 7. The Euclidean distance would be 5.</p>
+    </div>
+  </div>
+  <details class="say">
+    <summary>Say it out loud: one k-means iteration in four steps</summary>
+    <ul>
+      <li>For every point, write its distance to each centroid.</li>
+      <li>Assign it to the smaller distance.</li>
+      <li>Recompute every centroid as the coordinate-wise mean.</li>
+      <li>If any point changed cluster, repeat. Otherwise stop, and report the final centroids and SSE.</li>
+    </ul>
+  </details>
+  <p class="src">Sources: past-final walkthroughs 2023–24 (HAC, k-means, DBSCAN, silhouette); worked example 10.4.4; Mock C Q2.</p>
+</section>
+
+<!-- ============ EARLIER ============ -->
+<section id="earlier">
+  <div><p class="eyebrow">Weeks 6–9 · fast recap</p><h2>Bayes, LDA, SVM, data prep</h2></div>
+  <ul>
+    <li><b>Bayes rule</b>: choose the class with the largest P(ω)·p(x|ω). Dividing by p(x) rescales every class equally, so it never changes the winner.</li>
+    <li><b>Naive Bayes</b>: assumes the features are independent given the class, so you multiply the per-feature probabilities. A zero count wipes out the whole product, so use <b>Laplace</b> smoothing (n + 1)/(N + k).</li>
+    <li><b>Fisher LDA</b>: w = S<sub>W</sub>⁻¹(m₁ − m₂), w₀ = −½ wᵀ(m₁ + m₂). Check which sign means class 1 by evaluating g(m₁). The closed form is what you use with no computer (Week 8).</li>
+    <li><b>SVM</b>: margin = 2/‖w‖, w = Σ αᵢdᵢxᵢ. Compute b = dᵢ − wᵀxᵢ, averaged only over support vectors with <b>0 &lt; α &lt; C</b>. If α = C, the point is inside the margin or misclassified. A larger C allows less slack and gives a narrower margin. The lecturer said computing b “often” appears in exams (Week 9).</li>
+    <li><b>Data prep</b>: the types are nominal, ordinal, interval and ratio. Fill a missing nominal value with the mode. Box-plot fences sit at Q₁ − 1.5·IQR and Q₃ + 1.5·IQR. Scale with min–max or z-score.</li>
+  </ul>
+  <div class="checks">
+    <div class="q" data-id="e1" data-answer="c">
+      <p class="stem">Which support vectors do you average over to compute b?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">All training points</button>
+        <button class="opt" data-opt="b">Those with α = C</button>
+        <button class="opt" data-opt="c">Those with 0 &lt; α &lt; C</button>
+        <button class="opt" data-opt="d">Those with α = 0</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> Only these lie exactly on the margin, where d(wᵀx + b) = 1. Points with α = C have slack, and points with α = 0 aren't support vectors.</p>
+    </div>
+
+    <div class="q" data-id="e2" data-answer="b">
+      <p class="stem">w = (3, 4). What is the margin width?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">5</button>
+        <button class="opt" data-opt="b">0.4</button>
+        <button class="opt" data-opt="c">0.2</button>
+        <button class="opt" data-opt="d">2</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> ‖w‖ = 5 (a 3-4-5 triangle), so the width is 2/5 = 0.4.</p>
+    </div>
+
+    <div class="q" data-id="e3" data-answer="f">
+      <p class="stem">True or false: in a Bayes decision, dividing by the evidence p(x) can change which class wins.</p>
+      <div class="opts tf">
+        <button class="opt" data-opt="t">True</button>
+        <button class="opt" data-opt="f">False</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> False. Every class is divided by the same p(x), so their order stays the same.</p>
+    </div>
+
+    <div class="q" data-id="e4" data-answer="a">
+      <p class="stem">In naive Bayes, one feature value never appears in class B's training data. What do you do?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">Apply Laplace smoothing</button>
+        <button class="opt" data-opt="b">Delete that feature</button>
+        <button class="opt" data-opt="c">Set class B's prior to 0</button>
+        <button class="opt" data-opt="d">Nothing, a zero is fine</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> Without smoothing that zero makes class B's whole product zero, no matter what the other features say.</p>
+    </div>
+
+    <div class="q" data-id="e5" data-answer="d">
+      <p class="stem">After computing LDA's g(x) = wᵀx + w₀, how do you know which sign means class 1?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">Positive always means class 1</button>
+        <button class="opt" data-opt="b">Check whether ‖w‖ &gt; 1</button>
+        <button class="opt" data-opt="c">Compare w₀ with 0</button>
+        <button class="opt" data-opt="d">Evaluate g(m₁) and see its sign</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> Class 1's mean must land on class 1's side, so the sign of g(m₁) tells you which side that is.</p>
+    </div>
+
+    <div class="q" data-id="e6" data-answer="t">
+      <p class="stem">True or false: raising C in a soft-margin SVM tends to give a narrower margin with fewer violations.</p>
+      <div class="opts tf">
+        <button class="opt" data-opt="t">True</button>
+        <button class="opt" data-opt="f">False</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> True. C is the price of slack. A high C means slack is expensive, so the boundary bends to fit the training points.</p>
+    </div>
+  </div>
+  <p class="src">Sources: Weeks 6–9 transcripts; <code>quiz-2-primer.html</code> cards 1–4.</p>
+</section>
+
+<!-- ============ DOOR ============ -->
+<section id="door">
+  <div><p class="eyebrow">Last stop</p><h2>At the door: eight traps</h2></div>
+  <ul>
+    <li>Write the denominator in words first. Recall = row, precision = predicted column.</li>
+    <li>Class balance changes: recall and specificity hold; precision, accuracy and F1 move.</li>
+    <li>Gini split: weight each child by its sample count, then compute parent − weighted children.</li>
+    <li>Fisher: square σ, and finish with an explicit ranking line.</li>
+    <li>k-means: distance to <i>every</i> centroid, update <i>every</i> centroid, finish the SSE.</li>
+    <li>SVM b: only from 0 &lt; α &lt; C, then average.</li>
+    <li>LDA: check the sign with g(m₁).</li>
+    <li>Peaking: fixed N, more parameters, unreliable estimates, so select features.</li>
+  </ul>
+  <div class="tools">
+    <button type="button" id="redo">Redo the ones I missed</button>
+    <button type="button" id="reset" class="danger">Reset all answers</button>
+  </div>
+  <footer>Unofficial study aid built from your EE6407 Quiz 2 mocks and lecture transcripts. Answers are saved in this browser only.</footer>
+</section>
+
+</div>
+</main>
+
+<script>
+(() => {
+  const KEY = 'ee6407-quiz2-bus-v1';
+  let st = {};
+  try { st = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { st = {}; }
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} };
+  const qs = [...document.querySelectorAll('.q')];
+  const scoreEl = document.getElementById('score');
+
+  function show(q, pick) {
+    const ans = q.dataset.answer, ok = pick === ans;
+    q.querySelectorAll('.opt').forEach(b => {
+      b.disabled = true;
+      if (b.dataset.opt === ans) b.classList.add('right');
+      else if (b.dataset.opt === pick) b.classList.add('wrong');
+    });
+    q.classList.add(ok ? 'ok' : 'no');
+    q.querySelector('.tag').textContent = ok ? 'Correct.' : 'Not quite.';
+    q.querySelector('.why').hidden = false;
+  }
+  function clear(q) {
+    q.classList.remove('ok', 'no');
+    q.querySelectorAll('.opt').forEach(b => { b.disabled = false; b.classList.remove('right', 'wrong'); });
+    q.querySelector('.why').hidden = true;
+  }
+  function score() {
+    const right = qs.filter(q => st[q.dataset.id] === q.dataset.answer).length;
+    const done = qs.filter(q => st[q.dataset.id]).length;
+    scoreEl.textContent = `${right} / ${qs.length}` + (done && done < qs.length ? ` · ${qs.length - done} left` : '');
+  }
+
+  qs.forEach(q => {
+    q.querySelectorAll('.opt').forEach(b => b.addEventListener('click', () => {
+      st[q.dataset.id] = b.dataset.opt; save(); show(q, b.dataset.opt); score();
+    }));
+    if (st[q.dataset.id]) show(q, st[q.dataset.id]);
+  });
+  score();
+
+  document.getElementById('redo').addEventListener('click', () => {
+    let first = null;
+    qs.forEach(q => { if (st[q.dataset.id] && st[q.dataset.id] !== q.dataset.answer) { delete st[q.dataset.id]; clear(q); first = first || q; } });
+    save(); score();
+    if (first) first.scrollIntoView({ block: 'center' });
+  });
+  const reset = document.getElementById('reset');
+  let armed = false;
+  reset.addEventListener('click', () => {
+    if (!armed) { armed = true; reset.textContent = 'Tap again to erase all answers'; setTimeout(() => { armed = false; reset.textContent = 'Reset all answers'; }, 4000); return; }
+    st = {}; save(); qs.forEach(clear); score(); armed = false; reset.textContent = 'Reset all answers';
+  });
+})();
+</script>
