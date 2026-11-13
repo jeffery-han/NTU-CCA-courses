@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en" data-theme="system">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EE6407 Guided Mock A</title>
+<meta name="description" content="Step 2 of the EE6407 final-prep protocol: a full 4x25 final paper broken into self-checking steps with hints and worked lines.">
+<script>
+window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+  options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }, startup: { typeset: false } };
+</script>
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: #f6f7f9; --surface: #fff; --surface-2: #eef1f5; --text: #14181f; --muted: #5b6472; --border: #d8dee7;
+  --accent: #1f6feb; --accent-soft: #e5efff; --success: #17794b; --success-soft: #e2f5ec;
+  --warning: #9a6200; --warning-soft: #fdf1dc; --danger: #b32130; --danger-soft: #fdeaec;
+  --radius: 14px; --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0e1117; --surface: #161b23; --surface-2: #1d232d; --text: #e7ecf3; --muted: #99a3b3; --border: #2a323e;
+  --accent: #6ea8ff; --accent-soft: #17233a; --success: #56d39b; --success-soft: #10281f;
+  --warning: #e5b567; --warning-soft: #2b2113; --danger: #ff8189; --danger-soft: #2e1519; } }
+:root[data-theme="dark"] {
+  --bg: #0e1117; --surface: #161b23; --surface-2: #1d232d; --text: #e7ecf3; --muted: #99a3b3; --border: #2a323e;
+  --accent: #6ea8ff; --accent-soft: #17233a; --success: #56d39b; --success-soft: #10281f;
+  --warning: #e5b567; --warning-soft: #2b2113; --danger: #ff8189; --danger-soft: #2e1519; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.62 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+a { color: var(--accent); }
+.app { display: grid; grid-template-columns: 270px minmax(0, 1fr); }
+nav.toc { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 18px 14px; border-right: 1px solid var(--border); background: var(--surface); font-size: .9rem; }
+nav.toc b { display: block; margin-bottom: 8px; }
+nav.toc a { display: flex; justify-content: space-between; gap: 8px; padding: 3px 6px; border-radius: 7px; text-decoration: none; color: var(--text); }
+nav.toc a:hover { background: var(--surface-2); }
+nav.toc .sc { color: var(--muted); font-family: var(--mono); font-size: .8rem; }
+nav.toc .sc.ok { color: var(--success); font-weight: 700; }
+nav.toc .tools { margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--border); }
+main { min-width: 0; max-width: 900px; padding: 24px 22px 120px; }
+h1 { font-size: 1.65rem; margin: 0 0 .4rem; }
+h2 { font-size: 1.25rem; margin: 2.2rem 0 .4rem; padding-top: .6rem; border-top: 2px solid var(--border); }
+h3 { font-size: 1.04rem; margin: 0 0 .3rem; }
+.sub { color: var(--muted); }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 18px; margin: 14px 0; }
+.card.done { border-color: var(--success); }
+.notice { background: var(--warning-soft); border: 1px solid var(--border); border-radius: 12px; padding: 12px 15px; margin: 14px 0; }
+.notice.info { background: var(--accent-soft); }
+.tag { float: right; color: var(--muted); font-size: .82rem; font-weight: 600; }
+.ex { background: var(--surface-2); border-radius: 10px; padding: 8px 12px; margin: 8px 0; font-size: .95rem; }
+.chk { border-top: 1px dashed var(--border); padding-top: 8px; margin-top: 10px; }
+.chk input, .chk select, .btn { font: inherit; font-size: .92rem; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 4px 10px; }
+.btn { cursor: pointer; } .btn:hover { border-color: var(--accent); }
+.btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 600; text-decoration: none; padding: 8px 16px; }
+.fb { font-weight: 600; margin-left: 6px; }
+table.d { border-collapse: collapse; margin: 6px 0; font-size: .9rem; }
+table.d td, table.d th { border: 1px solid var(--border); padding: 3px 9px; text-align: center; }
+a.cite { font-size: .85rem; }
+dialog { max-width: min(900px, 94vw); border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text); padding: 14px; }
+dialog img { width: 100%; display: block; margin: 8px 0; border: 1px solid var(--border); background: #fff; }
+dialog::backdrop { background: rgba(0, 0, 0, .5); }
+.row { display: flex; gap: 10px; align-items: center; }
+#math-warning { display: none; }
+@media (max-width: 860px) {
+  .app { grid-template-columns: 1fr; }
+  nav.toc { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--border); }
+  nav.toc #toc-links { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 8px; }
+  main { padding: 16px 16px 80px; }
+}
+.stem { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 10px; padding: 10px 14px; margin: 8px 0 12px; }
+.step { border-left: 3px solid var(--border); padding: 4px 0 4px 12px; margin: 10px 0; }
+.step.done { border-left-color: var(--success); }
+.step p { margin: 4px 0; }
+.step input:not([type=checkbox]), .step select { font: inherit; font-size: .9rem; font-family: var(--mono); background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 7px; padding: 3px 7px; }
+.step input.good { border-color: var(--success); } .step input.bad, .step select.bad { border-color: var(--danger); }
+details { margin: 3px 0; font-size: .94rem; } details summary { cursor: pointer; color: var(--muted); font-weight: 600; }
+details.work[open] { background: var(--success-soft); border-radius: 8px; padding: 6px 10px; }
+details.hint[open] { background: var(--accent-soft); border-radius: 8px; padding: 6px 10px; }
+.pill { display: inline-block; background: var(--warning-soft); border: 1px solid var(--border); border-radius: 999px; padding: 0 9px; font-size: .78rem; font-weight: 700; }
+label.self { display: block; font-size: .92rem; margin-top: 4px; }
+h3 .tag, h2 .tag { float: right; color: var(--muted); font-size: .82rem; font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="app">
+<nav class="toc" aria-label="Contents">
+  <b>EE6407 Final &mdash; Guided mock A</b>
+  <div id="toc-links"></div>
+  <div class="tools">
+    <div>Steps right <b id="score" style="display:inline">0</b>/<span id="total">0</span></div>
+    <p><button class="btn" id="reset">Reset progress</button> <button class="btn" id="theme">Theme</button></p>
+    <a href="final-primer.html">&larr; Step 1 primer</a>
+  </div>
+</nav>
+<main>
+<h1>EE6407 Final &mdash; Step 2: Guided mock A</h1>
+<p class="sub">This is a full paper in the official format: 4 questions, 25 marks each, Q1 GA and Q2&ndash;Q4 ML. Each part is broken into the steps a marker looks for, and every step checks itself. Work each step on paper first, then type the number. A <b>hint</b> recalls the method; the <b>worked line</b> unlocks after your first check. Steps marked <span class="pill">written</span> are self-marked against a model answer. Give numbers to 4 decimal places.</p>
+<div id="math-warning" class="notice"><strong>Equations are not rendering.</strong> Open this page from the course folder (via <code>index.html</code>) so <code>vendor/mathjax/</code> resolves.</div>
+<div class="notice info"><p style="margin:0">Difficulty is set a notch <em>above</em> the 2024&ndash;26 papers: LDA from raw samples rather than given scatter matrices, a soft-margin SVM where one support vector has \(\alpha=C\), a portfolio crossover that produces an invalid child, and a naive Bayes decision decided by the third significant figure. Conventions follow the slides; each part links to the slide it uses.</p></div>
+
+<!-- ======================= Q1 ======================= -->
+<h2 id="q1">Q1 &middot; Genetic algorithms <span class="tag">25 marks</span></h2>
+
+<h3>(a) Binary decoding <span class="tag">10 marks</span></h3>
+<div class="stem">A GA minimises \(f(x,y)=x^2+2y^2-3x\) with \(x\in[-4,4]\) and \(y\in[0,6]\). Each variable is encoded with 8 bits, \(x\) first. One chromosome is <code>10110100 01011010</code>. <a class="cite" href="../resources/lecture-01-evolutionary-computing-part-1.pdf#page=20" data-pages="lecture-01-evolutionary-computing-part-1:20,31">GA part 1, pp. 20 &amp; 31</a></div>
+
+<div class="step" data-k="q1a_decx"><p>1. Decimal value of the \(x\) field <code>10110100</code>: <input size="8"></p>
+<details class="hint"><summary>Hint</summary>Bit weights from the left are 128, 64, 32, 16, 8, 4, 2, 1. Add the weights where the bit is 1.</details>
+<details class="work"><summary>Worked line</summary>\(128+32+16+4=180\).</details></div>
+
+<div class="step" data-k="q1a_x"><p>2. Decoded \(x\): <input size="8"></p>
+<details class="hint"><summary>Hint</summary>\(x=a+D\,\frac{b-a}{2^n-1}\) with \(2^8-1=255\).</details>
+<details class="work"><summary>Worked line</summary>\(x=-4+180\cdot\frac{8}{255}=-4+5.6471=1.6471\). Check that it lies inside \([-4,4]\).</details></div>
+
+<div class="step" data-k="q1a_decy"><p>3. Decimal value of the \(y\) field <code>01011010</code>: <input size="8"></p>
+<details class="work"><summary>Worked line</summary>\(64+16+8+2=90\).</details></div>
+
+<div class="step" data-k="q1a_y"><p>4. Decoded \(y\): <input size="8"></p>
+<details class="work"><summary>Worked line</summary>\(y=0+90\cdot\frac{6}{255}=2.1176\).</details></div>
+
+<div class="step" data-k="q1a_f"><p>5. \(f(x,y)\) for this chromosome: <input size="8"></p>
+<details class="work"><summary>Worked line</summary>\(x^2=2.7128\), \(2y^2=8.9689\), \(-3x=-4.9412\), so \(f=6.7405\). Keep 4 or more decimals in \(x\) and \(y\) until the end.</details></div>
+
+<div class="step" data-k="q1a_res"><p>6. Resolution (smallest representable step) of \(x\): <input size="8"></p>
+<details class="work"><summary>Worked line</summary>\(\frac{8}{255}=0.0314\). The grid is \(-4,\,-3.9686,\,\dots,\,4\).</details></div>
+
+<div class="step" data-k="q1a_bits"><p>7. Minimum number of bits for \(x\) to have a resolution of 0.001 or finer: <input size="8"></p>
+<details class="hint"><summary>Hint</summary>Need \(\frac{8}{2^n-1}\le 0.001\), that is, \(2^n\ge 8001\).</details>
+<details class="work"><summary>Worked line</summary>\(2^{12}=4096&lt;8001\le 8192=2^{13}\), so \(n=13\) (resolution \(8/8191=0.00098\)).</details></div>
+
+<div class="step written" data-m="2"><p><span class="pill">written</span> 8. State two limitations of this binary representation for a continuous problem. (2 marks)</p>
+<details class="work"><summary>Model answer</summary>(i) Only \(2^n\) grid values can be reached; the true optimum \(x^\*=0.75,\ y^\*=0\) is approximated only to within the resolution, and more precision needs longer chromosomes and a larger search space. (ii) Hamming cliffs: neighbouring values such as <code>01111111</code> → <code>10000000</code> differ in every bit, so a small move in \(x\) needs many simultaneous flips, while flipping one high bit jumps by half the range. Gray coding or real-valued coding fixes this. One mark each.</details>
+<label class="self"><input type="checkbox"> My answer covers both points</label></div>
+
+<h3>(b) Real-coded crossover with a constraint <span class="tag">15 marks</span></h3>
+<div class="stem">A portfolio of 4 assets is coded as weights \(\mathbf w=(w_1,\dots,w_4)\) with \(w_i\ge 0\) and \(\sum w_i=1\). Maximise \(F(\mathbf w)=\sum_i\mu_i w_i-0.1\sum_i w_i^2\), where \(\boldsymbol\mu=(0.08,\,0.12,\,0.10,\,0.06)\). The parents are \(\mathbf P_1=(0.40,\,0.10,\,0.30,\,0.20)\) and \(\mathbf P_2=(0.10,\,0.50,\,0.20,\,0.20)\). <a class="cite" href="../resources/lecture-01-evolutionary-computing-part-2.pdf#page=13" data-pages="lecture-01-evolutionary-computing-part-2:12,13,14">GA part 2, slides 23&ndash;28</a></div>
+
+<div class="step" data-k="q1b_F_P1"><p>1. \(F(\mathbf P_1)\): <input size="8"></p>
+<details class="work"><summary>Worked line</summary>\(\boldsymbol\mu\cdot\mathbf P_1=0.032+0.012+0.030+0.012=0.086\); \(\sum w^2=0.16+0.01+0.09+0.04=0.30\); \(F=0.086-0.030=0.0560\).</details></div>
+
+<div class="step" data-k="q1b_F_P2"><p>2. \(F(\mathbf P_2)\): <input size="8"></p>
+<details class="work"><summary>Worked line</summary>\(0.008+0.060+0.020+0.012=0.100\); \(\sum w^2=0.34\); \(F=0.100-0.034=0.0660\).</details></div>
+
+<div class="step" data-k="q1b_c1"><p>3. Whole arithmetic crossover with \(\alpha=0.7\), child 1 \(=0.7\mathbf P_1+0.3\mathbf P_2\): <input data-p="0" size="6"> <input data-p="1" size="6"> <input data-p="2" size="6"> <input data-p="3" size="6"></p>
+<details class="hint"><summary>Hint</summary>Apply the same \(\alpha\) to every gene.</details>
+<details class="work"><summary>Worked line</summary>\((0.28+0.03,\ 0.07+0.15,\ 0.21+0.06,\ 0.14+0.06)=(0.31,\,0.22,\,0.27,\,0.20)\), sum = 1.</details></div>
+
+<div class="step" data-k="q1b_c2"><p>4. Child 2 \(=0.3\mathbf P_1+0.7\mathbf P_2\): <input data-p="0" size="6"> <input data-p="1" size="6"> <input data-p="2" size="6"> <input data-p="3" size="6"></p>
+<details class="work"><summary>Worked line</summary>\((0.19,\,0.38,\,0.23,\,0.20)\), sum = 1.</details></div>
+
+<div class="step" data-k="q1b_F_c1"><p>5. \(F(\text{child 1})\): <input size="8"></p>
+<details class="work"><summary>Worked line</summary>\(0.0248+0.0264+0.0270+0.0120=0.0902\); \(\sum w^2=0.0961+0.0484+0.0729+0.04=0.2574\); \(F=0.0902-0.02574=0.0645\). This is better than \(\mathbf P_1\) and worse than \(\mathbf P_2\), as you would expect from a point between them.</details></div>
+
+<div class="step" data-k="q1b_z"><p>6. Blend crossover BLX-\(\alpha\) with \(\alpha=0.5\), defined here as \(z_i=\min_i-\alpha d_i+u_i(1+2\alpha)d_i\), \(d_i=|P_{1i}-P_{2i}|\), random numbers \(\mathbf u=(0.1,\,0.9,\,0.5,\,0.3)\). Child \(\mathbf z\): <input data-p="0" size="6"> <input data-p="1" size="6"> <input data-p="2" size="6"> <input data-p="3" size="6"></p>
+<details class="hint"><summary>Hint</summary>For each gene: interval \([\min-0.5d,\ \max+0.5d]\), which has width \(2d\). Then \(z=\text{left end}+u\cdot 2d\).</details>
+<details class="work"><summary>Worked line</summary>Gene 1: \(d=0.3\), interval \([-0.05,0.55]\), \(z=-0.05+0.1\cdot0.6=0.01\). Gene 2: \(d=0.4\), \([-0.10,0.70]\), \(z=-0.10+0.9\cdot0.8=0.62\). Gene 3: \(d=0.1\), \([0.15,0.35]\), \(z=0.15+0.5\cdot0.2=0.25\). Gene 4: \(d=0\), so \(z=0.20\).</details></div>
+
+<div class="step" data-k="q1b_zsum"><p>7. \(\sum z_i\), and so is \(\mathbf z\) a valid portfolio? <input size="8"></p>
+<details class="work"><summary>Worked line</summary>\(0.01+0.62+0.25+0.20=1.08\neq 1\), so it is <b>invalid</b>: the blend interval reaches outside the parents' box, and the constraint is lost.</details></div>
+
+<div class="step" data-k="q1b_zr"><p>8. Repair it by dividing by the sum (all \(z_i\ge0\), so no clipping is needed): <input data-p="0" size="6"> <input data-p="1" size="6"> <input data-p="2" size="6"> <input data-p="3" size="6"></p>
+<details class="work"><summary>Worked line</summary>\(\mathbf z/1.08=(0.0093,\,0.5741,\,0.2315,\,0.1852)\). If a gene had been negative, set it to 0 <em>first</em>, then renormalise.</details></div>
+
+<div class="step" data-k="q1b_F_zr"><p>9. \(F\) of the repaired child: <input size="8"></p>
+<details class="work"><summary>Worked line</summary>\(\boldsymbol\mu\cdot\mathbf z'=0.0007+0.0689+0.0231+0.0111=0.1039\); \(\sum z'^2=0.4175\); \(F=0.1039-0.0418=0.0621\).</details></div>
+
+<div class="step written" data-m="2"><p><span class="pill">written</span> 10. Explain why whole arithmetic crossover <em>always</em> gives a valid portfolio but blend crossover may not, and say when you would still prefer blend. (2 marks)</p>
+<details class="work"><summary>Model answer</summary>Whole arithmetic is a convex combination: \(\sum_i(\alpha P_{1i}+(1-\alpha)P_{2i})=\alpha\cdot1+(1-\alpha)\cdot1=1\), and each gene lies between its parents' values, so it stays \(\ge0\). Blend samples from an interval extended by \(\alpha d_i\) beyond both parents, so the sum and the sign are not preserved and a repair is needed. Prefer blend for <em>exploration</em> (it can leave the parents' box and keeps diversity); whole arithmetic only contracts the population towards its interior (exploitation).</details>
+<label class="self"><input type="checkbox"> My answer covers both points</label></div>
+
+<!-- ======================= Q2 ======================= -->
+<h2 id="q2">Q2 &middot; Bayes and naive Bayes <span class="tag">25 marks</span></h2>
+
+<h3>(a) Gaussian Bayes decision rule <span class="tag">12 marks</span></h3>
+<div class="stem">The training set has 600 samples of \(\omega_1\) and 400 of \(\omega_2\). The estimates are \(\mathbf m_1=(0,1)\), \(\mathbf C_1=\begin{bmatrix}2&0\\0&1\end{bmatrix}\), \(\mathbf m_2=(2,3)\), \(\mathbf C_2=\begin{bmatrix}1&0.5\\0.5&2\end{bmatrix}\). Classify \(\mathbf x=(1,2)\) with the minimum-error Bayes rule, using \(g_i=\ln P(\omega_i)-\tfrac12\ln|\mathbf C_i|-\tfrac12(\mathbf x-\mathbf m_i)^T\mathbf C_i^{-1}(\mathbf x-\mathbf m_i)\). <a class="cite" href="../resources/machine-learning/ml-slides-03-bayesian-decision-theory.pdf#page=13" data-pages="ml-slides-03-bayesian-decision-theory:10,13,15">ML slides 3, pp. 10&ndash;15</a></div>
+
+<div class="step" data-k="q2a_det1"><p>1. \(|\mathbf C_1|\): <input size="8"></p><details class="work"><summary>Worked line</summary>\(2\cdot1-0=2\). Priors: \(P(\omega_1)=600/1000=0.6\), \(P(\omega_2)=0.4\).</details></div>
+<div class="step" data-k="q2a_q1"><p>2. Quadratic form \((\mathbf x-\mathbf m_1)^T\mathbf C_1^{-1}(\mathbf x-\mathbf m_1)\): <input size="8"></p>
+<details class="hint"><summary>Hint</summary>\(\mathbf x-\mathbf m_1=(1,1)\); the inverse of a diagonal matrix is the reciprocal of each diagonal entry.</details>
+<details class="work"><summary>Worked line</summary>\(\mathbf C_1^{-1}=\mathrm{diag}(0.5,1)\), so \(0.5\cdot1^2+1\cdot1^2=1.5\).</details></div>
+<div class="step" data-k="q2a_g1"><p>3. \(g_1(\mathbf x)\): <input size="8"></p><details class="work"><summary>Worked line</summary>\(\ln0.6-\tfrac12\ln2-\tfrac12(1.5)=-0.5108-0.3466-0.75=-1.6074\).</details></div>
+<div class="step" data-k="q2a_det2"><p>4. \(|\mathbf C_2|\): <input size="8"></p><details class="work"><summary>Worked line</summary>\(1\cdot2-0.5^2=1.75\).</details></div>
+<div class="step" data-k="q2a_q2"><p>5. Quadratic form for class 2: <input size="8"></p>
+<details class="hint"><summary>Hint</summary>\(\mathbf C_2^{-1}=\frac{1}{1.75}\begin{bmatrix}2&-0.5\\-0.5&1\end{bmatrix}\), with \(\mathbf x-\mathbf m_2=(-1,-1)\).</details>
+<details class="work"><summary>Worked line</summary>\(\frac{1}{1.75}\big(2(1)+2(-0.5)(1)+1(1)\big)=\frac{2}{1.75}=1.1429\). The signs cancel because both components are \(-1\).</details></div>
+<div class="step" data-k="q2a_g2"><p>6. \(g_2(\mathbf x)\): <input size="8"></p><details class="work"><summary>Worked line</summary>\(\ln0.4-\tfrac12\ln1.75-\tfrac12(1.1429)=-0.9163-0.2798-0.5714=-1.7675\).</details></div>
+<div class="step" data-k="q2a_class"><p>7. Decision (1 or 2): <input size="4"></p><details class="work"><summary>Worked line</summary>\(g_1=-1.6074>g_2=-1.7675\), so \(\omega_1\). Note that \(\mathbf x\) is closer to \(\mathbf m_2\) in Mahalanobis terms (1.14 &lt; 1.5), and the prior and determinant terms flip the decision. Leaving them out gives the wrong class.</details></div>
+<div class="step written" data-m="2"><p><span class="pill">written</span> 8. Why can the \((2\pi)^{d/2}\) factor be dropped, and what shape is the boundary when \(\mathbf C_1\ne\mathbf C_2\)? (2 marks)</p>
+<details class="work"><summary>Model answer</summary>It is the same positive constant for every class, so it does not change which \(g_i\) is largest (after the log it is an additive constant). With unequal covariances the \(\mathbf x^T\mathbf C_i^{-1}\mathbf x\) terms do not cancel, so the boundary is <em>quadratic</em> (a conic). With equal covariances it is linear.</details>
+<label class="self"><input type="checkbox"> My answer covers both points</label></div>
+
+<h3>(b) Bernoulli naive Bayes <span class="tag">13 marks</span></h3>
+<div class="stem">Classify a patient with Fever = N, Cough = Y, Fatigue = Y using naive Bayes, with no smoothing. <a class="cite" href="../resources/machine-learning/ml-slides-03-bayesian-decision-theory.pdf#page=57" data-pages="ml-slides-03-bayesian-decision-theory:57">ML slides 3, p. 57</a>
+<table class="d"><tr><th>#</th><th>Fever</th><th>Cough</th><th>Fatigue</th><th>Class</th></tr>
+<tr><td>1</td><td>Y</td><td>Y</td><td>Y</td><td>Flu</td></tr><tr><td>2</td><td>Y</td><td>Y</td><td>N</td><td>Flu</td></tr>
+<tr><td>3</td><td>Y</td><td>N</td><td>Y</td><td>Flu</td></tr><tr><td>4</td><td>Y</td><td>Y</td><td>Y</td><td>Flu</td></tr>
+<tr><td>5</td><td>N</td><td>Y</td><td>Y</td><td>Flu</td></tr><tr><td>6</td><td>Y</td><td>N</td><td>Y</td><td>Flu</td></tr>
+<tr><td>7</td><td>N</td><td>Y</td><td>N</td><td>Cold</td></tr><tr><td>8</td><td>N</td><td>Y</td><td>Y</td><td>Cold</td></tr>
+<tr><td>9</td><td>Y</td><td>Y</td><td>N</td><td>Cold</td></tr><tr><td>10</td><td>N</td><td>N</td><td>N</td><td>Cold</td></tr></table></div>
+<div class="step" data-k="q2b_flu"><p>1. Unnormalised score \(P(\text{Flu})\,p(F{=}N\mid\text{Flu})\,p(C{=}Y\mid\text{Flu})\,p(T{=}Y\mid\text{Flu})\): <input size="8"></p>
+<details class="hint"><summary>Hint</summary>Count within the 6 Flu rows only. Fever = N appears once.</details>
+<details class="work"><summary>Worked line</summary>\(0.6\cdot\frac16\cdot\frac46\cdot\frac56=0.6\cdot\frac{20}{216}=0.0556\).</details></div>
+<div class="step" data-k="q2b_cold"><p>2. The same score for Cold: <input size="8"></p><details class="work"><summary>Worked line</summary>\(0.4\cdot\frac34\cdot\frac34\cdot\frac14=0.4\cdot\frac{9}{64}=0.05625\).</details></div>
+<div class="step" data-k="q2b_class"><p>3. Decision: <select data-p=""><option value="">&mdash;</option><option>Flu</option><option>Cold</option></select></p><details class="work"><summary>Worked line</summary>\(0.05625>0.05556\), so <b>Cold</b>, by a whisker. Rounding the scores to 2 significant figures too early would make them look equal. Keep fractions until you compare.</details></div>
+<div class="step" data-k="q2b_post"><p>4. Posterior probability of the chosen class: <input size="8"></p><details class="work"><summary>Worked line</summary>\(\frac{0.05625}{0.05556+0.05625}=0.5031\). Low confidence.</details></div>
+<div class="step written" data-m="3"><p><span class="pill">written</span> 5. What is "naive" here? What happens if a class had zero patients with Fever = N, and how does the course fix it? (3 marks)</p>
+<details class="work"><summary>Model answer</summary>It assumes the features are conditionally independent given the class, so \(p(\mathbf x\mid\omega)=\prod_j p(x_j\mid\omega)\) (1). A zero estimate makes the whole product zero whatever the other features say (1). The fix is Laplace (add-one) smoothing: add 1 to each count and add the number of possible values to the denominator (\(+d\), the vocabulary size, in the multinomial case on slide 68) (1).</details>
+<label class="self"><input type="checkbox"> My answer covers all three points</label></div>
+
+<!-- ======================= Q3 ======================= -->
+<h2 id="q3">Q3 &middot; LDA and SVM <span class="tag">25 marks</span></h2>
+
+<h3>(a) Fisher LDA from raw samples <span class="tag">13 marks</span></h3>
+<div class="stem">\(\omega_1:\ (1,2),\ (2,4),\ (3,3)\). \(\omega_2:\ (4,0),\ (6,1),\ (5,2)\). Design the Fisher discriminant \(g(\mathbf x)=\mathbf w^T\mathbf x+w_0\) with \(w_0=-\tfrac12\mathbf w^T(\mathbf m_1+\mathbf m_2)\), then classify \(\mathbf x=(3,2)\) and give its distance to the boundary. <a class="cite" href="../resources/machine-learning/ml-slides-04-linear-discriminant-analysis.pdf#page=26" data-pages="ml-slides-04-linear-discriminant-analysis:24,26,27">ML slides 4, pp. 24&ndash;27</a></div>
+<div class="step" data-k="q3a_m1"><p>1. \(\mathbf m_1\): <input data-p="0" size="6"> <input data-p="1" size="6"> &nbsp; \(\mathbf m_2\) is on the next line.</p><details class="work"><summary>Worked line</summary>\(\big(\frac{1+2+3}{3},\frac{2+4+3}{3}\big)=(2,3)\).</details></div>
+<div class="step" data-k="q3a_m2"><p>2. \(\mathbf m_2\): <input data-p="0" size="6"> <input data-p="1" size="6"></p><details class="work"><summary>Worked line</summary>\((5,1)\).</details></div>
+<div class="step" data-k="q3a_S1"><p>3. \(\mathbf S_1=\sum(\mathbf x-\mathbf m_1)(\mathbf x-\mathbf m_1)^T\): entries \(s_{11}\) <input data-p="0.0" size="5"> \(s_{12}\) <input data-p="0.1" size="5"> \(s_{22}\) <input data-p="1.1" size="5"></p>
+<details class="hint"><summary>Hint</summary>The deviations are \((-1,-1),(0,1),(1,0)\). Sum the outer products, with no division by \(n\).</details>
+<details class="work"><summary>Worked line</summary>\(s_{11}=1+0+1=2\), \(s_{12}=1+0+0=1\), \(s_{22}=1+1+0=2\). \(\mathbf S_2\) has deviations \((-1,-1),(1,0),(0,1)\), which give the same matrix.</details></div>
+<div class="step" data-k="q3a_SW"><p>4. \(\mathbf S_W\): \(s_{11}\) <input data-p="0.0" size="5"> \(s_{12}\) <input data-p="0.1" size="5"> \(s_{22}\) <input data-p="1.1" size="5"></p><details class="work"><summary>Worked line</summary>\(\begin{bmatrix}4&2\\2&4\end{bmatrix}\).</details></div>
+<div class="step" data-k="q3a_det"><p>5. \(|\mathbf S_W|\): <input size="8"></p><details class="work"><summary>Worked line</summary>\(16-4=12\), so \(\mathbf S_W^{-1}=\frac1{12}\begin{bmatrix}4&-2\\-2&4\end{bmatrix}\).</details></div>
+<div class="step" data-k="q3a_w"><p>6. \(\mathbf w=\mathbf S_W^{-1}(\mathbf m_1-\mathbf m_2)\): <input data-p="0" size="7"> <input data-p="1" size="7"></p>
+<details class="work"><summary>Worked line</summary>\(\mathbf m_1-\mathbf m_2=(-3,2)\). \(\frac1{12}(4(-3)-2(2),\ -2(-3)+4(2))=\frac1{12}(-16,14)=(-1.3333,\ 1.1667)\).</details></div>
+<div class="step" data-k="q3a_w0"><p>7. \(w_0\): <input size="8"></p><details class="work"><summary>Worked line</summary>\(\mathbf m_1+\mathbf m_2=(7,4)\); \(\mathbf w^T(7,4)=-9.3333+4.6667=-4.6667\); \(w_0=+2.3333\). Sign check: \(g(\mathbf m_1)=-2.6667+3.5+2.3333=3.1667>0\), so \(g>0\) means \(\omega_1\).</details></div>
+<div class="step" data-k="q3a_g"><p>8. \(g(3,2)\): <input size="8"></p><details class="work"><summary>Worked line</summary>\(-4+2.3333+2.3333=0.6667>0\), so \(\omega_1\).</details></div>
+<div class="step" data-k="q3a_dist"><p>9. Distance of \((3,2)\) to the boundary: <input size="8"></p><details class="work"><summary>Worked line</summary>\(\lVert\mathbf w\rVert=\sqrt{1.7778+1.3611}=1.7717\), so \(0.6667/1.7717=0.3763\). This is small compared with \(g(\mathbf m_1)/\lVert\mathbf w\rVert=1.79\): a low-confidence decision.</details></div>
+<div class="step written" data-m="2"><p><span class="pill">written</span> 10. When does Fisher LDA perform best? (2 marks)</p>
+<details class="work"><summary>Model answer</summary>When the classes are roughly Gaussian with equal (shared) covariance, so a linear boundary is optimal; when the means are well separated relative to the within-class spread; and with plenty of samples relative to the dimension, so \(\mathbf S_W\) is well estimated and invertible.</details>
+<label class="self"><input type="checkbox"> My answer covers these points</label></div>
+
+<h3>(b) Soft-margin SVM <span class="tag">12 marks</span></h3>
+<div class="stem">A soft-margin linear SVM with \(C=1\) was trained. Its support vectors and multipliers are: \(\mathbf x_A=(3,1),\ d=+1,\ \alpha=0.25\); \(\mathbf x_B=(1,1),\ d=-1,\ \alpha=0.75\); \(\mathbf x_C=(2,0),\ d=-1,\ \alpha=0.5\); \(\mathbf x_D=(2,1.5),\ d=+1,\ \alpha=1\). <a class="cite" href="../resources/machine-learning/ml-slides-05-support-vector-machines.pdf#page=40" data-pages="ml-slides-05-support-vector-machines:34,39,40">ML slides 5, pp. 34&ndash;40</a></div>
+<div class="step" data-k="q3b_w"><p>1. \(\mathbf w=\sum\alpha_i d_i\mathbf x_i\): <input data-p="0" size="7"> <input data-p="1" size="7"></p>
+<details class="hint"><summary>Hint</summary>First check \(\sum\alpha_i d_i=0.25-0.75-0.5+1=0\), so the multipliers are consistent.</details>
+<details class="work"><summary>Worked line</summary>\(0.25(3,1)-0.75(1,1)-0.5(2,0)+1(2,1.5)=(0.75-0.75-1+2,\ 0.25-0.75+1.5)=(1,1)\).</details></div>
+<div class="step" data-k="q3b_b"><p>2. \(b\), averaged over the correct support vectors: <input size="8"></p>
+<details class="hint"><summary>Hint</summary>Which support vectors have \(0&lt;\alpha&lt;C\)? \(\mathbf x_D\) has \(\alpha=C\).</details>
+<details class="work"><summary>Worked line</summary>Use A, B and C only: \(1-4=-3\), \(-1-2=-3\), \(-1-2=-3\), so \(b=-3\). <b>Trap:</b> including D adds \(1-3.5=-2.5\), and the average becomes \(-2.875\), which is wrong. The lecturer said "if you use all the support vectors you get wrong results".</details></div>
+<div class="step" data-k="q3b_xi"><p>3. Slack \(\xi_D\) of \(\mathbf x_D\): <input size="8"></p><details class="work"><summary>Worked line</summary>\(g(\mathbf x_D)=2+1.5-3=0.5\), so \(\xi_D=1-d\,g=0.5\): inside the margin but on the correct side. This is consistent with \(\alpha_D=C\).</details></div>
+<div class="step" data-k="q3b_margin"><p>4. Margin width: <input size="8"></p><details class="work"><summary>Worked line</summary>\(2/\lVert\mathbf w\rVert=2/\sqrt2=1.4142\).</details></div>
+<div class="step" data-k="q3b_g"><p>5. \(g(2.5,2)\): <input size="8"></p><details class="work"><summary>Worked line</summary>\(2.5+2-3=1.5>0\), so class \(+1\), beyond the \(+1\) margin.</details></div>
+<div class="step" data-k="q3b_dist"><p>6. Its distance to the decision boundary: <input size="8"></p><details class="work"><summary>Worked line</summary>\(1.5/\sqrt2=1.0607\), which is more than half the margin (0.7071), so a confident decision.</details></div>
+<div class="step written" data-m="3"><p><span class="pill">written</span> 7. Explain the role of \(\xi_i\) and of \(C\) in the soft-margin primal \(\min\ \tfrac12\lVert\mathbf w\rVert^2+C\sum\xi_i\). (3 marks)</p>
+<details class="work"><summary>Model answer</summary>\(\xi_i\ge0\) relaxes the constraint to \(d_i(\mathbf w^T\mathbf x_i+b)\ge1-\xi_i\): \(0&lt;\xi_i\le1\) means inside the margin but correctly classified, and \(\xi_i>1\) means misclassified (1). \(C\) trades margin width against training violations: a large \(C\) gives a narrow margin and few violations, with a risk of overfitting; a small \(C\) gives a wide margin and more violations, which is more robust to noise (1). In the dual, \(C\) becomes the box \(0\le\alpha_i\le C\), and \(\alpha_i=C\) marks the points with \(\xi_i>0\) (1).</details>
+<label class="self"><input type="checkbox"> My answer covers all three points</label></div>
+
+<!-- ======================= Q4 ======================= -->
+<h2 id="q4">Q4 &middot; Clustering <span class="tag">25 marks</span></h2>
+
+<h3>(a) Complete-linkage HAC <span class="tag">10 marks</span></h3>
+<div class="stem">Cluster A&ndash;E with complete linkage, showing the distance matrix after every merge, and draw the dendrogram. <a class="cite" href="../resources/machine-learning/ml-slides-10-clustering-analysis.pdf#page=31" data-pages="ml-slides-10-clustering-analysis:29,31">ML slides 10, pp. 29&ndash;31</a>
+<table class="d"><tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr>
+<tr><th>A</th><td>0</td><td>2</td><td>6</td><td>10</td><td>9</td></tr><tr><th>B</th><td>2</td><td>0</td><td>5</td><td>9</td><td>8</td></tr>
+<tr><th>C</th><td>6</td><td>5</td><td>0</td><td>4</td><td>5</td></tr><tr><th>D</th><td>10</td><td>9</td><td>4</td><td>0</td><td>3</td></tr>
+<tr><th>E</th><td>9</td><td>8</td><td>5</td><td>3</td><td>0</td></tr></table></div>
+<div class="step" data-k="q4a_complete"><p>Give each merge as a cluster (letters) and a height.<br>
+Merge 1: <input data-p="0.0" size="6" data-set> at <input data-p="0.1" size="4"> &nbsp; Merge 2: <input data-p="1.0" size="6" data-set> at <input data-p="1.1" size="4"><br>
+Merge 3: <input data-p="2.0" size="6" data-set> at <input data-p="2.1" size="4"> &nbsp; Merge 4: <input data-p="3.0" size="6" data-set> at <input data-p="3.1" size="4"></p>
+<details class="hint"><summary>Hint</summary>Complete linkage: \(d(X,Y)=\max\) over all cross pairs. After each merge, rewrite the matrix.</details>
+<details class="work"><summary>Worked line</summary>The smallest entry is 2, so merge {A,B} at 2. New row: AB–C \(=\max(6,5)=6\), AB–D \(=10\), AB–E \(=9\); the smallest remaining is D–E = 3, so merge {D,E} at 3. Now AB–C = 6, AB–DE \(=\max(10,9,9,8)=10\), C–DE \(=\max(4,5)=5\), so merge {C,D,E} at 5. Finally everything joins at \(\max=10\). Dendrogram heights are 2, 3, 5, 10, drawn to scale. <b>Compare single linkage:</b> C–DE \(=\min(4,5)=4\) and AB–CDE \(=5\), so the heights are 2, 3, 4, 5. Single linkage chains; complete linkage keeps clusters compact.</details></div>
+<div class="step written" data-m="2"><p><span class="pill">written</span> Draw the dendrogram to scale and show the three intermediate distance matrices. (2 of the 10 marks)</p>
+<details class="work"><summary>Model answer</summary>Leaves ordered A B C D E. A–B join at 2, D–E at 3, C joins DE at 5, and AB joins CDE at 10, with the y-axis labelled "distance" and the merges drawn at their heights. Matrices: 4&times;4 {AB,C,D,E} → 3&times;3 {AB,C,DE} → 2&times;2 {AB,CDE}.</details>
+<label class="self"><input type="checkbox"> I drew it to scale and showed every matrix</label></div>
+
+<h3>(b) k-means by hand <span class="tag">10 marks</span></h3>
+<div class="stem">Points \(p_1..p_6\): \((1,1),(2,1),(1,3),(5,4),(6,5),(4,6)\). \(K=2\) with initial centres \(\mathbf c_1=(1,1)\), \(\mathbf c_2=(2,1)\), Euclidean distance. Run two iterations. <a class="cite" href="../resources/machine-learning/ml-slides-10-clustering-analysis.pdf#page=21" data-pages="ml-slides-10-clustering-analysis:13,21">ML slides 10, pp. 13&ndash;21</a></div>
+<div class="step" data-k="q4b_iter"><p>Iteration 1 assignment, as a string of cluster numbers for \(p_1..p_6\) (e.g. 112212): <input data-p="0.0" size="8"><br>
+New centres: \(\mathbf c_1\) <input data-p="0.1.0.0" size="5"> <input data-p="0.1.0.1" size="5"> \(\mathbf c_2\) <input data-p="0.1.1.0" size="5"> <input data-p="0.1.1.1" size="5"><br>
+Iteration 2 assignment: <input data-p="1.0" size="8"> &nbsp; centres: \(\mathbf c_1\) <input data-p="1.1.0.0" size="5"> <input data-p="1.1.0.1" size="5"> \(\mathbf c_2\) <input data-p="1.1.1.0" size="5"> <input data-p="1.1.1.1" size="5"></p>
+<details class="hint"><summary>Hint</summary>Compare squared distances to save square roots. \(p_3=(1,3)\): \(4\) to \(\mathbf c_1\) and \(5\) to \(\mathbf c_2\).</details>
+<details class="work"><summary>Worked line</summary>Iteration 1: \(p_1\)→1 (0 vs 1); \(p_2\)→2; \(p_3\)→1 (4 vs 5); \(p_4\)→2 (25 vs 18); \(p_5\)→2 (41 vs 32); \(p_6\)→2 (34 vs 29), giving <code>121222</code>. \(\mathbf c_1=\text{mean}\{(1,1),(1,3)\}=(1,2)\), \(\mathbf c_2=\text{mean}\{(2,1),(5,4),(6,5),(4,6)\}=(4.25,4)\).<br>Iteration 2: \(p_2\): \(2\) to \(\mathbf c_1\) vs \(14.06\) to \(\mathbf c_2\), so it moves to 1; the others stay, giving <code>111222</code>. \(\mathbf c_1=(1.3333,1.6667)\), \(\mathbf c_2=(5,5)\).</details></div>
+<div class="step" data-k="q4b_converged"><p>Has it converged (would a third iteration change any assignment)? <select data-p=""><option value="">&mdash;</option><option value="true">yes</option><option value="false">no</option></select></p><details class="work"><summary>Worked line</summary>Yes. With the iteration-2 centres every point keeps its cluster, so the centres stop moving.</details></div>
+<div class="step" data-k="q4b_sse"><p>SSE (within-cluster sum of squares) at the final centres: <input size="8"></p><details class="work"><summary>Worked line</summary>Cluster 1: \(0.556+0.889+1.889=3.333\). Cluster 2: \(1+1+2=4\). Total \(7.3333\).</details></div>
+
+<h3>(c) Silhouette of one sample <span class="tag">5 marks</span></h3>
+<div class="stem">Using the final clustering from (b), compute the silhouette coefficient of \(p_2=(2,1)\) in the slide convention. <a class="cite" href="../resources/machine-learning/ml-slides-11-clustering-evaluation.pdf#page=4" data-pages="ml-slides-11-clustering-evaluation:3,4,5">ML slides 11, pp. 3&ndash;5</a></div>
+<div class="step" data-k="q4c_a"><p>1. \(a_2\) (mean distance to its own cluster): <input size="8"></p><details class="work"><summary>Worked line</summary>\(\frac{d(p_2,p_1)+d(p_2,p_3)}{2}=\frac{1+\sqrt5}{2}=1.618\). Divide by \(n_p-1=2\): do not include the point itself.</details></div>
+<div class="step" data-k="q4c_b"><p>2. \(b_2\) (slide: <em>minimum</em> distance to a sample of another cluster): <input size="8"></p><details class="work"><summary>Worked line</summary>\(\min(\sqrt{18},\sqrt{32},\sqrt{29})=\sqrt{18}=4.2426\), to \(p_4\).</details></div>
+<div class="step" data-k="q4c_s"><p>3. \(SC_2\): <input size="8"></p><details class="work"><summary>Worked line</summary>\(\frac{4.2426-1.618}{4.2426}=0.6186\): well clustered. In the textbook convention (\(b\) = mean distance to the other cluster, \((4.2426+5.6569+5.3852)/3=5.0949\)) you would get 0.6824. The paper follows the slides, but if a question defines \(b\) itself, use its definition.</details></div>
+
+<div class="notice"><b>Next: Step 3, Mock B (cold).</b> Mock B is built as a separate answer-free page: 3 h, handwritten. Tell Claude when you have finished this guided paper, and mention which steps needed the worked line. Those topics get extra weight in Mock B.</div>
+<p class="sub" style="font-size:.85rem">Unofficial study aid. Every key is recomputed by <code>final-check.py</code>, and the formulas follow the cited slides.</p>
+</main>
+</div>
+<dialog id="srcDlg"><div class="row" style="justify-content:space-between"><b id="srcTitle"></b><span><a id="srcOpen" target="_blank">Open PDF</a> <button class="btn" id="srcClose">Close</button></span></div><div id="srcImgs"></div></dialog>
+<script type="application/json" id="keys">{"q1a_decx": 180, "q1a_decy": 90, "q1a_x": 1.6471, "q1a_y": 2.1176, "q1a_f": 6.7405, "q1a_res": 0.0314, "q1a_bits": 13, "q1b_c1": [0.31, 0.22, 0.27, 0.2], "q1b_c2": [0.19, 0.38, 0.23, 0.2], "q1b_z": [0.01, 0.62, 0.25, 0.2], "q1b_zsum": 1.08, "q1b_zr": [0.0093, 0.5741, 0.2315, 0.1852], "q1b_F_P1": 0.056, "q1b_F_P2": 0.066, "q1b_F_c1": 0.0645, "q1b_F_zr": 0.0621, "q2a_q1": 1.5, "q2a_det1": 2, "q2a_g1": -1.6074, "q2a_q2": 1.1429, "q2a_det2": 1.75, "q2a_g2": -1.7675, "q2a_class": 1, "q2b_flu": 0.0556, "q2b_cold": 0.0563, "q2b_class": "Cold", "q2b_post": 0.5031, "q3a_m1": [2.0, 3.0], "q3a_m2": [5.0, 1.0], "q3a_S1": [[2.0, 1.0], [1.0, 2.0]], "q3a_SW": [[4.0, 2.0], [2.0, 4.0]], "q3a_det": 12.0, "q3a_w": [-1.3333, 1.1667], "q3a_w0": 2.3333, "q3a_g": 0.6667, "q3a_dist": 0.3763, "q3b_w": [1.0, 1.0], "q3b_b": -3.0, "q3b_b_wrong": -2.875, "q3b_xi": 0.5, "q3b_margin": 1.4142, "q3b_g": 1.5, "q3b_dist": 1.0607, "q4a_complete": [["AB", 2], ["DE", 3], ["CDE", 5], ["ABCDE", 10]], "q4a_single": [["AB", 2], ["DE", 3], ["CDE", 4], ["ABCDE", 5]], "q4b_iter": [["121222", [[1.0, 2.0], [4.25, 4.0]]], ["111222", [[1.3333, 1.6667], [5.0, 5.0]]]], "q4b_converged": true, "q4b_sse": 7.3333, "q4c_a": 1.618, "q4c_b": 4.2426, "q4c_s": 0.6186}</script>
+<script>
+(function () {
+  var KEY = 'ee6407-final-mock-a-guided-v1', KEYS = JSON.parse(document.getElementById('keys').textContent);
+  var st = {}; try { st = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) {}
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
+  function get(v, path) { if (!path) return v; path.split('.').forEach(function (i) { v = v[+i]; }); return v; }
+  function norm(s, set) { s = String(s).toUpperCase().replace(/[^A-Z0-9]/g, ''); return set ? s.split('').sort().join('') : s; }
+  function same(ans, val, set) {
+    if (typeof ans === 'number') { var v = parseFloat(val); return isFinite(v) && Math.abs(v - ans) <= Math.max(0.0015, Math.abs(ans) * 0.002); }
+    if (typeof ans === 'boolean') return val === String(ans);
+    return norm(val, set) === norm(ans, set) && val !== '';
+  }
+  var steps = [];
+  document.querySelectorAll('.step').forEach(function (s, idx) {
+    var id = 's' + idx, fields = s.querySelectorAll('input:not([type=checkbox]), select'), work = s.querySelector('details.work');
+    var rec = { id: id, el: s, sec: null };
+    steps.push(rec);
+    if (s.classList.contains('written')) {
+      var cb = s.querySelector('.self input'); cb.checked = !!(st[id] && st[id].ok);
+      cb.addEventListener('change', function () { st[id] = { ok: cb.checked }; save(); refresh(); });
+      return;
+    }
+    var p = s.querySelector('p'), btn = document.createElement('button'), fb = document.createElement('span');
+    btn.className = 'btn'; btn.textContent = 'check'; fb.className = 'fb'; p.appendChild(document.createTextNode(' ')); p.appendChild(btn); p.appendChild(fb);
+    function show(r) {
+      if (!r) return; fields.forEach(function (f, i) { f.classList.toggle('bad', r.v[i] !== undefined && !r.f[i]); f.classList.toggle('good', !!r.f[i]); });
+      fb.textContent = r.ok ? '✓ correct' : '✗ ' + r.f.filter(Boolean).length + '/' + fields.length + ' right — try the hint';
+      fb.style.color = r.ok ? 'var(--success)' : 'var(--danger)'; s.classList.toggle('done', r.ok); if (work) work.dataset.open = '1';
+    }
+    if (st[id]) { fields.forEach(function (f, i) { f.value = st[id].v[i] || ''; }); show(st[id]); }
+    btn.addEventListener('click', function () {
+      var v = [], f = [];
+      fields.forEach(function (fl) { v.push(fl.value); f.push(same(get(KEYS[s.dataset.k], fl.dataset.p), fl.value, fl.hasAttribute('data-set'))); });
+      st[id] = { v: v, f: f, ok: f.every(Boolean) }; save(); show(st[id]); refresh();
+    });
+    if (work) work.addEventListener('toggle', function () {
+      if (work.open && !work.dataset.open) { work.open = false; fb.textContent = 'Check once first — then the worked line unlocks.'; fb.style.color = 'var(--warning)'; }
+    });
+  });
+  var toc = document.getElementById('toc-links');
+  var secs = Array.prototype.map.call(document.querySelectorAll('main h2[id]'), function (h) {
+    var a = document.createElement('a'); a.href = '#' + h.id; a.innerHTML = '<span>' + h.firstChild.textContent + '</span><span class="sc"></span>'; toc.appendChild(a);
+    return { h: h, a: a };
+  });
+  steps.forEach(function (r) { secs.forEach(function (s) { if (s.h.compareDocumentPosition(r.el) & Node.DOCUMENT_POSITION_FOLLOWING) r.sec = s; }); });
+  function refresh() {
+    var tot = 0, ok = 0;
+    secs.forEach(function (s) {
+      var mine = steps.filter(function (r) { return r.sec === s; }), o = mine.filter(function (r) { return st[r.id] && st[r.id].ok; }).length;
+      var sc = s.a.querySelector('.sc'); sc.textContent = o + '/' + mine.length; sc.classList.toggle('ok', o === mine.length); tot += mine.length; ok += o;
+    });
+    document.getElementById('score').textContent = ok; document.getElementById('total').textContent = tot;
+  }
+  refresh();
+  document.getElementById('reset').onclick = function () { try { localStorage.removeItem(KEY); } catch (e) {} location.reload(); };
+  var root = document.documentElement; try { var th = localStorage.getItem('ee6407-theme'); if (th) root.dataset.theme = th; } catch (e) {}
+  document.getElementById('theme').onclick = function () { var n = root.dataset.theme === 'dark' ? 'light' : 'dark'; root.dataset.theme = n; try { localStorage.setItem('ee6407-theme', n); } catch (e) {} };
+  var dlg = document.getElementById('srcDlg');
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('a[data-pages]'); if (!a) return; e.preventDefault();
+    var parts = a.dataset.pages.split(':'), box = document.getElementById('srcImgs'); box.innerHTML = '';
+    parts[1].split(',').forEach(function (p) { var img = document.createElement('img'); img.loading = 'lazy'; img.alt = parts[0] + ' page ' + p; img.src = 'final-pages/' + parts[0] + '-p' + ('00' + p).slice(-3) + '.jpg'; box.appendChild(img); });
+    document.getElementById('srcTitle').textContent = a.textContent; document.getElementById('srcOpen').href = a.getAttribute('href'); dlg.showModal();
+  });
+  document.getElementById('srcClose').onclick = function () { dlg.close(); };
+  dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+  var s = document.createElement('script'); s.src = 'vendor/mathjax/tex-mml-chtml.js'; s.async = true;
+  s.onload = function () { MathJax.startup.promise.then(function () { return [].slice.call(document.querySelector('main').children).reduce(function (p, el) { return p.then(function () { return MathJax.typesetPromise([el]).catch(function (e) { console.warn('MathJax', e); }); }); }, Promise.resolve()); }); };
+  s.onerror = function () { document.getElementById('math-warning').style.display = 'block'; }; document.head.appendChild(s);
+})();
+</script>
+</body>
+</html>

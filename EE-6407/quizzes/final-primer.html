@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en" data-theme="system">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EE6407 Final Primer</title>
+<meta name="description" content="Step 1 of the EE6407 final-prep protocol: one card per examined topic, the formula in the slides' convention, and a quick check each.">
+<script>
+window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+  options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }, startup: { typeset: false } };
+</script>
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: #f6f7f9; --surface: #fff; --surface-2: #eef1f5; --text: #14181f; --muted: #5b6472; --border: #d8dee7;
+  --accent: #1f6feb; --accent-soft: #e5efff; --success: #17794b; --success-soft: #e2f5ec;
+  --warning: #9a6200; --warning-soft: #fdf1dc; --danger: #b32130; --danger-soft: #fdeaec;
+  --radius: 14px; --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0e1117; --surface: #161b23; --surface-2: #1d232d; --text: #e7ecf3; --muted: #99a3b3; --border: #2a323e;
+  --accent: #6ea8ff; --accent-soft: #17233a; --success: #56d39b; --success-soft: #10281f;
+  --warning: #e5b567; --warning-soft: #2b2113; --danger: #ff8189; --danger-soft: #2e1519; } }
+:root[data-theme="dark"] {
+  --bg: #0e1117; --surface: #161b23; --surface-2: #1d232d; --text: #e7ecf3; --muted: #99a3b3; --border: #2a323e;
+  --accent: #6ea8ff; --accent-soft: #17233a; --success: #56d39b; --success-soft: #10281f;
+  --warning: #e5b567; --warning-soft: #2b2113; --danger: #ff8189; --danger-soft: #2e1519; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.62 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+a { color: var(--accent); }
+.app { display: grid; grid-template-columns: 270px minmax(0, 1fr); }
+nav.toc { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 18px 14px; border-right: 1px solid var(--border); background: var(--surface); font-size: .9rem; }
+nav.toc b { display: block; margin-bottom: 8px; }
+nav.toc a { display: flex; justify-content: space-between; gap: 8px; padding: 3px 6px; border-radius: 7px; text-decoration: none; color: var(--text); }
+nav.toc a:hover { background: var(--surface-2); }
+nav.toc .sc { color: var(--muted); font-family: var(--mono); font-size: .8rem; }
+nav.toc .sc.ok { color: var(--success); font-weight: 700; }
+nav.toc .tools { margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--border); }
+main { min-width: 0; max-width: 900px; padding: 24px 22px 120px; }
+h1 { font-size: 1.65rem; margin: 0 0 .4rem; }
+h2 { font-size: 1.25rem; margin: 2.2rem 0 .4rem; padding-top: .6rem; border-top: 2px solid var(--border); }
+h3 { font-size: 1.04rem; margin: 0 0 .3rem; }
+.sub { color: var(--muted); }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 18px; margin: 14px 0; }
+.card.done { border-color: var(--success); }
+.notice { background: var(--warning-soft); border: 1px solid var(--border); border-radius: 12px; padding: 12px 15px; margin: 14px 0; }
+.notice.info { background: var(--accent-soft); }
+.tag { float: right; color: var(--muted); font-size: .82rem; font-weight: 600; }
+.ex { background: var(--surface-2); border-radius: 10px; padding: 8px 12px; margin: 8px 0; font-size: .95rem; }
+.chk { border-top: 1px dashed var(--border); padding-top: 8px; margin-top: 10px; }
+.chk input, .chk select, .btn { font: inherit; font-size: .92rem; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 4px 10px; }
+.btn { cursor: pointer; } .btn:hover { border-color: var(--accent); }
+.btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 600; text-decoration: none; padding: 8px 16px; }
+.fb { font-weight: 600; margin-left: 6px; }
+table.d { border-collapse: collapse; margin: 6px 0; font-size: .9rem; }
+table.d td, table.d th { border: 1px solid var(--border); padding: 3px 9px; text-align: center; }
+a.cite { font-size: .85rem; }
+dialog { max-width: min(900px, 94vw); border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text); padding: 14px; }
+dialog img { width: 100%; display: block; margin: 8px 0; border: 1px solid var(--border); background: #fff; }
+dialog::backdrop { background: rgba(0, 0, 0, .5); }
+.row { display: flex; gap: 10px; align-items: center; }
+#math-warning { display: none; }
+@media (max-width: 860px) {
+  .app { grid-template-columns: 1fr; }
+  nav.toc { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--border); }
+  nav.toc #toc-links { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 8px; }
+  main { padding: 16px 16px 80px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+<nav class="toc" aria-label="Contents">
+  <b>EE6407 Final &mdash; Primer</b>
+  <div id="toc-links"></div>
+  <div class="tools">
+    <div>Score <b id="score" style="display:inline">0</b>/<span id="total">0</span></div>
+    <p><button class="btn" id="reset">Reset progress</button> <button class="btn" id="theme">Theme</button></p>
+    <a href="final-mock-a-guided.html">Next: Step 2 guided mock &rarr;</a><br>
+    <a href="#protocol">The 8-step protocol</a>
+  </div>
+</nav>
+<main>
+<h1>EE6407 Final &mdash; Step 1: Primer</h1>
+<p class="sub">This is a light primer, not a course. Each card gives the idea, the formula exactly as the slides write it, one example, and a quick check. Pass a card and move on: depth comes from the mocks and their mistake review.</p>
+<div id="math-warning" class="notice"><strong>Equations are not rendering.</strong> Open this page from the course folder (via <code>index.html</code>) so <code>vendor/mathjax/</code> resolves.</div>
+
+<div class="notice info" id="protocol">
+<h3>The final-prep protocol</h3>
+<p style="margin:.2rem 0">The real paper is 3 h, closed book, with 4 questions of 25 marks: Q1 is GA, Q2&ndash;Q4 are ML (all four official EE6407 papers, 2024&ndash;26). This semester's quizzes ran harder than the intel, so the mocks are pitched <em>above</em> the past papers. The official papers are held back for the last two steps.</p>
+<ol style="margin:.3rem 0">
+  <li><b>Primer</b> (this page): every examined topic, quick checks.</li>
+  <li><b>Guided mock A</b>: a full 4&times;25 paper broken into checked steps, with hints and worked lines.</li>
+  <li><b>Mock B</b>, cold: 3 h, handwritten. Graded against a rubric.</li>
+  <li><b>Retrain</b>: diagnose every lost mark, then do a fresh variant until it is right.</li>
+  <li><b>Mock C</b>, cold: a re-test on new numbers, including the weak spots from step 4.</li>
+  <li><b>Hard mock H</b>, cold: wider range (regression, metrics, feature selection, data prep, DBSCAN, Davies&ndash;Bouldin, average linkage) and nastier traps. Retrain after.</li>
+  <li><b>Official 2025-26 S1</b>, cold under exam conditions. Graded, then retrained.</li>
+  <li><b>Official 2025-26 S2</b>: the dress rehearsal, then a final re-test from the mistakes log.</li>
+</ol>
+<p style="margin:.2rem 0">The 2024-25 papers are the spare: they are reserved for extra retrain drills, and no mock reuses their numbers.</p>
+</div>
+
+<h2 id="s-ga">Q1 &middot; Genetic algorithms</h2>
+
+<div class="card" data-k="g1"><h3>G1. Binary decoding and resolution <span class="tag">24-25 S1</span></h3>
+<p>An \(n\)-bit gene with decimal value \(D\) maps onto \([a,b]\) as \(x = a + D\,\dfrac{b-a}{2^n-1}\). All zeros gives \(a\) and all ones gives \(b\), so the step (<em>resolution</em>) is \(\dfrac{b-a}{2^n-1}\). To reach a precision \(\varepsilon\), choose the smallest \(n\) with \(\dfrac{b-a}{2^n-1}\le\varepsilon\). For several variables, split the chromosome into one field per variable and decode each separately. Limitation: values between grid points are unreachable, and neighbouring values can differ in many bits (Hamming cliffs; Gray coding helps). <a class="cite" href="../resources/lecture-01-evolutionary-computing-part-1.pdf#page=20" data-pages="lecture-01-evolutionary-computing-part-1:20,31">GA part 1, pp. 20 &amp; 31</a></p>
+<div class="ex">Example: 4 bits on \([0,3]\), gene 1010 → \(D=10\), \(x=0+10\cdot 3/15=2\).</div>
+<div class="chk">Decode the 8-bit gene <code>10110010</code> on \([-5,5]\) (4 d.p.): <input data-num size="9"> <button class="btn">check</button><span class="fb"></span></div></div>
+
+<div class="card" data-k="g2"><h3>G2. Real-coded crossover and validity <span class="tag">24-25 S2, 25-26 S1</span></h3>
+<p>Whole arithmetic: child \(= \alpha\mathbf x + (1-\alpha)\mathbf y\) on every gene, and the other child swaps \(\alpha\) and \(1-\alpha\). Single arithmetic changes one gene \(k\) only; simple arithmetic keeps genes \(1..k\) and blends the rest. Blend (BLX-\(\alpha\)): with \(d_i=|x_i-y_i|\), sample \(z_i\) from \([\min_i-\alpha d_i,\ \max_i+\alpha d_i]\), so it can leave the parents' box. The exam defines any variant (flexible-\(\alpha\), quasi-blend) in the question and gives the random numbers, so read the stated formula and apply it literally. <b>Validity:</b> a convex combination keeps linear constraints such as \(\sum w_i=1\) and keeps every gene inside the parents' range. Blend-type operators do not, so check the result and repair it (clip to the bounds, then divide by the sum). <a class="cite" href="../resources/lecture-01-evolutionary-computing-part-2.pdf#page=12" data-pages="lecture-01-evolutionary-computing-part-2:12,13,14">GA part 2, slides 23&ndash;28</a></p>
+<div class="ex">Example: \(\mathbf x=(0.6,0.4)\), \(\mathbf y=(0.2,0.8)\), \(\alpha=0.5\) → \((0.4,0.6)\), whose sum is still 1.</div>
+<div class="chk">\(\mathbf x=(0.2,0.5,0.3)\), \(\mathbf y=(0.6,0.1,0.3)\), \(\alpha=0.25\). What is the first gene of \(\alpha\mathbf x+(1-\alpha)\mathbf y\)? <input data-num size="9"> <button class="btn">check</button><span class="fb"></span></div></div>
+
+<div class="card" data-k="g3"><h3>G3. Permutation coding and a problem-specific fitness <span class="tag">24-25 S2, 25-26 S2</span></h3>
+<p>For \(n\)-queens, gene \(i\) is the row of the queen in column \(i\). A permutation already rules out row and column clashes, so only diagonal clashes remain: \(C(Q)=\sum_{i&lt;j}\big[\,|q_i-q_j| = j-i\,\big]\). The worst case is \(C_{\max}=\binom n2=\frac{n(n-1)}2\), so a fitness in \([0,1]\) is \(F=1-C/C_{\max}\) (1 means solved). The same recipe works for any permutation problem (tours, schedules): count the violations of each rule, weight them, then normalise by the worst case. <a class="cite" href="../resources/lecture-01-evolutionary-computing-part-1.pdf#page=28" data-pages="lecture-01-evolutionary-computing-part-1:28,29">GA part 1, pp. 28&ndash;29 (8-queens)</a></p>
+<div class="ex">Example: \(\langle 2,4,1,3\rangle\) has no pair with \(|q_i-q_j|=j-i\), so \(C=0\) and \(F=1\).</div>
+<div class="chk">What is the fitness \(1-C/C_{\max}\) of \(\langle 1,3,2,4\rangle\) (4 d.p.)? <input data-num size="9"> <button class="btn">check</button><span class="fb"></span></div></div>
+
+<div class="card" data-k="g4" data-sel="crossover"><h3>G4. Concepts: exploration vs exploitation, problem classes <span class="tag">24-25 S2, 25-26 S1/S2</span></h3>
+<p><b>Exploration</b> discovers promising areas of the search space; <b>exploitation</b> optimises inside one. Too much exploitation (high selection pressure, small mutation) leads to stagnation and premature convergence. The remedies are more mutation, diversity preservation, a larger population or restarts. In the black-box model, given the model and the output, find the input → <em>optimisation</em>; given inputs and outputs, find the model → <em>modelling</em>; given the model and the input, find the output → <em>simulation</em>. <a class="cite" href="../resources/lecture-01-evolutionary-computing-part-2.pdf#page=6" data-pages="lecture-01-evolutionary-computing-part-2:6">GA part 2, slides 11&ndash;12</a></p>
+<div class="chk">Which operator does the lecture call <em>explorative</em> (a big jump into the area between the parents)? <select><option value="">&mdash;</option><option>mutation</option><option>crossover</option><option>selection</option></select> <button class="btn">check</button><span class="fb"></span></div></div>
+
+<h2 id="s-bayes">Q2-type &middot; Bayes and naive Bayes</h2>
+
+<div class="card" data-k="m1"><h3>M1. Gaussian Bayes decision rule <span class="tag">24-25 S1</span></h3>
+<p>Choose the class with the largest \(g_i(\mathbf x)=\ln P(\omega_i)-\tfrac12\ln|\mathbf C_i|-\tfrac12(\mathbf x-\mathbf m_i)^T\mathbf C_i^{-1}(\mathbf x-\mathbf m_i)\). The \((2\pi)^{d/2}\) term is the same for every class, so it drops out. Priors come from class counts (for example 500/300 gives 0.625/0.375). Estimate \(\mathbf m\) as the sample mean and \(\mathbf C\) as the sample covariance. <a class="cite" href="../resources/machine-learning/ml-slides-03-bayesian-decision-theory.pdf#page=13" data-pages="ml-slides-03-bayesian-decision-theory:10,13,15">ML slides 3, pp. 10&ndash;15</a></p>
+<div class="chk">In 1-D, \(m_1=0\), \(m_2=4\), \(\sigma^2=4\) for both classes, priors 0.75/0.25, and \(x=2.5\). Compute \(g_1-g_2\) (4 d.p.; positive means class 1): <input data-num size="9"> <button class="btn">check</button><span class="fb"></span></div></div>
+
+<div class="card" data-k="m2"><h3>M2. Naive Bayes: Bernoulli and multinomial <span class="tag">3 of 4 papers</span></h3>
+<p>Score \(P(\omega)\prod_j p(x_j\mid\omega)\) and pick the largest. <b>Bernoulli</b> (yes/no features): \(p(\text{Y}\mid\omega)\) = the fraction of class-\(\omega\) samples with Y, and use \(1-p\) when the test value is N. <b>Multinomial</b> (word counts): \(p(x_i\mid\omega)=\dfrac{\text{count}(x_i,\omega)+1}{\sum_k\text{count}(x_k,\omega)+d}\), where \(d\) is the number of unique words in <em>all</em> the training data (Laplace add-1). Multiply once per occurrence of the word in the test text. <a class="cite" href="../resources/machine-learning/ml-slides-03-bayesian-decision-theory.pdf#page=57" data-pages="ml-slides-03-bayesian-decision-theory:56,57,66,68">ML slides 3, pp. 56&ndash;68</a></p>
+<div class="chk">A class has 9 word tokens in total, the vocabulary has \(d=12\), and the word appears once in that class. Smoothed \(p\) (4 d.p.): <input data-num size="9"> <button class="btn">check</button><span class="fb"></span></div></div>
+
+<h2 id="s-lin">Q3-type &middot; Linear classifiers</h2>
+
+<div class="card" data-k="m3" data-k2="m3b"><h3>M3. Fisher LDA <span class="tag">4 of 4 papers</span></h3>
+<p>\(\mathbf S_i=\sum_{\mathbf x\in D_i}(\mathbf x-\mathbf m_i)(\mathbf x-\mathbf m_i)^T\) (a scatter, so no division by \(n\)), \(\mathbf S_W=\mathbf S_1+\mathbf S_2\), \(\mathbf w=\mathbf S_W^{-1}(\mathbf m_1-\mathbf m_2)\), \(w_0=-\tfrac12\mathbf w^T(\mathbf m_1+\mathbf m_2)\), \(g(\mathbf x)=\mathbf w^T\mathbf x+w_0\). Decide \(\omega_1\) when \(g>0\). Distance to the boundary \(=|g(\mathbf x)|/\lVert\mathbf w\rVert\): the larger it is, the more confident the decision. 2&times;2 inverse: \(\frac1{ad-bc}\begin{bmatrix}d&-b\\-c&a\end{bmatrix}\). <a class="cite" href="../resources/machine-learning/ml-slides-04-linear-discriminant-analysis.pdf#page=26" data-pages="ml-slides-04-linear-discriminant-analysis:24,26,27">ML slides 4, pp. 24&ndash;27</a></p>
+<div class="chk">\(\mathbf S_W=\begin{bmatrix}4&1\\1&2\end{bmatrix}\), \(\mathbf m_1=(4,2)\), \(\mathbf m_2=(1,1)\). What is \(w_1\) (4 d.p.)? <input data-num size="9"> <button class="btn">check</button><span class="fb"></span><br>
+Then \(w_0=-2\). What is the distance of \(\mathbf x=(2,3)\) to the boundary (4 d.p.)? <input data-num="2" size="9"> <button class="btn">check</button><span class="fb"></span></div></div>
+
+<div class="card" data-k="m4" data-sel="only 0 &lt; α &lt; C"><h3>M4. Linear SVM, hard and soft margin <span class="tag">3 of 4 papers</span></h3>
+<p>\(\mathbf w=\sum_i\alpha_i d_i\mathbf x_i\) with \(\sum\alpha_i d_i=0\). Bias: \(b=\dfrac1{N_s}\sum_{0&lt;\alpha_i&lt;C}\big[d_i-\mathbf w^T\mathbf x_i\big]\), averaged <b>only</b> over the support vectors with \(0&lt;\alpha_i&lt;C\). Those lie exactly on the margin. Support vectors with \(\alpha_i=C\) are inside the margin or misclassified (\(\xi_i>0\)), and using them gives a wrong \(b\). Margin width \(=2/\lVert\mathbf w\rVert\). Slack \(\xi_i=\max(0,1-d_i g(\mathbf x_i))\). A large \(C\) penalises slack heavily (narrow margin, fits the training data); a small \(C\) tolerates slack (wide margin). <a class="cite" href="../resources/machine-learning/ml-slides-05-support-vector-machines.pdf#page=40" data-pages="ml-slides-05-support-vector-machines:9,24,34,39,40">ML slides 5, pp. 9&ndash;40</a></p>
+<div class="chk">Margin width for \(\mathbf w=(3,4)\) (4 d.p.): <input data-num size="9"> <button class="btn">check</button><span class="fb"></span><br>
+Which support vectors enter the average for \(b\)? <select><option value="">&mdash;</option><option>all support vectors</option><option>only 0 &lt; α &lt; C</option><option>only α = C</option></select> <button class="btn">check</button><span class="fb"></span></div></div>
+
+<div class="card" data-k="m5"><h3>M5. Decision trees: Gini and entropy <span class="tag">25-26 S1</span></h3>
+<p><b>This course's Gini is \(\tfrac12\big(1-\sum_k p_k^2\big)\)</b>, so the two-class maximum is 0.25, not 0.5. Entropy \(=-\sum p_k\log_2 p_k\). Score a split by the <em>size-weighted</em> child impurity, \(\sum_c \frac{n_c}{n}I_c\). The best root feature has the largest drop: parent impurity minus weighted child impurity. The paper says which measure to use. <a class="cite" href="../resources/machine-learning/ml-slides-06-classification-trees.pdf#page=14" data-pages="ml-slides-06-classification-trees:13,14">ML slides 6, pp. 13&ndash;14</a></p>
+<div class="chk">Gini of a node with proportions (0.7, 0.3) in the slide convention: <input data-num size="9"> <button class="btn">check</button><span class="fb"></span></div></div>
+
+<h2 id="s-clu">Q4-type &middot; Clustering</h2>
+
+<div class="card" data-k="m6"><h3>M6. Hierarchical agglomerative clustering <span class="tag">4 of 4 papers</span></h3>
+<p>Start with every sample as its own cluster and repeatedly merge the closest pair. Single linkage uses the minimum pairwise distance, complete the maximum, average the mean, and centroid the distance between the centroids. Write out the updated distance matrix after each merge, and draw the dendrogram with merge heights in proportion to the merge distance (the lecturer asks for both). <a class="cite" href="../resources/machine-learning/ml-slides-10-clustering-analysis.pdf#page=29" data-pages="ml-slides-10-clustering-analysis:29,31,33,35">ML slides 10, pp. 29&ndash;35</a></p>
+<div class="chk">1-D: what is the <em>complete</em>-linkage distance between \(\{1,2\}\) and \(\{6,9\}\)? <input data-num size="9"> <button class="btn">check</button><span class="fb"></span></div></div>
+
+<div class="card" data-k="m7"><h3>M7. k-means by hand <span class="tag">3 of 4 papers</span></h3>
+<p>(1) Assign every point to its nearest centre. (2) Replace each centre by the mean of its points. Repeat until the assignments stop changing, and show a table of distances for each iteration. The objective is the within-cluster sum of squares. Choose K with the elbow of SSE against K, or with a silhouette or other index. k-means assumes compact, roughly spherical clusters, so it fails on irregular shapes (use DBSCAN or single linkage for those). <a class="cite" href="../resources/machine-learning/ml-slides-10-clustering-analysis.pdf#page=13" data-pages="ml-slides-10-clustering-analysis:13,21">ML slides 10, pp. 13&ndash;21</a></p>
+<div class="chk">1-D points 1, 2, 4, 7, 8 with initial centres 1 and 8. After one update, what is the first centre (4 d.p.)? <input data-num size="9"> <button class="btn">check</button><span class="fb"></span></div></div>
+
+<div class="card" data-k="m8"><h3>M8. Cluster validity indices <span class="tag">2 of 4 papers</span></h3>
+<p><b>Silhouette (slide convention):</b> \(SC_i=\dfrac{b_i-a_i}{\max(a_i,b_i)}\), where \(a_i\) is the <em>mean</em> distance to the other samples in its own cluster and \(b_i\) is the <em>minimum</em> distance to any sample in another cluster. Many textbooks instead use the mean distance to the nearest cluster; follow the slide. Overall \(SC\) is the average of the \(SC_i\), in \([-1,1]\), and higher is better. <b>Dunn:</b> \(DI=\dfrac{\min_{p\ne q} d_{pq}}{\max_p\delta_p}\), where \(d_{pq}\) is the closest pair across two clusters and \(\delta_p\) is the cluster diameter (farthest pair inside it). Higher is better. <b>Davies&ndash;Bouldin:</b> \(\delta_i=\sqrt{\frac1{n_i}\sum\lVert\mathbf x-\mathbf m_i\rVert^2}\), \(S_{ij}=\frac{\delta_i+\delta_j}{d(\mathbf m_i,\mathbf m_j)}\), \(DB=\frac1K\sum_i\max_{j\ne i}S_{ij}\). <em>Lower</em> is better. <a class="cite" href="../resources/machine-learning/ml-slides-11-clustering-evaluation.pdf#page=3" data-pages="ml-slides-11-clustering-evaluation:3,4,5,8,9,11,12">ML slides 11, pp. 3&ndash;12</a></p>
+<div class="chk">1-D clusters \(\{0,1\}\) and \(\{4,6\}\). What is the Dunn index? <input data-num size="9"> <button class="btn">check</button><span class="fb"></span></div></div>
+
+<h2 id="s-ext">Wider range (absent 2024&ndash;26, but on the lecturer's list)</h2>
+<p class="sub">These appeared in the older EE6227 papers, and the lecturer's Week 13 revision list keeps them in scope. Hard mock H will test them.</p>
+
+<div class="card" data-k="e1"><h3>E1. Data preparation</h3>
+<p>Min&ndash;max: \(x'=\frac{x-\min}{\max-\min}\in[0,1]\), which is sensitive to outliers. Standardisation: \(z=\frac{x-\mu}{\sigma}\), giving mean 0 and SD 1. Use it for distance-based methods (k-means, k-NN, SVM) whenever features have different units. Missing values: drop the row, or impute with the mean/median (numeric) or the mode (categorical). <a class="cite" href="../resources/machine-learning/ml-slides-02-data-preparation.pdf#page=57" data-pages="ml-slides-02-data-preparation:57,58">ML slides 2, pp. 57&ndash;58</a></p>
+<div class="chk">Min&ndash;max scale \(x=30\) when \(\min=10\) and \(\max=60\): <input data-num size="9"> <button class="btn">check</button><span class="fb"></span></div></div>
+
+<div class="card" data-k="e2"><h3>E2. Evaluation metrics</h3>
+<p>Precision \(=\frac{TP}{TP+FP}\) (of the predicted positives, how many are right), recall \(=\frac{TP}{TP+FN}\) (of the actual positives, how many are found), \(F_1=\frac{2PR}{P+R}\). Emphasise recall when a miss is costly (disease screening) and precision when a false alarm is costly (spam filtering). <a class="cite" href="../resources/machine-learning/ml-slides-07-classifier-performance-evaluation.pdf#page=16" data-pages="ml-slides-07-classifier-performance-evaluation:16,17">ML slides 7, pp. 16&ndash;17</a></p>
+<div class="chk">TP = 40, FP = 10, FN = 20. What is \(F_1\) (4 d.p.)? <input data-num size="9"> <button class="btn">check</button><span class="fb"></span></div></div>
+
+<div class="card" data-k="e3"><h3>E3. Regression: OLS, ridge, lasso</h3>
+<p>OLS: \(\boldsymbol\theta=(X^TX)^{-1}X^T\mathbf y\). Ridge (L2): \(\boldsymbol\theta=(X^TX+\lambda I)^{-1}X^T\mathbf y\), which shrinks the coefficients towards zero and fixes an ill-conditioned \(X^TX\). Lasso (L1) can set coefficients exactly to zero, so it also selects variables. For one feature with no intercept, ridge gives \(\theta=\frac{\sum xy}{\sum x^2+\lambda}\). <a class="cite" href="../resources/machine-learning/ml-slides-08-regression.pdf#page=14" data-pages="ml-slides-08-regression:14,15,16">ML slides 8, pp. 14&ndash;16</a></p>
+<div class="chk">\(\sum xy=20\), \(\sum x^2=8\), \(\lambda=2\). What is the ridge \(\theta\)? <input data-num size="9"> <button class="btn">check</button><span class="fb"></span></div></div>
+
+<div class="card" data-k="e4" data-sel="S_W becomes singular"><h3>E4. Curse of dimensionality and feature selection</h3>
+<p>With \(d\) large relative to \(N\), estimates (covariances, \(\mathbf S_W\)) become unreliable and the classifier overfits. Fisher LDA in particular fails once \(N \le d\), because \(\mathbf S_W\) is singular. The remedies are to reduce \(d\) (feature selection with SFS/SBS, or extraction such as PCA), to regularise (\(\mathbf S_W+\lambda I\)), or to collect more data. SFS starts empty and adds the best feature each step; SBS starts full and removes the worst. <a class="cite" href="../resources/machine-learning/ml-slides-09-feature-selection.pdf#page=19" data-pages="ml-slides-09-feature-selection:19,20">ML slides 9, pp. 19&ndash;20</a></p>
+<div class="chk">Why does plain LDA break when \(N\le d\)? <select><option value="">&mdash;</option><option>the means are undefined</option><option>S_W becomes singular</option><option>the classes become separable</option></select> <button class="btn">check</button><span class="fb"></span></div></div>
+
+<p style="text-align:center;margin-top:28px"><a class="btn btn-primary" href="final-mock-a-guided.html">Step 2: guided mock A &rarr;</a></p>
+<p class="sub" style="font-size:.85rem">Unofficial study aid. Every formula follows the cited slides, and the keys are checked by <code>final-check.py</code>. Verify the exam date and calculator policy on NTULearn.</p>
+</main>
+</div>
+
+<dialog id="srcDlg"><div class="row" style="justify-content:space-between"><b id="srcTitle"></b><span><a id="srcOpen" target="_blank">Open PDF</a> <button class="btn" id="srcClose">Close</button></span></div><div id="srcImgs"></div></dialog>
+
+<script type="application/json" id="keys">{"g1": 1.9804, "g2": 0.5, "g3": 0.6667, "m1": 0.5986, "m2": 0.0952, "m3": 0.7143, "m3b": 0.1961, "m4": 0.4, "m5": 0.21, "m6": 8, "m7": 2.3333, "m8": 1.5, "e1": 0.4, "e2": 0.7273, "e3": 2.0}</script>
+<script>
+(function () {
+  var KEY = 'ee6407-final-primer-v1', KEYS = JSON.parse(document.getElementById('keys').textContent);
+  var st = {}; try { st = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) {}
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
+  var checks = [];
+  document.querySelectorAll('.card[data-k]').forEach(function (card) {
+    var k = card.dataset.k;
+    card.querySelectorAll('.chk button').forEach(function (btn, i) {
+      var field = btn.previousElementSibling, fb = btn.nextElementSibling, id = k + '#' + i, ok;
+      if (field.tagName === 'SELECT') ok = function () { return field.value === card.dataset.sel.replace('&lt;', '<'); };
+      else { var ans = KEYS[field.dataset.num === '2' ? card.dataset.k2 : k];
+        ok = function () { var v = parseFloat(field.value); return isFinite(v) && Math.abs(v - ans) <= Math.max(0.0015, Math.abs(ans) * 0.002); }; }
+      function show(good) { fb.textContent = good ? '✓ correct' : '✗ not yet — reread the card'; fb.style.color = good ? 'var(--success)' : 'var(--danger)'; }
+      checks.push({ id: id, card: card });
+      if (st[id]) { field.value = st[id].v; show(st[id].ok); }
+      btn.addEventListener('click', function () { var g = ok(); st[id] = { v: field.value, ok: g }; save(); show(g); refresh(); });
+    });
+  });
+  var toc = document.getElementById('toc-links');
+  var secs = Array.prototype.map.call(document.querySelectorAll('main h2[id]'), function (h) {
+    var a = document.createElement('a'); a.href = '#' + h.id; a.innerHTML = '<span>' + h.textContent + '</span><span class="sc"></span>'; toc.appendChild(a);
+    var cards = []; var n = h.nextElementSibling; while (n && n.tagName !== 'H2') { if (n.matches('.card[data-k]')) cards.push(n); n = n.nextElementSibling; }
+    return { a: a, cards: cards };
+  });
+  function refresh() {
+    var tot = 0, ok = 0;
+    secs.forEach(function (s) {
+      var t = 0, o = 0;
+      checks.forEach(function (c) { if (s.cards.indexOf(c.card) >= 0) { t++; if (st[c.id] && st[c.id].ok) o++; } });
+      var sc = s.a.querySelector('.sc'); sc.textContent = o + '/' + t; sc.classList.toggle('ok', t > 0 && o === t); tot += t; ok += o;
+    });
+    document.querySelectorAll('.card[data-k]').forEach(function (card) {
+      var mine = checks.filter(function (c) { return c.card === card; });
+      card.classList.toggle('done', mine.length > 0 && mine.every(function (c) { return st[c.id] && st[c.id].ok; }));
+    });
+    document.getElementById('score').textContent = ok; document.getElementById('total').textContent = tot;
+  }
+  refresh();
+  document.getElementById('reset').onclick = function () { try { localStorage.removeItem(KEY); } catch (e) {} location.reload(); };
+  var root = document.documentElement; try { var th = localStorage.getItem('ee6407-theme'); if (th) root.dataset.theme = th; } catch (e) {}
+  document.getElementById('theme').onclick = function () { var n = root.dataset.theme === 'dark' ? 'light' : 'dark'; root.dataset.theme = n; try { localStorage.setItem('ee6407-theme', n); } catch (e) {} };
+  // citation pop-ups: data-pages="stem:p1,p2,..." -> final-pages/stem-pNNN.jpg
+  var dlg = document.getElementById('srcDlg');
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('a[data-pages]'); if (!a) return; e.preventDefault();
+    var parts = a.dataset.pages.split(':'), box = document.getElementById('srcImgs'); box.innerHTML = '';
+    parts[1].split(',').forEach(function (p) { var img = document.createElement('img'); img.loading = 'lazy'; img.alt = parts[0] + ' page ' + p; img.src = 'final-pages/' + parts[0] + '-p' + ('00' + p).slice(-3) + '.jpg'; box.appendChild(img); });
+    document.getElementById('srcTitle').textContent = a.textContent; document.getElementById('srcOpen').href = a.getAttribute('href'); dlg.showModal();
+  });
+  document.getElementById('srcClose').onclick = function () { dlg.close(); };
+  dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+  var s = document.createElement('script'); s.src = 'vendor/mathjax/tex-mml-chtml.js'; s.async = true;
+  s.onload = function () { MathJax.startup.promise.then(function () { return [].slice.call(document.querySelector('main').children).reduce(function (p, el) { return p.then(function () { return MathJax.typesetPromise([el]).catch(function (e) { console.warn('MathJax', e); }); }); }, Promise.resolve()); }); };
+  s.onerror = function () { document.getElementById('math-warning').style.display = 'block'; }; document.head.appendChild(s);
+})();
+</script>
+</body>
+</html>

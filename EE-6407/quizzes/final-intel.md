@@ -71,6 +71,30 @@ GA scope: the whole GA part (Weeks 1–4). The official Q1s use binary decoding,
 crossovers (whole arithmetic, flexible-α, blend), permutation coding with problem-specific fitness,
 and the problem classification and exploration/exploitation concepts.
 
+## Prep protocol (agreed 2026-11-13)
+
+The learner reports that this semester's quizzes ran harder than the intel predicted, so mocks are pitched
+above the 2024-26 papers and the official papers are held back until the end.
+
+| Step | Material | Mode |
+|---|---|---|
+| 1 | `final-primer.html` | Light primer: one card per topic (GA ×4, ML ×8, wider range ×4), 18 checks |
+| 2 | `final-mock-a-guided.html` | Full 4 × 25 paper as checked steps (hint → worked line after a first attempt) |
+| 3 | Mock B (to build) | Cold, 3 h, handwritten; answer-free page + `.md` key/rubric; graded |
+| 4 | Retrain | Every lost mark diagnosed; fresh variant until right; `final-mistakes.md` |
+| 5 | Mock C (to build) | Cold re-test on new numbers, weighted to step-4 weak spots |
+| 6 | Hard mock H (to build) | Cold; wider range (regression, metrics, feature selection, data prep, DBSCAN, Davies–Bouldin, average linkage) and harder traps |
+| 7 | `tests/test-final-2025-26-s1.pdf` | Official paper, cold, exam conditions; graded + retrained |
+| 8 | `tests/test-final-2025-26-s2.pdf` | Dress rehearsal; then a re-test from the mistakes log |
+
+The 2024-25 S1/S2 papers are reserved for extra retrain drills. No mock reuses official-paper numbers.
+All keys for steps 1–2 are recomputed by `final-check.py`. Slide conventions confirmed visually on
+2026-11-13: Gini ½(1 − Σp²) (ml-slides-06 p. 14); b averaged over 0 < α < C (ml-slides-05 p. 40);
+w₀ = −wᵀ(m₁+m₂)/2 (ml-slides-04 p. 24); Laplace (count+1)/(Σcount+d), d = vocabulary of all training
+data (ml-slides-03 p. 68); silhouette bᵢ = **minimum** distance to another cluster's sample, not the
+textbook mean (ml-slides-11 p. 4); Dunn = min inter-cluster pair distance / max diameter (p. 8–9);
+Davies–Bouldin δᵢ = RMS distance to the centroid (p. 11–12).
+
 ## Open questions
 
 1. This sitting's exam date, time and venue; calculator policy.
