@@ -62,6 +62,7 @@ th { background: var(--surface-2); font-weight: 600; }
 .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 6px; }
 input[type=text] { font: inherit; font-family: var(--mono); width: 150px; padding: 5px 8px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); }
 textarea { font: inherit; width: 100%; min-height: 110px; padding: 8px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); }
+select { font: inherit; padding: 5px 8px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface-2); color: var(--text); max-width: 100%; }
 button { font: inherit; font-size: 14px; padding: 5px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); cursor: pointer; }
 button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
 button:disabled { opacity: .5; cursor: default; }
@@ -184,11 +185,32 @@ pre.export { white-space: pre-wrap; font-size: 13px; background: var(--surface-2
 <p>This phase has two steps:</p>
 <ol>
 <li><b>Mark your paper.</b> Go through the rubric and tick only the checkpoints your written answer actually earns. A checkpoint you didn't attempt stays unticked; write "blank" next to it on your paper so you can tell running out of time apart from not knowing.</li>
-<li><b>Retrain.</b> Every topic with an unticked checkpoint becomes <span class="status open">open</span>. Generate fresh problems for it until you get <b>two right in a row</b>, and it closes. Before you generate, read the rule for that topic.</li>
+<li><b>Review, then retrain.</b> The four priorities below come from your attempt; peaking is optional. Read each topic’s short review and worked example, close the review, then generate a fresh problem. Two fully correct problems in a row close that topic.</li>
 </ol>
 <div class="card"><b>Score: <span id="scoreOut">0</span> / 100</b> <span class="muted" id="scoreBreak"></span></div>
 <div id="rubric"></div>
-<h3 id="queue">Retrain queue</h3>
+<h3 id="queue">Your targeted retrain queue</h3>
+<div class="card note">
+<b>Based on your 10 November Mock C attempt</b> (chat estimate: 63/100; this does not tick your self-mark boxes).
+<ul>
+<li><b>Metrics:</b> your follow-up screenshot correctly separates recall, precision and specificity and handles doubled actual-negative counts. That repairs the mix-up in your first attempt.</li>
+<li><b>k-means:</b> your first centroids and final clusters were correct. Use supplied distances to decide membership, recognise that centroids update after a move, and select the correct stopping rule and SSE definition. C’s first squared distance was 4, not 3.</li>
+<li><b>Fisher:</b> your ratio expressions were correct. Use supplied R values to explicitly rank the features; do not treat this as a variance-concept failure.</li>
+<li><b>Gini:</b> you revealed the weighted-child calculation in Train. Practise the sample weights.</li>
+<li><b>Peaking:</b> your explanation earned full credit in the chat review. Optional polish: say that parameter estimates become unreliable with fixed N, and conclude “select features”.</li>
+</ul>
+<p>The remaining k-means, Fisher and Gini drills now supply the arithmetic. You choose the method and conclusions. Two fully correct fresh problems close a topic; this checks reasoning rather than calculator speed.</p>
+</div>
+<div class="card">
+<h3 style="margin-top:0">How to use this retrain session</h3>
+<ol>
+<li><b>Review one topic at a time.</b> Read the explanation and follow the worked arithmetic below. Before closing it, explain to yourself why each denominator, centroid or weight is used.</li>
+<li><b>Work with the review closed.</b> Press <b>New problem</b>. For k-means, Fisher and Gini, use the supplied calculations and choose the correct decisions. Say or jot down a one-sentence reason; you do not need to re-enter intermediate arithmetic. The metrics drill retains numerical entry.</li>
+<li><b>Finish the answer.</b> Select an answer in each dropdown. For Fisher, select each feature once, from best to worst. In the metrics drill, fractions such as <code>4/3</code> and decimals both work. Finish the current problem before pressing New problem again.</li>
+<li><b>Check and repair.</b> Press <b>Check all</b>. If anything is wrong or blank, read the explanation, identify the first incorrect step on paper, and solve a fresh problem. A wrong problem resets the streak; two fully correct fresh problems close the topic.</li>
+</ol>
+<p class="muted">Your metrics screenshot looks correct. Continue with k-means → Fisher ranking → weighted Gini; another metrics problem is optional practice. The worked examples are review material, not the answers to your next fresh problem.</p>
+</div>
 <div id="retrainCards"></div>
 </div>
 </main>
@@ -224,25 +246,36 @@ function genCM(r) {
   const head = rowsPred
     ? '<tr><th></th><th>Actual +</th><th>Actual −</th></tr><tr><th>Predicted +</th><td>' + TP + '</td><td>' + FP + '</td></tr><tr><th>Predicted −</th><td>' + FN + '</td><td>' + TN + '</td></tr>'
     : '<tr><th></th><th>Predicted +</th><th>Predicted −</th></tr><tr><th>Actual +</th><td>' + TP + '</td><td>' + FN + '</td></tr><tr><th>Actual −</th><td>' + FP + '</td><td>' + TN + '</td></tr>';
+  const shiftedN = TP + FN + 2 * (FP + TN);
   return {
-    prompt: '<p>Watch the orientation: in this table the <b>rows are the ' + (rowsPred ? 'predicted' : 'actual') + ' class</b>.</p><table>' + head + '</table>',
-    fields: [['Accuracy', (TP + TN) / N], ['Sensitivity / recall', R], ['Specificity', TN / (TN + FP)], ['Precision', P], ['F-score', 2 * P * R / (P + R)]],
-    key: 'TP=' + TP + ', FP=' + FP + ', FN=' + FN + ', TN=' + TN + ', N=' + N + '. Precision = TP/(TP+FP) looks across the predicted-positive cells; recall = TP/(TP+FN) looks across the actual-positive cells. F = 2TP/(2TP+FP+FN) = ' + f4(2 * TP / (2 * TP + FP + FN)) + '.'
+    prompt: '<p>Watch the orientation: in this table the <b>rows are the ' + (rowsPred ? 'predicted' : 'actual') + ' class</b>.</p><table>' + head + '</table><p>First calculate the original metrics and their denominators. Then <b>double both actual-negative counts</b>, keeping actual-positive counts fixed. Calculate the new metrics. Why do sensitivity and specificity stay unchanged? Enter <b>1</b>: numerator and denominator within each actual class scale together; <b>2</b>: every metric ignores class proportions; <b>3</b>: the total N is unchanged.</p>',
+    fields: [['Accuracy', (TP + TN) / N], ['Sensitivity / recall', R], ['Specificity', TN / (TN + FP)], ['Precision', P], ['F-score', 2 * P * R / (P + R)],
+      ['Recall denominator: actual positives', TP + FN], ['Precision denominator: predicted positives', TP + FP],
+      ['New sensitivity / recall', R], ['New specificity', TN / (TN + FP)], ['New precision', TP / (TP + 2 * FP)],
+      ['New F-score', 2 * TP / (2 * TP + 2 * FP + FN)], ['New accuracy', (TP + 2 * TN) / shiftedN], ['New error rate', (2 * FP + FN) / shiftedN], ['Reason (1, 2 or 3)', 1]],
+    key: 'TP=' + TP + ', FP=' + FP + ', FN=' + FN + ', TN=' + TN + ', N=' + N + '. Precision = TP/(TP+FP) looks across the predicted-positive cells; recall = TP/(TP+FN) looks across the actual-positive cells. F = 2TP/(2TP+FP+FN) = ' + f4(2 * TP / (2 * TP + FP + FN)) + '. Sensitivity is another name for recall. Specificity = TN/(TN+FP), within actual negatives. After doubling actual negatives: FP=' + (2 * FP) + ', TN=' + (2 * TN) + ', N=' + shiftedN + '. Recall is unchanged because TP and FN stay fixed; specificity is unchanged because both TN and TN+FP double (reason 1). Precision falls to ' + f4(TP / (TP + 2 * FP)) + ', F falls to ' + f4(2 * TP / (2 * TP + 2 * FP + FN)) + '. Accuracy becomes ' + f4((TP + 2 * TN) / shiftedN) + ' and error ' + f4((2 * FP + FN) / shiftedN) + '; accuracy can rise, fall or stay unchanged depending on the class-specific rates.'
   };
 }
+function choice(r, label, correct, distractors) {
+  const options = [correct, ...distractors];
+  for (let i = options.length - 1; i > 0; i--) {
+    const j = ri(r, 0, i); [options[i], options[j]] = [options[j], options[i]];
+  }
+  return [label, options.indexOf(correct) + 1, options];
+}
 function genFR(r) {
-  const ds = [0.1, 0.2, 0.3];
-  const cls = () => { const m = ri(r, 10, 40) / 10, a = ds[ri(r, 0, 2)], b = ds[ri(r, 0, 2)];
-    const xs = [m + a, m - a, m + b, m - b].map(v => Math.round(v * 10) / 10);
-    for (let i = 3; i > 0; i--) { const j = ri(r, 0, i); [xs[i], xs[j]] = [xs[j], xs[i]]; }
-    return { xs, m, v: (a * a + b * b) / 2 }; };
-  let c1 = cls(), c2 = cls();
-  while (Math.abs(c1.m - c2.m) < 0.3) c2 = cls();
-  const R = (c1.m - c2.m) ** 2 / (c1.v + c2.v);
+  const base = [[2, .6, .8], [.5, .3, .4], [3, 1.5, 1.5], [.6, .3, .4]];
+  const features = base.map(([gap, a, b], i) => {
+    const m = ri(r, 10, 50), factor = ri(r, 8, 12) / 10;
+    const d = Math.round(gap * factor * 100) / 100;
+    return { id: i + 1, m1: m, m2: Math.round((m + d) * 100) / 100, a, b, R: d * d / (a * a + b * b) };
+  });
+  if (features.some((f, i) => features.slice(i + 1).some(g => Math.abs(f.R - g.R) < 0.001))) return genFR(r);
+  const rank = features.slice().sort((a, b) => b.R - a.R);
   return {
-    prompt: '<p>Compute Fisher\'s ratio for this one feature. Use the population variance, dividing by N as in worked example 9.3.1.</p><table><tr><th>Class 1</th>' + c1.xs.map(x => '<td>' + x + '</td>').join('') + '</tr><tr><th>Class 2</th>' + c2.xs.map(x => '<td>' + x + '</td>').join('') + '</tr></table>',
-    fields: [['m₁', c1.m], ['m₂', c2.m], ['σ₁²', c1.v], ['σ₂²', c2.v], ['R = (m₁−m₂)²/(σ₁²+σ₂²)', R]],
-    key: 'm₁=' + f4(c1.m) + ', m₂=' + f4(c2.m) + ', σ₁²=' + f4(c1.v) + ', σ₂²=' + f4(c2.v) + ' → R=' + f4(R) + '. Divide by N=4 (not N−1), and square the difference of means.'
+    prompt: '<p><b>No calculator needed.</b> The ratios are calculated for you. Choose the correct denominator when the supplied σ values are standard deviations, then rank the features.</p><table><tr><th>Feature</th><th>m₁</th><th>m₂</th><th>σ₁</th><th>σ₂</th><th>Calculated R</th></tr>' + features.map(f => '<tr><th>x' + f.id + '</th><td>' + f.m1 + '</td><td>' + f.m2 + '</td><td>' + f.a + '</td><td>' + f.b + '</td><td>' + f4(f.R) + '</td></tr>').join('') + '</table><p>Rank from <b>largest R (best) to smallest</b>. Select each feature once, from best to worst. Explain the ordering by comparing separation relative to spread.</p>',
+    fields: [choice(r, 'Fisher denominator when σ is given', 'σ₁² + σ₂²', ['σ₁ + σ₂', '(σ₁² + σ₂²)²']), ...rank.map((f, i) => ['Rank ' + (i + 1) + ': feature', f.id, ['x1', 'x2', 'x3', 'x4']])],
+    key: features.map(f => 'x' + f.id + ': (' + f.m1 + '−' + f.m2 + ')²/(' + f.a + '²+' + f.b + '²) = ' + f4(f.R)).join('; ') + '. Ranking: ' + rank.map(f => 'x' + f.id).join(' > ') + '. Use the sum of variances (σ₁² + σ₂²), not the sum of standard deviations or variances squared again. Rank by R, not by the raw mean gap. Choosing this ordering is the task; the arithmetic has been supplied.'
   };
 }
 function kmeans1d(xs, c) {
@@ -260,29 +293,38 @@ function kmeans1d(xs, c) {
   return { c, assign, iters: it, sse };
 }
 function genKM(r) {
-  for (;;) {
-    const set = new Set(); while (set.size < 6) set.add(ri(r, 0, 20));
-    const xs = [...set].sort((a, b) => a - b);
-    const i0 = ri(r, 0, 2), i1 = ri(r, i0 + 1, 3);   // two low-ish starts force at least one reassignment often
-    let res; try { res = kmeans1d(xs, [xs[i0], xs[i1]]); } catch (e) { continue; }
-    if (res.iters < 3) continue;                       // insist on a real reassignment
-    const lo = Math.min(...res.c), hi = Math.max(...res.c);
-    return {
-      prompt: '<p>Run 1-D k-means with k = 2 on <b>' + xs.join(', ') + '</b>. The initial centroids are <b>' + xs[i0] + '</b> and <b>' + xs[i1] + '</b>. Iterate until no point changes cluster.</p>',
-      fields: [['Final lower centroid', lo], ['Final upper centroid', hi], ['SSE', res.sse]],
-      key: 'Converged after ' + res.iters + ' assignment passes (the last pass changes nothing). Clusters: {' + xs.filter((_, i) => res.c[res.assign[i]] === lo).join(', ') + '} and {' + xs.filter((_, i) => res.c[res.assign[i]] === hi).join(', ') + '}; centroids ' + f4(lo) + ' and ' + f4(hi) + '; SSE ' + f4(res.sse) + '. Recompute every centroid as the mean of its members before the next assignment.'
-    };
-  }
+  const scale = ri(r, 1, 3), dx = ri(r, 0, 8), dy = ri(r, 0, 8);
+  const base = [[1, 1], [2, 1], [1, 3], [5, 4], [6, 5], [4, 5], [3, 3]];
+  const pts = base.map(p => [scale * p[0] + dx, scale * p[1] + dy]);
+  const names = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+  const d2 = (p, c) => (p[0] - c[0]) ** 2 + (p[1] - c[1]) ** 2;
+  const mean = ids => [0, 1].map(j => ids.reduce((sum, i) => sum + pts[i][j], 0) / ids.length);
+  const first = [mean([0, 2]), mean([1, 3, 4, 5, 6])];
+  const final = [mean([0, 1, 2]), mean([3, 4, 5, 6])];
+  const sums = [[0, 1, 2], [3, 4, 5, 6]].map((ids, j) => ids.reduce((sum, i) => sum + d2(pts[i], final[j]), 0));
+  return {
+    prompt: '<p><b>No calculator needed.</b> Distances, candidate centroids and SSE contributions are supplied. Decide which assignment, update and stopping rule are valid.</p><table><tr><th>Point</th><th>x</th><th>y</th></tr>' + pts.map((p, i) => '<tr><th>' + names[i] + '</th><td>' + p[0] + '</td><td>' + p[1] + '</td></tr>').join('') + '</table><p>Start at c₁=A, c₂=B. Iteration 1 assigns {A,C} and {B,D,E,F,G}; their centroids are (' + first[0].map(f4).join(', ') + ') and (' + first[1].map(f4).join(', ') + '). In iteration 2, B has squared distances <b>' + f4(d2(pts[1], first[0])) + ' to c₁</b> and <b>' + f4(d2(pts[1], first[1])) + ' to c₂</b>; all other memberships stay the same. Decide B’s cluster and choose the resulting centroid pair.</p><p>For the resulting centroids, G has squared distances <b>' + f4(d2(pts[6], final[0])) + ' to c₁</b> and <b>' + f4(d2(pts[6], final[1])) + ' to c₂</b>. Every other point also stays with its assigned cluster in that next pass. Cluster SSEs are already calculated: <b>' + f4(sums[0]) + '</b> and <b>' + f4(sums[1]) + '</b>; total <b>' + f4(sums[0] + sums[1]) + '</b>. Choose the definition that produces this total, without adding it yourself.</p>',
+    fields: [['B’s cluster in iteration 2', 1, ['Cluster 1', 'Cluster 2']],
+      choice(r, 'Centroids after B’s assignment', 'Means of the new members: (' + final[0].map(f4).join(', ') + ') and (' + final[1].map(f4).join(', ') + ')',
+        ['Keep the preceding centroids: (' + first[0].map(f4).join(', ') + ') and (' + first[1].map(f4).join(', ') + ')', 'Use B alone as c₁ and leave c₂ unchanged']),
+      ['G’s cluster in the next pass', 2, ['Cluster 1', 'Cluster 2']],
+      choice(r, 'Can the algorithm stop now?', 'Yes: a full assignment pass changes no memberships', ['Yes: one point stayed in its cluster', 'No: even unchanged memberships always require another pass']),
+      choice(r, 'What is total SSE?', 'Sum of squared distances to each point’s final assigned centroid', ['Mean distance to the nearest initial centroid', 'Sum of distances after taking a square root for each point'])],
+    key: 'B moves to c₁ because ' + f4(d2(pts[1], first[0])) + ' < ' + f4(d2(pts[1], first[1])) + '. Both centroids must be recomputed from the new memberships: (' + final[0].map(f4).join(', ') + ') and (' + final[1].map(f4).join(', ') + '). G stays with c₂ because ' + f4(d2(pts[6], final[1])) + ' < ' + f4(d2(pts[6], final[0])) + '. A full unchanged assignment pass establishes convergence. SSE adds the squared errors to the final assigned centroids, without roots or averaging: ' + f4(sums[0]) + ' + ' + f4(sums[1]) + ' = ' + f4(sums[0] + sums[1]) + '.'
+  };
 }
 function gini(p, n) { const t = p + n; return t ? 1 - (p / t) ** 2 - (n / t) ** 2 : 0; }
 function genGini(r) {
   const p = ri(r, 3, 9), n = ri(r, 3, 9), a = ri(r, 0, p), b = ri(r, 0, n);
-  if (a + b === 0 || a + b === p + n) return genGini(r);
+  if (a + b === 0 || a + b === p + n || 2 * (a + b) === p + n) return genGini(r);
   const t = p + n, w = ((a + b) / t) * gini(a, b) + ((t - a - b) / t) * gini(p - a, n - b);
   return {
-    prompt: '<p>A node holds <b>' + p + ' positives and ' + n + ' negatives</b>. A split sends <b>' + a + '+ / ' + b + '−</b> to the left and <b>' + (p - a) + '+ / ' + (n - b) + '−</b> to the right.</p>',
-    fields: [['Root Gini', gini(p, n)], ['Weighted child Gini', w], ['Gini decrease (gain)', gini(p, n) - w]],
-    key: 'Gini = 1 − Σpᵢ². Root ' + f4(gini(p, n)) + '; left ' + f4(gini(a, b)) + ', right ' + f4(gini(p - a, n - b)) + '; weight each child by its share of the samples → ' + f4(w) + '; gain ' + f4(gini(p, n) - w) + '.'
+    prompt: '<p><b>No calculator needed.</b> A node holds <b>' + p + ' positives and ' + n + ' negatives</b>. A split sends <b>' + a + '+ / ' + b + '−</b> to the left and <b>' + (p - a) + '+ / ' + (n - b) + '−</b> to the right.</p><p>Arithmetic supplied: root Gini = ' + f4(gini(p, n)) + ', left Gini GL = ' + f4(gini(a, b)) + ', right Gini GR = ' + f4(gini(p - a, n - b)) + '. Child sizes: left ' + (a + b) + ', right ' + (t - a - b) + ', parent ' + t + '. Choose the correct weighting and gain definitions, and which child gets more weight.</p>',
+    fields: [choice(r, 'Weighted child Gini expression', '(' + (a + b) + '/' + t + ') GL + (' + (t - a - b) + '/' + t + ') GR',
+      ['(GL + GR) / 2', '(' + (t - a - b) + '/' + t + ') GL + (' + (a + b) + '/' + t + ') GR']),
+      choice(r, 'Gini gain expression', 'Root Gini − weighted child Gini', ['Weighted child Gini − root Gini', 'Root Gini + weighted child Gini']),
+      ['Which child receives more sample weight?', a + b > t - a - b ? 1 : 2, ['Left child', 'Right child']]],
+    key: 'Weight by sample counts, not class proportions: left ' + (a + b) + '/' + t + ', right ' + (t - a - b) + '/' + t + '. The larger child receives more weight, regardless of purity. Their weighted Gini is ' + f4(w) + '; gain is root minus weighted child Gini = ' + f4(gini(p, n) - w) + '. A plain average silently assumes equal child sizes; reversed weights attach each impurity to the wrong sample count.'
   };
 }
 // GEN-END
@@ -472,11 +514,39 @@ const RUBRIC = [
  ['q3', 'peak', 8, 'Peaking: a fixed N; error falls and then rises as features are added; more parameters estimated from the same N (curse of dimensionality); the optimum dimensionality grows with N; therefore select features. Roughly 2 marks per point, 8 maximum.']
 ];
 const TOPICS = {
-  cm: { name: 'Confusion-matrix metrics', gen: genCM, rule: 'Rule: Precision divides by the <b>predicted</b>-positive count and recall by the <b>actual</b>-positive count. Before computing anything, find which axis is predicted and which is actual.' },
-  km: { name: 'k-means iteration', gen: genKM, rule: 'Rule: assign every point → recompute every centroid as a mean → repeat. Convergence is a full pass with no reassignment, and you must show that pass.' },
-  fr: { name: 'Fisher\'s ratio', gen: genFR, rule: 'Rule: R = (m₁−m₂)² / (σ₁²+σ₂²). Square the standard deviations and divide the variance by N. Rank by R, not by the gap between the means.' },
-  gini: { name: 'Gini split (wildcard)', gen: genGini, rule: 'Rule: Gini = 1 − Σp². The split score is the root Gini minus the sample-weighted child Gini.' },
-  peak: { name: 'Peaking phenomenon', gen: null, rule: 'Rule: fixed N → error falls, then rises → too many parameters for N → optimum grows with N → select features.' }
+  cm: { focus: true, name: 'Metrics + class-count changes', gen: genCM, rule: 'Rule: Precision divides by the <b>predicted</b>-positive count and recall by the <b>actual</b>-positive count. Before computing anything, find which axis is predicted and which is actual.' },
+  km: { focus: true, name: '2-D k-means: decisions without arithmetic', gen: genKM, rule: 'Rule: assign every point → recompute every centroid as a mean → repeat. Convergence is a full pass with no reassignment, and you must show that pass.' },
+  fr: { focus: true, name: 'Fisher ratios + explicit ranking', gen: genFR, rule: 'Rule: R = (m₁−m₂)² / (σ₁²+σ₂²). Square the standard deviations and divide the variance by N. Rank by R, not by the gap between the means.' },
+  gini: { focus: true, name: 'Weighted Gini (revealed in Train)', gen: genGini, rule: 'Rule: Gini = 1 − Σp². The split score is the root Gini minus the sample-weighted child Gini.' },
+  peak: { name: 'Peaking phenomenon (optional polish)', gen: null, rule: 'Rule: fixed N → error falls, then rises → too many parameters for N → optimum grows with N → select features.' }
+};
+const REVIEWS = {
+  cm: `<p><b>1. Choose the population before calculating.</b> TP means actual positive and predicted positive; FN means actual positive but predicted negative. FP means actual negative but predicted positive; TN means actual negative and predicted negative. The axis labels, not a memorised cell position, tell you which is which.</p>
+<table><tr><th>Metric</th><th>Question it answers</th><th>Formula</th></tr>
+<tr><th>Recall = sensitivity</th><td>Of the actual positives, how many did we find?</td><td>TP / (TP + FN)</td></tr>
+<tr><th>Precision</th><td>Of the predicted positives, how many were correct?</td><td>TP / (TP + FP)</td></tr>
+<tr><th>Specificity</th><td>Of the actual negatives, how many did we reject correctly?</td><td>TN / (TN + FP)</td></tr></table>
+<p>Accuracy = (TP + TN) / N, error = 1 − accuracy, and F-score = 2TP / (2TP + FP + FN), where N is the total sample count.</p>
+<div class="card note"><b>Worked repair of Q1.</b> With TP = 135, FP = 30, FN = 25, TN = 210: recall = 135/160 = 0.84375; precision = 135/165 ≈ 0.8182; specificity = 210/240 = 0.875. You had the first two values attached to the opposite names.</div>
+<p><b>2. Change counts, then recompute.</b> Doubling actual negatives means FP becomes 60 and TN becomes 420; TP and FN stay fixed. Recall is unchanged because its counts are unchanged. Specificity becomes 420/(420+60) = 0.875: both numerator and denominator doubled, so the factor cancels. Precision becomes 135/195 ≈ 0.6923, F becomes 270/355 ≈ 0.7606, and accuracy becomes 555/640 ≈ 0.8672. More actual negatives can change overall accuracy even though both class-specific rates stay fixed.</p>
+<p><b>Your next check:</b> identify the actual-positive and predicted-positive denominators, calculate the original metrics, then calculate the metrics after the count change and choose the reason. Say “actual positives” for recall and “predicted positives” for precision before entering numbers.</p>`,
+  km: `<p><b>1. Keep assignment and updating separate.</b> For a point (x,y) and centroid (a,b), squared distance is d² = (x−a)² + (y−b)². Compare it with the squared distance to the other centroid. Square each coordinate difference, then add; do not square their sum. All assignments in one pass use the same current centroids.</p>
+<p><b>2. Recompute both coordinates after a move.</b> A centroid is the coordinate-wise mean of its current members: c = (sum of x / member count, sum of y / member count).</p>
+<div class="card note"><b>Worked repair of Q2.</b> C=(1,3) is at squared distance (1−1)²+(3−1)² = 4 from A=(1,1). After the first update, B=(2,1) has d²(B,c₁) = (2−1)²+(1−2)² = 2, versus d²(B,c₂) = (2−4)²+(1−3.6)² = 10.76. Therefore B moves to c₁. With members {A,B,C}, the new c₁ is ((1+2+1)/3, (1+1+3)/3) = (4/3,5/3). The other centroid becomes (4.5,4.25). The old centroids cannot remain just because you already calculated them once.</div>
+<p><b>3. Verify convergence, then finish the sum.</b> Reassign every point using the updated centroids. Stop only when that full pass changes no memberships. SSE means <em>sum of squared errors</em>: add each point’s squared distance to its final assigned centroid, once per point. Do not take square roots or divide by the number of points.</p>
+<p>For the original Q2, the first cluster contributes 5/9 + 8/9 + 17/9 = 10/3. The second contributes 0.3125 + 2.8125 + 0.8125 + 3.8125 = 7.75. Total SSE = 10/3 + 7.75 = 133/12 ≈ 11.0833.</p>
+<p><b>Your next check:</b> use supplied distances to select B and G’s clusters, choose the updated centroid pair, and identify when to stop and what SSE sums. All arithmetic is supplied; explain your selections in one sentence.</p>`,
+  fr: `<p><b>1. Measure separation relative to spread.</b> For one feature, m₁ and m₂ are its two class means, and σ₁² and σ₂² are the within-class variances. Fisher’s ratio is R = (m₁−m₂)² / (σ₁²+σ₂²). A larger R means greater separation relative to within-class spread.</p>
+<p><b>2. Read the supplied quantity.</b> If given standard deviations σ, square each one before adding. If given variances σ², add them directly. Your Mock C expressions already handled this correctly; the missing step was the explicit ranking.</p>
+<div class="card note"><b>Worked completion of Q3.</b> x₁: 4/(0.36+0.64) = 4; x₂: 0.25/0.25 = 1; x₃: 9/4.5 = 2; x₄: 0.36/0.25 = 1.44. Now sort the evaluated values: 4 &gt; 2 &gt; 1.44 &gt; 1, so write <b>x₁ &gt; x₃ &gt; x₄ &gt; x₂</b>. A list of ratios alone does not state the requested feature ordering.</div>
+<p><b>Your next check:</b> use the supplied R values to choose the four features from best to worst, and choose the correct variance denominator. No ratio calculation is required. Do not carry over the worked ranking: fresh means can change the order. When explaining the result, say “larger between-class separation relative to within-class variance”.</p>`,
+  gini: `<p><b>1. Compute impurity inside each node.</b> For a node with positive proportion p and negative proportion q, G = 1 − p² − q². Divide by that node’s own sample count. A pure node has G = 0.</p>
+<p><b>2. Weight by how many samples reach each child.</b> If the parent contains n samples and the left and right children contain nL and nR, their weights are nL/n and nR/n. Weighted child Gini = (nL/n)GL + (nR/n)GR. Gain = parent Gini − weighted child Gini. The weights must add to 1; a plain average works only when both child sizes are equal.</p>
+<div class="card note"><b>Worked example with unequal sizes.</b> A parent has 6 positives and 4 negatives: G = 1 − (6/10)² − (4/10)² = 0.48. The left child has 4 positives and no negatives, so GL = 0 and its weight is 4/10. The right child has 2 positives and 4 negatives, so GR = 1 − (2/6)² − (4/6)² = 4/9 and its weight is 6/10. Weighted child Gini = (4/10)×0 + (6/10)×(4/9) = 4/15 ≈ 0.2667. Gain = 0.48 − 4/15 = 16/75 ≈ 0.2133.</div>
+<p><b>Your next check:</b> choose the correctly weighted expression and gain definition, then select the child with more sample weight. Counts and impurities are supplied; no Gini calculation is required. This directly repairs the weighted calculation you revealed in Train.</p>`,
+  peak: `<p><b>Optional review.</b> Your explanation already captured the main idea. With a fixed number N of training samples, useful added features initially reduce classification error. Beyond an optimum dimensionality, estimating more parameters from the same N makes estimates unreliable and can increase error. With more training data, the optimum number of features generally increases. Therefore select or reduce features rather than assuming every extra feature helps.</p>
+<p><b>Distinguish the axes:</b> classification <em>performance</em> rises then falls; classification <em>error</em> falls then rises. Both describe the same peaking effect.</p>
+<p><b>Your optional check:</b> close this review and write a short paragraph containing fixed N, the turning point, unreliable parameter estimates, the effect of larger N, and feature selection. Then compare with the checklist in T6.</p>`
 };
 function renderRubric() {
   let h = '';
@@ -500,7 +570,7 @@ function score() {
 function openTopics() { const o = new Set(); RUBRIC.forEach((r, i) => { if (!S.rubric[i]) o.add(r[1]); }); return o; }
 function topicState(k) {
   const re = S.re[k] || {}; if (re.closed) return 'closed';
-  if (openTopics().has(k)) return 'open';
+  if (TOPICS[k].focus || (k !== 'peak' && openTopics().has(k))) return 'open';
   return 'opt';
 }
 
@@ -511,7 +581,7 @@ function renderRetrain() {
   Object.entries(TOPICS).forEach(([k, t]) => {
     const st = topicState(k), re = S.re[k] || {};
     const label = st === 'closed' ? 'closed' : st === 'open' ? 'open: retrain needed' : 'optional';
-    h += '<div class="card" id="re-' + k + '"><h3 style="margin-top:0">' + t.name + ' · <span class="status ' + st + '">' + label + '</span></h3><p>' + t.rule + '</p>';
+    h += '<div class="card" id="re-' + k + '"><h3 style="margin-top:0">' + t.name + ' · <span class="status ' + st + '">' + label + '</span></h3><p>' + t.rule + '</p><details open><summary><b>Review before practising — close when ready</b></summary>' + REVIEWS[k] + '</details>';
     if (t.gen) {
       h += '<p class="muted" style="font-size:14px">Current streak: <b>' + (re.streak || 0) + '</b> / 2 · problems tried: ' + (re.tries || 0) + '</p><div class="row"><button data-gen="' + k + '" class="primary">New problem</button></div><div id="prob-' + k + '"></div>';
     } else {
@@ -525,8 +595,14 @@ function renderRetrain() {
 function drawProblem(k) {
   const p = live[k], box = $('prob-' + k); if (!p || !box) return;
   const vals = p.vals || [], res = p.res || [];
-  box.innerHTML = '<div class="step">' + p.prompt + p.fields.map((f, i) => '<div class="row"><span style="min-width:220px">' + f[0] + '</span><input type="text" id="gf-' + k + '-' + i + '" value="' + (vals[i] || '').replace(/"/g, '') + '"' +
-      (p.done ? ' style="border-color:var(--' + (res[i] ? 'success' : 'danger') + ')"' : '') + '>' + (p.done && !res[i] ? ' <span class="muted">→ ' + f4(f[1]) + '</span>' : '') + '</div>').join('') +
+  box.innerHTML = '<div class="step">' + p.prompt + p.fields.map((f, i) => {
+    const id = 'gf-' + k + '-' + i;
+    const control = f[2]
+      ? '<select id="' + id + '"><option value="">Choose…</option>' + f[2].map((label, j) => '<option value="' + (j + 1) + '"' + (String(vals[i]) === String(j + 1) ? ' selected' : '') + '>' + label + '</option>').join('') + '</select>'
+      : '<input type="text" id="' + id + '" value="' + (vals[i] || '').replace(/"/g, '') + '">';
+    return '<div class="row"><label for="' + id + '" style="min-width:220px">' + f[0] + '</label>' + control +
+      (p.done ? '<span class="fb ' + (res[i] ? 'ok' : 'bad') + '">' + (res[i] ? '✓' : '→ ' + (f[2] ? f[2][f[1] - 1] : f4(f[1]))) + '</span>' : '') + '</div>';
+  }).join('') +
     '<div class="row"><button data-gchk="' + k + '"' + (p.done ? ' disabled' : '') + '>Check all</button><span class="fb ' + (p.msg ? (p.ok ? 'ok' : 'bad') : '') + '">' + (p.msg || '') + '</span></div>' +
     '<div class="why' + (p.done ? ' show' : '') + '">' + p.key + '</div></div>';
   typeset(box);

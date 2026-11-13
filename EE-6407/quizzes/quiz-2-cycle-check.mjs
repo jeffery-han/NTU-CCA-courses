@@ -54,6 +54,14 @@ const sse = Object.keys(P).reduce((s, n) => s + d2(P[n], cs[hist[2][n]]), 0);
 assert.ok(near(sse, 133 / 12)); has('11.0833');
 assert.ok(near(d2(P.B, cs[0]), 8 / 9) && near(d2(P.B, cs[1]), 16.8125) && near(d2(P.G, cs[0]), 41 / 9) && near(d2(P.G, cs[1]), 3.8125));
 
+// ---- Pre-retrain review: independently verify worked SSE terms and unequal child weights.
+['A', 'B', 'C'].forEach((name, i) => assert.ok(near(d2(P[name], cs[0]), [5 / 9, 8 / 9, 17 / 9][i]), 'review SSE ' + name));
+['D', 'E', 'F', 'G'].forEach((name, i) => assert.ok(near(d2(P[name], cs[1]), [.3125, 2.8125, .8125, 3.8125][i]), 'review SSE ' + name));
+const reviewRoot = G.gini(6, 4), reviewRight = G.gini(2, 4), reviewWeighted = 4 / 10 * G.gini(4, 0) + 6 / 10 * reviewRight;
+assert.ok(near(reviewRoot, .48) && near(reviewRight, 4 / 9) && near(reviewWeighted, 4 / 15));
+assert.ok(near(reviewRoot - reviewWeighted, 16 / 75));
+has('4/15 ≈ 0.2667'); has('16/75 ≈ 0.2133');
+
 // ---- Test Q3: Fisher ratios and the unsquared-sigma trap
 const feats = { x1: [4, 6, .6, .8], x2: [2, 2.5, .3, .4], x3: [10, 13, 1.5, 1.5], x4: [7, 7.6, .3, .4] };
 const R = Object.fromEntries(Object.entries(feats).map(([f, [a, b, s1, s2]]) => [f, (a - b) ** 2 / (s1 ** 2 + s2 ** 2)]));
@@ -75,14 +83,97 @@ for (let s = 1; s <= 2000; s++) {
   const [TP, FP, FN, TN] = rowsPred ? nums : [nums[0], nums[2], nums[1], nums[3]];
   const e = cm(TP, FP, FN, TN);
   [e.acc, e.R, e.spec, e.P, e.F].forEach((v, i) => assert.ok(near(c.fields[i][1], v), 'genCM ' + s));
-  const f = G.genFR(r), rows = [...f.prompt.matchAll(/<tr><th>Class \d<\/th>(.*?)<\/tr>/g)].map(x => [...x[1].matchAll(/<td>([\d.]+)<\/td>/g)].map(y => +y[1]));
-  const fr = (mean(rows[0]) - mean(rows[1])) ** 2 / (pvar(rows[0]) + pvar(rows[1]));
-  assert.ok(near(f.fields[4][1], fr, 1e-6) && Number.isFinite(fr) && fr > 0, 'genFR ' + s);
-  const q = G.genKM(r), xs = q.prompt.match(/on <b>([\d, ]+)<\/b>/)[1].split(', ').map(Number), init = [...q.prompt.matchAll(/<b>(\d+)<\/b>/g)].map(x => +x[1]);
-  const kk = G.kmeans1d(xs, init);
-  assert.ok(kk.iters >= 3 && near(q.fields[0][1], Math.min(...kk.c)) && near(q.fields[2][1], kk.sse), 'genKM ' + s);
+  const factorCM = cm(TP, 2 * FP, FN, 2 * TN);
+  [TP + FN, TP + FP, e.R, e.spec, factorCM.P, factorCM.F, factorCM.acc, 1 - factorCM.acc, 1]
+    .forEach((v, i) => assert.ok(near(c.fields[i + 5][1], v), 'class-count change ' + s));
+  // Swapping precision and recall must fail at least one field whenever FP != FN.
+  if (FP !== FN) assert.ok(!G.close(String(e.P), e.R) || !G.close(String(e.R), e.P), 'metric swap ' + s);
+  const f = G.genFR(r);
+  const rows = [...f.prompt.matchAll(/<tr><th>x(\d)<\/th>(.*?)<\/tr>/g)].map(x => ({
+    id: +x[1], values: [...x[2].matchAll(/<td>([\d.]+)<\/td>/g)].map(y => +y[1])
+  }));
+  const ratios = rows.map(({id, values: [a, b, s1, s2]}) => ({id, R: (a - b) ** 2 / (s1 ** 2 + s2 ** 2)}));
+  ratios.forEach((v, i) => assert.ok(near(rows[i].values[4], v.R, .000051), 'supplied Fisher value ' + s));
+  assert.equal(f.fields[0][2][f.fields[0][1] - 1], 'σ₁² + σ₂²');
+  ratios.sort((a, b) => b.R - a.R).forEach((v, i) => assert.equal(f.fields[i + 1][1], v.id, 'ranking ' + s));
+  const q = G.genKM(r);
+  const points = [...q.prompt.matchAll(/<tr><th>([A-G])<\/th><td>(\d+)<\/td><td>(\d+)<\/td><\/tr>/g)]
+    .map(x => [+x[2], +x[3]]);
+  assert.equal(points.length, 7);
+  let centers = [points[0], points[1]], last = null, passes = [], centerHistory = [];
+  for (let it = 0; it < 10; it++) {
+    const assignments = points.map(p => {
+      const a = d2(p, centers[0]), b = d2(p, centers[1]);
+      assert.notEqual(a, b, 'no tie ' + s);
+      return a < b ? 0 : 1;
+    });
+    passes.push(assignments);
+    centers = [0, 1].map(j => [0, 1].map(dim => mean(points.filter((_, i) => assignments[i] === j).map(p => p[dim]))));
+    centerHistory.push(centers);
+    if (last && assignments.every((v, i) => v === last[i])) break;
+    last = assignments;
+  }
+  assert.equal(passes.length, 3, '2-D convergence ' + s);
+  assert.deepEqual(passes[0], [0, 1, 0, 1, 1, 1, 1]);
+  assert.deepEqual(passes[1], [0, 0, 0, 1, 1, 1, 1]);
+  const first = centerHistory[0];
+  const clusterSSE = [0, 1].map(j => points.reduce((sum, p, i) => sum + (passes[2][i] === j ? d2(p, centers[j]) : 0), 0));
+  const display = v => String(Math.round(v * 10000) / 10000);
+  const suppliedDistances = [...q.prompt.matchAll(/squared distances <b>([\d.]+) to c₁<\/b> and <b>([\d.]+) to c₂<\/b>/g)].map(x => [+x[1], +x[2]]);
+  assert.equal(suppliedDistances.length, 2);
+  [points[1], points[6]].forEach((point, i) => {
+    const cc = i === 0 ? first : centers;
+    suppliedDistances[i].forEach((v, j) => assert.ok(near(v, d2(point, cc[j]), .000051), 'supplied distance ' + s));
+  });
+  const suppliedSSE = q.prompt.match(/Cluster SSEs are already calculated: <b>([\d.]+)<\/b> and <b>([\d.]+)<\/b>; total <b>([\d.]+)<\/b>/);
+  [...clusterSSE, clusterSSE[0] + clusterSSE[1]].forEach((v, i) => assert.ok(near(+suppliedSSE[i + 1], v, .000051), 'supplied SSE ' + s));
+  const selected = field => field[2][field[1] - 1];
+  assert.equal(q.fields[0][1], passes[1][1] + 1);
+  assert.equal(selected(q.fields[1]), 'Means of the new members: (' + centers[0].map(display).join(', ') + ') and (' + centers[1].map(display).join(', ') + ')');
+  assert.equal(q.fields[2][1], passes[2][6] + 1);
+  assert.equal(selected(q.fields[3]), 'Yes: a full assignment pass changes no memberships');
+  assert.equal(selected(q.fields[4]), 'Sum of squared distances to each point’s final assigned centroid');
   const g = G.genGini(r), [p, n, a, b] = [...g.prompt.matchAll(/(\d+)/g)].map(x => +x[1]);
-  const t = p + n, w = (a + b) / t * G.gini(a, b) + (t - a - b) / t * G.gini(p - a, n - b);
-  assert.ok(near(g.fields[1][1], w) && g.fields[2][1] >= -1e-12, 'genGini ' + s);
+  const t = p + n, left = a + b, right = t - left;
+  const w = left / t * G.gini(a, b) + right / t * G.gini(p - a, n - b);
+  assert.notEqual(left, right, 'weighting distractors must be different ' + s);
+  assert.equal(selected(g.fields[0]), '(' + left + '/' + t + ') GL + (' + right + '/' + t + ') GR');
+  assert.equal(selected(g.fields[1]), 'Root Gini − weighted child Gini');
+  assert.equal(g.fields[2][1], left > right ? 1 : 2);
+  assert.ok(g.prompt.includes('root Gini = ' + display(G.gini(p, n))) && g.prompt.includes('left Gini GL = ' + display(G.gini(a, b))) && g.prompt.includes('right Gini GR = ' + display(G.gini(p - a, n - b))));
+  assert.ok(g.key.includes('weighted Gini is ' + display(w)) && g.key.includes('Gini = ' + display(G.gini(p, n) - w)));
+  for (const problem of [f, q, g]) {
+    for (const field of problem.fields) {
+      assert.equal(new Set(field[2]).size, field[2].length, 'distinct dropdown choices ' + s);
+      assert.ok(Number.isInteger(field[1]) && field[1] >= 1 && field[1] <= field[2].length);
+      assert.ok(G.close(String(field[1]), field[1]) && !G.close('', field[1]));
+      for (let wrong = 1; wrong <= field[2].length; wrong++) if (wrong !== field[1]) assert.ok(!G.close(String(wrong), field[1]));
+    }
+  }
 }
-console.log('quiz-2-cycle: all keys and 8000 generated problems verified');
+// Targeted queue keeps past Train/Test storage and makes peaking optional.
+has("const KEY = 'ee6407-quiz2-cycle-v1'");
+const topicSrc = html.slice(html.indexOf('const TOPICS = {'), html.indexOf('function renderRubric()'));
+const stateSrc = html.slice(html.indexOf('function openTopics()'), html.indexOf('/* ---------------- RETRAIN: generators'));
+const mockState = { re: {}, rubric: {} };
+const queue = new Function('S', 'RUBRIC', 'genCM', 'genKM', 'genFR', 'genGini', topicSrc + stateSrc + ';return {topicState};')
+  (mockState, [], G.genCM, G.genKM, G.genFR, G.genGini);
+for (const name of ['cm', 'km', 'fr', 'gini']) assert.equal(queue.topicState(name), 'open');
+assert.equal(queue.topicState('peak'), 'opt');
+mockState.re.cm = {closed: true};
+assert.equal(queue.topicState('cm'), 'closed');
+// Dropdowns use the existing saved-value and numeric-checking path.
+const drawSrc = html.slice(html.indexOf('function drawProblem(k)'), html.indexOf("document.addEventListener('click', e => {\n  const g ="));
+const problem = G.genKM(G.mkRng(42)), box = {};
+const draw = new Function('live', '$', 'typeset', 'f4', drawSrc + ';return drawProblem;')
+  ({km: problem}, () => box, () => {}, v => String(v));
+draw('km');
+assert.equal((box.innerHTML.match(/<select /g) || []).length, problem.fields.length);
+assert.ok(!box.innerHTML.includes(' selected'));
+problem.vals = problem.fields.map(f => String(f[1])); problem.res = problem.fields.map(() => true); problem.done = true;
+draw('km');
+assert.equal((box.innerHTML.match(/ selected/g) || []).length, problem.fields.length);
+problem.res[0] = false;
+draw('km');
+assert.ok(box.innerHTML.includes('→ Cluster 1'), 'feedback names the option rather than a numeric code');
+console.log('quiz-2-cycle: reviews, dropdown rendering, targeted queue and 8000 generated problems verified');

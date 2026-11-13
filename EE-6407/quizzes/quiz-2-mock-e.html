@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en" data-theme="system">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EE6407 Quiz 2 Mock E</title>
+<meta name="description" content="Answer-free timed Quiz 2 mock (Mock C format, hand-friendly numbers) with rubric self-marking and a plain-text export.">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']], processEscapes: true },
+    options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] },
+    startup: { typeset: true }
+  };
+</script>
+<script src="vendor/mathjax/tex-mml-chtml.js" async></script>
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: #f6f7f9; --surface: #ffffff; --surface-2: #eef1f5; --text: #14181f; --muted: #5b6472;
+  --border: #d8dee7; --accent: #1f6feb; --accent-soft: #e5efff; --success: #17794b; --success-soft: #e2f5ec;
+  --warning: #9a6200; --warning-soft: #fdf1dc; --danger: #b32130; --danger-soft: #fdeaec;
+  --radius: 12px; --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1117; --surface: #161b23; --surface-2: #1d232d; --text: #e7ecf3; --muted: #99a3b3; --border: #2a323e;
+    --accent: #6ea8ff; --accent-soft: #17233a; --success: #56d39b; --success-soft: #10281f;
+    --warning: #e5b567; --warning-soft: #2b2113; --danger: #ff8189; --danger-soft: #2e1519;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1117; --surface: #161b23; --surface-2: #1d232d; --text: #e7ecf3; --muted: #99a3b3; --border: #2a323e;
+  --accent: #6ea8ff; --accent-soft: #17233a; --success: #56d39b; --success-soft: #10281f;
+  --warning: #e5b567; --warning-soft: #2b2113; --danger: #ff8189; --danger-soft: #2e1519;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+.app { display: grid; grid-template-columns: 270px minmax(0, 1fr); }
+nav.side { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 18px 14px; border-right: 1px solid var(--border); background: var(--surface); font-size: 14px; }
+nav.side h1 { font-size: 17px; margin: 0 0 4px; }
+nav.side .sub { color: var(--muted); font-size: 12.5px; margin-bottom: 12px; }
+nav.side .grp { font-size: 11.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 14px 0 4px; }
+nav.side a.lk { display: flex; justify-content: space-between; gap: 6px; padding: 4px 8px; border-radius: 8px; color: var(--text); text-decoration: none; }
+nav.side a.lk:hover { background: var(--surface-2); }
+nav.side .sc { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+nav.side .sc.full { color: var(--success); font-weight: 600; }
+nav.side .tools { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+main { min-width: 0; padding: 28px clamp(16px, 4vw, 48px) 80px; max-width: 920px; }
+h2 { margin: 40px 0 8px; font-size: 24px; }
+h3 { margin: 26px 0 6px; font-size: 19px; }
+.phase { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); margin-right: 6px; vertical-align: middle; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; margin: 14px 0; }
+.note { background: var(--warning-soft); border-color: transparent; font-size: 14.5px; }
+.muted { color: var(--muted); }
+table { border-collapse: collapse; margin: 8px 0; font-size: 15px; }
+th, td { border: 1px solid var(--border); padding: 5px 10px; text-align: center; }
+th { background: var(--surface-2); font-weight: 600; }
+.step { border-left: 3px solid var(--border); padding: 6px 0 6px 12px; margin: 10px 0; }
+.step.ok { border-left-color: var(--success); }
+.step.bad { border-left-color: var(--danger); }
+.step.hidden { display: none; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 6px; }
+input[type=text] { font: inherit; font-family: var(--mono); width: 150px; padding: 5px 8px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); }
+textarea { font: inherit; width: 100%; min-height: 110px; padding: 8px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); }
+select { font: inherit; padding: 5px 8px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface-2); color: var(--text); max-width: 100%; }
+button { font: inherit; font-size: 14px; padding: 5px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); cursor: pointer; }
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+button:disabled { opacity: .5; cursor: default; }
+.fb { font-size: 14.5px; }
+.fb.ok { color: var(--success); }
+.fb.bad { color: var(--danger); }
+.why { display: none; background: var(--surface-2); border-radius: 8px; padding: 8px 12px; margin-top: 6px; font-size: 15px; }
+.why.show { display: block; }
+.locked { opacity: .45; pointer-events: none; filter: grayscale(1); }
+.cp { display: flex; gap: 10px; align-items: flex-start; padding: 6px 0; border-bottom: 1px dashed var(--border); }
+.cp:last-child { border-bottom: 0; }
+.cp .m { font-family: var(--mono); color: var(--muted); min-width: 34px; }
+.tag { font-size: 11.5px; padding: 1px 7px; border-radius: 999px; background: var(--surface-2); color: var(--muted); margin-left: 4px; }
+.status { font-weight: 600; }
+.status.open { color: var(--danger); }
+.status.closed { color: var(--success); }
+.status.opt { color: var(--muted); }
+.timer { font-family: var(--mono); font-size: 20px; }
+a.cite { color: var(--accent); cursor: pointer; }
+dialog { max-width: min(900px, 94vw); border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text); padding: 14px; }
+dialog img { width: 100%; display: block; margin: 8px 0; border: 1px solid var(--border); background: #fff; }
+dialog::backdrop { background: rgba(0,0,0,.5); }
+pre.export { white-space: pre-wrap; font-size: 13px; background: var(--surface-2); padding: 10px; border-radius: 8px; max-height: 360px; overflow: auto; }
+@media (max-width: 860px) {
+  .app { grid-template-columns: 1fr; }
+  nav.side { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--border); }
+  nav.side #toc { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+}
+</style>
+
+</head>
+<body>
+<div class="app">
+<nav class="side">
+  <h1>Quiz 2 Mock E</h1>
+  <div class="sub">EE6407 · ML part · Mock C format, easy numbers</div>
+  <div id="toc"></div>
+  <div class="grp">Test clock</div>
+  <div class="timer" id="sideTimer">60:00</div>
+  <div class="tools">
+    <button id="exportBtn">Export</button>
+    <button id="themeBtn">Theme</button>
+    <button id="resetBtn">Reset all</button>
+  </div>
+  <div class="grp">Other pages</div>
+  <a class="lk" href="quiz-2-cycle.html">Mock C cycle</a>
+  <a class="lk" href="quiz-2-mock-d.html">Mock D</a>
+  <a class="lk" href="quiz-2-bus-review.html">Bus review</a>
+</nav>
+
+<main>
+<h1 style="margin-top:0">EE6407 Quiz 2: Mock E</h1>
+<p>This paper has the same shape as Mock C: a confusion matrix with a class-count change, 2-D k-means and Fisher's ratio with peaking, at the same marks. The numbers are chosen so every step works by hand. Sit it on paper under the clock, submit, then tick the rubric checkpoints you actually earned and press <b>Export</b> to paste the record into the chat.</p>
+<p class="muted" style="font-size:14px">Unofficial practice material. Key and rubric: <code>quiz-2-mock-e.md</code>. Your progress is saved in this browser.</p>
+
+<h2 id="test"><span class="phase">Test</span>Mock E</h2>
+<div class="card">
+<p style="margin-top:0"><b>Conditions:</b> 60 minutes, 100 marks, closed book, all working on paper. Keep fractions exact while you work and give final answers to 4 decimal places.</p>
+<div class="row"><button class="primary" id="startBtn">Start the 60-min clock</button><button id="pauseBtn">Pause</button><span class="timer" id="mainTimer">60:00</span></div>
+</div>
+
+<div id="testPaper">
+<h3 id="q1">Q1. Classifier evaluation (40 marks)</h3>
+<p>A defect detector is tested on 200 parts: <b>50 are defective</b> (positive) and <b>150 are good</b>. The detector <b>misses 10</b> of the defective parts and <b>wrongly rejects 30</b> of the good ones.</p>
+<ol type="a">
+<li>Construct the confusion matrix, with <b>rows = predicted class</b> and <b>columns = actual class</b>. Label TP, FP, FN and TN. <i>(8)</i></li>
+<li>Compute the accuracy, error rate, sensitivity (recall), specificity, precision and F-score. Show the formula and substitution for each. <i>(24)</i></li>
+<li>A second batch has <b>twice as many defective parts</b> (100) and the same 150 good parts. The detector behaves the same within each class. Which of your six metrics stay the same and which change? Give the new precision and F-score, and explain in one sentence why accuracy does or does not change here. <i>(8)</i></li>
+</ol>
+
+<div class="card ansbox"><div class="row" style="justify-content:space-between;margin-top:0"><b>Your answer: Q1</b><label><input type="checkbox" data-paper="q1"> answered on paper</label></div><textarea data-ans="q1" placeholder="Final numbers, e.g. TP 80, FP 20 ... acc 0.8667 ..."></textarea></div>
+
+<h3 id="q2">Q2. k-means clustering (40 marks)</h3>
+<p>Cluster the seven points below into <b>k = 2</b> groups with k-means, using Euclidean distance. The initial centroids are \(c_1 = A\) and \(c_2 = B\).</p>
+<table><tr><th>Point</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th></tr>
+<tr><td>\((x, y)\)</td><td>(2, 0)</td><td>(5, 7)</td><td>(3, 5)</td><td>(1, 6)</td><td>(7, 4)</td><td>(0, 0)</td><td>(4, 3)</td></tr></table>
+<ol type="a">
+<li>Iteration 1: compute each point's distance to both centroids (squared distances are fine), assign the points, and compute the new centroids. <i>(14)</i></li>
+<li>Iteration 2: reassign the points and update the centroids. Say which point changes cluster and why. <i>(14)</i></li>
+<li>Show that the algorithm has converged and state the final clusters. <i>(6)</i></li>
+<li>Compute the within-cluster sum of squared errors (SSE) of the final partition. <i>(6)</i></li>
+</ol>
+
+<div class="card ansbox"><div class="row" style="justify-content:space-between;margin-top:0"><b>Your answer: Q2</b><label><input type="checkbox" data-paper="q2"> answered on paper</label></div><textarea data-ans="q2" placeholder="Assignments, centroids per iteration, which point moved, final clusters, SSE"></textarea></div>
+
+<h3 id="q3">Q3. Feature selection (20 marks)</h3>
+<p>The table gives each feature's class means and <b>standard deviations</b> for a two-class problem.</p>
+<table><tr><th>Feature</th><th>\(m_1\)</th><th>\(m_2\)</th><th>\(\sigma_1\)</th><th>\(\sigma_2\)</th></tr>
+<tr><td>\(x_1\)</td><td>0</td><td>2</td><td>1.0</td><td>1.0</td></tr>
+<tr><td>\(x_2\)</td><td>5</td><td>6</td><td>0.3</td><td>0.4</td></tr>
+<tr><td>\(x_3\)</td><td>2</td><td>6</td><td>2.4</td><td>3.2</td></tr>
+<tr><td>\(x_4\)</td><td>4</td><td>7</td><td>0.6</td><td>0.8</td></tr>
+</table>
+<ol type="a">
+<li>Compute Fisher's ratio for each feature and rank the features from most to least discriminative. <i>(12)</i></li>
+<li>A classmate says: "Adding more features can never hurt a classifier, because each one adds information." Use the <b>peaking phenomenon</b> to explain why this is wrong, and what it implies for feature selection. <i>(8)</i></li>
+</ol>
+<div class="card ansbox"><div class="row" style="justify-content:space-between;margin-top:0"><b>Your answer: Q3</b><label><input type="checkbox" data-paper="q3"> answered on paper</label></div><textarea data-ans="q3" placeholder="Fisher ratios + ranking; peaking points"></textarea></div>
+</div>
+
+<div class="card">
+<b>Finished?</b> Your answer boxes and "answered on paper" ticks are under each question and go into the export.
+<div class="row"><button class="primary" id="submitBtn">I'm done: submit and unlock self-marking</button><span class="fb" id="submitFb"></span></div>
+</div>
+
+<h2 id="retrain"><span class="phase">Mark</span>Self-mark</h2>
+<div id="retrainWrap" class="locked">
+<p>Go through the rubric and tick only the checkpoints your written answer actually earns. A checkpoint you didn't attempt stays unticked; write "blank" next to it on your paper so you can tell running out of time apart from not knowing. Then press <b>Export</b> and paste the result into the chat.</p>
+<div class="card"><b>Score: <span id="scoreOut">0</span> / 100</b> <span class="muted" id="scoreBreak"></span></div>
+<div id="rubric"></div>
+<h3>Topics to retrain</h3>
+<div class="card" id="openOut"></div>
+</div>
+</main>
+</div>
+
+<dialog id="srcDlg"><div class="row" style="justify-content:space-between"><b id="srcTitle"></b><span><button id="srcClose">Close</button></span></div><div id="srcImgs"></div></dialog>
+
+<script>
+const KEY = 'ee6407-quiz2-mock-e-v1';
+let S = {};
+try { S = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { S = {}; }
+S.paper = S.paper || {}; S.rubric = S.rubric || {}; S.elapsed = S.elapsed || 0;
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+const $ = id => document.getElementById(id);
+function typeset(el) { if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise(el ? [el] : undefined).catch(() => {}); }
+
+const QS = [['q1', 'Q1 confusion matrix'], ['q2', 'Q2 k-means'], ['q3', 'Q3 Fisher + peaking']];
+S.ans = S.ans || {};
+document.querySelectorAll('[data-ans]').forEach(t => { t.value = S.ans[t.dataset.ans] || ''; t.oninput = () => { S.ans[t.dataset.ans] = t.value; save(); }; });
+document.querySelectorAll('[data-paper]').forEach(cb => cb.checked = !!S.paper[cb.dataset.paper]);
+document.querySelectorAll('[data-paper]').forEach(cb => cb.onchange = () => { S.paper[cb.dataset.paper] = cb.checked; save(); updateToc(); });
+let tick = null;
+function fmt(sec) { const r = Math.max(0, 3600 - sec); return String(Math.floor(r / 60)).padStart(2, '0') + ':' + String(r % 60).padStart(2, '0'); }
+function showTime() { $('mainTimer').textContent = $('sideTimer').textContent = fmt(S.elapsed) + (S.elapsed >= 3600 ? ' (time)' : ''); }
+$('startBtn').onclick = () => { if (tick) return; S.started = S.started || new Date().toISOString(); tick = setInterval(() => { S.elapsed++; showTime(); if (S.elapsed % 10 === 0) save(); }, 1000); };
+$('pauseBtn').onclick = () => { clearInterval(tick); tick = null; save(); };
+$('submitBtn').onclick = () => { clearInterval(tick); tick = null; S.submitted = true; save(); unlock(); updateToc(); location.hash = '#retrain'; };
+
+const RUBRIC = [["q1", "cm", 8, "The matrix in rows = predicted, columns = actual: TP = 40, FP = 30 (top row); FN = 10, TN = 120 (bottom row)."], ["q1", "cm", 4, "Accuracy = (40+120)/200 = 0.8000."], ["q1", "cm", 4, "Error rate = (30+10)/200 = 0.2000, i.e. 1 − accuracy."], ["q1", "cm", 4, "Sensitivity = recall = 40/50 = 0.8000."], ["q1", "cm", 4, "Specificity = 120/150 = 0.8000."], ["q1", "cm", 4, "Precision = 40/(40+30) = 4/7 = 0.5714."], ["q1", "cm", 4, "F-score = 2PR/(P+R) = 2TP/(2TP+FP+FN) = 80/120 = 0.6667. (The arithmetic mean 0.6857 is wrong: F is the harmonic mean.)"], ["q1", "cm", 4, "(c) Sensitivity and specificity are <b>unchanged</b>, because each is a rate within one actual class (column). The reason must be stated."], ["q1", "cm", 4, "(c) With TP = 80 and FN = 20: precision rises to 80/110 = 0.7273 and F to 160/210 = 0.7619, because more positives means more TPs against the same FPs. Accuracy stays 200/250 = 0.8000 (error 0.2000) <b>only because sensitivity = specificity</b>: accuracy is their prevalence-weighted average."], ["q2", "km", 6, "Iteration 1 assignment (squared distances to A(2,0) | B(5,7)): A 0|58 → c₁; B 58|0 → c₂; C 26|8, D 37|17, E 41|13 → c₂; F 4|74, G 13|17 → c₁. Clusters {A, F, G} | {B, C, D, E}."], ["q2", "km", 8, "Iteration 1 centroids: c₁ = mean{A, F, G} = (6/3, 3/3) = (2, 1); c₂ = mean{B, C, D, E} = (16/4, 22/4) = (4, 5.5)."], ["q2", "km", 6, "Iteration 2: <b>G moves to c₂</b> (d² = 8 vs 6.25). The others don't change (e.g. A 1 vs 34.25, F 5 vs 46.25)."], ["q2", "km", 8, "Iteration 2 centroids: c₁ = mean{A, F} = (1, 0); c₂ = mean{B, C, D, E, G} = (20/5, 25/5) = (4, 5)."], ["q2", "km", 6, "Iteration 3: no point changes cluster (e.g. G 18 vs 4 → c₂; A 1 vs 29 → c₁; F 1 vs 41 → c₁), so the algorithm stops. Final clusters {A, F} and {B, C, D, E, G}."], ["q2", "km", 6, "SSE = (1 + 1) + (5 + 1 + 10 + 10 + 4) = 2 + 30 = 32."], ["q3", "fr", 8, "Fisher ratios, with σ squared: x₁ = 4/(1+1) = <b>2</b>; x₂ = 1/(0.09+0.16) = <b>4</b>; x₃ = 16/(5.76+10.24) = <b>1</b>; x₄ = 9/(0.36+0.64) = <b>9</b> (2 marks each)."], ["q3", "fr", 4, "Ranking x₄ > x₂ > x₁ > x₃. (If σ is left unsquared you get x₄ > x₃ > x₁ > x₂, a sign of the variance trap; ranking by the mean gap alone puts x₃ first.)"], ["q3", "peak", 8, "Peaking: a fixed N; error falls and then rises as features are added; more parameters estimated from the same N (curse of dimensionality); the optimum dimensionality grows with N; therefore select features. Roughly 2 marks per point, 8 maximum."]];
+const TOPICS = {
+  cm: { name: 'Metrics + class-count changes', link: 'quiz-2-cycle.html#re-cm', rule: 'Precision divides by the predicted-positive count, recall by the actual-positive count. Find which axis is predicted before computing anything.' },
+  km: { name: '2-D k-means', link: 'quiz-2-cycle.html#re-km', rule: 'Assign every point, recompute every centroid as a mean, repeat. Convergence is a full pass with no reassignment, and you must show that pass.' },
+  fr: { name: 'Fisher ratios + explicit ranking', link: 'quiz-2-cycle.html#re-fr', rule: 'R = (m₁−m₂)² / (σ₁²+σ₂²). Square the standard deviations. Rank by R, not by the gap between the means.' },
+  peak: { name: 'Peaking', link: 'quiz-2-cycle.html#re-peak', rule: 'Fixed N; error falls then rises; too many parameters for N; optimum grows with N; so select features.' }
+};
+function renderRubric() {
+  let h = '';
+  QS.forEach(([q, l]) => {
+    h += '<div class="card"><h3 style="margin-top:0">' + l + '</h3>';
+    RUBRIC.forEach((r, i) => { if (r[0] !== q) return;
+      h += '<label class="cp"><input type="checkbox" data-rb="' + i + '"' + (S.rubric[i] ? ' checked' : '') + '><span class="m">' + r[2] + '</span><span>' + r[3] + ' <span class="tag">' + TOPICS[r[1]].name + '</span></span></label>'; });
+    h += '</div>';
+  });
+  $('rubric').innerHTML = h;
+  document.querySelectorAll('[data-rb]').forEach(cb => cb.onchange = () => { S.rubric[cb.dataset.rb] = cb.checked; save(); score(); renderOpen(); updateToc(); });
+  score(); typeset($('rubric'));
+}
+function score() {
+  let t = 0; const per = {};
+  RUBRIC.forEach((r, i) => { per[r[0]] = per[r[0]] || [0, 0]; per[r[0]][1] += r[2]; if (S.rubric[i]) { t += r[2]; per[r[0]][0] += r[2]; } });
+  $('scoreOut').textContent = t;
+  $('scoreBreak').textContent = '(' + QS.map(([q]) => q.toUpperCase() + ' ' + per[q][0] + '/' + per[q][1]).join(' · ') + ')';
+  return t;
+}
+function openTopics() { const o = new Set(); RUBRIC.forEach((r, i) => { if (!S.rubric[i]) o.add(r[1]); }); return o; }
+function renderOpen() {
+  const o = openTopics();
+  $('openOut').innerHTML = o.size ? '<p style="margin-top:0">Every topic with an unticked checkpoint is open. Each one links to its fresh-number drill on the Mock C cycle page.</p><ul>' + [...o].map(k => '<li><a href="' + TOPICS[k].link + '"><b>' + TOPICS[k].name + '</b></a>: ' + TOPICS[k].rule + '</li>').join('') + '</ul>' : '<p style="margin:0" class="fb ok">Every checkpoint ticked: nothing open.</p>';
+}
+function unlock() { if (!S.submitted) return; $('retrainWrap').classList.remove('locked'); renderRubric(); renderOpen(); }
+
+function updateToc() {
+  let h = '<div class="grp">Test</div>' + QS.map(([q, l]) => '<a class="lk" href="#' + q + '"><span>' + l + '</span><span class="sc">' + (S.paper[q] ? '✓' : '') + '</span></a>').join('');
+  h += '<div class="grp">Self-mark</div><a class="lk" href="#retrain"><span>Score</span><span class="sc">' + (S.submitted ? score() + '/100' : 'locked') + '</span></a>';
+  if (S.submitted) { const o = openTopics(); h += Object.entries(TOPICS).map(([k, t]) => '<a class="lk" href="' + t.link + '"><span>' + t.name + '</span><span class="sc' + (o.has(k) ? '' : ' full') + '">' + (o.has(k) ? 'open' : 'ok') + '</span></a>').join(''); }
+  $('toc').innerHTML = h;
+}
+$('exportBtn').onclick = () => {
+  const lines = ['EE6407 Quiz 2 Mock E, export ' + new Date().toISOString(),
+    'Key/rubric: EE-6407/quizzes/quiz-2-mock-e.md · paper 100 marks / 60 min',
+    'Elapsed: ' + Math.floor(S.elapsed / 60) + ' min ' + (S.elapsed % 60) + ' s; submitted: ' + !!S.submitted, ''];
+  lines.push('TEST answered on paper: ' + QS.map(([q]) => q + '=' + (S.paper[q] ? 'yes' : 'no')).join(', '), '');
+  QS.forEach(([q, l]) => lines.push(l + ' answer:', '  ' + ((S.ans[q] || '').trim().replace(/\n/g, '\n  ') || '<blank>')));
+  if (S.testNotes) lines.push('Earlier typed notes: ' + S.testNotes);
+  lines.push('');
+  if (S.submitted) {
+    lines.push('SELF-MARK: ' + score() + '/100. Missed checkpoints:');
+    RUBRIC.forEach((r, i) => { if (!S.rubric[i]) lines.push('  [' + r[0] + ', ' + r[2] + ' marks] ' + r[3].replace(/<[^>]+>/g, '')); });
+    const o = openTopics();
+    lines.push('', 'TOPICS:'); Object.entries(TOPICS).forEach(([k, t]) => lines.push('  ' + t.name + ': ' + (o.has(k) ? 'open' : 'ok')));
+  }
+  const txt = lines.join('\n');
+  const pre = document.createElement('pre'); pre.className = 'export'; pre.textContent = txt;
+  $('srcTitle').textContent = 'Export (copy this into the chat)'; $('srcImgs').innerHTML = ''; $('srcImgs').appendChild(pre);
+  $('srcDlg').showModal();
+  try { navigator.clipboard.writeText(txt).catch(() => {}); } catch (e) {}
+};
+$('srcClose').onclick = () => $('srcDlg').close();
+$('resetBtn').onclick = () => { if (!window.confirm('Erase all progress on this page?')) return; try { localStorage.removeItem(KEY); } catch (e) {} location.reload(); };
+const THEME_KEY = 'ee6407-theme';
+try { const t = localStorage.getItem(THEME_KEY); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+$('themeBtn').onclick = () => { const r = document.documentElement, n = r.dataset.theme === 'dark' ? 'light' : 'dark'; r.dataset.theme = n; try { localStorage.setItem(THEME_KEY, n); } catch (e) {} };
+
+showTime(); unlock(); updateToc();
+</script>
+</body>
+</html>
