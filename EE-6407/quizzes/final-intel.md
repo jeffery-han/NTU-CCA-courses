@@ -1,64 +1,77 @@
 # EE6407 final exam — scope and format evidence
 
-Compiled 2026-11-13 after a fresh NTULearn sync (course `_2706625_1`: content, announcements and Media
-Gallery). Lecturer statements in transcripts are high trust, allowing for speech-recognition noise.
-Student material is **unofficial**: use it for patterns only, and re-derive every answer.
-**The exam date, time and venue are NOT verified.** EE6407 is not on the NTU undergraduate exam
-timetable (that timetable runs 23 Nov – 3 Dec 2026). Check the postgraduate timetable or StudentLink.
+Compiled 2026-11-13. The primary evidence is the **official past papers** from the NTU Library
+repository (Graduates folder, last three academic years). They are stored locally in `tests/` and
+**git-ignored**: they are NTU-only, copyright-marked, and this backup repo is public. This file
+summarises topics only. Lecturer statements come from transcripts. Student material is unofficial.
+**This sitting's date, time and venue are NOT verified.** EE6407 is not on the NTU undergraduate
+exam timetable (23 Nov – 3 Dec 2026). Check the postgraduate timetable or StudentLink.
 
 ## Sources consulted
 
 | Source | What it gives | Trust |
 |---|---|---|
-| `resources/transcripts-raw/week-05-transcript.txt` (+ second session) | The final has **4 questions: 1 GA + 3 ML**. Questions change every semester. | High (lecturer) |
-| `resources/transcripts-raw/week-13-transcript.txt`, end section ("brief review what we have studied in the machine learning part") | The lecturer's own **ML revision list** (see "Scope" below). Exam-specific remarks: no computer in the exam, so compute LDA `w` directly rather than by SVD; for soft-margin SVM, `b` comes only from support vectors with `0 < α < C`; using all support vectors gives "wrong results"; you should be able to use **either** impurity measure. | High |
-| `resources/transcripts-raw/week-13-second-session-transcript.txt` | The same review, plus: "if we have such a question … you will be instructed" which impurity measure to use. Draw dendrogram heights proportional to the merge distance, and give the similarity matrix at every step. | High |
-| `resources/transcripts-raw/week-12-transcript.txt` | k-means: in a past exam most students could describe the algorithm but could not **run it** on given initial centroids and samples. | High |
-| `resources/machine-learning/ml-slides-01…11-*.pdf` (NTULearn "Machine Learning Lecture Note-1…10", downloaded 2026-11-13) | The full ML deck set. These are the controlling source for formula conventions. | Official |
-| `resources/public-archive-2026-08-24/exam-summary/6407考试原题.docx` | Chinese recollection of 21-22 S2, 22-23 S2, 23-24 S1, 23-24 S2 finals (under the older code EE6227) | Unofficial; question text approximate |
-| `resources/public-archive-2026-08-24/past-exam-walkthroughs-2020-2024/*.pdf` (25 files) | Personal solutions per question, 20-S2 to 24-S1 | Unofficial; keys may be wrong |
-| 小红书 (RedNote) | **Not searched yet**: the MCP login failed on 2026-11-11 | — |
+| `tests/test-final-2024-25-s1.pdf`, `-2024-25-s2.pdf`, `-2025-26-s1.pdf`, `-2025-26-s2.pdf` (NTU Library, EE6407) | Four complete official papers | **Official** |
+| `tests/test-final-2023-24-s1-ee6227.pdf`, `-2023-24-s2-ee6227.pdf` (NTU Library, old code EE6227) | Two older official papers. Not re-read page by page; topics match the docx summary below. | Official |
+| `resources/transcripts-raw/week-05-transcript.txt` | Lecturer: 4 questions, 1 GA + 3 ML; questions change every semester | High |
+| `resources/transcripts-raw/week-13-transcript.txt` (+ second session), end section | The lecturer's ML revision list and exam remarks (see "Scope") | High |
+| `resources/transcripts-raw/week-12-transcript.txt` | k-means: in a past exam most students could not run it by hand on given centres | High |
+| `resources/machine-learning/ml-slides-01…11-*.pdf` | Formula conventions (Gini = ½(1 − Σp²), ml-slides-06 p. 14) | Official |
+| `resources/public-archive-2026-08-24/exam-summary/6407考试原题.docx`, `past-exam-walkthroughs-2020-2024/` | Student summaries and personal solutions | Unofficial; keys not trusted |
+| 小红书 | Skipped by the learner on 2026-11-13. The official papers replace it. | — |
 
-## Format (pattern from past papers)
+## Format (official, constant over all four EE6407 papers)
 
-Every sitting from 21-22 S2 to 24-25 S1 has 4 questions. Older papers (≤ 22-23 S2) put 2 questions
-on GA; from 23-24 S1 on, GA has 1 (Q1), matching the lecturer's "1 GA + 3 ML" statement. The 20-S2
-paper (PSO, CNN) belongs to an older syllabus and is ignored. Duration and marks per question are
-not confirmed locally.
+- **3 hours, closed book, 4 questions, answer all, 25 marks each.** Questions are split into parts of 5–18 marks.
+- **Q1 = GA (25 marks), Q2–Q4 = ML.** Each GA question has two independent parts: one calculation and one shorter argument.
+- Calculator: not stated on the papers. The answers need one, and one was allowed for Quiz 2.
+- Large numbers are given (e.g. scatter matrices ~100), so expect 4-significant-figure hand arithmetic.
 
-| Sitting | Q1 | Q2 | Q3 | Q4 |
+## Topic map (official papers)
+
+| Sitting | Q1 GA | Q2 | Q3 | Q4 |
 |---|---|---|---|---|
-| 21-22 S2 | GA scenario (helmet; real vs binary coding) | GA: NP/TSP, distance matrix, cycle crossover | Bayes rule from μ, Σ; Fisher LDA; evaluation procedures and metrics | filter vs wrapper diagram; 3 clustering families; DBSCAN steps |
-| 22-23 S2 | GA scenario (heartbeats; fitness normalisation) | GA: arithmetic recombination, 18-bit encoding | feature-selection method; Fisher LDA; k-fold CV | HAC + dendrogram; choose and describe a clustering method |
-| 23-24 S1 | GA: 12-city TSP, new recombination operator | **data preparation** (types, outliers, missing values, scaling) | LDA classify; naive Bayes classify | choose a clustering algorithm for figures ×2; 5 clustering evaluation metrics |
-| 23-24 S2 | GA: PID real/binary coding; voucher genotype and fitness | **SVM** primal; w, b from α; LDA vs SVM | confusion-matrix metrics; peaking phenomenon; 3 feature-subset methods | 4 clustering methods and their applications; HAC + dendrogram |
-| 24-25 S1 | GA: 12-bit encoding of x, y, z | Bayes (Gaussian) + naive Bayes | Fisher LDA + SVM | HAC single then complete linkage + dendrogram; silhouette |
+| 24-25 S1 | 12-bit binary decoding of (x, y, z) on [−10, 10]³, binary-resolution limitation (15); real-coded fitness = estimation error from sensor points (10) | Gaussian **Bayes** rule from m, C with unequal priors 500/300 (12); **naive Bayes** on the same data (13) | **Fisher LDA** design + classify (12); separable **SVM** w, w₀ from 4 SVs and α + classify (13) | **HAC** single (9) and complete (7) linkage + dendrograms; **silhouette** (9) |
+| 24-25 S2 | n-queens diagonal-conflict equation C(Q), value for an 8-queen string, fitness in [0, 1] (10); real-coded **flexible-α arithmetic crossover**, F before/after, for/against (15) | Soft-margin **SVM primal** explained (10); w, b from 6 SVs with **C = 1** (15) | **Bernoulli NB** (binary table) (10); **Fisher LDA** (10); classify + **distance to boundary** + confidence (5) | Describe **k-means** (5); choosing k (5); irregular shapes? (5); single-linkage **HAC** from a distance matrix (10) |
+| 25-26 S1 | Portfolio weights Σw = 1: **whole arithmetic** and **quasi-blend** crossover with given rᵢ, validity repair (18); **black-box problem classification** — elevator control (7) | **LDA as an optimisation problem** + rationale (12); design (8); classify + confidence (5) | **Bernoulli NB** (categorical binary) (9); **multinomial NB** on word sequences (9); **Gini root-node** choice from 3 binary features (7) | Four clustering families + applications (8); **centroid-linkage** HAC, 3-D samples, dendrogram (10); **Dunn index** (7) |
+| 25-26 S2 | Two-knight tour, permutation coding of 64 squares: fitness function and fitness of a given string (18); stagnation, **exploration vs exploitation** (7) | **LDA** design (12 incl. "when does LDA perform best"); classify + distance + confidence (6); LDA when **d is large relative to N** + remedy (7) | Soft-margin SVM: role of ξ and C (7); w, w₀ from 8 SVs with **C = 3** (12); classify + distance + confidence (6) | Single-linkage **HAC** (3-D) (8); **k-means 2 iterations** from given centres (12); choosing K (5) |
 
-Pattern: the **ML calculation core** is fixed. LDA appears in 5/5 sittings and Bayes/NB in 3/5.
-SVM w,b appears twice, HAC + dendrogram 3 times, and confusion-matrix metrics once in the final plus
-in every Quiz 2. Descriptive parts recur: clustering families and scenarios, DBSCAN steps, feature
-selection (filter/wrapper, SFS/SBS), peaking, data preparation and evaluation procedures. The
-summary's author calls the ML questions highly standard ("背多分", memorise-for-marks) and the GA
-question the hardest on the paper.
+### Frequency (4 official EE6407 papers)
+
+| Item | Count | Notes |
+|---|---|---|
+| Fisher LDA design (w = S_W⁻¹(m₁ − m₂), w₀ from midpoint) | **4/4** | S_W = S₁ + S₂ (scatter matrices given) |
+| Distance to boundary \|g(x)\|/‖w‖ + confidence | **3/4** | LDA ×3, SVM ×1 |
+| SVM w and b from support vectors | **3/4** | Soft margin twice: b only from 0 < α < C (α = C excluded) |
+| Naive Bayes (Gaussian / Bernoulli / multinomial) | **3/4** | Bernoulli twice, multinomial once, Gaussian once |
+| HAC + dendrogram | **4/4** | Single ×3, complete ×1, centroid ×1 |
+| k-means: describe / run / choose K | 3/4 | Hand iteration once (25-26 S2) |
+| Cluster evaluation index (silhouette, Dunn) | 2/4 | |
+| Gini root-node selection | 1/4 | ½(1 − Σp²) |
+| Gaussian Bayes rule with priors | 1/4 | |
+| GA: crossover arithmetic on real vectors | 2/4 | Flexible-α, whole arithmetic, quasi-blend |
+| GA: permutation coding + fitness (n-queens, knight tour) | 2/4 | |
+| GA: binary decoding | 1/4 | |
+| GA: concept (exploration/exploitation, black-box classification) | 2/4 | |
+| Regression, metrics / CV, feature selection, data preparation, bagging | **0/4** | Present in older EE6227 papers (21-24). The lecturer's Week 13 list keeps them in scope, so a short part is possible. |
 
 ## Scope (lecturer's Week 13 revision list, ML part)
 
-1. Data preparation: data types (nominal/ordinal, quantitative), missing values, outliers, standardisation `(x−μ)/σ` vs min-max normalisation to [0, 1].
-2. Bayes decision rule with Gaussian class-conditional densities; naive Bayes in three forms (Gaussian, multinomial, Bernoulli with count tables).
-3. Fisher LDA: `w = S_W⁻¹(m₁ − m₂)`; `w₀` from the midpoint `(m₁+m₂)/2` lying on the boundary.
-4. Linear SVM: separable primal/dual; `w = Σ αᵢ yᵢ xᵢ`; `b` from support vectors (averaged); soft margin with slack and C: `b` uses only `0 < αᵢ < C`.
-5. Classification trees: entropy and **Gini = ½(1 − Σp²)** (ML-Slides6 p. 14, worked 0.09 on p. 15); choosing the split feature and threshold; bagging / random forest.
-6. Regression: OLS, ridge (L2), lasso (L1, which also selects variables).
-7. Evaluation: holdout, repeated holdout, k-fold, repeated k-fold, leave-one-out; accuracy, sensitivity, specificity, precision, recall, F-score, and when to prefer recall vs precision.
-8. Curse of dimensionality (distance concentration, sparsity); feature selection vs extraction; individual vs subset evaluation; SFS / SBS.
-9. Clustering: k-means (run it by hand), agglomerative HAC + dendrogram, DBSCAN, Gaussian mixture / EM; evaluation by silhouette, Dunn and Davies–Bouldin (ML-Slides11).
+1. Data preparation: data types, missing values, outliers, standardisation vs min-max normalisation.
+2. Bayes decision rule (Gaussian); naive Bayes: Gaussian, multinomial, Bernoulli (count tables).
+3. Fisher LDA: `w = S_W⁻¹(m₁ − m₂)`; `w₀ = −wᵀ(m₁+m₂)/2`. No computer, so compute directly; SVD is not used.
+4. Linear SVM: `w = Σ αᵢ dᵢ xᵢ`; b from support vectors, averaged. Soft margin: use only `0 < αᵢ < C` for b; "if you use all the support vectors you get wrong results".
+5. Trees: entropy and **Gini ½(1 − Σp²)**. "You will be instructed" which measure to use. Bagging / random forest.
+6. Regression: OLS, ridge (L2), lasso (L1, variable selection).
+7. Evaluation procedures (holdout … LOO) and metrics (precision/recall/F, when to emphasise which).
+8. Curse of dimensionality; feature selection vs extraction; SFS/SBS.
+9. Clustering: k-means (run by hand), HAC with **dendrogram heights proportional to merge distance** and the distance matrix shown at each step, DBSCAN, GMM/EM; silhouette, Dunn, Davies–Bouldin.
 
-GA scope for the 1 GA question: the Weeks 1–4 material already covered in `notes/` (see STATUS.md).
-The final may go beyond the Quiz 1 boundary (slide 60 onward: fitness scaling, selection schemes,
-population management). **Unconfirmed — check.**
+GA scope: the whole GA part (Weeks 1–4). The official Q1s use binary decoding, real-coded
+crossovers (whole arithmetic, flexible-α, blend), permutation coding with problem-specific fitness,
+and the problem classification and exploration/exploitation concepts.
 
 ## Open questions
 
-1. Exam date, time, venue, duration, calculator policy (calculator was allowed in Quiz 2).
-2. Whether GA material after the Quiz 1 boundary is examinable.
-3. RedNote recollections of the 24-25 S2 / 25-26 S1 finals (not yet searched).
+1. This sitting's exam date, time and venue; calculator policy.
+2. Whether a part on regression, metrics or feature selection returns (absent in 2024-26, but in the lecturer's list).
