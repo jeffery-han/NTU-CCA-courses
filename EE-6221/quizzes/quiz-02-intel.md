@@ -60,3 +60,36 @@ RedNote re-check on 2026-10-27 failed: both the MCP and the browser session are 
 ~10 True/False with one-line justification across Lec 1–4, plus one short-answer derivation. The most likely derivation is the **two-sensor Kalman fusion from first principles** — Lec 4 p. 42 literally sets "Q: Derive the above from first principles", and the 2024-25 exam Q5 is its three-sensor version. Second candidate: pinhole projection / normalised coordinates with integer intrinsics (no calculator). Lec 3 is likely tested conceptually (E vs H requirements, scale loss, number of solutions, positive-depth test) rather than by SVD arithmetic.
 
 Mock built from this: `quiz-02-mock-01.html` (answer-free) + `quiz-02-mock-01.md` (key) + `quiz-02-mock-01-check.py`.
+
+---
+
+# Addendum — locked-in intel (2026-11-04, quiz day)
+
+## 1. Last year's actual Quiz 2 (strongest evidence)
+
+`resources/peer-tutor-deck-04-quiz2-mobile-kalman.pptx` (peer tutor's deck, was `6221 tutor4.pptx`), slides 2–10:
+
+- **Format last year:** 7 True/False × 10 marks + 1 multiple-choice × 30 marks = 100 marks (15%). **Every item needs a brief reason.**
+- **The 8 items:** (1) Can 8 points give E? (2) Can 4 coplanar points give H? (3) Can both E and H give R and a scaled x? (4) "Precision = closeness to the true value, accuracy = reproducibility" (definitions swapped, so **False**). (5) Is the Kalman filter statistically optimal for linear systems? (6) V(X+Y) = V(X)+V(Y) for uncorrelated (independent) X, Y. (7) SFM = R, t between two views plus relative structure. (MCQ) Advantages of multi-sensor fusion: Redundancy / Accuracy / Reliability, justified.
+- **Tutor's answer slides cite:** Lec1 p24 (p25 in our copy), Lec4 pp15/17/45, Lec3 p4, Lec1 pp12–15 (pp13–16 in ours). Slides 11–34 cover mobile-robot wheels and slides 35–48 the Kalman exam Q5. These are final-exam material, not quiz material.
+
+## 2. WeChat group `EE6221-26S1` (`52886152108@chatroom`)
+
+Exported 2026-11-04 with `~/Projects/wechat-export` (2322 messages, 2026-08-01 → 2026-11-04; read in full from 15 Oct). Text only: the deck and the tutor's handwritten-note images posted to the group are not in the export.
+
+| Claim | Who / when | Trust |
+|---|---|---|
+| Scope Weeks 8–11 = Hu's Lec 1–4; **no** robot control or mobile robots | official notice; the peer tutor (10-13, 10-18; "last cohort's experience") | High |
+| Week 12 (IBVS, Lyapunov V = ½eᵀe) not in scope; a 2024 RedNote post shows it then, so the scope has since changed | lorne, CLIF, KOH (11-03) | High |
+| Paper and pen, no calculator, so little or no calculation; judgement (True/False + reason) and short discussion | many (10-26 → 11-04) | Medium-High |
+| "Last semester everyone basically got full marks on Quiz 2"; "the bank hasn't changed in three years" | LYF, CLIF (11-03), unverified | Medium-Low |
+| Last semester's tutor deck shared as a likely source of repeats | 619 刘一舟 (11-03 21:39) | Medium |
+| The tutor said on Monday the **expectation/variance** derivation "should be tested" | Black (11-03 22:09), second-hand | Medium |
+| The 2024 and 2025 discussion items were about **multi-sensor fusion** | Black (11-03 23:13) | Medium (matches the MCQ above) |
+| 8-point and 4-point: know the concept and derivation idea, not 8×9 arithmetic | several (11-02 → 11-04) | Medium |
+
+## 3. Updated prediction
+
+The bank is likely reused: **≈7 T/F with reasons on E/H requirements, accuracy vs precision, Kalman optimality conditions, V(X+Y), SFM; plus a fusion-advantages question**, possibly reworded or reversed. Second tier: the lecturer's in-class questions (Weeks 8–9). Derivation, if any: the V(X+Y) proof or two-sensor variance fusion.
+
+Drill page: `quizzes/quiz-02-sprint.html` (Part 1 = last year's paper, Part 2 = reversed variants, Part 3 = derivations, phrase sheet); keys checked by `quiz-02-sprint-check.py`.
