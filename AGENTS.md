@@ -10,8 +10,11 @@ This file holds the rules that apply to every task.  Task-specific rules are in 
 | Write or edit `notes/*.tex` | `docs/notes-style.md` |
 | Build or edit an HTML lesson, primer or mock | `docs/html-lessons.md` |
 | A message starting `/update` or `/synthesize` | `docs/shortcuts.md` |
-| Exam or quiz preparation | the `quiz-prep` skill; its outputs follow `docs/html-lessons.md` |
+| Quiz or exam preparation: primer, mock, grading, mistake review | `docs/quiz-prep.md` (the `quiz-prep` skill points to the same file) |
+| Before handing over any page that has an answer key | run `sh docs/run-checkers.sh EE-XXXX` |
 | "When did X change?" / an old path | that course's `LOG.md` (history; search it, do not read it whole) |
+
+Use one workflow for practice material: `docs/quiz-prep.md`.  The `course-assessment` skill (JSON question bank in `assessment/`) and the `self-study` skill (notes bank in `output/self-studying/`) are separate tools with their own folders; use them only when the learner names them, or to maintain pages they already built (`EE-6204/assessment/`, `EE-6221/output/self-studying/`).  For NTULearn use `ntulearn-browser` to sync and `ntulearn` to query what is already local; for RedNote use `rednote`.
 
 ## Course layout
 

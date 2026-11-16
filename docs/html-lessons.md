@@ -15,8 +15,20 @@ Use an executable notebook such as `.ipynb` only when running code, changing par
 - Safari on `file://` refuses to load anything through `../`.  So every folder that holds HTML keeps its own `vendor/` (MathJax) and its own page-image folder beside the pages, and every course has a root `index.html` launcher that links to all pages.  Add each new page to the launcher.
 - The vendored MathJax bundle cannot autoload extensions: `\boldsymbol` stops all typesetting, so use `\mathbf`.
 - Put new pages in `quizzes/`, so one `vendor/` and one image folder serve them.  Name the image folder `<assessment>-pages/` (e.g. `quiz-03-pages/`, `final-pages/`) and each image `<pdf-stem>-pNNN.jpg`.
-- Each page with numeric keys has a checker script beside it (`<page>-check.py`) that recomputes every key.  Run it before handing off.
+- Each page with numeric keys has a checker script beside it (`<page>-check.py`) that recomputes every key.  Run it before handing off; `sh docs/run-checkers.sh EE-XXXX` runs every checker in a course.
 - Record each new page as one line in the course `STATUS.md` "Study pages" section: path, what it is, its checker.
+
+## Citations and page pop-ups
+
+- Every source citation, and every named reference such as "Lecture Example 6.2" or "§7", is a link: `<a href="../resources/<file>.pdf#page=N" data-pages="<pdf-stem>:<first>-<last>">`.  `N` is the PDF page index, not the printed page number; check for an offset (EE-6204 `lecture-00`: printed p. 98 is PDF p. 103).
+- Clicking the link opens one shared `<dialog>` that shows the cited pages as JPG images from the page-image folder beside the HTML file.  Reference implementations: `EE-6204/notes/quiz2-prep-learning.html` (PDF pages) and `EE-6203/notes/quiz2-prep-learning.html` (slides).
+- Render pages with a Swift PDFKit script (this machine has no poppler or mutool).  Watch for `/Rotate` pages, and do not pipe the renderer into `head`.
+- Confirm that every target PDF and every image exists (the checker script should assert it) and spot-check that each page shows the cited content.
+
+## Layout
+
+- Self-contained and offline, light and dark colour tokens, palette and structure taken from the course's existing pages.
+- A page with more than a few sections gets a sticky contents sidebar, modelled on `EE-6203/notes/quiz2-prep-learning.html`: a 270px left column (`.app` grid `270px minmax(0,1fr)`; `position: sticky; height: 100vh; overflow-y: auto`) with the page title, one link per section built by script from the headings, a per-section `done/total` score that turns green when complete, and links to sibling pages.  Give the content column `min-width: 0`.  Under 860px the sidebar moves to the top as a two-column link grid.  Do not keep a second inline contents box.
 
 ## Checklist
 
