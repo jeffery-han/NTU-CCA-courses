@@ -4,6 +4,7 @@ History only: file moves, update records and settled assessment details.  Do not
 
 ## Entries since 2026-11-16
 
+- 2026-11-16: deleted the untracked `Part1/` folder (104 MB) at the learner's request.  It was a 2026-09-04 snapshot of this course: every file was older than or identical to the live or committed copy.  Unique items lost with it: iCloud conflict copies `STATUS 2/3/4.md` and `slides/sensitivity-analysis-simplex-method.pptx` (v1, superseded by `slides/sensitivity-analysis-simplex-method-v2.pptx`).  Also deleted remote branch `worktree-ee6204-quiz1-prep` (one unmerged commit, 25435e8, a second WeChat addendum to `quizzes/quiz-1-intel.md` from 2026-09-02).
 - 2026-11-16: `STATUS.md -> LOG.md` (this file); new short `STATUS.md` written from it.  No course file moved.
 
 ## Archived manifest (old `STATUS.md`, frozen 2026-11-16)

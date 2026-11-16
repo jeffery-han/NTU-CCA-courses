@@ -4,6 +4,7 @@ History only: file moves, update records and settled assessment details.  Do not
 
 ## Entries since 2026-11-16
 
+- 2026-11-16: removed stale September worktrees at the learner's request.  Deleted local branch `worktree-ee6407-week4-predictions` with two unmerged commits (bc3bea4, c47fa53: Quiz 1 prediction reconciled with the Week 4 transcript; tree representation and GP stated as in Quiz 1 scope) and the merged branches `worktree-ee6407-mockb-followups`, `-quiz1-mock-b`, `-quiz1-prediction-html`.
 - 2026-11-16: `STATUS.md -> LOG.md` (this file); new short `STATUS.md` written from it.  No course file moved.
 
 ## Archived manifest (old `STATUS.md`, frozen 2026-11-16)

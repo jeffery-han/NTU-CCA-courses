@@ -56,5 +56,5 @@ Open from `index.html`.  All are unofficial practice.
 ## Unresolved
 
 - Final-exam date, format and scope (see Now).
-- `Part1/` (untracked, 104 MB) is an older copy of this course folder with iCloud conflict files `STATUS 2/3/4.md`; several of its Quiz 1 pages differ from the live ones.  Waiting for the learner to say keep or delete.
+- Four pages carry uncommitted local edits from 2026-10-15 that swap `../resources/`, `../notes/`, `../quizzes/` links for `resources-link/`, `notes-link/`, `quizzes-link/`, folders that do not exist, so those links are broken in the working copy: `notes/exercises-part1-mock.html`, `notes/quiz1-prep-learning.html`, `quizzes/quiz-1-mcq-practice.html`, `quizzes/quiz-1-prediction.html`.  The committed versions are correct.  Waiting for the learner to say revert (`git restore <file>`) or keep.
 - `notes/quiz2-prep-learning.html`: one long inline formula overflows at phone width.
