@@ -1,0 +1,715 @@
+<title>EE6407 Final Bus Review</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@500&family=Space+Grotesk:wght@600;700&display=swap">
+<style>
+/* Layout: one narrow reading column for a phone held on a bus; sticky score bar with section chips; each topic = "know this" then tap-to-answer checks. */
+:root {
+  --bg: #eef2f6; --surface: #ffffff; --ink: #16202b; --muted: #566270; --line: #d6dde6;
+  --accent: #1d5fc0; --accent-soft: #e2ebf9;
+  --good: #1b7543; --good-soft: #e0f2e7; --bad: #b0341d; --bad-soft: #fbe5df;
+  --flag: #855600; --flag-soft: #fcefd3;
+  --f-body: "Atkinson Hyperlegible", system-ui, -apple-system, sans-serif;
+  --f-head: "Space Grotesk", "Atkinson Hyperlegible", system-ui, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0e131a; --surface: #161d27; --ink: #e5eaf1; --muted: #98a3b2; --line: #283241;
+  --accent: #82b2ff; --accent-soft: #1a2a44;
+  --good: #63d293; --good-soft: #122e1e; --bad: #ff8d77; --bad-soft: #391913;
+  --flag: #efc164; --flag-soft: #31260e; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #0e131a; --surface: #161d27; --ink: #e5eaf1; --muted: #98a3b2; --line: #283241;
+  --accent: #82b2ff; --accent-soft: #1a2a44;
+  --good: #63d293; --good-soft: #122e1e; --bad: #ff8d77; --bad-soft: #391913;
+  --flag: #efc164; --flag-soft: #31260e; color-scheme: dark; }
+
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 17px; line-height: 1.55; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
+.wrap { max-width: 40rem; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+header.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--surface); border-bottom: 1px solid var(--line); }
+.bar .wrap { padding-block: 10px 8px; display: grid; gap: 8px; }
+.bar-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.bar h1 { font-family: var(--f-head); font-size: 1.05rem; margin: 0; letter-spacing: -0.01em; }
+.score { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--accent); white-space: nowrap; }
+.chips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin-inline: -4px; padding-inline: 4px; }
+.chips::-webkit-scrollbar { display: none; }
+.chips a { flex: none; font-size: 0.85rem; text-decoration: none; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; }
+.chips a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+main .wrap { padding-block: 20px 48px; display: grid; gap: 36px; }
+.intro p { margin: 0 0 8px; color: var(--muted); }
+.intro strong { color: var(--ink); }
+
+section { display: grid; gap: 14px; scroll-margin-top: 110px; }
+h2 { font-family: var(--f-head); font-size: 1.45rem; line-height: 1.2; margin: 0; text-wrap: balance; letter-spacing: -0.015em; }
+.eyebrow { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0 0 4px; }
+h3 { font-size: 1rem; margin: 6px 0 0; }
+p, ul { margin: 0; }
+ul { padding-left: 1.2em; display: grid; gap: 6px; }
+.flag { background: var(--flag-soft); color: var(--ink); border-radius: 10px; padding: 10px 14px; font-size: 0.95rem; }
+.flag b { color: var(--flag); }
+.f { font-family: var(--f-mono); font-size: 0.88rem; background: var(--accent-soft); border-radius: 8px; padding: 10px 12px; overflow-x: auto; white-space: pre; line-height: 1.6; }
+.src { font-size: 0.8rem; color: var(--muted); }
+table.cm { border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: 0.95rem; }
+.cm th, .cm td { border: 1px solid var(--line); padding: 6px 12px; text-align: center; }
+.cm th { font-weight: 400; color: var(--muted); font-size: 0.85rem; }
+.cm td { font-weight: 700; }
+.tablebox { overflow-x: auto; }
+
+.checks { display: grid; gap: 12px; }
+.q { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: grid; gap: 10px; }
+.q.ok { border-color: var(--good); }
+.q.no { border-color: var(--bad); }
+.q .stem { font-weight: 700; }
+.q .hint { font-size: 0.85rem; color: var(--muted); font-weight: 400; }
+.opts { display: grid; gap: 8px; }
+.opts.tf { grid-template-columns: 1fr 1fr; }
+.opt { font: inherit; font-size: 0.98rem; text-align: left; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 11px 14px; min-height: 46px; cursor: pointer; }
+.opts.tf .opt { text-align: center; }
+.opt:disabled { cursor: default; }
+.opt.right { background: var(--good-soft); border-color: var(--good); color: var(--ink); }
+.opt.wrong { background: var(--bad-soft); border-color: var(--bad); color: var(--ink); text-decoration: line-through; }
+.why { font-size: 0.95rem; border-top: 1px dashed var(--line); padding-top: 10px; }
+.why .tag { font-weight: 700; }
+.q.ok .why .tag { color: var(--good); }
+.q.no .why .tag { color: var(--bad); }
+
+details.say { background: var(--surface); border: 1px dashed var(--accent); border-radius: 14px; padding: 12px 14px; }
+details.say summary { cursor: pointer; font-weight: 700; color: var(--accent); }
+details.say[open] summary { margin-bottom: 8px; }
+details.say p, details.say ul { font-size: 0.95rem; }
+
+.tools { display: flex; flex-wrap: wrap; gap: 10px; }
+.tools button { font: inherit; font-size: 0.9rem; padding: 9px 14px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.tools button.danger { color: var(--bad); }
+footer { font-size: 0.8rem; color: var(--muted); }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+
+<header class="bar">
+  <div class="wrap">
+    <div class="bar-top">
+      <h1>Final · Bus Review</h1>
+      <span class="score" id="score">0 / 0</span>
+    </div>
+    <nav class="chips" aria-label="Topics">
+      <a href="#ga">GA</a>
+      <a href="#bayes">Bayes</a>
+      <a href="#trees">Trees</a>
+      <a href="#svm">SVM</a>
+      <a href="#fisher">Fisher</a>
+      <a href="#clust">Clustering</a>
+      <a href="#idx">Indices</a>
+      <a href="#wide">Wider range</a>
+      <a href="#door">At the door</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+<div class="intro">
+  <p><strong>EE6407 final: a quick glance at what slips overnight.</strong> Each topic gives the formulas and ideas first, then tap-to-answer checks. Every number can be done in your head.</p>
+  <p>Amber boxes are your own slips from Mock B and Mock C. Read those twice.</p>
+  <p class="src">Formulas follow the course slides and the lecturer&rsquo;s revision deck (conventions in <code>final-intel.md</code>). Unofficial study aid.</p>
+</div>
+
+<!-- ============ GA ============ -->
+<section id="ga">
+  <div><p class="eyebrow">Q1 · every paper</p><h2>Genetic algorithms</h2></div>
+  <div class="f">Binary decode   x = a + (b − a) · dec / (2ᴸ − 1)
+Roulette        pᵢ = fᵢ / Σf
+Whole arith.    child = α·x + (1 − α)·y
+Blend BLX-α     I = |x − y|, child in [min − αI, max + αI]
+TSP length      L = d(g₁,g₂) + … + d(gₙ,g₁)   ← n edges
+Fitness         f = 100 / L  (shorter tour = fitter)</div>
+  <ul>
+    <li><b>PMX:</b> copy P₁&rsquo;s segment. For each P₂ segment value v not yet placed: look at P₁ at v&rsquo;s slot, find that value in P₂, go to its slot; free → put v, occupied → repeat. Fill the rest from P₂.</li>
+    <li><b>Cycle crossover:</b> follow A → B&rsquo;s value at that slot → where it sits in A → … until you return. Children take cycles alternately; every gene keeps a position it had in a parent.</li>
+    <li><b>Inversion</b> (reverse a segment) changes only 2 edges of a tour, so it keeps most adjacency.</li>
+    <li><b>Exploration</b> searches new areas (mutation, low selection pressure); <b>exploitation</b> refines good ones (high selection pressure, elitism).</li>
+  </ul>
+  <div class="flag"><b>Your slips:</b> Mock B filled PMX in order (that is order-1 crossover). Mock C read the chromosome as &ldquo;position of each city&rdquo; and dropped the return edge. Write the arrow chain 1→3→5→…→1 first.</div>
+  <div class="checks">
+    <div class="q" data-id="g1" data-answer="a">
+      <p class="stem">3-bit string 101 on [0, 14]. Decoded x?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">10</button>
+        <button class="opt" data-opt="b">5</button>
+        <button class="opt" data-opt="c">8.75</button>
+        <button class="opt" data-opt="d">7</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> 101 = 5, and 2³ − 1 = 7, so x = 0 + 14·5/7 = 10. Dividing by 2³ = 8 gives 8.75, the classic slip.</p>
+    </div>
+    <div class="q" data-id="g2" data-answer="c">
+      <p class="stem">Fitnesses 2, 3, 5. Roulette probability of the third?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">0.3</button>
+        <button class="opt" data-opt="b">0.33</button>
+        <button class="opt" data-opt="c">0.5</button>
+        <button class="opt" data-opt="d">0.2</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> 5 / (2 + 3 + 5) = 0.5. Check that the three probabilities sum to 1 (0.2 + 0.3 + 0.5).</p>
+    </div>
+    <div class="q" data-id="g3" data-answer="b">
+      <p class="stem">Tour chromosome 2 1 4 3. Which sum is its length?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">d(2,1) + d(1,4) + d(4,3)</button>
+        <button class="opt" data-opt="b">d(2,1) + d(1,4) + d(4,3) + d(3,2)</button>
+        <button class="opt" data-opt="c">d(1,2) + d(2,3) + d(3,4) + d(4,1)</button>
+        <button class="opt" data-opt="d">d(2,4) + d(4,1) + d(1,3) + d(3,2)</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> 2→1→4→3→2: four cities, four edges, including the return d(3,2). (a) is the open tour; (d) reads the genes as positions, your Mock C slip.</p>
+    </div>
+    <div class="q" data-id="g4" data-answer="a">
+      <p class="stem">Whole arithmetic, child = αx + (1 − α)y, with α = 0.25, x = 4, y = 8. Child?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">7</button>
+        <button class="opt" data-opt="b">5</button>
+        <button class="opt" data-opt="c">6</button>
+        <button class="opt" data-opt="d">3</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> 0.25·4 + 0.75·8 = 1 + 6 = 7. The other child swaps the roles: 0.25·8 + 0.75·4 = 5.</p>
+    </div>
+    <div class="q" data-id="g5" data-answer="c">
+      <p class="stem">PMX: P₁ = 1 2 3 4 5, P₂ = 3 5 1 2 4, copy positions 2–3 from P₁. Child?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">5 2 3 1 4</button>
+        <button class="opt" data-opt="b">3 2 3 5 4</button>
+        <button class="opt" data-opt="c">1 2 3 5 4</button>
+        <button class="opt" data-opt="d">4 2 3 5 1</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> Copy _ 2 3 _ _. 5 (slot 2): P₁ has 2 there; 2 is in slot 4 of P₂, which is free, so 5 → slot 4. 1 (slot 3): P₁ has 3; 3 is in slot 1 of P₂, which is free, so 1 → slot 1. Slot 5 from P₂: 4. Child 1 2 3 5 4. (a) is the order-fill trap.</p>
+    </div>
+    <div class="q" data-id="g6" data-answer="b">
+      <p class="stem">A bigger tournament size mainly increases…</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">exploration</button>
+        <button class="opt" data-opt="b">exploitation (selection pressure)</button>
+        <button class="opt" data-opt="c">the mutation rate</button>
+        <button class="opt" data-opt="d">population diversity</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> The best of a larger group wins more often, so good individuals dominate faster: more exploitation, less diversity.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BAYES ============ -->
+<section id="bayes">
+  <div><p class="eyebrow">Q2 · naive Bayes every paper</p><h2>Bayes and naive Bayes</h2></div>
+  <div class="f">Decide   largest P(ωⱼ) · p(x | ωⱼ)
+Gaussian NB, per feature:
+  p(xₖ|ω) = 1/(√(2π)·σ) · exp(−(xₖ − μ)² / (2σ²))
+  gⱼ = ln P(ωⱼ) − ½Σ ln σ² − ½Σ (x − μ)²/σ²
+Posterior (2 classes) = 1 / (1 + e^(g₂ − g₁))
+Multinomial + Laplace:
+  P(w|c) = (count of w in c + 1) / (n_c + d)
+  n_c = tokens in class c,  d = vocabulary of ALL training docs</div>
+  <ul>
+    <li>Naive = a product of 1-D bell curves. No covariance matrix, no inverse.</li>
+    <li>Papers usually give σ² (the variance): square-root it for the front factor, use it directly in the exponent.</li>
+    <li>Multinomial: multiply once <b>per token</b>, so a repeated word counts twice.</li>
+    <li>End with a decision line: &ldquo;… → class X&rdquo;.</li>
+  </ul>
+  <div class="flag"><b>Your slips:</b> Mock B computed P(class | word) instead of P(word | class), and wrote the full Gaussian with C and C⁻¹ swapped. Mock C had the right scores but no final class written.</div>
+  <div class="checks">
+    <div class="q" data-id="b1" data-answer="a">
+      <p class="stem">A class has 6 tokens, the vocabulary has d = 4 words, and &ldquo;cat&rdquo; appears 2 times. P(cat | class)?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">0.3</button>
+        <button class="opt" data-opt="b">0.375</button>
+        <button class="opt" data-opt="c">0.333</button>
+        <button class="opt" data-opt="d">0.25</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> (2 + 1)/(6 + 4) = 3/10. 0.375 = 3/8 forgets to add d; 0.333 = 2/6 has no smoothing.</p>
+    </div>
+    <div class="q" data-id="b2" data-answer="b">
+      <p class="stem">Test message &ldquo;cat cat dog&rdquo;. How many times is P(cat | c) multiplied into the score?</p>
+      <div class="opts tf">
+        <button class="opt" data-opt="a">1</button>
+        <button class="opt" data-opt="b">2</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> Once per token, so twice. In Mock B&rsquo;s worked example this flipped the decision.</p>
+    </div>
+    <div class="q" data-id="b3" data-answer="a">
+      <p class="stem">One Gaussian feature with σ² = 4 and x − μ = 2. The exponent is…</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">−0.5</button>
+        <button class="opt" data-opt="b">−1</button>
+        <button class="opt" data-opt="c">−2</button>
+        <button class="opt" data-opt="d">−0.25</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> −(x − μ)²/(2σ²) = −4/8 = −0.5. −1 forgets the 2 (or divides by 2σ with σ = 2).</p>
+    </div>
+    <div class="q" data-id="b4" data-answer="c">
+      <p class="stem">g₁ − g₂ = ln 3. What is P(ω₁ | x)?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">0.25</button>
+        <button class="opt" data-opt="b">0.67</button>
+        <button class="opt" data-opt="c">0.75</button>
+        <button class="opt" data-opt="d">0.5</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> 1/(1 + e^(g₂ − g₁)) = 1/(1 + 1/3) = 3/4. Equivalently, the odds are 3 : 1.</p>
+    </div>
+    <div class="q" data-id="b5" data-answer="f">
+      <p class="stem">True or false: Gaussian naive Bayes needs the inverse of the covariance matrix.</p>
+      <div class="opts tf">
+        <button class="opt" data-opt="t">True</button>
+        <button class="opt" data-opt="f">False</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> False. Independence means a diagonal covariance, so the density is a product of 1-D Gaussians. The full C⁻¹ belongs to the Gaussian Bayes rule.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TREES ============ -->
+<section id="trees">
+  <div><p class="eyebrow">Q2 · &ldquo;you will be instructed&rdquo; which measure</p><h2>Decision trees</h2></div>
+  <div class="f">Gini (course)  i = ½ (1 − Σ pⱼ²)   pure 0, 50/50 0.25
+Entropy        i = −Σ pⱼ log₂ pⱼ   pure 0, 50/50 1
+Split          weighted = Σ (n_child / n) · i(child)
+Decrease       Δi = i(parent) − weighted   → pick the largest</div>
+  <ul>
+    <li>A pure branch does not guarantee the best split; compare the weighted totals.</li>
+    <li><b>Bagging:</b> trees on bootstrap samples, then vote; this reduces variance. <b>Random forest:</b> bagging plus a random subset of features at each split.</li>
+  </ul>
+  <div class="flag"><b>Your slip:</b> Mock B wrote ½Σ(1 − p)², which equals ½Σp², a <i>purity</i> measure. Anchor: a 50/50 node must give 0.25.</div>
+  <div class="checks">
+    <div class="q" data-id="t1" data-answer="a">
+      <p class="stem">Node with 3 (+) and 1 (−). Course Gini?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">0.1875</button>
+        <button class="opt" data-opt="b">0.375</button>
+        <button class="opt" data-opt="c">0.3125</button>
+        <button class="opt" data-opt="d">0.25</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> ½(1 − 9/16 − 1/16) = ½ · 6/16 = 3/16. 0.375 forgets the ½; 0.3125 = ½Σp² is your Mock B slip.</p>
+    </div>
+    <div class="q" data-id="t2" data-answer="a">
+      <p class="stem">10 samples split into 4 (pure) and 6 (Gini 0.25). Weighted Gini?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">0.15</button>
+        <button class="opt" data-opt="b">0.125</button>
+        <button class="opt" data-opt="c">0.25</button>
+        <button class="opt" data-opt="d">0.1</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> 0.4·0 + 0.6·0.25 = 0.15. 0.125 is the unweighted average of the two children.</p>
+    </div>
+    <div class="q" data-id="t3" data-answer="c">
+      <p class="stem">What does a random forest add on top of bagging?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">Boosting weights on hard samples</button>
+        <button class="opt" data-opt="b">Pruning every tree</button>
+        <button class="opt" data-opt="c">A random subset of features at each split</button>
+        <button class="opt" data-opt="d">One deep tree instead of many</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> The random feature subsets decorrelate the trees, so averaging them cuts more variance.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SVM ============ -->
+<section id="svm">
+  <div><p class="eyebrow">Q3 · given the αs, just bookkeeping</p><h2>Soft-margin SVM</h2></div>
+  <div class="f">Check   Σ αᵢ dᵢ = 0
+w       = Σ αᵢ dᵢ xᵢ          (every α &gt; 0)
+b       = avg of dᵢ − wᵀxᵢ   over 0 &lt; α &lt; C ONLY
+margin  = 2/‖w‖,  half-margin 1/‖w‖
+slack   ξ = max(0, 1 − d·(wᵀx + b))
+new x   sign of g = wᵀx + b,  distance |g|/‖w‖</div>
+  <ul>
+    <li><b>Why only 0 &lt; α &lt; C for b:</b> KKT gives ξ = 0 there, so the point lies exactly on its margin, d(wᵀx + b) = 1. Points with α = C may lie inside the margin.</li>
+    <li><b>Where a point is:</b> ξ = 0 on or outside its margin; 0 &lt; ξ &lt; 1 inside the margin, correct side; ξ = 1 on the boundary; ξ &gt; 1 misclassified.</li>
+  </ul>
+  <div class="flag"><b>Your slips:</b> Mock B left this blank. Mock C had w and b right, but gave no reason for the samples, wrote ξ = d − g, and slipped on g(1.2, 0.9). Write the reason sentence and use the 1 − d·g form.</div>
+  <div class="checks">
+    <div class="q" data-id="s1" data-answer="b">
+      <p class="stem">C = 1. Support vectors have α = 0.3, 1 and 1. Which gives b?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">All three, averaged</button>
+        <button class="opt" data-opt="b">Only the one with α = 0.3</button>
+        <button class="opt" data-opt="c">Only the two with α = 1</button>
+        <button class="opt" data-opt="d">None; b cannot be found</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> 0 &lt; 0.3 &lt; C, so that point is on its margin. α = C points may be inside it; &ldquo;if you use all the support vectors you get wrong results&rdquo; (the lecturer).</p>
+    </div>
+    <div class="q" data-id="s2" data-answer="a">
+      <p class="stem">w = (3, 4). Margin width?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">0.4</button>
+        <button class="opt" data-opt="b">0.2</button>
+        <button class="opt" data-opt="c">2.5</button>
+        <button class="opt" data-opt="d">10</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> ‖w‖ = 5, so 2/5 = 0.4. 0.2 is the half-margin, 1/‖w‖.</p>
+    </div>
+    <div class="q" data-id="s3" data-answer="a">
+      <p class="stem">w = (1, 0), b = −2. Sample x = (2.5, 7) with d = −1. Slack ξ?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">1.5</button>
+        <button class="opt" data-opt="b">0.5</button>
+        <button class="opt" data-opt="c">0</button>
+        <button class="opt" data-opt="d">−1.5</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> g = 0.5, so ξ = 1 − (−1)(0.5) = 1.5 &gt; 1: misclassified. Your d − g form gives −1.5, which is impossible.</p>
+    </div>
+    <div class="q" data-id="s4" data-answer="c">
+      <p class="stem">A training point has ξ = 0.4. Where is it?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">Outside its margin</button>
+        <button class="opt" data-opt="b">On the decision boundary</button>
+        <button class="opt" data-opt="c">Inside the margin, correct side</button>
+        <button class="opt" data-opt="d">Misclassified</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> 0 &lt; ξ &lt; 1: it has crossed its margin line but not the boundary.</p>
+    </div>
+    <div class="q" data-id="s5" data-answer="d">
+      <p class="stem">Positive αs are 0.5 and 0.5. Negative αs are 0.2 and α₄. What is α₄?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">0.2</button>
+        <button class="opt" data-opt="b">1.2</button>
+        <button class="opt" data-opt="c">0.5</button>
+        <button class="opt" data-opt="d">0.8</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> Σαd = 0 means Σα over the positives equals Σα over the negatives: 1 = 0.2 + α₄.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FISHER ============ -->
+<section id="fisher">
+  <div><p class="eyebrow">Q3 · computed by hand</p><h2>Fisher LDA</h2></div>
+  <div class="f">J(w) = wᵀS_B w / wᵀS_W w
+S_B = (m₁ − m₂)(m₁ − m₂)ᵀ
+S_W = S₁ + S₂,  Sᵢ = Σ (x − mᵢ)(x − mᵢ)ᵀ
+w   = S_W⁻¹ (m₁ − m₂)
+w₀  = −wᵀ(m₁ + m₂)/2
+g   = wᵀx + w₀ &gt; 0 → ω₁
+2×2 inverse: [a b; c d]⁻¹ = 1/(ad − bc) · [d −b; −c a]</div>
+  <ul>
+    <li><b>What maximising J achieves:</b> the projection direction where the class means are farthest apart relative to the spread inside each class.</li>
+    <li><b>Check w:</b> S_W w must equal m₁ − m₂. Four products catch an arithmetic slip.</li>
+    <li><b>Confidence:</b> compare |g(x)|/‖w‖ with a class mean&rsquo;s distance to the boundary, |g(m₁)|/‖w‖. &ldquo;Less than 1&rdquo; means nothing.</li>
+  </ul>
+  <div class="flag"><b>Your slips:</b> Mock B used &ldquo;distance &lt; 1&rdquo; as a yardstick. Mock C had w₁ = 0.118 instead of 0.1039 (the check would have caught it) and left out Sᵢ.</div>
+  <div class="checks">
+    <div class="q" data-id="f1" data-answer="a">
+      <p class="stem">S_W = diag(2, 4), m₁ − m₂ = (4, 4). Fisher w?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">(2, 1)</button>
+        <button class="opt" data-opt="b">(8, 16)</button>
+        <button class="opt" data-opt="c">(1, 2)</button>
+        <button class="opt" data-opt="d">(4, 4)</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> The inverse of a diagonal matrix divides each entry: (4/2, 4/4) = (2, 1). (8, 16) multiplies by S_W instead of its inverse.</p>
+    </div>
+    <div class="q" data-id="f2" data-answer="a">
+      <p class="stem">w = (2, 1), m₁ = (3, 1), m₂ = (1, 1). w₀?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">−5</button>
+        <button class="opt" data-opt="b">5</button>
+        <button class="opt" data-opt="c">−10</button>
+        <button class="opt" data-opt="d">−2.5</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> m₁ + m₂ = (4, 2), wᵀ(4, 2) = 10, so w₀ = −10/2 = −5. The boundary passes through the midpoint (2, 1): g = 4 + 1 − 5 = 0. ✓</p>
+    </div>
+    <div class="q" data-id="f3" data-answer="t">
+      <p class="stem">S_W = [2 1; 1 2], m₁ − m₂ = (3, 3). Someone claims w = (1, 1). Correct?</p>
+      <div class="opts tf">
+        <button class="opt" data-opt="t">Yes</button>
+        <button class="opt" data-opt="f">No</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> Check S_W w = (2 + 1, 1 + 2) = (3, 3) = m₁ − m₂. ✓ No inverse needed.</p>
+    </div>
+    <div class="q" data-id="f4" data-answer="b">
+      <p class="stem">x is 0.3 from the boundary; m₁ is 3 from it. Confidence?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">High: 0.3 &lt; 1</button>
+        <button class="opt" data-opt="b">Low: a tenth of a typical class-1 distance</button>
+        <button class="opt" data-opt="c">Cannot say without the prior</button>
+        <button class="opt" data-opt="d">High: it is on the ω₁ side</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> Judge against the class mean&rsquo;s distance to the boundary. x is close to the boundary, so the decision has low confidence.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CLUSTERING ============ -->
+<section id="clust">
+  <div><p class="eyebrow">Q4 · run by hand</p><h2>k-means, HAC, DBSCAN</h2></div>
+  <ul>
+    <li><b>k-means:</b> assign each point to its nearest centroid, recompute the means, repeat until nothing moves.</li>
+    <li><b>HAC:</b> Euclidean = √(Δx² + Δy²); take the root before filling the matrix. Show the matrix after every merge. Dendrogram heights = merge distances, to scale.</li>
+    <li><b>Linkage:</b> single = closest pair; complete = farthest pair; average = mean of all cross pairs.</li>
+    <li><b>DBSCAN:</b> core point = enough neighbours within ε; border = within ε of a core point but not core itself; noise = neither. The slides disagree: p. 61 says &ldquo;at least&rdquo; MinPts, p. 63 says &ldquo;more than&rdquo;. Write the reading you use.</li>
+    <li><b>GMM/EM:</b> soft k-means. The E-step gives each point a responsibility per cluster; the M-step re-estimates the means, covariances and weights.</li>
+  </ul>
+  <div class="flag"><b>Your slip:</b> Mock B used squared distances (with one unsquared entry), so the first merge and every height were wrong. Fixed in Mock C.</div>
+  <div class="checks">
+    <div class="q" data-id="k1" data-answer="a">
+      <p class="stem">1-D points 0, 2, 10, 12; start centroids 0 and 2. Centroids after one k-means update?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">0 and 8</button>
+        <button class="opt" data-opt="b">1 and 11</button>
+        <button class="opt" data-opt="c">0 and 2</button>
+        <button class="opt" data-opt="d">2 and 10</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> 0 → c₁; 2, 10 and 12 are nearer 2, so → c₂. The new means are 0 and 24/3 = 8. A second round would give 1 and 11.</p>
+    </div>
+    <div class="q" data-id="k2" data-answer="c">
+      <p class="stem">On a line: {1, 2} and {6, 9}. Complete-linkage distance?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">4</button>
+        <button class="opt" data-opt="b">6</button>
+        <button class="opt" data-opt="c">8</button>
+        <button class="opt" data-opt="d">5.5</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> Farthest pair: 9 − 1 = 8. Single linkage = 6 − 2 = 4; average = (5 + 8 + 4 + 7)/4 = 6.</p>
+    </div>
+    <div class="q" data-id="k3" data-answer="f">
+      <p class="stem">True or false: (0, 0) and (3, 4) merge at height 25.</p>
+      <div class="opts tf">
+        <button class="opt" data-opt="t">True</button>
+        <button class="opt" data-opt="f">False</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> False. The height is √25 = 5. Squared distances keep the single-link order but give wrong heights.</p>
+    </div>
+    <div class="q" data-id="k4" data-answer="b">
+      <p class="stem">DBSCAN: a point has too few neighbours, but lies within ε of a core point. It is…</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">a core point</button>
+        <button class="opt" data-opt="b">a border point</button>
+        <button class="opt" data-opt="c">noise</button>
+        <button class="opt" data-opt="d">its own cluster</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> Border: it belongs to the core point&rsquo;s cluster but cannot expand it.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INDICES ============ -->
+<section id="idx">
+  <div><p class="eyebrow">Q4 · Dunn, DB, Rand in papers; CH on the revision list</p><h2>Cluster quality indices</h2></div>
+  <div class="f">Dunn  = min d(cross pair) / max diameter        ↑ better
+DB    δᵢ = √( mean ‖x − mᵢ‖² )   ← square, average, root
+      S₁₂ = (δ₁ + δ₂) / d(m₁, m₂),  DB = avg of max S  ↓ better
+CH    = Σ nᵢ‖mᵢ − m‖² / Σᵢ Σ ‖x − mᵢ‖²   (no (N−K)/(K−1))  ↑
+Rand  = (N_s + N_d) / C(N, 2)        pairs that agree
+Silh. sᵢ = (bᵢ − aᵢ) / max(aᵢ, bᵢ)
+      aᵢ = mean distance inside its own cluster
+      bᵢ = MIN distance to another cluster's sample (course)</div>
+  <div class="flag"><b>Your slips:</b> Mock B left Dunn, DB and Rand blank. In Mock C, Dunn and Rand were perfect, but DB δ was a plain mean (not root-mean-square) with δ₁ dropped from the top, and CH used unsquared norms and was not finished.</div>
+  <div class="checks">
+    <div class="q" data-id="i1" data-answer="a">
+      <p class="stem">A cluster&rsquo;s points sit at distances 1, 1 and 2 from its centroid. DB spread δ?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">1.414</button>
+        <button class="opt" data-opt="b">1.333</button>
+        <button class="opt" data-opt="c">2</button>
+        <button class="opt" data-opt="d">6</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> √((1 + 1 + 4)/3) = √2. 1.333 is the plain mean of 1, 1, 2, your Mock C slip.</p>
+    </div>
+    <div class="q" data-id="i2" data-answer="a">
+      <p class="stem">The closest cross-cluster pair is 6 apart; the widest cluster has diameter 3. Dunn?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">2</button>
+        <button class="opt" data-opt="b">0.5</button>
+        <button class="opt" data-opt="c">18</button>
+        <button class="opt" data-opt="d">3</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> 6/3 = 2. Separation goes on top, so higher is better.</p>
+    </div>
+    <div class="q" data-id="i3" data-answer="c">
+      <p class="stem">5 points; 6 of the pairs are together in both partitions or apart in both. Rand index?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">1.2</button>
+        <button class="opt" data-opt="b">0.4</button>
+        <button class="opt" data-opt="c">0.6</button>
+        <button class="opt" data-opt="d">0.3</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> C(5, 2) = 10 pairs, so 6/10 = 0.6.</p>
+    </div>
+    <div class="q" data-id="i4" data-answer="a">
+      <p class="stem">CH: two clusters of 2; ‖mᵢ − m‖² = 4 for both; within sums C₁ + C₂ = 8. CH?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">2</button>
+        <button class="opt" data-opt="b">1</button>
+        <button class="opt" data-opt="c">0.5</button>
+        <button class="opt" data-opt="d">4</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> (2·4 + 2·4)/8 = 2. Forgetting the nᵢ weights gives 1.</p>
+    </div>
+    <div class="q" data-id="i5" data-answer="b">
+      <p class="stem">For which index is LOWER better?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">Dunn</button>
+        <button class="opt" data-opt="b">Davies–Bouldin</button>
+        <button class="opt" data-opt="c">Calinski–Harabasz</button>
+        <button class="opt" data-opt="d">Silhouette</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> DB has the spread on top of the fraction, so a small DB means tight, well-separated clusters.</p>
+    </div>
+    <div class="q" data-id="i6" data-answer="c">
+      <p class="stem">Silhouette with a = 2, b = 6?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">0.333</button>
+        <button class="opt" data-opt="b">−0.667</button>
+        <button class="opt" data-opt="c">0.667</button>
+        <button class="opt" data-opt="d">3</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> (6 − 2)/max(2, 6) = 4/6. Near 1 means well placed; negative means probably in the wrong cluster.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WIDER ============ -->
+<section id="wide">
+  <div><p class="eyebrow">Short parts · hard mock H covers these</p><h2>Wider range</h2></div>
+  <div class="f">OLS     w = (XᵀX)⁻¹ Xᵀy
+Ridge   w = (XᵀX + λI)⁻¹ Xᵀy   L2: shrinks, never 0
+Lasso   L1 penalty: some weights become exactly 0
+Prec.   TP / (TP + FP)   Recall TP / (TP + FN)
+F1      2PR / (P + R)
+z-score (x − μ)/σ    min-max (x − min)/(max − min)</div>
+  <ul>
+    <li><b>Evaluation:</b> holdout; k-fold (k models); leave-one-out (n models).</li>
+    <li><b>Curse of dimensionality:</b> data become sparse and distances lose contrast as dimensions grow. <b>Selection</b> keeps original features (SFS adds, SBS removes); <b>extraction</b> builds new ones (PCA, LDA).</li>
+    <li>Recall matters when misses are costly (disease screening); precision when false alarms are costly (spam).</li>
+  </ul>
+  <div class="checks">
+    <div class="q" data-id="w1" data-answer="b">
+      <p class="stem">Which regression can set coefficients exactly to zero (built-in feature selection)?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">Ridge</button>
+        <button class="opt" data-opt="b">Lasso</button>
+        <button class="opt" data-opt="c">OLS</button>
+        <button class="opt" data-opt="d">None of them</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> The L1 penalty&rsquo;s corners pin weights at 0. Ridge (L2) only shrinks them.</p>
+    </div>
+    <div class="q" data-id="w2" data-answer="c">
+      <p class="stem">TP = 6, FP = 2, FN = 6. Precision?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">0.5</button>
+        <button class="opt" data-opt="b">0.25</button>
+        <button class="opt" data-opt="c">0.75</button>
+        <button class="opt" data-opt="d">0.6</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> 6/(6 + 2). Recall would be 6/(6 + 6) = 0.5.</p>
+    </div>
+    <div class="q" data-id="w3" data-answer="a">
+      <p class="stem">Min-max normalise x = 7 on a feature ranging 2 to 12.</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">0.5</button>
+        <button class="opt" data-opt="b">0.583</button>
+        <button class="opt" data-opt="c">0.7</button>
+        <button class="opt" data-opt="d">5</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> (7 − 2)/(12 − 2) = 0.5.</p>
+    </div>
+    <div class="q" data-id="w4" data-answer="d">
+      <p class="stem">x = 13, μ = 10, σ = 2. z-score?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">3</button>
+        <button class="opt" data-opt="b">0.75</button>
+        <button class="opt" data-opt="c">6.5</button>
+        <button class="opt" data-opt="d">1.5</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> (13 − 10)/2 = 1.5.</p>
+    </div>
+    <div class="q" data-id="w5" data-answer="b">
+      <p class="stem">Leave-one-out on 20 samples trains how many models?</p>
+      <div class="opts">
+        <button class="opt" data-opt="a">1</button>
+        <button class="opt" data-opt="b">20</button>
+        <button class="opt" data-opt="c">19</button>
+        <button class="opt" data-opt="d">10</button>
+      </div>
+      <p class="why" hidden><span class="tag"></span> One model per left-out sample: n = 20, each trained on 19.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DOOR ============ -->
+<section id="door">
+  <div><p class="eyebrow">Last minute</p><h2>At the door: 12 things to write correctly</h2></div>
+  <ol style="padding-left:1.3em; display:grid; gap:6px; margin:0">
+    <li>TSP: chromosome = visiting order; n edges, return edge included.</li>
+    <li>PMX follows the mapping chain; it never fills in order.</li>
+    <li>Binary decoding divides by 2ᴸ − 1.</li>
+    <li>Laplace: (count + 1)/(n_c + d), with d = the whole training vocabulary; one factor per token.</li>
+    <li>Gaussian NB: σ² in the exponent with the 2; √(2π)·σ in front.</li>
+    <li>Gini = ½(1 − Σp²): a 50/50 node gives 0.25.</li>
+    <li>SVM b: only 0 &lt; α &lt; C, averaged, plus the reason sentence. ξ = 1 − d·g, plus where the point lies.</li>
+    <li>Fisher: check S_W w = m₁ − m₂; w₀ = −wᵀ(m₁ + m₂)/2; judge confidence against a mean&rsquo;s distance to the boundary.</li>
+    <li>HAC: take the √ first; matrix after every merge; heights to scale.</li>
+    <li>DB δ: square, average, root; both δ go on top.</li>
+    <li>CH: everything squared, nᵢ weights, no (N−K)/(K−1).</li>
+    <li>End every classifier part with &ldquo;→ class X&rdquo;; carry 4 decimal places.</li>
+  </ol>
+  <div class="tools">
+    <button type="button" id="redo">Redo the ones I missed</button>
+    <button type="button" id="reset" class="danger">Reset all answers</button>
+  </div>
+  <footer>Unofficial study aid built from your EE6407 Mock A–C attempts, the course slides and the lecturer&rsquo;s revision deck. Answers are saved in this browser only.</footer>
+</section>
+
+</div>
+</main>
+<script>
+(() => {
+  const KEY = 'ee6407-final-bus-v1';
+  let st = {};
+  try { st = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { st = {}; }
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} };
+  const qs = [...document.querySelectorAll('.q')];
+  const scoreEl = document.getElementById('score');
+
+  function show(q, pick) {
+    const ans = q.dataset.answer, ok = pick === ans;
+    q.querySelectorAll('.opt').forEach(b => {
+      b.disabled = true;
+      if (b.dataset.opt === ans) b.classList.add('right');
+      else if (b.dataset.opt === pick) b.classList.add('wrong');
+    });
+    q.classList.add(ok ? 'ok' : 'no');
+    q.querySelector('.tag').textContent = ok ? 'Correct.' : 'Not quite.';
+    q.querySelector('.why').hidden = false;
+  }
+  function clear(q) {
+    q.classList.remove('ok', 'no');
+    q.querySelectorAll('.opt').forEach(b => { b.disabled = false; b.classList.remove('right', 'wrong'); });
+    q.querySelector('.why').hidden = true;
+  }
+  function score() {
+    const right = qs.filter(q => st[q.dataset.id] === q.dataset.answer).length;
+    const done = qs.filter(q => st[q.dataset.id]).length;
+    scoreEl.textContent = `${right} / ${qs.length}` + (done && done < qs.length ? ` · ${qs.length - done} left` : '');
+  }
+
+  qs.forEach(q => {
+    q.querySelectorAll('.opt').forEach(b => b.addEventListener('click', () => {
+      st[q.dataset.id] = b.dataset.opt; save(); show(q, b.dataset.opt); score();
+    }));
+    if (st[q.dataset.id]) show(q, st[q.dataset.id]);
+  });
+  score();
+
+  document.getElementById('redo').addEventListener('click', () => {
+    let first = null;
+    qs.forEach(q => { if (st[q.dataset.id] && st[q.dataset.id] !== q.dataset.answer) { delete st[q.dataset.id]; clear(q); first = first || q; } });
+    save(); score();
+    if (first) first.scrollIntoView({ block: 'center' });
+  });
+  const reset = document.getElementById('reset');
+  let armed = false;
+  reset.addEventListener('click', () => {
+    if (!armed) { armed = true; reset.textContent = 'Tap again to erase all answers'; setTimeout(() => { armed = false; reset.textContent = 'Reset all answers'; }, 4000); return; }
+    st = {}; save(); qs.forEach(clear); score(); armed = false; reset.textContent = 'Reset all answers';
+  });
+})();
+</script>
