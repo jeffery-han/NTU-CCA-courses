@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="en" data-theme="system">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EE6407 Final Mock B</title>
+<meta name="description" content="Answer-free cold mock for the EE6407 final: 4 questions x 25 marks, 3 hours, handwritten; export the answer sheet for grading.">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)']],
+      displayMath: [['\\[', '\\]']],
+      processEscapes: true
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    startup: { typeset: true }
+  };
+</script>
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --surface-2: #eef1f5;
+  --text: #14181f;
+  --muted: #5b6472;
+  --border: #d8dee7;
+  --accent: #1f6feb;
+  --accent-soft: #e5efff;
+  --success: #17794b;
+  --success-soft: #e2f5ec;
+  --warning: #9a6200;
+  --warning-soft: #fdf1dc;
+  --danger: #b32130;
+  --danger-soft: #fdeaec;
+  --shadow: 0 1px 2px rgba(16, 24, 40, .05), 0 8px 24px rgba(16, 24, 40, .06);
+  --radius: 14px;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1117; --surface: #161b23; --surface-2: #1d232d;
+    --text: #e7ecf3; --muted: #99a3b3; --border: #2a323e;
+    --accent: #6ea8ff; --accent-soft: #17233a;
+    --success: #56d39b; --success-soft: #10281f;
+    --warning: #e5b567; --warning-soft: #2b2113;
+    --danger: #ff8189; --danger-soft: #2e1519;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 28px rgba(0, 0, 0, .35);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1117; --surface: #161b23; --surface-2: #1d232d;
+  --text: #e7ecf3; --muted: #99a3b3; --border: #2a323e;
+  --accent: #6ea8ff; --accent-soft: #17233a;
+  --success: #56d39b; --success-soft: #10281f;
+  --warning: #e5b567; --warning-soft: #2b2113;
+  --danger: #ff8189; --danger-soft: #2e1519;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 28px rgba(0, 0, 0, .35);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.62;
+  font-size: 16.5px;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 880px; margin: 0 auto; padding: 24px 20px 120px; }
+a { color: var(--accent); }
+code { font-family: var(--mono); font-size: .9em; background: var(--surface-2); padding: .08em .35em; border-radius: 5px; }
+pre {
+  font-family: var(--mono); font-size: .86em; background: var(--surface-2);
+  border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px;
+  overflow-x: auto; line-height: 1.55;
+}
+h1 { font-size: 1.7rem; line-height: 1.25; margin: 0 0 .5rem; }
+h2 { font-size: 1.28rem; margin: 2.4rem 0 .4rem; padding-top: .6rem; border-top: 2px solid var(--border); }
+h3 { font-size: 1.06rem; margin: 1.5rem 0 .3rem; }
+h4 { font-size: .96rem; margin: 1rem 0 .3rem; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.sub { color: var(--muted); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+select, .btn, input[type="text"], textarea {
+  font: inherit; font-size: .92rem;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border); border-radius: 9px;
+  padding: 7px 12px;
+}
+select, .btn { cursor: pointer; }
+.btn:hover { border-color: var(--accent); }
+.btn-danger { color: var(--danger); }
+.btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 600; }
+.btn-primary:hover { filter: brightness(1.08); }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px 18px;
+  margin: 14px 0;
+}
+.notice { background: var(--warning-soft); border: 1px solid color-mix(in srgb, var(--warning) 40%, var(--border)); border-radius: 12px; padding: 12px 15px; margin: 14px 0; }
+.notice.info { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 35%, var(--border)); }
+.notice h3 { margin-top: .2rem; }
+.notice p:last-child, .notice ul:last-child { margin-bottom: 0; }
+
+/* sticky status bar: timer + progress */
+.statusbar {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center;
+  background: color-mix(in srgb, var(--surface) 93%, transparent);
+  backdrop-filter: blur(9px);
+  border: 1px solid var(--border); border-radius: 12px;
+  padding: 9px 14px; margin: 14px 0 4px;
+  box-shadow: var(--shadow);
+  font-size: .9rem;
+}
+.statusbar .grow { flex: 1 1 auto; }
+#clock { font-family: var(--mono); font-size: 1.06rem; font-weight: 700; letter-spacing: .02em; }
+#clock.over { color: var(--danger); }
+.pill {
+  display: inline-block; background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: 999px; padding: 1px 10px; font-size: .82rem; color: var(--muted);
+}
+.pill strong { color: var(--text); }
+
+/* True/False items */
+.tf { border-top: 1px solid var(--border); padding: 13px 0 11px; display: flex; gap: 13px; align-items: flex-start; }
+.tf:first-of-type { border-top: 0; }
+.tf .num { font-family: var(--mono); font-weight: 700; color: var(--muted); min-width: 2.1em; padding-top: 2px; }
+.tf .body { flex: 1 1 auto; min-width: 0; }
+.tf .stem { margin: 0 0 8px; }
+.tf .opts { display: flex; gap: 8px; }
+.tf .opts button {
+  font: inherit; font-weight: 700; font-size: .88rem;
+  min-width: 54px; padding: 5px 0;
+  background: var(--surface); color: var(--muted);
+  border: 1px solid var(--border); border-radius: 9px; cursor: pointer;
+}
+.tf .opts button:hover { border-color: var(--accent); color: var(--text); }
+.tf .opts button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* free response */
+.field { margin: 12px 0; }
+.field label { display: block; font-size: .87rem; color: var(--muted); margin-bottom: 4px; font-weight: 600; }
+.field input[type="text"], .field textarea { width: 100%; font-family: var(--mono); font-size: .9rem; }
+.field textarea { min-height: 170px; resize: vertical; line-height: 1.6; font-family: inherit; font-size: .95rem; }
+.field .hint { font-size: .8rem; color: var(--muted); margin-top: 3px; }
+.parents { white-space: pre; }
+
+table.data { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: .9rem; }
+table.data th, table.data td { border: 1px solid var(--border); padding: 5px 9px; text-align: right; }
+table.data th:first-child, table.data td:first-child { text-align: left; }
+table.data th { background: var(--surface-2); }
+
+.marks { float: right; color: var(--muted); font-size: .85rem; font-weight: 600; }
+
+/* export */
+#export-out { width: 100%; min-height: 300px; font-family: var(--mono); font-size: .8rem; line-height: 1.5; white-space: pre; }
+#copy-status { font-size: .87rem; color: var(--success); font-weight: 600; }
+
+footer { margin-top: 46px; padding-top: 16px; border-top: 1px solid var(--border); font-size: .87rem; color: var(--muted); }
+#math-warning { display: none; }
+.paper { display: flex; gap: 8px; align-items: center; margin: 10px 0 2px; font-size: .9rem; color: var(--muted); }
+.paper input { width: 18px; height: 18px; }
+.paper.on { color: var(--success); font-weight: 600; }
+@media (max-width: 560px) {
+  .tf { flex-direction: column; gap: 6px; }
+  .statusbar { font-size: .84rem; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>EE6407 Final — Mock Paper B</h1>
+<p class="sub">4 questions &middot; 25 marks each &middot; 100 marks &middot; 3 hours &middot; closed book &middot; calculator allowed &middot; answer all questions</p>
+
+<div id="math-warning" class="notice">
+  <strong>Equations are not rendering.</strong> This page loads MathJax from
+  <code>vendor/mathjax/tex-mml-chtml.js</code>. Open it from the course <code>index.html</code>. The questions are still readable without it.
+</div>
+
+<div class="statusbar">
+  <span id="clock">3:00:00</span>
+  <button class="btn" id="timer-toggle">Start</button>
+  <span class="pill">On paper <strong><span id="p-paper">0</span>/4</strong></span>
+  <span class="pill">Typed answers <strong><span id="p-fr">0</span>/11</strong></span>
+  <span class="grow"></span>
+  <label class="sr-only" for="theme">Theme</label>
+  <select id="theme"><option value="system">Auto</option><option value="light">Light</option><option value="dark">Dark</option></select>
+</div>
+
+<div class="notice info">
+  <h3>How to sit this paper</h3>
+  <ul>
+    <li>Sit it <strong>cold and timed</strong>: no notes, no primer, no Mock A. Press <em>Start</em>; the clock counts down 3 hours and turns red when time is up.</li>
+    <li>Write everything <strong>by hand</strong>, as in the real exam: working, distance matrices, dendrogram. Tick &ldquo;answered on paper&rdquo; for each question.</li>
+    <li>Then type only your <strong>final answers</strong> in the boxes (one line per item is enough). Leave a box empty if you did not reach it; the export marks it <code>&lt;blank&gt;</code>.</li>
+    <li>Give numbers to 4 decimal places. Photograph or scan your script into <code>EE-6407/quizzes/attempts/final-mock-b-&lt;date&gt;.pdf</code>.</li>
+    <li>At the end press <em>Build answer sheet</em>, copy it, and paste it into a chat with &ldquo;grade this&rdquo;.</li>
+  </ul>
+  <p>Unofficial practice paper (2026-11-19), in the official format of the 2024-26 EE6407 finals: Q1 GA, Q2&ndash;Q4 ML. The answers are in a separate file and are not on this page.</p>
+</div>
+
+<!-- ======================= Q1 ======================= -->
+<h2 id="q1">Question 1 &middot; Genetic algorithms <span class="marks">25 marks</span></h2>
+
+<h3>(a) <span class="marks">15 marks</span></h3>
+<p>The 8-queens problem is solved with a GA using <strong>permutation coding</strong>: gene \(i\) is the row of the queen in column \(i\), and a chromosome is a permutation of \(1,\dots,8\). The fitness of a chromosome \(q\) is
+\[ f(q) = 1-\frac{C(q)}{28}, \]
+where \(C(q)\) is the number of pairs of queens that attack each other. Two parents are
+\[ P_1 = 6\ 2\ 1\ 3\ 5\ 8\ 4\ 7, \qquad P_2 = 5\ 1\ 8\ 2\ 7\ 6\ 3\ 4. \]</p>
+<ol type="i">
+  <li>Explain why this coding removes all row and column conflicts, and compare the size of its search space with that of a coding that lets each gene take any value \(1,\dots,8\) independently. <span class="marks">(3)</span></li>
+  <li>Calculate \(C\) and \(f\) for \(P_1\) and for \(P_2\). List the attacking pairs. <span class="marks">(4)</span></li>
+  <li>Apply partially mapped crossover (PMX), copying the segment at <strong>positions 3&ndash;6 from \(P_1\)</strong>. Show every mapping step and give the child. <span class="marks">(5)</span></li>
+  <li>Calculate \(C\) and \(f\) for the child. <span class="marks">(2)</span></li>
+  <li>Explain why the child is a valid chromosome, and name one standard crossover that would not guarantee this for this coding. <span class="marks">(1)</span></li>
+</ol>
+<div class="field"><label for="q1a">Q1(a) final answers: (ii) C and f for P₁, P₂; (iii) child; (iv) C and f; (i), (v) in a few words</label><textarea id="q1a" data-fr="q1a"></textarea></div>
+
+<h3>(b) <span class="marks">10 marks</span></h3>
+<p>A GA <strong>minimises</strong> a cost \(g(x)\). The current population of five individuals has costs
+\[ g = (4,\ 9,\ 1,\ 6,\ 10) \quad\text{for individuals } 1,\dots,5. \]
+Parents are chosen by roulette-wheel (fitness-proportionate) selection.</p>
+<ol type="i">
+  <li>Explain why \(g\) itself cannot be used as the fitness in roulette-wheel selection. <span class="marks">(2)</span></li>
+  <li>Using the fitness \(f = 1/(1+g)\), calculate each individual's selection probability. <span class="marks">(4)</span></li>
+  <li>How many copies of individual 3 are expected in a mating pool of size 5? <span class="marks">(1)</span></li>
+  <li>The wheel is spun three times with uniform random numbers \(u = 0.25,\ 0.80,\ 0.95\). Lay the individuals out on the wheel in order 1 to 5 and state which individual each spin selects. <span class="marks">(2)</span></li>
+  <li>Comment on your result in (iv) in terms of exploration and exploitation. <span class="marks">(1)</span></li>
+</ol>
+<div class="field"><label for="q1b">Q1(b) final answers: (ii) five probabilities; (iii); (iv) three individuals; (i), (v) in a few words</label><textarea id="q1b" data-fr="q1b"></textarea></div>
+<label class="paper"><input type="checkbox" data-paper="Q1"> I answered Q1 on paper (working, pair lists, PMX steps)</label>
+
+<!-- ======================= Q2 ======================= -->
+<h2 id="q2">Question 2 &middot; Bayes, naive Bayes and trees <span class="marks">25 marks</span></h2>
+
+<h3>(a) <span class="marks">10 marks</span></h3>
+<p>A multinomial naive Bayes classifier with Laplace smoothing is trained on seven short messages:</p>
+<table class="data">
+  <tr><th>Class</th><th>Message</th></tr>
+  <tr><td>spam</td><td style="text-align:left">free win free</td></tr>
+  <tr><td>spam</td><td style="text-align:left">win money</td></tr>
+  <tr><td>spam</td><td style="text-align:left">free money now</td></tr>
+  <tr><td>ham</td><td style="text-align:left">meeting now</td></tr>
+  <tr><td>ham</td><td style="text-align:left">project meeting notes</td></tr>
+  <tr><td>ham</td><td style="text-align:left">notes free</td></tr>
+  <tr><td>ham</td><td style="text-align:left">project notes</td></tr>
+</table>
+<p>Classify the new message <strong>&ldquo;free notes now free&rdquo;</strong>. Show the priors, the vocabulary size, every smoothed word probability you need, and both class scores. Explain briefly why smoothing is needed here. <span class="marks">(10)</span></p>
+<div class="field"><label for="q2a">Q2(a) final answers: priors; d; six word probabilities; two scores; class</label><textarea id="q2a" data-fr="q2a"></textarea></div>
+
+<h3>(b) <span class="marks">8 marks</span></h3>
+<p>A Gaussian naive Bayes classifier has two continuous features. Its estimated parameters are:</p>
+<table class="data">
+  <tr><th>Class</th><th>Prior</th><th>Mean \((\mu_1,\mu_2)\)</th><th>Variance \((\sigma_1^2,\sigma_2^2)\)</th></tr>
+  <tr><td>\(\omega_1\)</td><td>0.6</td><td>(2, 5)</td><td>(1, 4)</td></tr>
+  <tr><td>\(\omega_2\)</td><td>0.4</td><td>(4, 3)</td><td>(2, 1)</td></tr>
+</table>
+<ol type="i">
+  <li>Calculate the class-conditional likelihoods \(p(\mathbf x\mid\omega_1)\) and \(p(\mathbf x\mid\omega_2)\) for \(\mathbf x=(3,4)\). <span class="marks">(3)</span></li>
+  <li>Classify \(\mathbf x\) with the Bayes decision rule, using log-discriminants. <span class="marks">(3)</span></li>
+  <li>Calculate the posterior probability \(P(\omega_1\mid\mathbf x)\). <span class="marks">(2)</span></li>
+</ol>
+<div class="field"><label for="q2b">Q2(b) final answers: two likelihoods; g₁, g₂ and class; posterior</label><textarea id="q2b" data-fr="q2b"></textarea></div>
+
+<h3>(c) <span class="marks">7 marks</span></h3>
+<p>A node of a classification tree holds 16 samples: 10 of class (+) and 6 of class (&minus;). Three binary features are candidates for the split:</p>
+<table class="data">
+  <tr><th>Feature</th><th>Value 1: (+, &minus;)</th><th>Value 0: (+, &minus;)</th></tr>
+  <tr><td>A</td><td>(7, 1)</td><td>(3, 5)</td></tr>
+  <tr><td>B</td><td>(4, 0)</td><td>(6, 6)</td></tr>
+  <tr><td>C</td><td>(8, 2)</td><td>(2, 4)</td></tr>
+</table>
+<p>Using the Gini impurity as defined in this course, find which feature should be used at this node. Show the impurity of the node, the weighted impurity after each split and the impurity decrease. <span class="marks">(7)</span></p>
+<div class="field"><label for="q2c">Q2(c) final answers: node impurity; three weighted impurities; three decreases; choice</label><textarea id="q2c" data-fr="q2c"></textarea></div>
+<label class="paper"><input type="checkbox" data-paper="Q2"> I answered Q2 on paper</label>
+
+<!-- ======================= Q3 ======================= -->
+<h2 id="q3">Question 3 &middot; Fisher LDA and SVM <span class="marks">25 marks</span></h2>
+
+<h3>(a) <span class="marks">14 marks</span></h3>
+<p>A two-class problem has class means and scatter matrices</p>
+\[ \mathbf m_1=\begin{bmatrix}6\\4\end{bmatrix},\quad \mathbf m_2=\begin{bmatrix}2\\2\end{bmatrix},\quad \mathbf S_1=\begin{bmatrix}30&10\\10&20\end{bmatrix},\quad \mathbf S_2=\begin{bmatrix}26&-2\\-2&16\end{bmatrix}. \]
+<ol type="i">
+  <li>State the Fisher criterion that is maximised, define \(\mathbf S_B\) and \(\mathbf S_W\), and explain in words what the criterion achieves. <span class="marks">(3)</span></li>
+  <li>Calculate \(\mathbf S_W\). <span class="marks">(1)</span></li>
+  <li>Calculate the Fisher weight vector \(\mathbf w\). <span class="marks">(4)</span></li>
+  <li>Calculate the bias \(w_0\) that places the boundary midway between the projected means. <span class="marks">(2)</span></li>
+  <li>Classify \(\mathbf x=(3.5,\ 3)\). <span class="marks">(2)</span></li>
+  <li>Calculate the distance of \(\mathbf x\) from the decision boundary and comment on the confidence of the decision. <span class="marks">(2)</span></li>
+</ol>
+<div class="field"><label for="q3a">Q3(a) final answers: S_W; w; w₀; g(x) and class; distance</label><textarea id="q3a" data-fr="q3a"></textarea></div>
+
+<h3>(b) <span class="marks">11 marks</span></h3>
+<p>A soft-margin linear SVM with \(C = 1\) is trained. The training samples with their labels \(d_i\) and the optimal Lagrange multipliers \(\alpha_i\) are:</p>
+<table class="data">
+  <tr><th>\(i\)</th><th>\(\mathbf x_i\)</th><th>\(d_i\)</th><th>\(\alpha_i\)</th></tr>
+  <tr><td>1</td><td>(2, 3)</td><td>+1</td><td>0.25</td></tr>
+  <tr><td>2</td><td>(4, 1)</td><td>+1</td><td>0.5</td></tr>
+  <tr><td>3</td><td>(1, 2)</td><td>&minus;1</td><td>0.875</td></tr>
+  <tr><td>4</td><td>(3, 0)</td><td>&minus;1</td><td>0.875</td></tr>
+  <tr><td>5</td><td>(2, 1.5)</td><td>+1</td><td>1</td></tr>
+  <tr><td>6</td><td>(5, 4)</td><td>+1</td><td>0</td></tr>
+</table>
+<ol type="i">
+  <li>Verify that the multipliers satisfy the equality constraint of the dual problem. <span class="marks">(1)</span></li>
+  <li>Calculate the optimal weight vector \(\mathbf w\). <span class="marks">(3)</span></li>
+  <li>State which samples should be used to calculate the bias \(b\), and why. <span class="marks">(2)</span></li>
+  <li>Calculate \(b\). <span class="marks">(2)</span></li>
+  <li>Calculate the width of the margin, and the slack \(\xi_5\) of sample 5. What does \(\xi_5\) tell you? <span class="marks">(1)</span></li>
+  <li>Classify \(\mathbf x=(3.2,\ 1.2)\), give its distance from the decision boundary, and comment on the confidence. <span class="marks">(2)</span></li>
+</ol>
+<div class="field"><label for="q3b">Q3(b) final answers: w; samples used for b; b; margin; ξ₅; class and distance</label><textarea id="q3b" data-fr="q3b"></textarea></div>
+<label class="paper"><input type="checkbox" data-paper="Q3"> I answered Q3 on paper</label>
+
+<!-- ======================= Q4 ======================= -->
+<h2 id="q4">Question 4 &middot; Clustering <span class="marks">25 marks</span></h2>
+<p>Six samples in two dimensions are given. Use the Euclidean distance throughout.</p>
+<table class="data">
+  <tr><th>Sample</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th></tr>
+  <tr><td>\((x_1, x_2)\)</td><td>(0, 0)</td><td>(1, 2)</td><td>(4, 0)</td><td>(8, 7)</td><td>(9, 4)</td><td>(12, 8)</td></tr>
+</table>
+
+<h3>(a) <span class="marks">10 marks</span></h3>
+<p>Perform agglomerative hierarchical clustering with <strong>single linkage</strong>. Give the initial distance matrix and the updated distance matrix after every merge, draw the dendrogram with heights proportional to the merge distances, and state the result when the dendrogram is cut into two clusters. <span class="marks">(10)</span></p>
+<div class="field"><label for="q4a">Q4(a) final answers: merges in order with heights; two-cluster result</label><textarea id="q4a" data-fr="q4a"></textarea></div>
+
+<h3>(b) <span class="marks">7 marks</span></h3>
+<p>For the two-cluster result of (a), calculate the Davies&ndash;Bouldin index. Show the centroids, the within-cluster dispersions and the separation, and interpret the value. <span class="marks">(7)</span></p>
+<div class="field"><label for="q4b">Q4(b) final answers: centroids; δ₁, δ₂; d(1,2); DB</label><textarea id="q4b" data-fr="q4b"></textarea></div>
+
+<h3>(c) <span class="marks">4 marks</span></h3>
+<p>For the same two-cluster result, calculate the Dunn index and interpret it. <span class="marks">(4)</span></p>
+<div class="field"><label for="q4c">Q4(c) final answers: inter-cluster distance; diameter; Dunn</label><textarea id="q4c" data-fr="q4c"></textarea></div>
+
+<h3>(d) <span class="marks">4 marks</span></h3>
+<p>A second clustering method gives the three clusters \(\{A, B\}\), \(\{C, D, E\}\), \(\{F\}\). Calculate the Rand index between this result and the two-cluster result of (a). <span class="marks">(4)</span></p>
+<div class="field"><label for="q4d">Q4(d) final answers: N_s; N_d; RI</label><textarea id="q4d" data-fr="q4d"></textarea></div>
+<label class="paper"><input type="checkbox" data-paper="Q4"> I answered Q4 on paper (matrices and dendrogram drawn)</label>
+
+<!-- ======================= export ======================= -->
+<h2 id="export">Answer sheet</h2>
+<p class="sub">Builds one plain-text block that names this paper and its key file, so grading works in a fresh chat.</p>
+<p><button class="btn btn-primary" id="build">Build answer sheet</button> <button class="btn" id="copy">Copy</button> <span id="copy-status"></span></p>
+<textarea id="export-out" readonly placeholder="Your answer sheet will appear here." spellcheck="false"></textarea>
+<p style="margin-top:24px"><button class="btn btn-danger" id="reset">Clear all answers and reset the timer</button></p>
+
+<footer>EE6407 final-prep step 3 &middot; unofficial practice paper &middot; open other pages from the course <code>index.html</code>.</footer>
+</div>
+
+<script>
+(function () {
+  var STORE_KEY = 'ee6407-final-mock-b-v1', THEME_KEY = 'ee6407-theme', LIMIT = 3 * 3600;
+  var state = { fr: {}, paper: {}, elapsed: 0, running: false, startedAt: null };
+  try { var raw = localStorage.getItem(STORE_KEY); if (raw) { var o = JSON.parse(raw); for (var k in o) state[k] = o[k]; } } catch (e) {}
+  function save() { try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {} }
+
+  /* theme */
+  var themeSel = document.getElementById('theme');
+  try { var t = localStorage.getItem(THEME_KEY); if (t) themeSel.value = t; } catch (e) {}
+  document.documentElement.setAttribute('data-theme', themeSel.value);
+  themeSel.addEventListener('change', function () {
+    document.documentElement.setAttribute('data-theme', themeSel.value);
+    try { localStorage.setItem(THEME_KEY, themeSel.value); } catch (e) {}
+  });
+
+  /* timer: counts down from 3 h; elapsed survives a reload */
+  var clock = document.getElementById('clock'), toggle = document.getElementById('timer-toggle');
+  function elapsed() { return state.elapsed + (state.running ? (Date.now() - state.startedAt) / 1000 : 0); }
+  function fmt(s) { s = Math.max(0, Math.round(s)); return Math.floor(s / 3600) + ':' + ('0' + Math.floor(s % 3600 / 60)).slice(-2) + ':' + ('0' + s % 60).slice(-2); }
+  function paintClock() {
+    var left = LIMIT - elapsed();
+    clock.textContent = left >= 0 ? fmt(left) : '+' + fmt(-left);
+    clock.className = left < 0 ? 'over' : '';
+    toggle.textContent = state.running ? 'Pause' : (state.elapsed ? 'Resume' : 'Start');
+  }
+  toggle.addEventListener('click', function () {
+    if (state.running) { state.elapsed = elapsed(); state.running = false; }
+    else { state.startedAt = Date.now(); state.running = true; }
+    save(); paintClock();
+  });
+  setInterval(paintClock, 1000);
+
+  /* typed answers + paper ticks */
+  var fields = document.querySelectorAll('[data-fr]'), boxes = document.querySelectorAll('[data-paper]');
+  function paintProgress() {
+    var n = 0, p = 0;
+    Array.prototype.forEach.call(fields, function (el) { if ((state.fr[el.dataset.fr] || '').trim()) n++; });
+    Array.prototype.forEach.call(boxes, function (cb) { cb.checked = !!state.paper[cb.dataset.paper]; cb.parentNode.classList.toggle('on', cb.checked); if (cb.checked) p++; });
+    document.getElementById('p-fr').textContent = n; document.getElementById('p-paper').textContent = p;
+  }
+  Array.prototype.forEach.call(fields, function (el) {
+    el.value = state.fr[el.dataset.fr] || '';
+    el.addEventListener('input', function () { state.fr[el.dataset.fr] = el.value; save(); paintProgress(); });
+  });
+  Array.prototype.forEach.call(boxes, function (cb) {
+    cb.addEventListener('change', function () { state.paper[cb.dataset.paper] = cb.checked; save(); paintProgress(); });
+  });
+
+  /* export */
+  var out = document.getElementById('export-out');
+  document.getElementById('build').addEventListener('click', function () {
+    var L = ['EE6407 FINAL - MOCK B - ANSWER SHEET',
+      'Paper      : EE-6407/quizzes/final-mock-b.html',
+      'Key/rubric : EE-6407/quizzes/final-mock-b.md (checker final-mock-b-check.py)',
+      'Marks      : 100 (4 x 25)   Time limit: 3:00:00',
+      'Time used  : ' + fmt(elapsed()) + (elapsed() > LIMIT ? '  (OVER TIME)' : ''),
+      'On paper   : ' + (['Q1', 'Q2', 'Q3', 'Q4'].filter(function (q) { return state.paper[q]; }).join(', ') || 'none') + '  (scans expected in EE-6407/quizzes/attempts/)',
+      'Exported   : ' + new Date().toISOString(), ''];
+    Array.prototype.forEach.call(fields, function (el) {
+      var v = (state.fr[el.dataset.fr] || '').trim();
+      L.push('[' + el.dataset.fr + ']');
+      L.push(v ? v.split('\n').map(function (s) { return '    ' + s; }).join('\n') : '    <blank>');
+    });
+    out.value = L.join('\n');
+  });
+  document.getElementById('copy').addEventListener('click', function () {
+    out.select();
+    var ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
+    if (navigator.clipboard) navigator.clipboard.writeText(out.value).then(function () { ok = true; }, function () {});
+    document.getElementById('copy-status').textContent = out.value ? 'Copied' : 'Build the sheet first';
+  });
+  document.getElementById('reset').addEventListener('click', function () {
+    state = { fr: {}, paper: {}, elapsed: 0, running: false, startedAt: null };
+    try { localStorage.removeItem(STORE_KEY); } catch (e) {}
+    Array.prototype.forEach.call(fields, function (el) { el.value = ''; });
+    out.value = ''; paintProgress(); paintClock();
+  });
+
+  paintProgress(); paintClock();
+
+  /* MathJax, vendored so the page works offline */
+  var warned = false;
+  function warn() { if (warned) return; warned = true; if (!window.MathJax || !window.MathJax.typesetPromise) document.getElementById('math-warning').style.display = 'block'; }
+  var s = document.createElement('script'); s.src = 'vendor/mathjax/tex-mml-chtml.js'; s.async = true; s.onerror = warn;
+  document.head.appendChild(s); setTimeout(warn, 3500);
+})();
+</script>
+</body>
+</html>

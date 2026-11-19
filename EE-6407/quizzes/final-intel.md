@@ -95,6 +95,18 @@ data (ml-slides-03 p. 68); silhouette bᵢ = **minimum** distance to another clu
 textbook mean (ml-slides-11 p. 4); Dunn = min inter-cluster pair distance / max diameter (p. 8–9);
 Davies–Bouldin δᵢ = RMS distance to the centroid (p. 11–12).
 
+## Lecturer's revision deck (2026-11-19)
+
+`resources/machine-learning/ml-revision-2026-s1.pdf` (NTULearn Content → "Revision_Machine Learning", 23 pages) is the
+official ML revision outline. It matches the Week 13 list and confirms the conventions above: w₀ = −wᵀ(m₁+m₂)/2 (p. 9),
+b averaged over 0 < α(i) < C (p. 14), Gini = Σ_{j≠k} P(ωj)P(ωk) = ½[1 − Σ P²(ωj)] (p. 16). It also names items absent from
+the 2024-26 papers: sensitivity/specificity and ROC/AUC (p. 19); peaking phenomenon, filter vs wrapper, individual feature vs
+subset (p. 20–21); GMM (p. 22); **Calinski–Harabasz and Rand index** (p. 23; formulas in ml-slides-11 p. 14–18). Mock B tests
+the Rand index as its labelled prediction item; hard mock H should cover the rest.
+
+DBSCAN wording conflict: ml-slides-10 p. 61 says a dense neighbourhood holds "at least" MinPts points, p. 63 says a core point
+has "more than" MinPts. Mock questions avoid neighbour counts exactly equal to MinPts; in the exam, state the reading used.
+
 ## Open questions
 
 1. This sitting's exam date, time and venue; calculator policy.

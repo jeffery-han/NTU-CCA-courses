@@ -5,7 +5,7 @@ Genetic Algorithms and Machine Learning.  Part 1: evolutionary computing (GA).  
 ## Now
 
 - **Next assessment: final exam.**  Format is official from the four past papers: 3 h, 4 × 25 marks, Q1 GA, Q2–Q4 ML.  **Date, time and venue are not verified** (EE6407 is not on the undergraduate timetable; `quizzes/final-intel.md` gives the 23 Nov – 3 Dec 2026 exam window).  Check the postgraduate timetable or StudentLink.
-- **Final-prep protocol is running**: 8 steps in `quizzes/final-intel.md` (primer → guided mock A → Mock B → retrain → Mock C → hard mock H → official 2025-26 S1 → official 2025-26 S2; the 2024-25 papers are spare).  Steps 1–2 are built.  **Next action: build Mock B once the learner finishes Step 2** (`quizzes/final-mock-a-guided.html`).
+- **Final-prep protocol is running**: 8 steps in `quizzes/final-intel.md` (primer → guided mock A → Mock B → retrain → Mock C → hard mock H → official 2025-26 S1 → official 2025-26 S2; the 2024-25 papers are spare).  Steps 1–2 done (learner finished Mock A on 2026-11-19).  **Step 3 is built: the learner sits `quizzes/final-mock-b.html` cold (3 h, handwritten), then exports the answer sheet for grading against `final-mock-b.md`.**  Next: grade it, then Step 4 retrain into `quizzes/final-mistakes.md`.
 - Open loops:
   1. The ML half of the course is in no LaTeX note; both notes are Quiz-1-only.
   2. Gini convention: the slides use ½(1 − Σp²) (`ml-slides-06` p. 14) and the final pages follow them; the older `quizzes/quiz-2-primer.html` uses 1 − Σp² and was left unchanged.
@@ -25,7 +25,8 @@ Genetic Algorithms and Machine Learning.  Part 1: evolutionary computing (GA).  
 | `lecture-01-evolutionary-computing-part-1.pdf` | 1–36 | both notes | Full.  Slide-65 hand-simulation table not transcribed. |
 | `lecture-01-evolutionary-computing-part-2.pdf` (representations deck) | all | both notes, written from the Week 3 transcript | No cross-check of the notes against this deck is recorded (it was thought missing until 2026-11-13).  Slide 60 onward (fitness scaling, selection schemes, population management) was outside Quiz 1 and is not in the notes. |
 | `n-queens-evolution-search-paper.pdf` | 2–6 | both notes | Core method only. |
-| `machine-learning/ml-slides-01…11-….pdf` (+ SVM KKT supplement, Python handout) | all | `quizzes/final-primer.html`, `final-mock-a-guided.html` only | No LaTeX.  Synced 2026-11-13. |
+| `machine-learning/ml-slides-01…11-….pdf` (+ SVM KKT supplement, Python handout) | all | `quizzes/final-primer.html`, `final-mock-a-guided.html`, `final-mock-b` only | No LaTeX.  Synced 2026-11-13. |
+| `machine-learning/ml-revision-2026-s1.pdf` (lecturer's ML revision deck) | 1–23 | topic list in `quizzes/final-intel.md`; conventions used by `final-mock-b` | Outline plus key formulas only.  Synced 2026-11-19. |
 | `week-01…04-transcript.txt` (cleaned) | Weeks 1–4 | both notes | Week 4 states the Quiz 1 scope boundary. |
 | `transcripts-raw/week-01…13-transcript.txt` and `…-second-session-…` (Weeks 4–13) | Weeks 1–13 | Weeks 5–13 mined for Quiz 2 and final intel only | Each lecture is given twice; use the second session only to fill gaps.  Week 13 ends with the ML revision list. |
 | `../tests/test-final-2024-25-s{1,2}.pdf`, `../tests/test-final-2025-26-s{1,2}.pdf` | all | topic map in `quizzes/final-intel.md` | **Official, git-ignored (NTU-only); never commit.**  2025-26 papers are reserved for steps 7–8: do not use their questions earlier. |
@@ -36,7 +37,7 @@ Genetic Algorithms and Machine Learning.  Part 1: evolutionary computing (GA).  
 
 Open from `index.html`.  All are unofficial practice.
 
-- Final: `quizzes/final-primer.html` (16 topic cards, 18 checks), `quizzes/final-mock-a-guided.html` (full 4 × 25 paper as 56 steps); checker `quizzes/final-check.py`; page images `quizzes/final-pages/`.
+- Final: `quizzes/final-primer.html` (16 topic cards, 18 checks), `quizzes/final-mock-a-guided.html` (full 4 × 25 paper as 56 steps); checker `quizzes/final-check.py`; `quizzes/final-mock-b.html` (Step 3, cold answer-free 4 × 25 paper, 3 h countdown, export) with key/rubric `final-mock-b.md` and checker `final-mock-b-check.py`; page images `quizzes/final-pages/`.
 - Quiz 2 (ML): `quizzes/quiz-2-primer.html`; `quiz-2-mock.html` / `.md` (checker `quiz-2-mock-check.py`); `quiz-2-mock-b.html` / `.md` (`quiz-2-mock-b-check.py`); `quiz-2-cycle.html` / `.md` = Mock C with train / test / retrain drills (`quiz-2-cycle-check.mjs`); `quiz-2-mock-d.html`, `quiz-2-mock-e.html` (`quiz-2-mock-de-check.py`); `quiz-2-bus-review.html` (phone review, `quiz-2-bus-review-check.py`).
 - Quiz 1 (GA): `notes/quiz1-prep-learning.html` (8 modules, 9 labs); `quizzes/quiz-1-prediction.html` / `.md` (Mock A); `quizzes/quiz-1-mock-b.html` / `.md` (answer-free).
 - Intel and records: `quizzes/final-intel.md`, `quiz-2-intel.md`, `rednote-quiz1-intel.md`, `quiz-2-retrain-handoff.md` (learner's Quiz 2 evidence as of 2026-11-10).
