@@ -26,6 +26,8 @@ Q4(b) after the centroids, Q4(c), Q4(d). Q2(a) stopped after the priors.
 
 ## Mock C (sat 2026-11-19, scan `attempts/final-mock-c-2026-11-19.pdf`) — 82 / 100
 
+Teach-first step: `final-relearn-c.html` (modules 1–5); its section 6 is the cold check of the retries below.
+
 Q1 20/25 · Q2 23.5/25 · Q3 19/25 · Q4 19.5/25. Mock B items 1–4 and 6–9 were right on new numbers and are closed.
 Items 5, 10 and 12 stay open (details below). Q4(e) CH was left unfinished (time or recall).
 

@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en" data-theme="system">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EE6407 Final Relearn II</title>
+<meta name="description" content="Second relearn page for the EE6407 final, on the Mock C gaps: TSP tour length, Davies-Bouldin delta, Calinski-Harabasz, SVM and Fisher write-ups, with a cold check on the logged retries.">
+<script>
+window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+  options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }, startup: { typeset: false } };
+</script>
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: #f6f7f9; --surface: #fff; --surface-2: #eef1f5; --text: #14181f; --muted: #5b6472; --border: #d8dee7;
+  --accent: #1f6feb; --accent-soft: #e5efff; --success: #17794b; --success-soft: #e2f5ec;
+  --warning: #9a6200; --warning-soft: #fdf1dc; --danger: #b32130; --danger-soft: #fdeaec;
+  --radius: 14px; --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0e1117; --surface: #161b23; --surface-2: #1d232d; --text: #e7ecf3; --muted: #99a3b3; --border: #2a323e;
+  --accent: #6ea8ff; --accent-soft: #17233a; --success: #56d39b; --success-soft: #10281f;
+  --warning: #e5b567; --warning-soft: #2b2113; --danger: #ff8189; --danger-soft: #2e1519; } }
+:root[data-theme="dark"] {
+  --bg: #0e1117; --surface: #161b23; --surface-2: #1d232d; --text: #e7ecf3; --muted: #99a3b3; --border: #2a323e;
+  --accent: #6ea8ff; --accent-soft: #17233a; --success: #56d39b; --success-soft: #10281f;
+  --warning: #e5b567; --warning-soft: #2b2113; --danger: #ff8189; --danger-soft: #2e1519; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.62 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+a { color: var(--accent); }
+.app { display: grid; grid-template-columns: 270px minmax(0, 1fr); }
+nav.toc { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 18px 14px; border-right: 1px solid var(--border); background: var(--surface); font-size: .9rem; }
+nav.toc b { display: block; margin-bottom: 8px; }
+nav.toc a { display: flex; justify-content: space-between; gap: 8px; padding: 3px 6px; border-radius: 7px; text-decoration: none; color: var(--text); }
+nav.toc a:hover { background: var(--surface-2); }
+nav.toc .sc { color: var(--muted); font-family: var(--mono); font-size: .8rem; }
+nav.toc .sc.ok { color: var(--success); font-weight: 700; }
+nav.toc .tools { margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--border); }
+main { min-width: 0; max-width: 900px; padding: 24px 22px 120px; }
+h1 { font-size: 1.65rem; margin: 0 0 .4rem; }
+h2 { font-size: 1.25rem; margin: 2.2rem 0 .4rem; padding-top: .6rem; border-top: 2px solid var(--border); }
+h3 { font-size: 1.04rem; margin: 0 0 .3rem; }
+.sub { color: var(--muted); }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 18px; margin: 14px 0; }
+.card.done { border-color: var(--success); }
+.notice { background: var(--warning-soft); border: 1px solid var(--border); border-radius: 12px; padding: 12px 15px; margin: 14px 0; }
+.notice.info { background: var(--accent-soft); }
+.tag { float: right; color: var(--muted); font-size: .82rem; font-weight: 600; }
+.ex { background: var(--surface-2); border-radius: 10px; padding: 8px 12px; margin: 8px 0; font-size: .95rem; }
+.chk { border-top: 1px dashed var(--border); padding-top: 8px; margin-top: 10px; }
+.chk input, .chk select, .btn { font: inherit; font-size: .92rem; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 4px 10px; }
+.btn { cursor: pointer; } .btn:hover { border-color: var(--accent); }
+.btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 600; text-decoration: none; padding: 8px 16px; }
+.fb { font-weight: 600; margin-left: 6px; }
+table.d { border-collapse: collapse; margin: 6px 0; font-size: .9rem; }
+table.d td, table.d th { border: 1px solid var(--border); padding: 3px 9px; text-align: center; }
+a.cite { font-size: .85rem; }
+dialog { max-width: min(900px, 94vw); border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text); padding: 14px; }
+dialog img { width: 100%; display: block; margin: 8px 0; border: 1px solid var(--border); background: #fff; }
+dialog::backdrop { background: rgba(0, 0, 0, .5); }
+.row { display: flex; gap: 10px; align-items: center; }
+#math-warning { display: none; }
+@media (max-width: 860px) {
+  .app { grid-template-columns: 1fr; }
+  nav.toc { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--border); }
+  nav.toc #toc-links { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 8px; }
+  main { padding: 16px 16px 80px; }
+}
+.stem { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 10px; padding: 10px 14px; margin: 8px 0 12px; }
+.step { border-left: 3px solid var(--border); padding: 4px 0 4px 12px; margin: 10px 0; }
+.step.done { border-left-color: var(--success); }
+.step p { margin: 4px 0; }
+.step input:not([type=checkbox]), .step select { font: inherit; font-size: .9rem; font-family: var(--mono); background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 7px; padding: 3px 7px; }
+.step input.good { border-color: var(--success); } .step input.bad, .step select.bad { border-color: var(--danger); }
+details { margin: 3px 0; font-size: .94rem; } details summary { cursor: pointer; color: var(--muted); font-weight: 600; }
+details.work[open] { background: var(--success-soft); border-radius: 8px; padding: 6px 10px; }
+details.hint[open] { background: var(--accent-soft); border-radius: 8px; padding: 6px 10px; }
+.pill { display: inline-block; background: var(--warning-soft); border: 1px solid var(--border); border-radius: 999px; padding: 0 9px; font-size: .78rem; font-weight: 700; }
+label.self { display: block; font-size: .92rem; margin-top: 4px; }
+h3 .tag, h2 .tag { float: right; color: var(--muted); font-size: .82rem; font-weight: 600; }
+.start { background: var(--accent-soft); border-radius: 12px; padding: 10px 16px; margin: 10px 0; }
+.start > summary { font-weight: 700; color: var(--accent); cursor: pointer; }
+.rule { background: var(--success-soft); border-left: 4px solid var(--success); border-radius: 8px; padding: 8px 12px; margin: 12px 0; font-weight: 600; }
+.badge { display: inline-block; font-size: .75rem; font-weight: 700; border-radius: 999px; padding: 1px 9px; margin-left: 6px; vertical-align: middle; background: var(--warning-soft); color: var(--warning); border: 1px solid var(--border); }
+table.sym { border-collapse: collapse; font-size: .92rem; margin: 6px 0; }
+table.sym td { border-bottom: 1px solid var(--border); padding: 3px 10px; vertical-align: top; }
+svg text { fill: var(--text); font: 13px -apple-system, sans-serif; }
+</style>
+</head>
+<body>
+<div class="app">
+<nav class="toc" aria-label="Contents">
+  <b>EE6407 Final &mdash; Relearn II</b>
+  <div id="toc-links"></div>
+  <div class="tools">
+    <div>Steps right <b id="score" style="display:inline">0</b>/<span id="total">0</span></div>
+    <p><button class="btn" id="reset">Reset my answers</button> <button class="btn" id="theme">Theme</button></p>
+  </div>
+</nav>
+<main>
+<h1>EE6407 Final &mdash; Relearn what Mock C exposed</h1>
+<p class="sub">Mock C scored 82/100. These five modules cover the 18 marks it lost, biggest loss first. Each module has <b>Start here</b>, a <b>worked example</b>, <b>your turn</b> (checked steps; the worked line unlocks after your first check) and <b>one rule</b>. The last section is a <b>cold check</b> on the retry numbers from <code>final-mistakes.md</code>: do it the next day, with this page&rsquo;s modules closed. Give numbers to 4 decimal places.</p>
+<div id="math-warning" class="notice"><strong>Equations are not rendering.</strong> Open this page from the course folder (via <code>index.html</code>) so <code>vendor/mathjax/</code> resolves.</div>
+
+<!-- ============================ 1 TSP ============================ -->
+<h2 id="m1">1 &middot; TSP tour length from a permutation <span class="badge">Fix</span> <span class="tag">Mock C &minus;4.5</span></h2>
+<details class="start" open><summary>Start here: read the chromosome left to right, then go home</summary>
+<p>In the TSP coding used in this course, a chromosome <b>is the visiting order</b>: \(1\,3\,5\,2\,6\,4\) means &ldquo;start at city 1, then go to 3, then 5, 2, 6, 4, then return to 1&rdquo;. With \(n\) cities a closed tour has <b>\(n\) edges</b>:</p>
+\[ L = d(g_1,g_2)+d(g_2,g_3)+\dots+d(g_{n-1},g_n)+\underbrace{d(g_n,g_1)}_{\text{return edge}}. \]
+<p><b>What you did in Mock C:</b> you read gene \(i\) as &ldquo;the position at which city \(i\) is visited&rdquo;. For \(P_1=1\,3\,5\,2\,6\,4\) that gives the tour \(1\,4\,2\,6\,3\,5\), which is a different tour. You also left out the return edge. Both errors came from not rereading the question&rsquo;s sentence &ldquo;the order in which the cities are visited &hellip; returns from the last city to the first&rdquo;.</p>
+<p><b>Habit:</b> before adding anything, write the tour as a chain of arrows, <code>1→3→5→2→6→4→1</code>, and count the arrows: there must be \(n\) of them. Then read each \(d\) from the matrix row of the first city and the column of the second.</p>
+</details>
+<h3>Worked example</h3>
+<div class="ex">Five cities, rows: [0,4,6,3,7], [4,0,5,8,2], [6,5,0,4,9], [3,8,4,0,5], [7,2,9,5,0]. Chromosome \(3\,1\,5\,2\,4\).
+<ol><li>Chain: 3→1→5→2→4→3, which is 5 arrows for 5 cities. ✓</li>
+<li>\(d(3,1)=6\), \(d(1,5)=7\), \(d(5,2)=2\), \(d(2,4)=8\), \(d(4,3)=4\). \(L=27\), \(f=100/27=3.7037\).</li>
+<li>Traps: without the return edge you get 23; reading genes as positions gives the tour 2 4 1 5 3 and 32.</li></ol></div>
+<h3>Your turn</h3>
+<div class="stem">Rows: [0,5,3,8,4], [5,0,6,2,7], [3,6,0,4,9], [8,2,4,0,3], [4,7,9,3,0]. Tour A \(=4\,2\,5\,1\,3\), tour B \(=1\,2\,3\,4\,5\). Fitness \(f=100/L\).</div>
+<div class="step" data-k="tsp_L"><p>1. \(L(A)=\) <input size="5" data-p="0">, \(L(B)=\) <input size="5" data-p="1"></p>
+<details class="work"><summary>Worked line</summary>A: 4→2→5→1→3→4: \(2+7+4+3+4=20\). B: 1→2→3→4→5→1: \(5+6+4+3+4=22\).</details></div>
+<div class="step" data-k="tsp_f"><p>2. \(f(A)=\) <input size="6" data-p="0">, \(f(B)=\) <input size="6" data-p="1">; the fitter tour is <select data-p="2"><option value=""></option><option>A</option><option>B</option></select></p>
+<details class="work"><summary>Worked line</summary>\(100/20=5\), \(100/22=4.5455\). A is fitter, because the shorter tour has the larger \(f\).</details></div>
+<div class="rule">One rule: chromosome = visiting order; draw the arrow chain back to the start; n cities → n edges.</div>
+
+<!-- ============================ 2 DB ============================ -->
+<h2 id="m2">2 &middot; Davies&ndash;Bouldin: &delta; is a root-mean-square <span class="badge">Fix</span> <span class="tag">Mock C &minus;2.5</span></h2>
+<details class="start" open><summary>Start here: square, average, then one square root</summary>
+<p>The spread of cluster \(i\) in DB (<a class="cite" href="../resources/machine-learning/ml-slides-11-clustering-evaluation.pdf#page=11" data-pages="ml-slides-11-clustering-evaluation:11,12">clustering-evaluation slides pp. 11&ndash;12</a>) is</p>
+\[ \delta_i=\sqrt{\frac1{n_i}\sum_{\mathbf x\in D_i}\lVert\mathbf x-\mathbf m_i\rVert^2}. \]
+<p>The order is <b>square &rarr; average &rarr; root</b>. The average of the plain distances (what you did) is always a little smaller unless every point is equally far from the centroid. That is why your \(\delta_2\) was right (D and E are equally far from their centroid) and your \(\delta_1\) was wrong.</p>
+<p>Then \(S_{12}=(\delta_1+\delta_2)/d(\mathbf m_1,\mathbf m_2)\). <b>Both</b> spreads go on top; in Mock C you used only \(\delta_2\). With two clusters, \(DB=S_{12}\). Lower is better.</p>
+<p><b>Shortcut:</b> \(\sum\lVert\mathbf x-\mathbf m_i\rVert^2\) is the same \(C_i\) that Calinski&ndash;Harabasz needs (module 3), so compute it once and reuse it.</p>
+</details>
+<h3>Worked example</h3>
+<div class="ex">A(0,0), B(4,0), C(0,2) | D(8,1), E(10,1).
+<ol><li>\(\mathbf m_1=(1.3333,0.6667)\), \(\mathbf m_2=(9,1)\).</li>
+<li>Squared distances to \(\mathbf m_1\): A \(2.2222\), B \(7.5556\), C \(3.5556\). Sum \(C_1=13.3333\), mean \(4.4444\), so \(\delta_1=\sqrt{4.4444}=2.1082\). The mean of plain distances would give \(2.0417\), which is wrong.</li>
+<li>D and E are 1 from \(\mathbf m_2\): \(\delta_2=1\). \(d(\mathbf m_1,\mathbf m_2)=7.6739\).</li>
+<li>\(DB=(2.1082+1)/7.6739=0.4050\).</li></ol></div>
+<h3>Your turn</h3>
+<div class="stem">P(1,1), Q(4,1), R(1,3) | S(9,2), T(11,4), U(9,4).</div>
+<div class="step" data-k="db_m"><p>1. \(\mathbf m_1=(\)<input size="6" data-p="0">, <input size="6" data-p="1">\()\), \(\mathbf m_2=(\)<input size="6" data-p="2">, <input size="6" data-p="3">\()\)</p>
+<details class="work"><summary>Worked line</summary>\((6/3,\ 5/3)=(2,1.6667)\); \((29/3,\ 10/3)=(9.6667,3.3333)\).</details></div>
+<div class="step" data-k="db_delta"><p>2. \(\delta_1=\) <input size="6" data-p="0">, \(\delta_2=\) <input size="6" data-p="1"></p>
+<details class="hint"><summary>Hint</summary>Do not take the square root of each distance before averaging.</details>
+<details class="work"><summary>Worked line</summary>Cluster 1: P \(1+0.4444\), Q \(4+0.4444\), R \(1+1.7778\); sum 8.6667, mean 2.8889, \(\delta_1=1.6997\) (the mean of plain distances gives 1.6589, the trap). Cluster 2: S \(0.4444+1.7778\), T \(1.7778+0.4444\), U \(0.4444+0.4444\); sum 5.3333, mean 1.7778, \(\delta_2=1.3333\).</details></div>
+<div class="step" data-k="db_val"><p>3. \(d(\mathbf m_1,\mathbf m_2)=\) <input size="6" data-p="0">, DB \(=\) <input size="6" data-p="1"></p>
+<details class="work"><summary>Worked line</summary>\(\sqrt{7.6667^2+1.6667^2}=7.8457\). DB \(=(1.6997+1.3333)/7.8457=0.3866\).</details></div>
+<div class="rule">One rule: δ = √(mean of squared distances); S = (δ₁ + δ₂)/d(m₁, m₂), both spreads on top.</div>
+
+<!-- ============================ 3 CH ============================ -->
+<h2 id="m3">3 &middot; Calinski&ndash;Harabasz <span class="badge">Revision list</span> <span class="tag">Mock C &minus;3</span></h2>
+<details class="start" open><summary>Start here: between-cluster over within-cluster, all squared</summary>
+<p>CH asks how far the clusters sit from the overall centre compared with how spread out they are inside (<a class="cite" href="../resources/machine-learning/ml-slides-11-clustering-evaluation.pdf#page=14" data-pages="ml-slides-11-clustering-evaluation:13,14,15">clustering-evaluation slides pp. 13&ndash;15</a>). Higher is better.</p>
+\[ CH=\frac{\sum_i n_i\,\lVert\mathbf m_i-\mathbf m\rVert^2}{\sum_i C_i},\qquad C_i=\sum_{\mathbf x\in D_i}\lVert\mathbf x-\mathbf m_i\rVert^2,\qquad \mathbf m=\text{mean of all }N\text{ samples}. \]
+<table class="sym">
+<tr><td>\(\mathbf m\)</td><td>global centroid: average <b>all samples</b>, not the cluster centroids (with unequal \(n_i\) these differ)</td></tr>
+<tr><td>\(n_i\lVert\mathbf m_i-\mathbf m\rVert^2\)</td><td>separation of cluster \(i\), <b>squared</b> and weighted by its size</td></tr>
+<tr><td>\(C_i\)</td><td>cohesion of cluster \(i\): the same sum of squares as in DB</td></tr>
+</table>
+<p>This is the course form: it has no \((N-K)/(K-1)\) factor. In Mock C you set up the top with plain norms \(\lVert\mathbf m_i-\mathbf m\rVert\) and stopped there. Square them, then divide by \(C_1+C_2\).</p>
+</details>
+<h3>Worked example</h3>
+<div class="ex">Same points as module 2: A(0,0), B(4,0), C(0,2) | D(8,1), E(10,1).
+<ol><li>\(\mathbf m=(22/5,\ 4/5)=(4.4,0.8)\).</li>
+<li>\(\lVert\mathbf m_1-\mathbf m\rVert^2=3.0667^2+0.1333^2=9.4222\); \(\lVert\mathbf m_2-\mathbf m\rVert^2=4.6^2+0.2^2=21.2\).</li>
+<li>Top \(=3(9.4222)+2(21.2)=70.6667\). Bottom \(=C_1+C_2=13.3333+2=15.3333\).</li>
+<li>\(CH=4.6087\).</li></ol></div>
+<h3>Your turn</h3>
+<div class="stem">Same points as module 2&rsquo;s your turn: P(1,1), Q(4,1), R(1,3) | S(9,2), T(11,4), U(9,4).</div>
+<div class="step" data-k="ch_g"><p>1. \(\mathbf m=(\)<input size="6" data-p="0">, <input size="6" data-p="1">\()\)</p>
+<details class="work"><summary>Worked line</summary>\((35/6,\ 15/6)=(5.8333,2.5)\).</details></div>
+<div class="step" data-k="ch_parts"><p>2. \(C_1=\) <input size="6" data-p="0">, \(C_2=\) <input size="6" data-p="1">, \(\lVert\mathbf m_1-\mathbf m\rVert^2=\) <input size="7" data-p="2">, \(\lVert\mathbf m_2-\mathbf m\rVert^2=\) <input size="7" data-p="3"></p>
+<details class="work"><summary>Worked line</summary>\(C_1=8.6667\) and \(C_2=5.3333\) (the sums from module 2). \((2-5.8333)^2+(1.6667-2.5)^2=14.6944+0.6944=15.3889\); \((9.6667-5.8333)^2+(3.3333-2.5)^2=15.3889\).</details></div>
+<div class="step" data-k="ch_val"><p>3. CH \(=\) <input size="7"></p>
+<details class="work"><summary>Worked line</summary>\((3\cdot15.3889+3\cdot15.3889)/(8.6667+5.3333)=92.3333/14=6.5952\).</details></div>
+<div class="rule">One rule: CH = Σ nᵢ‖mᵢ − m‖² / Σ Cᵢ, everything squared, m = mean of all samples.</div>
+
+<!-- ============================ 4 write-ups ============================ -->
+<h2 id="m4">4 &middot; Writing SVM and Fisher answers that collect every mark <span class="tag">Mock C &minus;6</span></h2>
+<details class="start" open><summary>Start here: the marks sit in the reason and the check</summary>
+<p>Your SVM and Fisher methods were right in Mock C. The lost marks were in three places.</p>
+<ol>
+<li><b>The reason for the samples that give \(b\).</b> Write a whole sentence, not just &ldquo;1234&rdquo;: <i>&ldquo;Samples with \(0\lt\alpha_i\lt C\) have \(\xi_i=0\) (KKT), so they lie exactly on their margin, \(d_i(\mathbf w^T\mathbf x_i+b)=1\); samples with \(\alpha_i=C\) may lie inside it and are excluded.&rdquo;</i> (<a class="cite" href="../resources/machine-learning/ml-slides-05-support-vector-machines.pdf#page=39" data-pages="ml-slides-05-support-vector-machines:34,39,40">SVM slides pp. 34, 39&ndash;40</a>)</li>
+<li><b>Slack in the right form, plus where the point lies.</b> Write \(\xi_i=\max(0,\ 1-d_i(\mathbf w^T\mathbf x_i+b))\). Your form \(d_i-g\) only agrees when \(d_i=+1\). Then say where the point is:
+<table class="sym"><tr><td>\(\xi=0\)</td><td>on or outside its margin</td></tr><tr><td>\(0\lt\xi\lt1\)</td><td>inside the margin, correct side</td></tr><tr><td>\(\xi=1\)</td><td>on the decision boundary</td></tr><tr><td>\(\xi\gt1\)</td><td>misclassified</td></tr></table></li>
+<li><b>Fisher: check \(\mathbf w\) before you use it.</b> Since \(\mathbf w=\mathbf S_W^{-1}(\mathbf m_1-\mathbf m_2)\), multiplying back must give \(\mathbf S_W\mathbf w=\mathbf m_1-\mathbf m_2\). That takes four products and would have caught \(w_1=0.118\). For confidence, compare \(|g(\mathbf x)|/\lVert\mathbf w\rVert\) with <b>a class mean&rsquo;s distance to the boundary</b>, \(|g(\mathbf m_1)|/\lVert\mathbf w\rVert\), not with the distance from \(\mathbf x\) to \(\mathbf m_1\) (<a class="cite" href="../resources/machine-learning/ml-slides-04-linear-discriminant-analysis.pdf#page=19" data-pages="ml-slides-04-linear-discriminant-analysis:17,19">LDA slides pp. 17, 19</a>).</li>
+</ol>
+</details>
+<h3>Your turn: slack and location</h3>
+<div class="stem">A soft-margin SVM has \(\mathbf w=(2,1)\), \(b=-4\). Points: 1: \((1,1.5),+1\); 2: \((1.5,0.5),-1\); 3: \((2,0),+1\).</div>
+<div class="step" data-k="svm_xi"><p>1. \(\xi_1=\) <input size="5" data-p="0">, \(\xi_2=\) <input size="5" data-p="1">, \(\xi_3=\) <input size="5" data-p="2"></p>
+<details class="work"><summary>Worked line</summary>\(g_1=2+1.5-4=-0.5\), so \(\xi_1=1-(1)(-0.5)=1.5\). \(g_2=3+0.5-4=-0.5\), so \(\xi_2=1-(-1)(-0.5)=0.5\). \(g_3=0\), so \(\xi_3=1\). Note that \(d-g\) would give \(\xi_2=-0.5\), which is impossible.</details></div>
+<div class="step" data-k="svm_loc"><p>2. Where is each point? 1 <select data-p="0"><option value=""></option><option value="outside">on/outside margin</option><option value="inside">inside margin, correct side</option><option value="boundary">on the boundary</option><option value="wrong">misclassified</option></select> 2 <select data-p="1"><option value=""></option><option value="outside">on/outside margin</option><option value="inside">inside margin, correct side</option><option value="boundary">on the boundary</option><option value="wrong">misclassified</option></select> 3 <select data-p="2"><option value=""></option><option value="outside">on/outside margin</option><option value="inside">inside margin, correct side</option><option value="boundary">on the boundary</option><option value="wrong">misclassified</option></select></p>
+<details class="work"><summary>Worked line</summary>1: \(\xi\gt1\), misclassified. 2: \(0\lt\xi\lt1\), inside the margin on the correct side (\(g\lt0\) for a \(-1\) point). 3: \(\xi=1\), on the boundary.</details></div>
+<h3>Your turn: Fisher check and confidence</h3>
+<div class="stem">\(\mathbf S_W=\begin{bmatrix}10&2\\2&5\end{bmatrix}\), \(\mathbf m_1=(4,2)\), \(\mathbf m_2=(1,1)\).</div>
+<div class="step" data-k="fi_w"><p>3. \(\mathbf w=\mathbf S_W^{-1}(\mathbf m_1-\mathbf m_2)=(\)<input size="7" data-p="0">, <input size="7" data-p="1">\()\)</p>
+<details class="work"><summary>Worked line</summary>\(\det=50-4=46\). \(\mathbf w=\tfrac1{46}(5\cdot3-2\cdot1,\ -2\cdot3+10\cdot1)=(13,4)/46=(0.2826,0.0870)\). Check: \(\mathbf S_W\mathbf w=(2.826+0.174,\ 0.565+0.435)=(3,1)=\mathbf m_1-\mathbf m_2\). ✓</details></div>
+<div class="step" data-k="fi_bad"><p>4. A classmate wrote \(\mathbf w=(0.3,0.087)\). Compute \(\mathbf S_W\mathbf w\) for their vector: (<input size="7" data-p="0">, <input size="7" data-p="1">)</p>
+<details class="work"><summary>Worked line</summary>\((3+0.174,\ 0.6+0.435)=(3.174,1.035)\ne(3,1)\), so their \(\mathbf w\) is wrong, and the check found it in four products.</details></div>
+<div class="step" data-k="fi_conf"><p>5. \(w_0=\) <input size="7" data-p="0">; distance of \(\mathbf m_1\) to the boundary <input size="7" data-p="1">; distance of \(\mathbf x=(2.8,1.4)\) to the boundary <input size="7" data-p="2"></p>
+<details class="work"><summary>Worked line</summary>\(w_0=-\mathbf w^T(5,3)/2=-0.8370\). \(\lVert\mathbf w\rVert=0.2957\). \(g(\mathbf m_1)=1.1304+0.1739-0.8370=0.4674\), so the distance is 1.5807. \(g(\mathbf x)=0.7913+0.1217-0.8370=0.0761\), so the distance is 0.2573. \(\mathbf x\) is about a sixth as far from the boundary as a typical class-1 point, so the decision has low confidence.</details></div>
+<div class="rule">One rule: give the reason sentence for b; ξ = 1 − d·g plus a location; check S_W w = m₁ − m₂; judge distance against a mean&rsquo;s distance to the boundary.</div>
+
+<!-- ============================ 5 small ============================ -->
+<h2 id="m5">5 &middot; Two one-line habits <span class="tag">Mock C &minus;2</span></h2>
+<ul>
+<li><b>End every classifier part with a decision line:</b> &ldquo;score(Urgent) &gt; score(Normal) &rarr; <b>Urgent</b>&rdquo;. In Mock C Q2(a) the scores were right but no class was written, which cost a mark. Carry 4 decimal places in the probabilities: 3 places moved your score from 2.8113 to 2.783.</li>
+<li><b>Cycle crossover property:</b> &ldquo;every gene in the child keeps <b>the position it had in one of the parents</b>&rdquo; (so the child is automatically a valid permutation). &ldquo;Valid permutation&rdquo; alone is half the answer (<a class="cite" href="../resources/lecture-01-evolutionary-computing-part-2.pdf#page=22" data-pages="lecture-01-evolutionary-computing-part-2:22">GA representations slides p. 22</a>).</li>
+</ul>
+
+<!-- ============================ cold ============================ -->
+<h2 id="m6">6 &middot; Cold check: the retries from <code>final-mistakes.md</code> <span class="tag">do it the next day</span></h2>
+<p class="sub">Close modules 1&ndash;5 first. There are no hints here, and only your first check counts. Tell me which ones you got right and I will close them in the log.</p>
+<div class="stem">Item 13. Rows: [0,3,8,5,6], [3,0,4,7,9], [8,4,0,2,6], [5,7,2,0,3], [6,9,6,3,0]. Tours \(2\,5\,1\,4\,3\) and \(1\,2\,3\,4\,5\); \(f=100/L\).</div>
+<div class="step" data-k="cold_tsp"><p>\(L_1\) <input size="5" data-p="0">, \(L_2\) <input size="5" data-p="1">, \(f_1\) <input size="6" data-p="2">, \(f_2\) <input size="6" data-p="3"></p>
+<details class="work"><summary>Worked line</summary>2→5→1→4→3→2: \(9+6+5+2+4=26\). 1→2→3→4→5→1: \(3+4+2+3+6=18\). \(f=3.8462\) and \(5.5556\). Traps: open tour 22, gene-as-position reading 28.</details></div>
+<div class="stem">Items 5 and 14. A(1,0), B(0,3), C(2,3) | D(7,2), E(9,2), F(8,5).</div>
+<div class="step" data-k="cold_db"><p>Item 5: \(\delta_1\) <input size="6" data-p="0">, \(\delta_2\) <input size="6" data-p="1">, \(d(\mathbf m_1,\mathbf m_2)\) <input size="6" data-p="2">, DB <input size="6" data-p="3"></p>
+<details class="work"><summary>Worked line</summary>\(\mathbf m_1=(1,2)\), \(\mathbf m_2=(8,3)\). Squared distances 4, 2, 2 (and the same for cluster 2): mean 2.6667, so \(\delta=1.6330\) for both. \(d=\sqrt{49+1}=7.0711\). DB \(=3.2660/7.0711=0.4619\). The mean-of-distances trap gives \(\delta=1.6095\).</details></div>
+<div class="step" data-k="cold_ch"><p>Item 14: \(\mathbf m=(\)<input size="5" data-p="0">, <input size="5" data-p="1">\()\), \(C_1\) <input size="5" data-p="2">, \(C_2\) <input size="5" data-p="3">, CH <input size="7" data-p="4"></p>
+<details class="work"><summary>Worked line</summary>\(\mathbf m=(27/6,\ 15/6)=(4.5,2.5)\). \(C_1=C_2=8\). \(\lVert\mathbf m_i-\mathbf m\rVert^2=12.25+0.25=12.5\) for both. CH \(=(3\cdot12.5+3\cdot12.5)/16=4.6875\).</details></div>
+<div class="stem">Items 15 and 16, on the Mock C numbers.</div>
+<div class="step" data-k="cold_svm"><p>Item 15: with \(\mathbf w=(2,-1)\), \(b=-1\), for \(\mathbf x=(1.2,0.9)\): \(g\) <input size="6" data-p="0">, distance <input size="6" data-p="1"></p>
+<details class="work"><summary>Worked line</summary>\(g=2.4-0.9-1=0.5\); distance \(0.5/\sqrt5=0.2236\), which is less than the half-margin 0.4472.</details></div>
+<div class="step" data-k="cold_fi"><p>Item 16: \(\mathbf S_W=\begin{bmatrix}36&6\\6&32\end{bmatrix}\), \(\mathbf m_1-\mathbf m_2=(4,2)\): \(w_1\) <input size="7" data-p="0">, \(w_2\) <input size="7" data-p="1"> (then check \(\mathbf S_W\mathbf w\) on paper)</p>
+<details class="work"><summary>Worked line</summary>\(\tfrac1{1116}(32\cdot4-6\cdot2,\ -6\cdot4+36\cdot2)=(116,48)/1116=(0.1039,0.0430)\). Check: \((3.740+0.258,\ 0.623+1.376)=(4.0,2.0)\). ✓</details></div>
+
+<div class="notice"><b>Next:</b> send me the cold-check results. Then Step 6 is the hard mock H (wider range, harder traps).</div>
+<p class="sub" style="font-size:.85rem">Unofficial study aid. Every key is recomputed by <code>final-relearn-c-check.py</code>.</p>
+</main>
+</div>
+<dialog id="srcDlg"><div class="row" style="justify-content:space-between"><b id="srcTitle"></b><span><a id="srcOpen" target="_blank">Open PDF</a> <button class="btn" id="srcClose">Close</button></span></div><div id="srcImgs"></div></dialog>
+<script type="application/json" id="keys">{"tsp_L": [20, 22], "tsp_f": [5.0, 4.5455, "A"], "db_m": [2.0, 1.6667, 9.6667, 3.3333], "db_delta": [1.6997, 1.3333], "db_val": [7.8457, 0.3866], "ch_g": [5.8333, 2.5], "ch_parts": [8.6667, 5.3333, 15.3889, 15.3889], "ch_val": 6.5952, "svm_xi": [1.5, 0.5, 1], "svm_loc": ["wrong", "inside", "boundary"], "fi_w": [0.2826, 0.087], "fi_bad": [3.174, 1.035], "fi_conf": [-0.837, 1.5807, 0.2573], "cold_tsp": [26, 18, 3.8462, 5.5556], "cold_db": [1.633, 1.633, 7.0711, 0.4619], "cold_ch": [4.5, 2.5, 8.0, 8.0, 4.6875], "cold_svm": [0.5, 0.2236], "cold_fi": [0.1039, 0.043]}</script>
+<script>
+(function () {
+  var KEY = 'ee6407-final-relearn-c-v1', KEYS = JSON.parse(document.getElementById('keys').textContent);
+  var st = {}; try { st = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) {}
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
+  function get(v, path) { if (!path) return v; path.split('.').forEach(function (i) { v = v[+i]; }); return v; }
+  function norm(s, set) { s = String(s).toUpperCase().replace(/[^A-Z0-9]/g, ''); return set ? s.split('').sort().join('') : s; }
+  function same(ans, val, set) {
+    if (typeof ans === 'number') { var v = parseFloat(val); return isFinite(v) && Math.abs(v - ans) <= Math.max(0.0015, Math.abs(ans) * 0.002); }
+    if (typeof ans === 'boolean') return val === String(ans);
+    return norm(val, set) === norm(ans, set) && val !== '';
+  }
+  var steps = [];
+  document.querySelectorAll('.step').forEach(function (s, idx) {
+    var id = s.dataset.k || s.dataset.id || ('s' + idx), fields = s.querySelectorAll('input:not([type=checkbox]), select'), work = s.querySelector('details.work');
+    var rec = { id: id, el: s, sec: null };
+    steps.push(rec);
+    if (s.classList.contains('written')) {
+      var cb = s.querySelector('.self input'); cb.checked = !!(st[id] && st[id].ok);
+      cb.addEventListener('change', function () { st[id] = { ok: cb.checked }; save(); refresh(); });
+      return;
+    }
+    var p = s.querySelector('p'), btn = document.createElement('button'), fb = document.createElement('span');
+    btn.className = 'btn'; btn.textContent = 'check'; fb.className = 'fb'; p.appendChild(document.createTextNode(' ')); p.appendChild(btn); p.appendChild(fb);
+    function show(r) {
+      if (!r) return; fields.forEach(function (f, i) { f.classList.toggle('bad', r.v[i] !== undefined && !r.f[i]); f.classList.toggle('good', !!r.f[i]); });
+      fb.textContent = r.ok ? '✓ correct' : '✗ ' + r.f.filter(Boolean).length + '/' + fields.length + ' right — try the hint';
+      fb.style.color = r.ok ? 'var(--success)' : 'var(--danger)'; s.classList.toggle('done', r.ok); if (work) work.dataset.open = '1';
+    }
+    if (st[id]) { fields.forEach(function (f, i) { f.value = st[id].v[i] || ''; }); show(st[id]); }
+    btn.addEventListener('click', function () {
+      var v = [], f = [];
+      fields.forEach(function (fl) { v.push(fl.value); f.push(same(get(KEYS[s.dataset.k], fl.dataset.p), fl.value, fl.hasAttribute('data-set'))); });
+      st[id] = { v: v, f: f, ok: f.every(Boolean) }; save(); show(st[id]); refresh();
+    });
+    if (work) work.addEventListener('toggle', function () {
+      if (work.open && !work.dataset.open) { work.open = false; fb.textContent = 'Check once first — then the worked line unlocks.'; fb.style.color = 'var(--warning)'; }
+    });
+  });
+  var toc = document.getElementById('toc-links');
+  var secs = Array.prototype.map.call(document.querySelectorAll('main h2[id]'), function (h) {
+    var a = document.createElement('a'); a.href = '#' + h.id; a.innerHTML = '<span>' + h.firstChild.textContent + '</span><span class="sc"></span>'; toc.appendChild(a);
+    return { h: h, a: a };
+  });
+  steps.forEach(function (r) { secs.forEach(function (s) { if (s.h.compareDocumentPosition(r.el) & Node.DOCUMENT_POSITION_FOLLOWING) r.sec = s; }); });
+  function refresh() {
+    var tot = 0, ok = 0;
+    secs.forEach(function (s) {
+      var mine = steps.filter(function (r) { return r.sec === s; }), o = mine.filter(function (r) { return st[r.id] && st[r.id].ok; }).length;
+      var sc = s.a.querySelector('.sc'); sc.textContent = o + '/' + mine.length; sc.classList.toggle('ok', o === mine.length); tot += mine.length; ok += o;
+    });
+    document.getElementById('score').textContent = ok; document.getElementById('total').textContent = tot;
+  }
+  refresh();
+  document.getElementById('reset').onclick = function () { try { localStorage.removeItem(KEY); } catch (e) {} location.reload(); };
+  var root = document.documentElement; try { var th = localStorage.getItem('ee6407-theme'); if (th) root.dataset.theme = th; } catch (e) {}
+  document.getElementById('theme').onclick = function () { var n = root.dataset.theme === 'dark' ? 'light' : 'dark'; root.dataset.theme = n; try { localStorage.setItem('ee6407-theme', n); } catch (e) {} };
+  var dlg = document.getElementById('srcDlg');
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('a[data-pages]'); if (!a) return; e.preventDefault();
+    var parts = a.dataset.pages.split(':'), box = document.getElementById('srcImgs'); box.innerHTML = '';
+    parts[1].split(',').forEach(function (p) { var img = document.createElement('img'); img.loading = 'lazy'; img.alt = parts[0] + ' page ' + p; img.src = 'final-pages/' + parts[0] + '-p' + ('00' + p).slice(-3) + '.jpg'; box.appendChild(img); });
+    document.getElementById('srcTitle').textContent = a.textContent; document.getElementById('srcOpen').href = a.getAttribute('href'); dlg.showModal();
+  });
+  document.getElementById('srcClose').onclick = function () { dlg.close(); };
+  dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+  var s = document.createElement('script'); s.src = 'vendor/mathjax/tex-mml-chtml.js'; s.async = true;
+  s.onload = function () { MathJax.startup.promise.then(function () { return [].slice.call(document.querySelector('main').children).reduce(function (p, el) { return p.then(function () { return MathJax.typesetPromise([el]).catch(function (e) { console.warn('MathJax', e); }); }); }, Promise.resolve()); }); };
+  s.onerror = function () { document.getElementById('math-warning').style.display = 'block'; }; document.head.appendChild(s);
+})();
+</script>
+</body>
+</html>
