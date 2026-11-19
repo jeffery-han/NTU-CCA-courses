@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>EE6407 Mock C Review</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Marked review of EE6407 final Mock C (82/100): each question with the learner's handwritten answer, the marks awarded, the correct working and the fix, focused on the 18 lost marks.">
+<style>
+/* Layout: one reading column like a marked exam script; red-pen marks in a right-hand margin column on each card. */
+:root {
+  --bg: #f6f7f9; --paper: #ffffff; --ink: #1d2433; --muted: #5d6677; --line: #dde2ea;
+  --pen: #c8322b; --pen-soft: #fbe9e7; --ok: #1f7a4d; --ok-soft: #e5f4ec; --part: #b26b00; --part-soft: #fdf1dc;
+  --accent: #2f5aa8; --accent-soft: #e8eefa; --code: #f0f2f6;
+  --f-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --f-hand: "Bradley Hand", "Segoe Print", "Comic Sans MS", cursive;
+  --f-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #12151b; --paper: #1a1f28; --ink: #e6e9ef; --muted: #9aa3b2; --line: #2c3442;
+  --pen: #ff7b72; --pen-soft: #3a1d1d; --ok: #5fd39a; --ok-soft: #173326; --part: #f0b45a; --part-soft: #3a2c14;
+  --accent: #8fb2ff; --accent-soft: #1d2a45; --code: #222936; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #12151b; --paper: #1a1f28; --ink: #e6e9ef; --muted: #9aa3b2; --line: #2c3442;
+  --pen: #ff7b72; --pen-soft: #3a1d1d; --ok: #5fd39a; --ok-soft: #173326; --part: #f0b45a; --part-soft: #3a2c14;
+  --accent: #8fb2ff; --accent-soft: #1d2a45; --code: #222936; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.6 var(--f-body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.wrap { max-width: 860px; margin: 0 auto; padding-block: 28px 64px; }
+h1 { font-size: 1.7rem; line-height: 1.25; margin: 0 0 4px; text-wrap: balance; }
+h2 { font-size: 1.25rem; margin: 40px 0 10px; display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: baseline; text-wrap: balance; }
+h2 .score { font-family: var(--f-hand); color: var(--pen); font-size: 1.35rem; }
+.sub { color: var(--muted); margin: 0 0 18px; }
+.summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; margin: 18px 0; }
+.qbox { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; text-decoration: none; color: inherit; }
+.qbox b { display: block; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.qbox .big { font-family: var(--f-hand); font-size: 1.6rem; color: var(--pen); }
+.bar { height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; margin-top: 4px; }
+.bar i { display: block; height: 100%; background: var(--ok); }
+table.loss { width: 100%; border-collapse: collapse; font-size: .93rem; font-variant-numeric: tabular-nums; }
+table.loss td, table.loss th { border-bottom: 1px solid var(--line); padding: 6px 8px; text-align: left; vertical-align: top; }
+table.loss td.n { color: var(--pen); font-weight: 700; white-space: nowrap; }
+.tablewrap { overflow-x: auto; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; }
+.card { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; margin: 14px 0; display: grid; grid-template-columns: minmax(0, 1fr) 92px; }
+.card .body { padding: 14px 16px; min-width: 0; }
+.card .mark { border-left: 2px dashed var(--pen); padding: 12px 8px; text-align: center; font-family: var(--f-hand); color: var(--pen); }
+.card .mark .m { font-size: 1.6rem; line-height: 1.1; }
+.card .mark .of { font-size: .95rem; }
+.card.partial .mark, .mark.partial { border-left-color: var(--part); color: var(--part); }
+.card h3 { margin: 0 0 6px; font-size: 1.02rem; }
+.q { color: var(--muted); font-size: .93rem; margin: 0 0 10px; }
+.lbl { display: inline-block; font-size: .72rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; padding: 1px 8px; border-radius: 999px; margin-bottom: 4px; }
+.yours, .right, .why, .fix { border-radius: 8px; padding: 8px 12px; margin: 8px 0; }
+.yours { background: var(--code); }
+.yours .hand { font-family: var(--f-hand); font-size: 1.05rem; }
+.yours .lbl { background: var(--line); color: var(--ink); }
+.right { background: var(--ok-soft); }
+.right .lbl { background: var(--ok); color: var(--paper); }
+.why { background: var(--pen-soft); }
+.why .lbl { background: var(--pen); color: var(--paper); }
+.fix { background: var(--accent-soft); }
+.fix .lbl { background: var(--accent); color: var(--paper); }
+.x { color: var(--pen); font-weight: 700; } .v { color: var(--ok); font-weight: 700; }
+.mono { font-family: var(--f-mono); font-size: .92em; overflow-wrap: anywhere; }
+ul.ticks { list-style: none; padding: 0; margin: 8px 0; display: grid; gap: 4px; }
+ul.ticks li { background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 6px 12px; display: flex; flex-wrap: wrap; gap: 4px 12px; justify-content: space-between; }
+ul.ticks li .s { font-family: var(--f-hand); color: var(--ok); font-size: 1.1rem; white-space: nowrap; }
+button.scan { font: inherit; font-size: .82rem; border: 1px solid var(--line); background: var(--paper); color: var(--accent); border-radius: 999px; padding: 2px 10px; cursor: pointer; }
+button.scan:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+a { color: var(--accent); }
+dialog { max-width: min(900px, 96vw); width: 100%; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); color: var(--ink); padding: 10px; }
+dialog::backdrop { background: rgba(0,0,0,.55); }
+dialog img { width: 100%; height: auto; display: block; border-radius: 6px; }
+dialog .row { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 8px; }
+@media (max-width: 560px) { .card { grid-template-columns: 1fr; } .card .mark { border-left: 0; border-top: 2px dashed currentColor; display: flex; gap: 8px; justify-content: center; align-items: baseline; padding: 6px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Mock C, marked: what you wrote, what it earned, what fixes it</h1>
+<p class="sub">EE6407 final practice paper, sat 2026-11-19, handwritten and graded from the scan. <b>82 / 100</b> (Mock B was 40). Wrong or partly wrong parts get a full card; full-mark parts are one line each. &ldquo;Your script&rdquo; opens the page of your scan.</p>
+
+<div class="summary">
+  <a class="qbox" href="#q1"><b>Q1 Genetic algorithms</b><span class="big">20 / 25</span><div class="bar"><i style="width:80%"></i></div></a>
+  <a class="qbox" href="#q2"><b>Q2 Naive Bayes, trees</b><span class="big">23.5 / 25</span><div class="bar"><i style="width:94%"></i></div></a>
+  <a class="qbox" href="#q3"><b>Q3 SVM, Fisher LDA</b><span class="big">19 / 25</span><div class="bar"><i style="width:76%"></i></div></a>
+  <a class="qbox" href="#q4"><b>Q4 Clustering</b><span class="big">19.5 / 25</span><div class="bar"><i style="width:78%"></i></div></a>
+</div>
+
+<h2>Where the 18 marks went</h2>
+<div class="tablewrap"><table class="loss">
+<tr><th>Lost</th><th>Part</th><th>Cause in one line</th></tr>
+<tr><td class="n">&minus;4.5</td><td><a href="#q1a1">Q1(a)(i), (iii)</a></td><td>Read the chromosome as &ldquo;position of each city&rdquo; and left out the return edge</td></tr>
+<tr><td class="n">&minus;3</td><td><a href="#q3a">Q3(a)</a></td><td>No reason for the samples that give b; slack written as d &minus; g; g(1.2, 0.9) slip</td></tr>
+<tr><td class="n">&minus;3</td><td><a href="#q3b">Q3(b)</a></td><td>w₁ = 0.118 instead of 0.1039; Sᵢ and the meaning of J missing; wrong confidence yardstick</td></tr>
+<tr><td class="n">&minus;3</td><td><a href="#q4e">Q4(e)</a></td><td>Calinski&ndash;Harabasz set up with unsquared norms and not finished</td></tr>
+<tr><td class="n">&minus;2.5</td><td><a href="#q4b">Q4(b)</a></td><td>δ₁ as the mean distance (not root-mean-square), and δ₁ left out of the numerator</td></tr>
+<tr><td class="n">&minus;1.5</td><td><a href="#q2a">Q2(a)</a></td><td>No final class written; 3-decimal probabilities shifted the score</td></tr>
+<tr><td class="n">&minus;0.5</td><td><a href="#q1b">Q1(b)(iv)</a></td><td>&ldquo;Valid permutation&rdquo; without the position-keeping property</td></tr>
+</table></div>
+<p class="sub" style="margin-top:8px">Relearn page for all of these: <code>final-relearn-c.html</code> (modules 1&ndash;5), then its cold check.</p>
+
+<!-- ========================= Q1 ========================= -->
+<h2 id="q1">Question 1 &middot; Genetic algorithms <span class="score">20 / 25</span> <button class="scan" data-img="final-pages/final-mock-c-scan-p001.jpg" data-t="Your script, page 1 (Q1)">Your script p. 1</button></h2>
+<p class="q">Six-city TSP. A chromosome is the visiting order; the tour returns from the last city to the first. P₁ = 1 3 5 2 6 4, P₂ = 2 4 1 6 3 5, f = 100/L.</p>
+
+<div class="card" id="q1a1"><div class="body">
+<h3>(a)(i) Tour lengths of the parents</h3>
+<div class="yours"><span class="lbl">You wrote</span><div class="hand">L(1) = d(1,4) + d(4,2) + d(2,6) + d(6,3) + d(3,5) = 6 + 8 + 7 + 8 + 4 = 33<br>L(2) = 7 + 9 + 6 + 7 + 6 = 35</div></div>
+<div class="why"><span class="lbl">What went wrong</span>
+<p style="margin:4px 0">Your edges belong to the tour <b>1 → 4 → 2 → 6 → 3 → 5</b>, not 1 → 3 → 5 → 2 → 6 → 4. You read gene i as &ldquo;city i is visited at position gᵢ&rdquo;: gene 2 is 3, so city 2 went to position 3; gene 4 is 2, so city 4 went to position 2; and so on. That is the inverse permutation. P₂ was decoded the same way, as 3 1 5 2 6 4.</p>
+<p style="margin:4px 0">Second error: only <b>5 edges</b> for 6 cities. The edge from the last city back to the first is missing.</p></div>
+<div class="right"><span class="lbl">Correct working</span>
+<p class="mono" style="margin:4px 0">P₁: 1→3→5→2→6→4→1 = 7 + 4 + 6 + 7 + 6 + 6 = <b>36</b><br>P₂: 2→4→1→6→3→5→2 = 8 + 6 + 5 + 8 + 4 + 6 = <b>37</b></p></div>
+<div class="fix"><span class="lbl">Fix</span> Before adding, write the arrow chain back to the start and count the arrows: n cities, n edges. Reread the sentence that defines the coding.</div>
+</div><div class="mark partial"><div class="m">1</div><div class="of">/ 4</div><div style="font-size:.8rem">for summing edges consistently</div></div></div>
+
+<div class="card" id="q1a3"><div class="body">
+<h3>(a)(iii) Child length and the three fitness values</h3>
+<div class="yours"><span class="lbl">You wrote</span><div class="hand">L(c₁) = 6 + 6 + 4 + 3 + 4 = 23<br>F(P₁) = 100/33 = 3.33 &nbsp; F(P₂) = 100/35 = 2.857 &nbsp; F(c₁) = 100/23 = 4.348</div></div>
+<div class="why"><span class="lbl">What went wrong</span>
+<p style="margin:4px 0">The child 3 4 5 2 6 1 was decoded the same inverted way, as tour 6 → 4 → 1 → 2 → 3 → 5, again without the return edge. Separately, 100/33 = 3.03, not 3.33.</p>
+<p style="margin:4px 0">Effect: your numbers make the child look 30% fitter than P₁. The real gain is about 9%.</p></div>
+<div class="right"><span class="lbl">Correct working</span>
+<p class="mono" style="margin:4px 0">child: 3→4→5→2→6→1→3 = 5 + 3 + 6 + 7 + 5 + 7 = <b>33</b><br>f(P₁) = 100/36 = <b>2.7778</b> &nbsp; f(P₂) = 100/37 = <b>2.7027</b> &nbsp; f(child) = 100/33 = <b>3.0303</b></p></div>
+</div><div class="mark partial"><div class="m">1.5</div><div class="of">/ 3</div><div style="font-size:.8rem">f = 100/L used right; values follow your L</div></div></div>
+
+<div class="card partial" id="q1b"><div class="body">
+<h3>(b)(iv) What cycle crossover guarantees</h3>
+<div class="yours"><span class="lbl">You wrote</span><div class="hand">Every cycle pair is complete for its inside genes; choosing a different set for cycles guarantees the child remains a valid permutation.</div></div>
+<div class="why"><span class="lbl">What is missing</span> Validity is a consequence. The property itself is about <b>positions</b>.</div>
+<div class="right"><span class="lbl">Model answer</span> Every gene in the child keeps <b>the position it had in one of the parents</b>; as a result, the child is automatically a valid permutation.</div>
+</div><div class="mark partial"><div class="m">0.5</div><div class="of">/ 1</div></div></div>
+
+<ul class="ticks">
+<li><span>(a)(ii) PMX child: <b>3 4 5 2 6 1</b>, with both mapping chains shown</span><span class="s">5 / 5 ✓</span></li>
+<li><span>(a)(iv) Permutation reason ✓; &ldquo;swap two neighbouring cities&rdquo; accepted (a length-2 inversion, which also changes only 2 edges)</span><span class="s">3 / 3 ✓</span></li>
+<li><span>(b)(i) Cycles {1, 8}, {2, 3, 4}, {5, 6, 7}</span><span class="s">4 / 4 ✓</span></li>
+<li><span>(b)(ii) Child 1: 1 4 2 3 5 6 7 8</span><span class="s">3 / 3 ✓</span></li>
+<li><span>(b)(iii) Child 2: 8 2 3 4 7 5 6 1. There is a stray mark after it; a child must have exactly 8 genes</span><span class="s">2 / 2 ✓</span></li>
+</ul>
+
+<!-- ========================= Q2 ========================= -->
+<h2 id="q2">Question 2 &middot; Naive Bayes and trees <span class="score">23.5 / 25</span> <button class="scan" data-img="final-pages/final-mock-c-scan-p002.jpg" data-t="Your script, page 2 (Q2a, Q2b)">Your script p. 2</button></h2>
+
+<div class="card partial" id="q2a"><div class="body">
+<h3>(a) Multinomial NB: classify &ldquo;server meeting now now&rdquo;</h3>
+<div class="yours"><span class="lbl">You wrote</span><div class="hand">P(U) = 0.4, P(N) = 0.6, d = 8, C(U) = 6, C(N) = 7<br>U: server 3/14 = 0.214, meeting 1/14 = 0.071, now 3/14 = 0.214<br>N: server 0.067, meeting 0.2, now 0.133<br>S(U) = 0.4 × 0.214 × 0.071 × 0.214² = 2.783 × 10⁻⁴<br>S(N) = 0.6 × 0.067 × 0.2 × 0.133² = 1.422 × 10⁻⁴</div></div>
+<div class="why"><span class="lbl">What went wrong</span> Everything up to the scores is right, and you counted &ldquo;now&rdquo; twice (the Mock B fix worked). But <b>no class is written</b>, and the decision is a mark. Rounding to 3 decimals moved S(U) from 2.8113 to 2.783 (1% off).</div>
+<div class="right"><span class="lbl">Model ending</span> S(U) = 2.8113 × 10⁻⁴ &gt; S(N) = 1.4222 × 10⁻⁴ → <b>Urgent</b>.</div>
+<div class="fix"><span class="lbl">Fix</span> End every classifier part with &ldquo;→ class X&rdquo;, and carry 4 decimal places.</div>
+</div><div class="mark partial"><div class="m">7.5</div><div class="of">/ 9</div><div style="font-size:.8rem">whole of (a); decision &minus;1, rounding &minus;0.5</div></div></div>
+
+<ul class="ticks">
+<li><span>(b) Gaussian NB: likelihoods 0.0293 / 0.012, g₁ = &minus;2.897, g₂ = &minus;2.953 → ω₁, posterior 0.514, &ldquo;low confidence, close to 0.5&rdquo;. A complete turnaround from Mock B.</span><span class="s">9 / 9 ✓</span></li>
+<li><span>(c) Gini: root 0.24; weighted 0.158 / 0.171 / 0.23; decreases 0.083 / 0.069 / 0.01 → F1, with the ½(1 &minus; Σp²) form throughout. <button class="scan" data-img="final-pages/final-mock-c-scan-p003.jpg" data-t="Your script, page 3 (Q2c, Q3)">p. 3</button></span><span class="s">7 / 7 ✓</span></li>
+</ul>
+
+<!-- ========================= Q3 ========================= -->
+<h2 id="q3">Question 3 &middot; SVM and Fisher LDA <span class="score">19 / 25</span> <button class="scan" data-img="final-pages/final-mock-c-scan-p003.jpg" data-t="Your script, page 3 (Q2c, Q3)">Your script p. 3</button></h2>
+<p class="q">(a) Soft margin, C = 2: w = (2, &minus;1), b = &minus;1, sample 5 = (0.5, 0) with α = C. (b) m₁ = (5, 3), m₂ = (1, 1), S₁ = [[20, 4], [4, 12]], S₂ = [[16, 2], [2, 20]], x = (3, 2.2).</p>
+
+<div class="card partial" id="q3a"><div class="body">
+<h3>(a) Soft-margin SVM: the three places marks were lost</h3>
+<div class="yours"><span class="lbl">You wrote</span><div class="hand">3. &nbsp;1234<br>6. &nbsp;ξ₅ = dᵢ &minus; (wᵀxᵢ + b) = 1<br>7. &nbsp;x = (1.2, 0.9): wᵀx + b = 0.3 &gt; 0, classified as +1; dist = 0.3/√5 = 0.134, low confidence since 0.3 &lt; 1</div></div>
+<div class="why"><span class="lbl">What went wrong</span>
+<ul style="margin:4px 0; padding-left:18px">
+<li><b>(iii) −1:</b> the list is right, but half the marks are for the reason.</li>
+<li><b>(vi) −1:</b> the slack is ξ = 1 − d(wᵀx + b). Your d − g agrees only because d₅ = +1; for a −1 point it gives the wrong sign. You also did not say where the point lies.</li>
+<li><b>(vii) −1:</b> 2 × 1.2 − 0.9 − 1 = <b>0.5</b>, not 0.3. The class and your yardstick are right: |g| &lt; 1 means inside the margin, a valid test for an SVM.</li>
+</ul></div>
+<div class="right"><span class="lbl">Model answer</span>
+<p style="margin:4px 0">(iii) Samples 1&ndash;4: they have 0 &lt; α &lt; C, so KKT gives ξ = 0 and they lie exactly on their margin, d(wᵀx + b) = 1. Sample 5 (α = C) may lie inside the margin and sample 6 (α = 0) is not a support vector.<br>
+(vi) g(x₅) = 1 − 0 − 1 = 0, so ξ₅ = 1 − (+1)(0) = <b>1</b>: sample 5 lies <b>on the decision boundary</b>.<br>
+(vii) g = 0.5 &gt; 0 → +1; distance 0.5/√5 = <b>0.2236</b> &lt; half-margin 0.4472, so the point is inside the margin and the confidence is low.</p></div>
+</div><div class="mark partial"><div class="m">10</div><div class="of">/ 13</div><div style="font-size:.8rem">whole of (a); w, b, margin right</div></div></div>
+
+<div class="card partial" id="q3b"><div class="body">
+<h3>(b) Fisher LDA</h3>
+<div class="yours"><span class="lbl">You wrote</span><div class="hand">J(w) = wᵀS_B w / wᵀS_W w, S_B = (m₁ − m₂)(m₁ − m₂)ᵀ, S_W = S₁ + S₂, w = S_W⁻¹(m₁ − m₂)<br>S_W = [[36, 6], [6, 32]], w = (1/1116)[[32, −6], [−6, 36]](4, 2) = (0.118, 0.043)<br>w₀ = −½ wᵀ(6, 4) = −0.44 &nbsp; g = 8.6 × 10⁻³ &gt; 0 → c₁<br>d = 8.6 × 10⁻³/‖w‖ = 0.068; d(x, m₁) = 2.154, low confidence since d(x, b) ≪ d(x, m₁)</div></div>
+<div class="why"><span class="lbl">What went wrong</span>
+<ul style="margin:4px 0; padding-left:18px">
+<li><b>(i) −1:</b> Sᵢ = Σ(x − mᵢ)(x − mᵢ)ᵀ is not defined, and there is no sentence on what maximising J achieves.</li>
+<li><b>(ii) −1.5:</b> w₁ = (32·4 − 6·2)/1116 = 116/1116 = <b>0.1039</b>, not 0.118. S_W, the determinant and w₂ are right.</li>
+<li><b>(v) −0.5:</b> the yardstick should be <b>m₁&rsquo;s distance to the boundary</b> (2.2304), not the distance from x to m₁.</li>
+</ul>
+<p style="margin:4px 0">Your w₀, g and class follow correctly from your w and earn full follow-through marks. By coincidence, your g also came out at 0.0086.</p></div>
+<div class="right"><span class="lbl">Correct working</span>
+<p class="mono" style="margin:4px 0">w = (116, 48)/1116 = (0.1039, 0.0430)<br>check: S_W w = (36·0.1039 + 6·0.0430, 6·0.1039 + 32·0.0430) = (4.0, 2.0) = m₁ − m₂ ✓<br>w₀ = −w·(3, 2) = −0.3978 &nbsp; g(x) = 0.0086 → ω₁<br>distance = 0.0086/0.1124 = 0.0765; m₁ is 2.2304 from the boundary → x is almost on it: very low confidence</p></div>
+<div class="fix"><span class="lbl">Fix</span> Multiply back, S_W w = m₁ − m₂, before using w. Judge confidence against a class mean&rsquo;s distance to the boundary.</div>
+</div><div class="mark partial"><div class="m">9</div><div class="of">/ 12</div><div style="font-size:.8rem">whole of (b)</div></div></div>
+
+<ul class="ticks">
+<li><span>(a)(i) Σαᵢdᵢ = 0 verified; (ii) w = (2, &minus;1); (iv) b = &minus;1 with dᵢ(wᵀxᵢ + b) = 1; (v) margin 2/√5 = 0.894</span><span class="s">7 / 7 ✓</span></li>
+<li><span>(b)(iii) w₀ and (iv) the class follow correctly from your w <button class="scan" data-img="final-pages/final-mock-c-scan-p004.jpg" data-t="Your script, page 4 (Q3b, Q4)">p. 4</button></span><span class="s">3 / 3 ✓</span></li>
+</ul>
+
+<!-- ========================= Q4 ========================= -->
+<h2 id="q4">Question 4 &middot; Clustering <span class="score">19.5 / 25</span> <button class="scan" data-img="final-pages/final-mock-c-scan-p004.jpg" data-t="Your script, page 4 (Q3b, Q4)">Your script p. 4</button></h2>
+<p class="q">A(2, 0), B(3, 5), C(3, 0), D(10, 10), E(14, 4). Two-cluster result {A, B, C} | {D, E}.</p>
+
+<div class="card partial" id="q4b"><div class="body">
+<h3>(b) Davies&ndash;Bouldin index</h3>
+<div class="yours"><span class="lbl">You wrote</span><div class="hand">c(ACB) = (2.667, 1.667), δ₁ = 2.281; c(DE) = (12, 7), δ₂ = 3.606<br>DB = (δ₁ + δ₂)/d(c₁, c₂) = 3.606/10.749 = 0.335</div></div>
+<div class="why"><span class="lbl">What went wrong</span>
+<ul style="margin:4px 0; padding-left:18px">
+<li><b>δ₁:</b> 2.281 is the <b>mean of the distances</b> (1.795, 3.350, 1.700). δ is the root of the mean <b>squared</b> distance. δ₂ came out right only because D and E are equally far from their centroid.</li>
+<li><b>Numerator:</b> you wrote δ₁ + δ₂ but substituted only 3.606, which is δ₂.</li>
+</ul></div>
+<div class="right"><span class="lbl">Correct working</span>
+<p class="mono" style="margin:4px 0">squared distances to m₁: A 3.2222, B 11.2222, C 2.8889 → sum 17.3333, mean 5.7778<br>δ₁ = √5.7778 = 2.4037 &nbsp; δ₂ = 3.6056 &nbsp; d(m₁, m₂) = 10.7497<br>DB = (2.4037 + 3.6056)/10.7497 = <b>0.5590</b></p></div>
+<div class="fix"><span class="lbl">Fix</span> Square, average, then take one root. Both spreads go on top. The sum 17.3333 is also C₁ for CH in part (e).</div>
+</div><div class="mark partial"><div class="m">3.5</div><div class="of">/ 6</div><div style="font-size:.8rem">centroids, δ₂, separation right</div></div></div>
+
+<div class="card" id="q4e"><div class="body">
+<h3>(e) Calinski&ndash;Harabasz index (the revision-list prediction item)</h3>
+<div class="yours"><span class="lbl">You wrote</span><div class="hand">g_c = (6.4, 3.8);&nbsp; 3 × ‖m₁ − g_c‖ + 2 × ‖m₂ − g_c‖ &hellip; (unfinished)</div></div>
+<div class="why"><span class="lbl">What went wrong</span> The global centroid and the size weights are right. The norms must be <b>squared</b>, and the denominator Σ Cᵢ (within-cluster sum of squares) is missing.</div>
+<div class="right"><span class="lbl">Correct working</span>
+<p class="mono" style="margin:4px 0">CH = Σ nᵢ‖mᵢ − m‖² / Σ Cᵢ, &nbsp; Cᵢ = Σ‖x − mᵢ‖² (course form, no (N−K)/(K−1))<br>‖m₁ − m‖² = 3.7333² + 2.1333² = 18.4889 &nbsp; ‖m₂ − m‖² = 5.6² + 3.2² = 41.6<br>top = 3(18.4889) + 2(41.6) = 138.6667 &nbsp; bottom = C₁ + C₂ = 17.3333 + 26 = 43.3333<br>CH = <b>3.2</b></p></div>
+<div class="fix"><span class="lbl">Fix</span> Between-cluster over within-cluster, everything squared. The within part reuses the DB sums.</div>
+</div><div class="mark"><div class="m">1</div><div class="of">/ 4</div><div style="font-size:.8rem">for m and the nᵢ weights</div></div></div>
+
+<ul class="ticks">
+<li><span>(a) Euclidean matrix with real square roots; merges AC@1, ACB@5, DE@7.211, all@8.602; dendrogram drawn to scale. The Mock B mistake is fixed.</span><span class="s">8 / 8 ✓</span></li>
+<li><span>(c) Dunn = √74/√52 = 8.602/7.211 = 1.193 (closest cross pair over largest diameter)</span><span class="s">4 / 4 ✓</span></li>
+<li><span>(d) Rand: N_s = 2, N_d = 6, RI = 8/10 = 0.8</span><span class="s">3 / 3 ✓</span></li>
+</ul>
+
+<h2>What changed since Mock B</h2>
+<p>Eight Mock B weaknesses scored full or near-full marks on new numbers: multinomial NB (repeated tokens counted), Gaussian NB, Gini, Euclidean HAC, PMX, Dunn, Rand, and SVM w and b. What remains is narrower: decoding the TSP chromosome, the root-mean-square in δ, finishing CH, and writing out the reasons and checks that collect the last marks. All of these are in the second relearn page and its cold check.</p>
+<p class="sub" style="font-size:.85rem">Unofficial practice paper. Key and rubric: <code>final-mock-c.md</code>; scan: <code>attempts/final-mock-c-2026-11-19.pdf</code>; mistakes log: <code>final-mistakes.md</code>.</p>
+</div>
+
+<dialog id="dlg" aria-label="Scanned page"><div class="row"><b id="dlgT"></b><button class="scan" id="dlgX">Close</button></div><img id="dlgI" alt="Scanned page of the handwritten Mock C script"></dialog>
+<script>
+(function () {
+  var d = document.getElementById('dlg'), img = document.getElementById('dlgI');
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-img]'); if (!b) return;
+    img.src = b.dataset.img; document.getElementById('dlgT').textContent = b.dataset.t; d.showModal();
+  });
+  document.getElementById('dlgX').onclick = function () { d.close(); };
+  d.addEventListener('click', function (e) { if (e.target === d) d.close(); });
+})();
+</script>
+</body>
+</html>
