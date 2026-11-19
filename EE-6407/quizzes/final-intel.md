@@ -107,6 +107,9 @@ the Rand index as its labelled prediction item; hard mock H should cover the res
 DBSCAN wording conflict: ml-slides-10 p. 61 says a dense neighbourhood holds "at least" MinPts points, p. 63 says a core point
 has "more than" MinPts. Mock questions avoid neighbour counts exactly equal to MinPts; in the exam, state the reading used.
 
+Calinski–Harabasz in this course (ml-slides-11 p. 14–15): CH = Σ nᵢ‖mᵢ − m‖² / Σᵢ Σ_{x∈Dᵢ} ‖x − mᵢ‖², with **no**
+(N − K)/(K − 1) factor (the textbook form has it). Mock C Q4(e) uses the slide form; in the exam, write the formula used.
+
 ## Open questions
 
 1. This sitting's exam date, time and venue; calculator policy.

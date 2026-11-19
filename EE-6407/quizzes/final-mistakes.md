@@ -2,6 +2,7 @@
 
 Step 4 of the final-prep protocol (`final-intel.md`). One row per lost mark group, largest loss first. An item
 closes only when its retry on fresh numbers is right. Retry keys were recomputed in Python on 2026-11-19.
+Teach-first step: `final-relearn.html` (one module per item group); then do the retries below cold; then Mock C.
 
 ## Mock B (sat 2026-11-19, scan `attempts/final-mock-b-2026-11-19.pdf`) — 40 / 100
 
