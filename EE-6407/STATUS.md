@@ -5,11 +5,11 @@ Genetic Algorithms and Machine Learning.  Part 1: evolutionary computing (GA).  
 ## Now
 
 - **Next assessment: final exam.**  Format is official from the four past papers: 3 h, 4 × 25 marks, Q1 GA, Q2–Q4 ML.  **Date, time and venue are not verified** (EE6407 is not on the undergraduate timetable; `quizzes/final-intel.md` gives the 23 Nov – 3 Dec 2026 exam window).  Check the postgraduate timetable or StudentLink.
-- **Final-prep protocol is running**: 8 steps in `quizzes/final-intel.md` (primer → guided mock A → Mock B → retrain → Mock C → hard mock H → official 2025-26 S1 → official 2025-26 S2; the 2024-25 papers are spare).  Steps 1–2 done (learner finished Mock A on 2026-11-19).  **Step 3 is built: the learner sits `quizzes/final-mock-b.html` cold (3 h, handwritten), then exports the answer sheet for grading against `final-mock-b.md`.**  Next: grade it, then Step 4 retrain into `quizzes/final-mistakes.md`.
+- **Final-prep protocol is running**: 8 steps in `quizzes/final-intel.md` (primer → guided mock A → Mock B → retrain → Mock C → hard mock H → official 2025-26 S1 → official 2025-26 S2; the 2024-25 papers are spare).  Steps 1–2 done (learner finished Mock A on 2026-11-19).  Step 3 (Mock B) is graded.  **Step 4 retrain is running: 11 open items in `quizzes/final-mistakes.md`, each with a fresh-number retry; close them, then build Mock C weighted to whatever is still open.**
 - Open loops:
   1. The ML half of the course is in no LaTeX note; both notes are Quiz-1-only.
   2. Gini convention: the slides use ½(1 − Σp²) (`ml-slides-06` p. 14) and the final pages follow them; the older `quizzes/quiz-2-primer.html` uses 1 − Σp² and was left unchanged.
-  3. Quiz 2 weak spots carried into the final (from the Mock C attempt, in `quizzes/quiz-2-retrain-handoff.md`): confusion-matrix metrics under class-count change, 2-D k-means with SSE, Fisher-ratio ranking, sample-weighted Gini.
+  3. Quiz 2 weak spots still untested in the final mocks (`quizzes/quiz-2-retrain-handoff.md`): confusion-matrix metrics under class-count change, 2-D k-means with SSE, Fisher-ratio ranking.  Sample-weighted Gini was done right in Mock B.
   4. The two 2023-24 EE6227 papers have not been re-read page by page.
 
 ## Notes
@@ -40,7 +40,7 @@ Open from `index.html`.  All are unofficial practice.
 - Final: `quizzes/final-primer.html` (16 topic cards, 18 checks), `quizzes/final-mock-a-guided.html` (full 4 × 25 paper as 56 steps); checker `quizzes/final-check.py`; `quizzes/final-mock-b.html` (Step 3, cold answer-free 4 × 25 paper, 3 h countdown, export) with key/rubric `final-mock-b.md` and checker `final-mock-b-check.py`; page images `quizzes/final-pages/`.
 - Quiz 2 (ML): `quizzes/quiz-2-primer.html`; `quiz-2-mock.html` / `.md` (checker `quiz-2-mock-check.py`); `quiz-2-mock-b.html` / `.md` (`quiz-2-mock-b-check.py`); `quiz-2-cycle.html` / `.md` = Mock C with train / test / retrain drills (`quiz-2-cycle-check.mjs`); `quiz-2-mock-d.html`, `quiz-2-mock-e.html` (`quiz-2-mock-de-check.py`); `quiz-2-bus-review.html` (phone review, `quiz-2-bus-review-check.py`).
 - Quiz 1 (GA): `notes/quiz1-prep-learning.html` (8 modules, 9 labs); `quizzes/quiz-1-prediction.html` / `.md` (Mock A); `quizzes/quiz-1-mock-b.html` / `.md` (answer-free).
-- Intel and records: `quizzes/final-intel.md`, `quiz-2-intel.md`, `rednote-quiz1-intel.md`, `quiz-2-retrain-handoff.md` (learner's Quiz 2 evidence as of 2026-11-10).
+- Intel and records: `quizzes/final-mistakes.md` (final retrain log), `quizzes/attempts/final-mock-b-2026-11-19.pdf` (Mock B script), `quizzes/final-intel.md`, `quiz-2-intel.md`, `rednote-quiz1-intel.md`, `quiz-2-retrain-handoff.md` (learner's Quiz 2 evidence as of 2026-11-10).
 
 ## Unresolved
 
