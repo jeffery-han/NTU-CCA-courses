@@ -40,7 +40,7 @@ P₁ = 1 3 5 2 6 4, P₂ = 2 4 1 6 3 5.
 | (i) Tour lengths | L(P₁) = 7+4+6+7+6+6 = **36**; L(P₂) = 8+6+5+8+4+6 = **37** (the closing edge counts) | 4 D (2 each) |
 | (ii) PMX child, segment = positions 3–5 from P₁ | **3 4 5 2 6 1** | 5 D |
 | (iii) L and f | L(child) = 5+3+6+7+5+7 = **33**; f = 100/36 = **2.7778**, 100/37 = **2.7027**, 100/33 = **3.0303** | 3 D |
-| (iv) Why a TSP operator must return a permutation; which mutation keeps the most adjacency | Every city once, else the tour skips or repeats a city (2). Inversion: reversing a segment changes only 2 edges (1) | 3 D |
+| (iv) Why a TSP operator must return a permutation; which mutation keeps the most adjacency | Every city once, else the tour skips or repeats a city (2). Inversion: reversing a segment changes only 2 edges (1); an adjacent swap (a length-2 inversion) is also accepted | 3 D |
 
 PMX working: copy `_ _ 5 2 6 _`; P₂'s segment is 1 6 3; 6 already placed.
 1 (pos 3): P₁ has 5 there → 5 is at pos 6 in P₂ → free → 1 to pos 6.
