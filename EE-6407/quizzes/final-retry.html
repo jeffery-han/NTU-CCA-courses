@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en" data-theme="system">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EE6407 Final Retries</title>
+<meta name="description" content="Cold retries of the EE6407 final Mock B mistakes on fresh numbers: one checked section per open item in final-mistakes.md; the first check decides whether an item closes.">
+<script>
+window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+  options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }, startup: { typeset: false } };
+</script>
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: #f6f7f9; --surface: #fff; --surface-2: #eef1f5; --text: #14181f; --muted: #5b6472; --border: #d8dee7;
+  --accent: #1f6feb; --accent-soft: #e5efff; --success: #17794b; --success-soft: #e2f5ec;
+  --warning: #9a6200; --warning-soft: #fdf1dc; --danger: #b32130; --danger-soft: #fdeaec;
+  --radius: 14px; --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0e1117; --surface: #161b23; --surface-2: #1d232d; --text: #e7ecf3; --muted: #99a3b3; --border: #2a323e;
+  --accent: #6ea8ff; --accent-soft: #17233a; --success: #56d39b; --success-soft: #10281f;
+  --warning: #e5b567; --warning-soft: #2b2113; --danger: #ff8189; --danger-soft: #2e1519; } }
+:root[data-theme="dark"] {
+  --bg: #0e1117; --surface: #161b23; --surface-2: #1d232d; --text: #e7ecf3; --muted: #99a3b3; --border: #2a323e;
+  --accent: #6ea8ff; --accent-soft: #17233a; --success: #56d39b; --success-soft: #10281f;
+  --warning: #e5b567; --warning-soft: #2b2113; --danger: #ff8189; --danger-soft: #2e1519; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.62 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+a { color: var(--accent); }
+.app { display: grid; grid-template-columns: 270px minmax(0, 1fr); }
+nav.toc { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 18px 14px; border-right: 1px solid var(--border); background: var(--surface); font-size: .9rem; }
+nav.toc b { display: block; margin-bottom: 8px; }
+nav.toc a { display: flex; justify-content: space-between; gap: 8px; padding: 3px 6px; border-radius: 7px; text-decoration: none; color: var(--text); }
+nav.toc a:hover { background: var(--surface-2); }
+nav.toc .sc { color: var(--muted); font-family: var(--mono); font-size: .8rem; }
+nav.toc .sc.ok { color: var(--success); font-weight: 700; }
+nav.toc .tools { margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--border); }
+main { min-width: 0; max-width: 900px; padding: 24px 22px 120px; }
+h1 { font-size: 1.65rem; margin: 0 0 .4rem; }
+h2 { font-size: 1.25rem; margin: 2.2rem 0 .4rem; padding-top: .6rem; border-top: 2px solid var(--border); }
+h3 { font-size: 1.04rem; margin: 0 0 .3rem; }
+.sub { color: var(--muted); }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 18px; margin: 14px 0; }
+.card.done { border-color: var(--success); }
+.notice { background: var(--warning-soft); border: 1px solid var(--border); border-radius: 12px; padding: 12px 15px; margin: 14px 0; }
+.notice.info { background: var(--accent-soft); }
+.tag { float: right; color: var(--muted); font-size: .82rem; font-weight: 600; }
+.ex { background: var(--surface-2); border-radius: 10px; padding: 8px 12px; margin: 8px 0; font-size: .95rem; }
+.chk { border-top: 1px dashed var(--border); padding-top: 8px; margin-top: 10px; }
+.chk input, .chk select, .btn { font: inherit; font-size: .92rem; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 4px 10px; }
+.btn { cursor: pointer; } .btn:hover { border-color: var(--accent); }
+.btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 600; text-decoration: none; padding: 8px 16px; }
+.fb { font-weight: 600; margin-left: 6px; }
+table.d { border-collapse: collapse; margin: 6px 0; font-size: .9rem; }
+table.d td, table.d th { border: 1px solid var(--border); padding: 3px 9px; text-align: center; }
+a.cite { font-size: .85rem; }
+dialog { max-width: min(900px, 94vw); border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text); padding: 14px; }
+dialog img { width: 100%; display: block; margin: 8px 0; border: 1px solid var(--border); background: #fff; }
+dialog::backdrop { background: rgba(0, 0, 0, .5); }
+.row { display: flex; gap: 10px; align-items: center; }
+#math-warning { display: none; }
+@media (max-width: 860px) {
+  .app { grid-template-columns: 1fr; }
+  nav.toc { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--border); }
+  nav.toc #toc-links { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 8px; }
+  main { padding: 16px 16px 80px; }
+}
+.stem { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 10px; padding: 10px 14px; margin: 8px 0 12px; }
+.step { border-left: 3px solid var(--border); padding: 4px 0 4px 12px; margin: 10px 0; }
+.step.done { border-left-color: var(--success); }
+.step p { margin: 4px 0; }
+.step input:not([type=checkbox]), .step select { font: inherit; font-size: .9rem; font-family: var(--mono); background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 7px; padding: 3px 7px; }
+.step input.good { border-color: var(--success); } .step input.bad, .step select.bad { border-color: var(--danger); }
+details { margin: 3px 0; font-size: .94rem; } details summary { cursor: pointer; color: var(--muted); font-weight: 600; }
+details.work[open] { background: var(--success-soft); border-radius: 8px; padding: 6px 10px; }
+details.hint[open] { background: var(--accent-soft); border-radius: 8px; padding: 6px 10px; }
+.pill { display: inline-block; background: var(--warning-soft); border: 1px solid var(--border); border-radius: 999px; padding: 0 9px; font-size: .78rem; font-weight: 700; }
+label.self { display: block; font-size: .92rem; margin-top: 4px; }
+h3 .tag, h2 .tag { float: right; color: var(--muted); font-size: .82rem; font-weight: 600; }
+.start { background: var(--accent-soft); border-radius: 12px; padding: 10px 16px; margin: 10px 0; }
+.start > summary { font-weight: 700; color: var(--accent); cursor: pointer; }
+.rule { background: var(--success-soft); border-left: 4px solid var(--success); border-radius: 8px; padding: 8px 12px; margin: 12px 0; font-weight: 600; }
+.badge { display: inline-block; font-size: .75rem; font-weight: 700; border-radius: 999px; padding: 1px 9px; margin-left: 6px; vertical-align: middle; background: var(--warning-soft); color: var(--warning); border: 1px solid var(--border); }
+table.sym { border-collapse: collapse; font-size: .92rem; margin: 6px 0; }
+table.sym td { border-bottom: 1px solid var(--border); padding: 3px 10px; vertical-align: top; }
+svg text { fill: var(--text); font: 13px -apple-system, sans-serif; }
+</style>
+</head>
+<body>
+<div class="app">
+<nav class="toc" aria-label="Contents">
+  <b>EE6407 Final &mdash; Retries</b>
+  <div id="toc-links"></div>
+  <div class="tools">
+    <div>Steps right <b id="score" style="display:inline">0</b>/<span id="total">0</span></div>
+    <p><button class="btn" id="reset">Reset my answers</button> <button class="btn" id="theme">Theme</button></p>
+    <a href="final-relearn.html">Relearn page</a>
+  </div>
+</nav>
+<main>
+<h1>EE6407 Final &mdash; Cold retries of the Mock B mistakes</h1>
+<p class="sub">One section per open item in <code>final-mistakes.md</code>, in the same order (largest loss first). The numbers are new; the questions are the ones Mock B asked.</p>
+<div id="math-warning" class="notice"><strong>Equations are not rendering.</strong> Open this page from the course folder (via <code>index.html</code>) so <code>vendor/mathjax/</code> resolves.</div>
+
+<div class="notice info">
+<h3 style="margin-top:0">How to retry</h3>
+<ol>
+<li><b>Cold.</b> Close the relearn page and your notes. Each section has no hints on purpose. Allow about 8 minutes per item; all ten take roughly an hour and a half.</li>
+<li><b>On paper first.</b> Write the full working as you would in the exam, then type only the numbers and press <em>check</em> once.</li>
+<li><b>First check counts.</b> Right first time: the item is <b>closed</b>. Wrong: the worked line unlocks. Read it, find the exact line where you went wrong, and write the section's rule in your own words under your working.</li>
+<li><b>Still open?</b> Redo that topic&rsquo;s &ldquo;your turn&rdquo; on the <a href="final-relearn.html">relearn page</a> (the link is under each section) the next day. Mock C then tests it again on new numbers.</li>
+<li><b>Tell me the result</b>, e.g. &ldquo;closed 1, 2, 5, 6; missed 3 at the exponent&rdquo;. I will update <code>final-mistakes.md</code>.</li>
+</ol>
+<p style="margin:0">Give numbers to 4 decimal places. Keep the first-check result honest: a reset or a second try does not close an item.</p>
+</div>
+
+<!-- 1 -->
+<h2 id="i1">1 &middot; Soft-margin SVM <span class="tag">was &minus;11</span></h2>
+<div class="stem">\(C=1\). Samples \((\mathbf x,d,\alpha)\): 1: \((3,0),+1,0.625\); 2: \((3,2),+1,0.625\); 3: \((1,0),-1,0.125\); 4: \((1,2),-1,0.125\); 5: \((2.5,1),-1,1\); 6: \((0,4),-1,0\).</div>
+<div class="step" data-k="r1_w"><p>(a) \(\mathbf w=(\)<input size="6" data-p="0">, <input size="6" data-p="1">\()\)</p>
+<details class="work"><summary>Worked line</summary>\(\Sigma\alpha d=0.625+0.625-0.125-0.125-1=0\) ✓. \(x\): \(1.875+1.875-0.125-0.125-2.5=1\). \(y\): \(0+1.25-0-0.25-1=0\). So \(\mathbf w=(1,0)\).</details></div>
+<div class="step" data-k="r1_which"><p>(b) Samples used for \(b\) (digits, e.g. <code>135</code>): <input size="8" data-set></p>
+<details class="work"><summary>Worked line</summary>1, 2, 3, 4 (\(0\lt\alpha\lt C\)). Not 5 (\(\alpha=C\)) and not 6 (\(\alpha=0\)).</details></div>
+<div class="step" data-k="r1_b"><p>(c) \(b=\) <input size="8"></p>
+<details class="work"><summary>Worked line</summary>\(b=d-\mathbf w^T\mathbf x\): \(1-3\), \(1-3\), \(-1-1\), \(-1-1\), all \(-2\). Including sample 5 gives \(-2.3\).</details></div>
+<div class="step" data-k="r1_mx"><p>(d) Margin width <input size="7" data-p="0">, \(\xi_5=\) <input size="7" data-p="1"></p>
+<details class="work"><summary>Worked line</summary>\(2/\lVert\mathbf w\rVert=2\). \(g(2.5,1)=0.5\), so \(\xi_5=1-(-1)(0.5)=1.5>1\): sample 5 is misclassified.</details></div>
+<div class="step" data-k="r1_g"><p>(e) \(\mathbf x=(2.4,5)\): \(g=\) <input size="7" data-p="0">, distance <input size="7" data-p="1"></p>
+<details class="work"><summary>Worked line</summary>\(g=2.4-2=0.4>0\), so \(+1\). Distance \(0.4/1=0.4\), below the half-margin 1: inside the margin, low confidence.</details></div>
+<p class="sub">Missed? <a href="final-relearn.html#m1">Relearn module 1</a>.</p>
+
+<!-- 2 -->
+<h2 id="i2">2 &middot; Multinomial naive Bayes <span class="tag">was &minus;8</span></h2>
+<div class="stem">Laplace smoothing. Sports: &ldquo;ball goal ball&rdquo;, &ldquo;goal team&rdquo;. Politics: &ldquo;vote team&rdquo;, &ldquo;vote law vote&rdquo;. Classify &ldquo;ball vote team&rdquo;.</div>
+<div class="step" data-k="r2_counts"><p>(a) \(d=\) <input size="4" data-p="0">, \(n_{\text{Sports}}=\) <input size="4" data-p="1">, \(n_{\text{Politics}}=\) <input size="4" data-p="2"></p>
+<details class="work"><summary>Worked line</summary>Vocabulary {ball, goal, team, vote, law}: \(d=5\). Both classes have 5 tokens.</details></div>
+<div class="step" data-k="r2_sports"><p>(b) Sports: \(P(\text{ball})\) <input size="6" data-p="0">, \(P(\text{vote})\) <input size="6" data-p="1">, \(P(\text{team})\) <input size="6" data-p="2"></p>
+<details class="work"><summary>Worked line</summary>\((2+1)/10=0.3\), \((0+1)/10=0.1\), \((1+1)/10=0.2\).</details></div>
+<div class="step" data-k="r2_politics"><p>(c) Politics: \(P(\text{ball})\) <input size="6" data-p="0">, \(P(\text{vote})\) <input size="6" data-p="1">, \(P(\text{team})\) <input size="6" data-p="2"></p>
+<details class="work"><summary>Worked line</summary>The Politics bag is vote 3, team 1, law 1. Ball \((0+1)/10=0.1\), vote \((3+1)/10=0.4\), team \((1+1)/10=0.2\).</details></div>
+<div class="step" data-k="r2_scores"><p>(d) Scores &times; 10³: Sports <input size="6" data-p="0">, Politics <input size="6" data-p="1">; class <select data-p="2"><option value=""></option><option>Sports</option><option>Politics</option></select></p>
+<details class="work"><summary>Worked line</summary>Sports \(0.5\cdot0.3\cdot0.1\cdot0.2=0.003\). Politics \(0.5\cdot0.1\cdot0.4\cdot0.2=0.004\). <b>Politics.</b></details></div>
+<p class="sub">Missed? <a href="final-relearn.html#m2">Relearn module 2</a>.</p>
+
+<!-- 3 -->
+<h2 id="i3">3 &middot; Gaussian naive Bayes <span class="tag">was &minus;8</span></h2>
+<div class="stem">\(P(\omega_1)=P(\omega_2)=0.5\). \(\omega_1\): \(\mu=(0,2)\), \(\sigma^2=(1,1)\). \(\omega_2\): \(\mu=(2,1)\), \(\sigma^2=(4,1)\). \(\mathbf x=(1,2)\).</div>
+<div class="step" data-k="r3_lik"><p>(a) \(p(\mathbf x\mid\omega_1)=\) <input size="7" data-p="0">, \(p(\mathbf x\mid\omega_2)=\) <input size="7" data-p="1"></p>
+<details class="work"><summary>Worked line</summary>\(\omega_1\): \(\frac1{\sqrt{2\pi}}e^{-1/2}\cdot\frac1{\sqrt{2\pi}}e^{0}=0.2420\cdot0.3989=0.0965\). \(\omega_2\): \(\frac1{2\sqrt{2\pi}}e^{-1/8}\cdot\frac1{\sqrt{2\pi}}e^{-1/2}=0.1760\cdot0.2420=0.0426\).</details></div>
+<div class="step" data-k="r3_g"><p>(b) \(g_1=\) <input size="7" data-p="0">, \(g_2=\) <input size="7" data-p="1">, class <input size="3" data-p="2"></p>
+<details class="work"><summary>Worked line</summary>\(g_1=\ln0.5-0-\tfrac12(1+0)=-1.1931\). \(g_2=\ln0.5-\tfrac12\ln4-\tfrac12(0.25+1)=-2.0113\). Class 1.</details></div>
+<div class="step" data-k="r3_post"><p>(c) \(P(\omega_1\mid\mathbf x)=\) <input size="7"></p>
+<details class="work"><summary>Worked line</summary>\(1/(1+e^{g_2-g_1})=1/(1+e^{-0.8182})=0.6938\).</details></div>
+<p class="sub">Missed? <a href="final-relearn.html#m3">Relearn module 3</a>.</p>
+
+<!-- 4 -->
+<h2 id="i4">4 &middot; HAC with real Euclidean distances <span class="tag">was &minus;5.5</span></h2>
+<div class="stem">P(0,0), Q(1,1), R(4,0), S(4,3). Euclidean distance, single linkage. Items 5, 8 and 9 reuse these points.</div>
+<div class="step" data-k="r4_matrix"><p>(a) PQ <input size="6" data-p="0">, PR <input size="6" data-p="1">, PS <input size="6" data-p="2">, QR <input size="6" data-p="3">, QS <input size="6" data-p="4">, RS <input size="6" data-p="5"></p>
+<details class="work"><summary>Worked line</summary>\(\sqrt2=1.4142\), \(4\), \(5\), \(\sqrt{10}=3.1623\), \(\sqrt{13}=3.6056\), \(3\). Every entry is a square root.</details></div>
+<div class="step" data-k="r4_merges"><p>(b) Merge heights in order: <input size="6" data-p="0">, <input size="6" data-p="1">, <input size="6" data-p="2"></p>
+<details class="work"><summary>Worked line</summary>{P,Q} at 1.4142; {R,S} at 3; then {P,Q} and {R,S} join at QR = 3.1623 (the closest cross pair). Two clusters: {P,Q} and {R,S}.</details></div>
+<p class="sub">Missed? <a href="final-relearn.html#m5">Relearn module 5</a>.</p>
+
+<!-- 5 -->
+<h2 id="i5">5 &middot; Davies&ndash;Bouldin <span class="tag">was &minus;5</span></h2>
+<div class="stem">Clusters {P, Q} and {R, S} from item 4.</div>
+<div class="step" data-k="r5_m"><p>(a) \(\mathbf m_1=(\)<input size="5" data-p="0">, <input size="5" data-p="1">\()\), \(\mathbf m_2=(\)<input size="5" data-p="2">, <input size="5" data-p="3">\()\)</p>
+<details class="work"><summary>Worked line</summary>\((0.5,0.5)\) and \((4,1.5)\).</details></div>
+<div class="step" data-k="r5_db"><p>(b) \(\delta_1=\) <input size="6" data-p="0">, \(\delta_2=\) <input size="6" data-p="1">, \(d(\mathbf m_1,\mathbf m_2)=\) <input size="6" data-p="2">, DB \(=\) <input size="6" data-p="3"></p>
+<details class="work"><summary>Worked line</summary>\(\delta_1=\sqrt{(0.5+0.5)/2}=0.7071\). \(\delta_2=\sqrt{(2.25+2.25)/2}=1.5\). \(d=\sqrt{12.25+1}=3.6401\). DB \(=2.2071/3.6401=0.6063\).</details></div>
+<p class="sub">Missed? <a href="final-relearn.html#m4">Relearn module 4</a>.</p>
+
+<!-- 6 -->
+<h2 id="i6">6 &middot; Gini <span class="tag">was &minus;5</span></h2>
+<div class="stem">A node of 12 samples: 6 (+), 6 (&minus;). Split X: (5, 3) | (1, 3). Split Y: (3, 0) | (3, 6).</div>
+<div class="step" data-k="r6"><p>Node impurity <input size="6" data-p="0">, weighted X <input size="6" data-p="1">, weighted Y <input size="6" data-p="2">, choose <input size="3" data-p="3"></p>
+<details class="work"><summary>Worked line</summary>Root \(\tfrac12(1-0.25-0.25)=0.25\). X: \(\tfrac8{12}\cdot0.2344+\tfrac4{12}\cdot0.1875=0.2188\). Y: \(\tfrac3{12}\cdot0+\tfrac9{12}\cdot0.2222=0.1667\). Y has the larger drop (0.0833 vs 0.0312).</details></div>
+<p class="sub">Missed? <a href="final-relearn.html#m5">Relearn module 5</a>.</p>
+
+<!-- 7 -->
+<h2 id="i7">7 &middot; PMX <span class="tag">was &minus;4</span></h2>
+<div class="stem">\(P_1=3\,5\,1\,7\,2\,8\,6\,4\), \(P_2=8\,6\,2\,4\,3\,1\,7\,5\). Copy positions 3&ndash;5 from \(P_1\).</div>
+<div class="step" data-k="r7"><p>Child (8 digits, no spaces): <input size="10"></p>
+<details class="work"><summary>Worked line</summary>Copy <code>_ _ 1 7 2 _ _ _</code>. \(P_2\)&rsquo;s segment is 2 4 3; 2 is placed. 4 (pos 4): \(P_1\) has 7 there; 7 is at pos 7 in \(P_2\), free, so 4 goes to pos 7. 3 (pos 5): \(P_1\) has 2; 2 is at pos 3 in \(P_2\), occupied; \(P_1\) has 1 at pos 3; 1 is at pos 6 in \(P_2\), free, so 3 goes to pos 6. Fill the rest from \(P_2\): <b>8 6 1 7 2 3 4 5</b>.</details></div>
+<p class="sub">Missed? <a href="final-relearn.html#m5">Relearn module 5</a>.</p>
+
+<!-- 8 -->
+<h2 id="i8">8 &middot; Dunn <span class="tag">was &minus;4</span></h2>
+<div class="stem">Clusters {P, Q} and {R, S} from item 4.</div>
+<div class="step" data-k="r8"><p>Closest cross pair <input size="6" data-p="0">, largest diameter <input size="6" data-p="1">, Dunn <input size="6" data-p="2"></p>
+<details class="work"><summary>Worked line</summary>QR = 3.1623; diameters PQ 1.4142 and RS 3, so 3. Dunn \(=3.1623/3=1.0541\).</details></div>
+<p class="sub">Missed? <a href="final-relearn.html#m4">Relearn module 4</a>.</p>
+
+<!-- 9 -->
+<h2 id="i9">9 &middot; Rand index <span class="tag">was &minus;4</span></h2>
+<div class="stem">Compare {P, Q} | {R, S} with {P} | {Q, R} | {S}.</div>
+<div class="step" data-k="r9"><p>\(N_s=\) <input size="4" data-p="0">, \(N_d=\) <input size="4" data-p="1">, RI \(=\) <input size="6" data-p="2"></p>
+<details class="work"><summary>Worked line</summary>6 pairs. Together in both: none, so \(N_s=0\). Apart in both: PR, PS, QS, so \(N_d=3\). PQ and RS are together only in the first, QR only in the second. RI \(=3/6=0.5\).</details></div>
+<p class="sub">Missed? <a href="final-relearn.html#m4">Relearn module 4</a>.</p>
+
+<!-- 10 + 12 -->
+<h2 id="i10">10 &middot; Fisher criterion and confidence <span class="tag">was &minus;4</span></h2>
+<div class="step written" data-id="r10_criterion"><p><span class="pill">written</span> (a) From memory: write \(J(\mathbf w)\), define \(\mathbf S_B\), \(\mathbf S_W\) and \(\mathbf S_i\), and say in one sentence why maximising \(J\) gives \(\mathbf w\propto\mathbf S_W^{-1}(\mathbf m_1-\mathbf m_2)\).</p>
+<details class="work"><summary>Model answer</summary>\(J=\mathbf w^T\mathbf S_B\mathbf w/\mathbf w^T\mathbf S_W\mathbf w\); \(\mathbf S_B=(\mathbf m_1-\mathbf m_2)(\mathbf m_1-\mathbf m_2)^T\); \(\mathbf S_W=\mathbf S_1+\mathbf S_2\), \(\mathbf S_i=\sum_{\mathbf x\in D_i}(\mathbf x-\mathbf m_i)(\mathbf x-\mathbf m_i)^T\). Setting the derivative to zero gives \(\mathbf S_B\mathbf w=\lambda\mathbf S_W\mathbf w\); \(\mathbf S_B\mathbf w\) always points along \(\mathbf m_1-\mathbf m_2\), so \(\mathbf w\propto\mathbf S_W^{-1}(\mathbf m_1-\mathbf m_2)\): the direction with the widest gap between projected means relative to projected spread.</details>
+<label class="self"><input type="checkbox"> All four definitions and the reason were right</label></div>
+<div class="step written" data-id="r10_confidence"><p><span class="pill">written</span> (b) In Mock B you wrote the distance as \(-0.423\) and judged &ldquo;&lt; 1, not very confident&rdquo;. Write the correct distance, a one-line judgement, and the reference you compare against.</p>
+<details class="work"><summary>Model answer</summary>Distance \(=|g|/\lVert\mathbf w\rVert=0.424\) (always positive). Compare with the distance of a class mean from the boundary: \(\mathbf m_1\) is 2.226 away, so \(\mathbf x\) lies about a fifth of the way from the boundary to a typical class-1 point: low confidence. &ldquo;Less than 1&rdquo; is no yardstick, because \(\mathbf w\) can be rescaled.</details>
+<label class="self"><input type="checkbox"> I named the mean-distance reference</label></div>
+<p class="sub">Missed? <a href="final-relearn.html#m6">Relearn module 6</a>.</p>
+
+<div class="notice"><b>Next:</b> tell me which items closed. Then sit <a href="final-mock-c.html">Mock C</a> cold, 3 h on paper, ideally on another day.</div>
+<p class="sub" style="font-size:.85rem">Unofficial study aid. Every key is recomputed by <code>final-retry-check.py</code> and matches <code>final-mistakes.md</code>.</p>
+</main>
+</div>
+<dialog id="srcDlg"><div class="row" style="justify-content:space-between"><b id="srcTitle"></b><span><a id="srcOpen" target="_blank">Open PDF</a> <button class="btn" id="srcClose">Close</button></span></div><div id="srcImgs"></div></dialog>
+<script type="application/json" id="keys">{"r1_w": [1.0, 0.0], "r1_which": "1234", "r1_b": -2.0, "r1_mx": [2.0, 1.5], "r1_g": [0.4, 0.4], "r2_counts": [5, 5, 5], "r2_sports": [0.3, 0.1, 0.2], "r2_politics": [0.1, 0.4, 0.2], "r2_scores": [3.0, 4.0, "Politics"], "r3_lik": [0.0965, 0.0426], "r3_g": [-1.1931, -2.0113, 1], "r3_post": 0.6938, "r4_matrix": [1.4142, 4.0, 5.0, 3.1623, 3.6056, 3.0], "r4_merges": [1.4142, 3.0, 3.1623], "r5_m": [0.5, 0.5, 4.0, 1.5], "r5_db": [0.7071, 1.5, 3.6401, 0.6063], "r6": [0.25, 0.2188, 0.1667, "Y"], "r7": "86172345", "r8": [3.1623, 3.0, 1.0541], "r9": [0, 3, 0.5]}</script>
+<script>
+(function () {
+  var KEY = 'ee6407-final-retry-v1', KEYS = JSON.parse(document.getElementById('keys').textContent);
+  var st = {}; try { st = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) {}
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
+  function get(v, path) { if (!path) return v; path.split('.').forEach(function (i) { v = v[+i]; }); return v; }
+  function norm(s, set) { s = String(s).toUpperCase().replace(/[^A-Z0-9]/g, ''); return set ? s.split('').sort().join('') : s; }
+  function same(ans, val, set) {
+    if (typeof ans === 'number') { var v = parseFloat(val); return isFinite(v) && Math.abs(v - ans) <= Math.max(0.0015, Math.abs(ans) * 0.002); }
+    if (typeof ans === 'boolean') return val === String(ans);
+    return norm(val, set) === norm(ans, set) && val !== '';
+  }
+  var steps = [];
+  document.querySelectorAll('.step').forEach(function (s, idx) {
+    var id = s.dataset.k || s.dataset.id || ('s' + idx), fields = s.querySelectorAll('input:not([type=checkbox]), select'), work = s.querySelector('details.work');
+    var rec = { id: id, el: s, sec: null };
+    steps.push(rec);
+    if (s.classList.contains('written')) {
+      var cb = s.querySelector('.self input'); cb.checked = !!(st[id] && st[id].ok);
+      cb.addEventListener('change', function () { st[id] = { ok: cb.checked }; save(); refresh(); });
+      return;
+    }
+    var p = s.querySelector('p'), btn = document.createElement('button'), fb = document.createElement('span');
+    btn.className = 'btn'; btn.textContent = 'check'; fb.className = 'fb'; p.appendChild(document.createTextNode(' ')); p.appendChild(btn); p.appendChild(fb);
+    function show(r) {
+      if (!r) return; fields.forEach(function (f, i) { f.classList.toggle('bad', r.v[i] !== undefined && !r.f[i]); f.classList.toggle('good', !!r.f[i]); });
+      fb.textContent = r.ok ? '✓ correct' : '✗ ' + r.f.filter(Boolean).length + '/' + fields.length + ' right — try the hint';
+      fb.style.color = r.ok ? 'var(--success)' : 'var(--danger)'; s.classList.toggle('done', r.ok); if (work) work.dataset.open = '1';
+    }
+    if (st[id]) { fields.forEach(function (f, i) { f.value = st[id].v[i] || ''; }); show(st[id]); }
+    btn.addEventListener('click', function () {
+      var v = [], f = [];
+      fields.forEach(function (fl) { v.push(fl.value); f.push(same(get(KEYS[s.dataset.k], fl.dataset.p), fl.value, fl.hasAttribute('data-set'))); });
+      st[id] = { v: v, f: f, ok: f.every(Boolean) }; save(); show(st[id]); refresh();
+    });
+    if (work) work.addEventListener('toggle', function () {
+      if (work.open && !work.dataset.open) { work.open = false; fb.textContent = 'Check once first — then the worked line unlocks.'; fb.style.color = 'var(--warning)'; }
+    });
+  });
+  var toc = document.getElementById('toc-links');
+  var secs = Array.prototype.map.call(document.querySelectorAll('main h2[id]'), function (h) {
+    var a = document.createElement('a'); a.href = '#' + h.id; a.innerHTML = '<span>' + h.firstChild.textContent + '</span><span class="sc"></span>'; toc.appendChild(a);
+    return { h: h, a: a };
+  });
+  steps.forEach(function (r) { secs.forEach(function (s) { if (s.h.compareDocumentPosition(r.el) & Node.DOCUMENT_POSITION_FOLLOWING) r.sec = s; }); });
+  function refresh() {
+    var tot = 0, ok = 0;
+    secs.forEach(function (s) {
+      var mine = steps.filter(function (r) { return r.sec === s; }), o = mine.filter(function (r) { return st[r.id] && st[r.id].ok; }).length;
+      var sc = s.a.querySelector('.sc'); sc.textContent = o + '/' + mine.length; sc.classList.toggle('ok', o === mine.length); tot += mine.length; ok += o;
+    });
+    document.getElementById('score').textContent = ok; document.getElementById('total').textContent = tot;
+  }
+  refresh();
+  document.getElementById('reset').onclick = function () { try { localStorage.removeItem(KEY); } catch (e) {} location.reload(); };
+  var root = document.documentElement; try { var th = localStorage.getItem('ee6407-theme'); if (th) root.dataset.theme = th; } catch (e) {}
+  document.getElementById('theme').onclick = function () { var n = root.dataset.theme === 'dark' ? 'light' : 'dark'; root.dataset.theme = n; try { localStorage.setItem('ee6407-theme', n); } catch (e) {} };
+  var dlg = document.getElementById('srcDlg');
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('a[data-pages]'); if (!a) return; e.preventDefault();
+    var parts = a.dataset.pages.split(':'), box = document.getElementById('srcImgs'); box.innerHTML = '';
+    parts[1].split(',').forEach(function (p) { var img = document.createElement('img'); img.loading = 'lazy'; img.alt = parts[0] + ' page ' + p; img.src = 'final-pages/' + parts[0] + '-p' + ('00' + p).slice(-3) + '.jpg'; box.appendChild(img); });
+    document.getElementById('srcTitle').textContent = a.textContent; document.getElementById('srcOpen').href = a.getAttribute('href'); dlg.showModal();
+  });
+  document.getElementById('srcClose').onclick = function () { dlg.close(); };
+  dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+  var s = document.createElement('script'); s.src = 'vendor/mathjax/tex-mml-chtml.js'; s.async = true;
+  s.onload = function () { MathJax.startup.promise.then(function () { return [].slice.call(document.querySelector('main').children).reduce(function (p, el) { return p.then(function () { return MathJax.typesetPromise([el]).catch(function (e) { console.warn('MathJax', e); }); }); }, Promise.resolve()); }); };
+  s.onerror = function () { document.getElementById('math-warning').style.display = 'block'; }; document.head.appendChild(s);
+})();
+</script>
+</body>
+</html>
