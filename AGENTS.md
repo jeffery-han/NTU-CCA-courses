@@ -25,7 +25,8 @@ EE-XXXX/
   index.html     # launcher linking every HTML page (Safari needs it)
   resources/     # supplied material: slides, readings, transcripts-raw/, public archive
   notes/         # beginner-notes.tex, notes.tex and their PDFs
-  quizzes/       # announcements, *-intel.md, HTML study pages, keys, checkers, attempts/
+  quizzes/       # one folder per assessment: quiz-01/, quiz-02/, final/ (see docs/quiz-prep.md)
+    final/       #   final-intel.md, pages, keys, checkers, final-pages/, quiz-assets/, attempts/
   tests/         # past exam papers (final papers are git-ignored: NTU-only)
   assignments/  projects/  figures/
 ```

@@ -4,7 +4,7 @@
 # Exit status is non-zero if any checker fails.
 cd "$(dirname "$0")/.." || exit 2
 fail=0
-for f in ${1:-EE-*}/quizzes/*-check.py ${1:-EE-*}/notes/*-check.py ${1:-EE-*}/quizzes/*-check.mjs; do
+for f in ${1:-EE-*}/quizzes/*-check.py ${1:-EE-*}/quizzes/*/*-check.py ${1:-EE-*}/notes/*-check.py ${1:-EE-*}/quizzes/*-check.mjs ${1:-EE-*}/quizzes/*/*-check.mjs; do
   [ -e "$f" ] || continue
   case "$f" in
     *.py)  run="python3" ;;

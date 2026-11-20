@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en" data-theme="system">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EE6221 Final Guided Mock A</title>
+<meta name="description" content="Step 2 of the EE6221 final-prep protocol: a full 5 x 20 paper broken into self-checking steps.">
+<link rel="stylesheet" href="quiz-assets/katex/katex.min.css">
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: #f6f7f9; --surface: #fff; --surface-2: #eef1f5; --text: #14181f; --muted: #5b6472; --border: #d8dee7;
+  --accent: #1f6feb; --accent-soft: #e5efff; --success: #17794b; --success-soft: #e2f5ec;
+  --warning: #9a6200; --warning-soft: #fdf1dc; --danger: #b32130; --danger-soft: #fdeaec;
+  --radius: 14px; --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0e1117; --surface: #161b23; --surface-2: #1d232d; --text: #e7ecf3; --muted: #99a3b3; --border: #2a323e;
+  --accent: #6ea8ff; --accent-soft: #17233a; --success: #56d39b; --success-soft: #10281f;
+  --warning: #e5b567; --warning-soft: #2b2113; --danger: #ff8189; --danger-soft: #2e1519; } }
+:root[data-theme="dark"] {
+  --bg: #0e1117; --surface: #161b23; --surface-2: #1d232d; --text: #e7ecf3; --muted: #99a3b3; --border: #2a323e;
+  --accent: #6ea8ff; --accent-soft: #17233a; --success: #56d39b; --success-soft: #10281f;
+  --warning: #e5b567; --warning-soft: #2b2113; --danger: #ff8189; --danger-soft: #2e1519; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.62 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+a { color: var(--accent); }
+.app { display: grid; grid-template-columns: 270px minmax(0, 1fr); }
+nav.toc { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 18px 14px; border-right: 1px solid var(--border); background: var(--surface); font-size: .9rem; }
+nav.toc b { display: block; margin-bottom: 8px; }
+nav.toc a { display: flex; justify-content: space-between; gap: 8px; padding: 3px 6px; border-radius: 7px; text-decoration: none; color: var(--text); }
+nav.toc a:hover { background: var(--surface-2); }
+nav.toc .sc { color: var(--muted); font-family: var(--mono); font-size: .8rem; }
+nav.toc .sc.ok { color: var(--success); font-weight: 700; }
+nav.toc .tools { margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--border); }
+main { min-width: 0; max-width: 900px; padding: 24px 22px 120px; }
+h1 { font-size: 1.65rem; margin: 0 0 .4rem; }
+h2 { font-size: 1.25rem; margin: 2.2rem 0 .4rem; padding-top: .6rem; border-top: 2px solid var(--border); }
+h3 { font-size: 1.04rem; margin: 1.2rem 0 .3rem; }
+.sub { color: var(--muted); }
+.notice { background: var(--warning-soft); border: 1px solid var(--border); border-radius: 12px; padding: 12px 15px; margin: 14px 0; }
+.notice.info { background: var(--accent-soft); }
+.btn { font: inherit; font-size: .92rem; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 4px 10px; cursor: pointer; }
+.btn:hover { border-color: var(--accent); }
+.fb { font-weight: 600; margin-left: 6px; }
+.katex-display { overflow-x: auto; overflow-y: hidden; }
+a.cite { font-size: .85rem; }
+dialog { max-width: min(900px, 94vw); border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text); padding: 14px; }
+dialog img { width: 100%; display: block; margin: 8px 0; border: 1px solid var(--border); background: #fff; }
+dialog::backdrop { background: rgba(0, 0, 0, .5); }
+.row { display: flex; gap: 10px; align-items: center; }
+figure { margin: 10px 0; background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 8px; }
+figure img, figure svg { display: block; width: 100%; height: auto; max-width: 560px; margin: 0 auto; }
+figcaption { color: #5b6472; font-size: .85rem; text-align: center; }
+.stem { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 10px; padding: 10px 14px; margin: 8px 0 12px; }
+.step { border-left: 3px solid var(--border); padding: 4px 0 4px 12px; margin: 10px 0; }
+.step.done { border-left-color: var(--success); }
+.step p { margin: 4px 0; }
+.step input:not([type=checkbox]), .step select { font: inherit; font-size: .9rem; font-family: var(--mono); background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 7px; padding: 3px 7px; }
+.step input.good, .step select.good { border-color: var(--success); } .step input.bad, .step select.bad { border-color: var(--danger); }
+details { margin: 3px 0; font-size: .94rem; } details summary { cursor: pointer; color: var(--muted); font-weight: 600; }
+details.work[open] { background: var(--success-soft); border-radius: 8px; padding: 6px 10px; }
+details.hint[open] { background: var(--accent-soft); border-radius: 8px; padding: 6px 10px; }
+.pill { display: inline-block; background: var(--warning-soft); border: 1px solid var(--border); border-radius: 999px; padding: 0 9px; font-size: .78rem; font-weight: 700; }
+label.self { display: block; font-size: .92rem; margin-top: 4px; }
+h3 .tag, h2 .tag { float: right; color: var(--muted); font-size: .82rem; font-weight: 600; }
+@media (max-width: 860px) {
+  .app { grid-template-columns: 1fr; }
+  nav.toc { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--border); }
+  nav.toc #toc-links { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 8px; }
+  main { padding: 16px 16px 80px; }
+}
+</style>
+<script defer src="quiz-assets/katex/katex.min.js"></script>
+<script defer src="quiz-assets/katex/contrib/auto-render.min.js"></script>
+<script defer src="quiz-assets/render-math.js"></script>
+</head>
+<body>
+<div class="app">
+<nav class="toc" aria-label="Contents">
+  <b>EE6221 Final &mdash; Guided mock A</b>
+  <div id="toc-links"></div>
+  <div class="tools">
+    <div>Steps right <b id="score" style="display:inline">0</b>/<span id="total">0</span></div>
+    <p><button class="btn" id="reset">Reset my answers</button> <button class="btn" id="theme">Theme</button></p>
+    <a href="final-primer.html">&larr; Step 1 primer</a>
+  </div>
+</nav>
+<main>
+<h1>EE6221 Final &mdash; Step 2: Guided mock A</h1>
+<p class="sub">A full paper in the official format: 5 questions, 20 marks each, in the fixed slot order. Each part is broken into the steps a marker looks for, and every step checks itself. Work each step on paper first, then type the number (fractions such as <code>1/6</code> are accepted). A <b>hint</b> recalls the method; the <b>worked line</b> unlocks after your first check. Steps marked <span class="pill">written</span> are self-marked against a model answer. Give numbers to 4 decimal places.</p>
+<div class="notice info"><p style="margin:0">All numbers are new except Q1, which reuses the 2023-24 S2 arm figure (you solved it once in Quiz 1 mock 5; here the point is speed and the transform matrices). The two most recent official papers are held back for steps 7 and 8.</p></div>
+
+<!-- ======================= Q1 ======================= -->
+<h2 id="q1">Q1 &middot; D-H <span class="tag">20 marks</span></h2>
+<div class="stem">Figure 1 shows a six-joint arm (all joints revolute).
+<figure><img src="quiz-assets/ee6221-2023-2024-s2-q1-six-joint-figure.png" alt="Six-joint arm. Vertical base column with waist joint q1. The q2 axis is 0.47 m above the base, and a 0.16 m horizontal offset runs to the q2 pipe. Joint q3 is 0.15 m below that. Link 0.18 m runs to q4. A horizontal 0.17 m link runs to vertical axis q5. The gripper axis sits 0.05 m higher, and the gripper roll is q6 with 0.20 m to the tool tip."><figcaption>Figure 1 (cropped from the tutor slides)</figcaption></figure>
+(a) Assign link coordinates with the D-H algorithm and draw the link-coordinate diagram. (12 marks) (b) Tabulate the kinematic parameters of all 6 joints and write \(T^1_0\), \(T^2_1\), \(T^3_2\) (multiplication not required). (8 marks) <a class="cite" href="../../resources/lecture-01-manipulator-kinematics.pdf#page=59" data-pages="lecture-01-manipulator-kinematics:59,60">Lec 1 pp. 59&ndash;60</a></div>
+
+<h3>(a) Link-coordinate diagram <span class="tag">12 marks</span></h3>
+<div class="step written" data-id="q1a_frames"><p><span class="pill">written</span> 1. Draw frames 0&ndash;6.</p>
+<details class="work"><summary>Model answer</summary>Frame 0 at the base on the waist axis, \(z_0\) up. \(z_1\) along the q2 pipe (horizontal, pointing right), \(y_1\) up. Frame 2 at the q3 centre, \(x_2\) down the 0.15 m drop, \(z_2\) along the q3 axis. \(z_3\parallel z_2\) at q4. \(z_4\) vertical on the q5 axis, origin 0.17 m from q4. \(z_5\) horizontal (the q6 roll axis), raised 0.05 m. Frame 6 at the tool tip, \(z_6\) the approach. Rubric: 6 marks for each \(z_{k-1}\) on joint \(k\)'s axis, 3 for the \(x\) axes on the common normals, 1 for right-handed \(y\), 1 base, 1 tool.</details>
+<label class="self"><input type="checkbox"> My diagram matches (or is an equivalent valid assignment)</label></div>
+
+<h3>(b) Parameters and transforms <span class="tag">8 marks</span></h3>
+<div class="step" data-k="q1_r1"><p>1. Row 1: \(d_1=\) <input data-p="0" size="6"> m, \(a_1=\) <input data-p="1" size="6"> m</p>
+<details class="hint"><summary>Hint</summary>\(d\) runs along the previous \(z\); \(a\) runs along the new \(x\).</details>
+<details class="work"><summary>Worked line</summary>The 0.47 m column lies along \(z_0\), so \(d_1=0.47\); \(z_0\) and \(z_1\) intersect, so \(a_1=0\).</details></div>
+<div class="step" data-k="q1_r2"><p>2. Row 2: \(d_2=\) <input data-p="0" size="6"> m, \(a_2=\) <input data-p="1" size="6"> m</p>
+<details class="hint"><summary>Hint</summary>Which run lies along the q2 pipe (\(z_1\)), and which along \(x_2\)?</details>
+<details class="work"><summary>Worked line</summary>The 0.16 m run is along \(z_1\) (a \(d\)); the 0.15 m drop is along \(x_2\) (an \(a\)). Swapping them is the most common lost mark on this arm.</details></div>
+<div class="step" data-k="q1_r34"><p>3. Rows 3&ndash;4: \(a_3=\) <input data-p="0" size="6"> m, \(a_4=\) <input data-p="1" size="6"> m</p>
+<details class="work"><summary>Worked line</summary>The 0.18 m link and the 0.17 m horizontal link both lie along the new \(x\) axes, so \(a_3=0.18\), \(a_4=0.17\), with \(d_3=d_4=0\).</details></div>
+<div class="step" data-k="q1_r56"><p>4. Rows 5&ndash;6: \(d_5=\) <input data-p="0" size="6"> m, \(d_6=\) <input data-p="1" size="6"> m</p>
+<details class="work"><summary>Worked line</summary>The 0.05 m raise is along \(z_4\) (vertical), so it is \(d_5\), not \(a_5\). The 0.20 m to the tip is along \(z_5\): \(d_6=0.20\).</details></div>
+<div class="step" data-k="q1_tip"><p>5. Sanity check. At \(q=(90^\circ,-90^\circ,90^\circ,0,90^\circ,0)\) the arm is stretched out horizontally. Tool tip \(x=\) <input data-p="0" size="6"> m, \(z=\) <input data-p="1" size="6"> m</p>
+<details class="hint"><summary>Hint</summary>Add every horizontal run for \(x\); for \(z\), start at the column height and add the vertical offsets with their signs.</details>
+<details class="work"><summary>Worked line</summary>\(x=0.16+0.18+0.17+0.20=0.71\), \(z=0.47-0.15+0.05=0.37\). Multiplying the six D-H matrices of your table gives the same point; if yours does not, a row is wrong.</details></div>
+<div class="step written" data-id="q1b_T"><p><span class="pill">written</span> 6. Write the \(\alpha\) column and \(T^1_0\), \(T^2_1\), \(T^3_2\).</p>
+<details class="work"><summary>Model answer</summary>\(\alpha=(\pi/2,\ \pi/2,\ 0,\ -\pi/2,\ \pi/2,\ 0)\). With \(T^k_{k-1}=\begin{bmatrix}C_k&-\cos\alpha_kS_k&\sin\alpha_kS_k&a_kC_k\\S_k&\cos\alpha_kC_k&-\sin\alpha_kC_k&a_kS_k\\0&\sin\alpha_k&\cos\alpha_k&d_k\\0&0&0&1\end{bmatrix}\):
+\[T^1_0=\begin{bmatrix}C_1&0&S_1&0\\S_1&0&-C_1&0\\0&1&0&0.47\\0&0&0&1\end{bmatrix},\ T^2_1=\begin{bmatrix}C_2&0&S_2&0.15C_2\\S_2&0&-C_2&0.15S_2\\0&1&0&0.16\\0&0&0&1\end{bmatrix},\ T^3_2=\begin{bmatrix}C_3&-S_3&0&0.18C_3\\S_3&C_3&0&0.18S_3\\0&0&1&0\\0&0&0&1\end{bmatrix}\]</details>
+<label class="self"><input type="checkbox"> My table and three matrices match</label></div>
+
+<!-- ======================= Q2 ======================= -->
+<h2 id="q2">Q2 &middot; Robot control <span class="tag">20 marks</span></h2>
+<div class="stem">The dynamic equations of a robot are
+\[\begin{aligned}(3+\cos q_2)\ddot q_1+\ddot q_2-2\dot q_1\dot q_2\sin q_2+15\cos q_1+d_1&=u_1\\ \ddot q_1+\ddot q_2+\dot q_1^2\sin q_2+5\cos(q_1+q_2)+d_2&=u_2\\ 8\ddot q_3+4\dot q_3+78.4+f&=u_3\end{aligned}\]
+where \(f\) is the contact force and \(d_1,d_2\) are disturbances. The unmodelled resonances are at 12, 20 and 30 rad/s; the control system must not excite any of them. <a class="cite" href="../../resources/lecture-02-robot-control.pdf#page=8" data-pages="lecture-02-robot-control:8,9,10">Lec 2 pp. 8&ndash;10</a></div>
+
+<h3>(a) Computed torque, free motion <span class="tag">9 marks</span></h3>
+<p class="sub">\(f=0\), \(d_1=d_2=0\). Design a computed-torque controller that is overdamped with \(\zeta=1.2\).</p>
+<div class="step" data-k="q2a_wn"><p>1. Largest allowed \(\omega_n\) (rad/s): <input size="7"></p>
+<details class="hint"><summary>Hint</summary>\(\omega_n\le0.5\,\omega_{res}\), with the <em>lowest</em> resonance.</details>
+<details class="work"><summary>Worked line</summary>\(0.5\times12=6\) rad/s.</details></div>
+<div class="step" data-k="q2a_k"><p>2. \(k_v=\) <input data-p="0" size="7"> \(k_p=\) <input data-p="1" size="7"></p>
+<details class="work"><summary>Worked line</summary>\(k_v=2(1.2)(6)=14.4\), \(k_p=6^2=36\), the same for all three joints.</details></div>
+<div class="step written" data-id="q2a_ab"><p><span class="pill">written</span> 3. Write \(\alpha\) and \(\beta\).</p>
+<details class="work"><summary>Model answer</summary>
+\[\alpha=\begin{bmatrix}3+\cos q_2&1&0\\1&1&0\\0&0&8\end{bmatrix},\qquad \beta=\begin{bmatrix}-2\dot q_1\dot q_2\sin q_2+15\cos q_1\\ \dot q_1^2\sin q_2+5\cos(q_1+q_2)\\ 4\dot q_3+78.4\end{bmatrix}\]
+The \(\ddot q_2\) in the first equation and the \(\ddot q_1\) in the second are inertia coupling: they are the off-diagonal 1s of \(\alpha\). Then \(u=\alpha v+\beta\) gives \(\ddot q=v\) and \(v_i=\ddot q_{id}+14.4\dot e_i+36e_i\), so \(\ddot e_i+14.4\dot e_i+36e_i=0\).</details>
+<label class="self"><input type="checkbox"> My \(\alpha\), \(\beta\) and servo law match</label></div>
+<div class="step" data-k="q2a_b3"><p>4. \(\beta_3\) when \(\dot q_3=0.5\) m/s: <input size="7"></p>
+<details class="work"><summary>Worked line</summary>\(4(0.5)+78.4=80.4\).</details></div>
+<div class="step" data-k="q2a_v"><p>5. At \(q_1=0\), \(q_2=\pi/2\), \(\dot q_1=1\), \(\dot q_2=2\), with \(\ddot q_{1d}=0\), \(e_1=0.1\), \(\dot e_1=-0.2\), \(\ddot q_{2d}=0.5\), \(e_2=-0.05\), \(\dot e_2=0.1\): \(v_1=\) <input data-p="0" size="7"> \(v_2=\) <input data-p="1" size="7"></p>
+<details class="work"><summary>Worked line</summary>\(v_1=0+14.4(-0.2)+36(0.1)=0.72\); \(v_2=0.5+14.4(0.1)+36(-0.05)=0.14\).</details></div>
+<div class="step" data-k="q2a_u1"><p>6. The torque \(u_1\) at that instant: <input size="7"></p>
+<details class="hint"><summary>Hint</summary>Row 1 of \(\alpha v+\beta\): \((3+\cos q_2)v_1+v_2+\beta_1\).</details>
+<details class="work"><summary>Worked line</summary>\(\cos q_2=0\), \(\sin q_2=1\): \(3(0.72)+0.14-2(1)(2)(1)+15(1)=2.16+0.14-4+15=13.3\).</details></div>
+
+<h3>(b) Hybrid position/force control with disturbances <span class="tag">8 marks</span></h3>
+<p class="sub">Now \(d_1,d_2\) are unknown constants and the robot touches a surface with \(f=30(q_3-0.15)\). Design a hybrid controller: motion subspace overdamped with \(\zeta=1.05\), force subspace critically damped. Derive the error equations. <a class="cite" href="../../resources/lecture-02-robot-control.pdf#page=42" data-pages="lecture-02-robot-control:42,47,48,53,54">Lec 2 pp. 42&ndash;54</a></p>
+<div class="step" data-k="q2b_sub"><p>1. Which coordinate is in the force subspace? <select><option value="">&mdash;</option><option>q1</option><option>q2</option><option>q3</option></select></p>
+<details class="work"><summary>Worked line</summary>\(f\) depends on \(q_3\) only, so \(q_3\) is force-controlled and \(q_1,q_2\) are position-controlled.</details></div>
+<div class="step" data-k="q2b_km"><p>2. Motion gains: \(k_v=\) <input data-p="0" size="7"> \(k_p=\) <input data-p="1" size="7"></p>
+<details class="work"><summary>Worked line</summary>\(\omega_n=6\): \(k_v=2(1.05)(6)=12.6\), \(k_p=36\).</details></div>
+<div class="step" data-k="q2b_kf"><p>3. Force gains: \(k_{vf}=\) <input data-p="0" size="7"> \(k_{pf}=\) <input data-p="1" size="7"></p>
+<details class="work"><summary>Worked line</summary>Critically damped, \(\omega_n=6\): \(k_{vf}=12\), \(k_{pf}=36\).</details></div>
+<div class="step" data-k="q2b_v3"><p>4. \(v_3\) when \(\ddot f_d=0\), \(e_f=0.6\) N, \(\dot e_f=-0.3\) N/s: <input size="7"></p>
+<details class="hint"><summary>Hint</summary>\(f=30(q_3-0.15)\Rightarrow\ddot f=30\ddot q_3=30v_3\), so \(v_3=\frac1{30}(\ddot f_d+k_{vf}\dot e_f+k_{pf}e_f)\).</details>
+<details class="work"><summary>Worked line</summary>\(\frac1{30}\big(0+12(-0.3)+36(0.6)\big)=\frac{18}{30}=0.6\).</details></div>
+<div class="step" data-k="q2b_u3"><p>5. \(u_3\) at that instant, with \(q_3=0.17\) m, \(\dot q_3=0\): <input size="7"></p>
+<details class="hint"><summary>Hint</summary>\(\beta_3\) now contains the contact force: \(\beta_3=4\dot q_3+78.4+f\).</details>
+<details class="work"><summary>Worked line</summary>\(f=30(0.02)=0.6\). \(u_3=8(0.6)+0+78.4+0.6=83.8\).</details></div>
+<div class="step" data-k="q2b_ess"><p>6. With \(d=(2,1)\) and the arm held at \(q_2=\pi/2\), the steady errors: \(e_{1,ss}=\) <input data-p="0" size="7"> \(e_{2,ss}=\) <input data-p="1" size="7"></p>
+<details class="hint"><summary>Hint</summary>\(\bar M(\ddot E+K_v\dot E+K_pE)=d\) for the motion block \(\bar M=\begin{bmatrix}3+\cos q_2&1\\1&1\end{bmatrix}\); at steady state \(E=\bar M^{-1}d/k_p\).</details>
+<details class="work"><summary>Worked line</summary>\(\bar M=\begin{bmatrix}3&1\\1&1\end{bmatrix}\), \(\det=2\), \(\bar M^{-1}d=\tfrac12\begin{bmatrix}1&-1\\-1&3\end{bmatrix}\begin{bmatrix}2\\1\end{bmatrix}=\begin{bmatrix}0.5\\0.5\end{bmatrix}\); divide by 36: 0.0139 each.</details></div>
+<div class="step written" data-id="q2b_err"><p><span class="pill">written</span> 7. State all error equations and how to remove the steady error.</p>
+<details class="work"><summary>Model answer</summary>Motion: \(\begin{bmatrix}\ddot e_1\\\ddot e_2\end{bmatrix}+12.6\begin{bmatrix}\dot e_1\\\dot e_2\end{bmatrix}+36\begin{bmatrix}e_1\\e_2\end{bmatrix}=\bar M^{-1}\begin{bmatrix}d_1\\d_2\end{bmatrix}\), which leaves a non-zero steady error. Force: \(\ddot e_f+12\dot e_f+36e_f=0\) (no disturbance enters joint 3). Fix: add integral action to the motion servo, \(v_i=\ddot q_{id}+k_v\dot e_i+k_pe_i+k_i\int e_i\,dt\), which puts an \(s\) in the numerator of \(E(s)/D(s)\) and drives \(e_{ss}\) to 0.</details>
+<label class="self"><input type="checkbox"> I had the \(\bar M^{-1}d\) term and the integral fix</label></div>
+
+<h3>(c) Misjudged stiffness <span class="tag">3 marks</span></h3>
+<p class="sub">The force sensor works, but the controller uses \(\hat k=30\) while the true stiffness is 32 N/m. This is not on the slides; derive it from the force servo (primer card C6).</p>
+<div class="step" data-k="q2c_rho"><p>1. \(\rho=k/\hat k\): <input size="7"></p>
+<details class="work"><summary>Worked line</summary>\(32/30=1.0667\).</details></div>
+<div class="step" data-k="q2c_wn"><p>2. Actual \(\omega_n'\) of the force loop: <input size="7"></p>
+<details class="hint"><summary>Hint</summary>\(\ddot e_f+\rho k_{vf}\dot e_f+\rho k_{pf}e_f=(1-\rho)\ddot f_d\), so \(\omega_n'^2=\rho k_{pf}\).</details>
+<details class="work"><summary>Worked line</summary>\(\sqrt{1.0667\times36}=\sqrt{38.4}=6.1968\).</details></div>
+<div class="step" data-k="q2c_zeta"><p>3. Actual \(\zeta'\): <input size="7"></p>
+<details class="work"><summary>Worked line</summary>\(2\zeta'\omega_n'=\rho k_{vf}=12.8\Rightarrow\zeta'=12.8/(2\times6.1968)=1.0328\) (equivalently \(\zeta\sqrt\rho\)). Still no overshoot, and a constant \(f_d\) is still reached.</details></div>
+<div class="step" data-k="q2c_ok"><p>4. Does the force loop still satisfy \(\omega_n\le0.5\,\omega_{res}\)? <select><option value="">&mdash;</option><option>yes</option><option>no</option></select></p>
+<details class="work"><summary>Worked line</summary>No: \(6.1968>6\). An underestimated stiffness pushes the loop past the resonance limit. Remedy: identify \(k\) properly, or design with margin below \(0.5\,\omega_{res}\).</details></div>
+
+<!-- ======================= Q3 ======================= -->
+<h2 id="q3">Q3 &middot; Mobile platform and arm <span class="tag">20 marks</span></h2>
+<div class="stem">(a) The platform in Figure 2 has two fixed standard wheels A and B (radius 0.05 m) at \((0,\ 0.25)\) and \((0,\ -0.25)\) m from \(P\), both rolling along \(+X_R\), and one steered standard wheel C (radius 0.04 m) at \((0.4,\ 0)\) m with steering angle \(\beta_s\). Measure \(\alpha\), \(\beta\), \(l\) as in Lec 3 p. 22. Derive the rolling and sliding constraints of the platform. (10 marks) <a class="cite" href="../../resources/lecture-03-mobile-robot-kinematics.pdf#page=38" data-pages="lecture-03-mobile-robot-kinematics:22,25,27,38,39">Lec 3 pp. 22&ndash;39</a>
+<figure><svg viewBox="0 0 420 250" role="img" aria-label="Rectangular chassis seen from above. P at the origin. Wheel A at 0.25 m above P and wheel B at 0.25 m below P, both aligned with X_R. Steered wheel C at 0.4 m ahead of P on the X_R axis, turned by beta_s.">
+<rect x="70" y="40" width="260" height="170" rx="10" fill="none" stroke="#5b6472" stroke-width="2"/>
+<line x1="110" y1="125" x2="390" y2="125" stroke="#1f6feb" stroke-width="2" marker-end="url(#ar)"/><text x="392" y="120" font-size="14" fill="#1f6feb">X_R</text>
+<line x1="110" y1="125" x2="110" y2="20" stroke="#1f6feb" stroke-width="2" marker-end="url(#ar)"/><text x="116" y="22" font-size="14" fill="#1f6feb">Y_R</text>
+<circle cx="110" cy="125" r="4" fill="#14181f"/><text x="92" y="145" font-size="14">P</text>
+<rect x="90" y="56" width="40" height="12" rx="5" fill="#14181f"/><text x="136" y="66" font-size="13">A (0, 0.25)</text>
+<rect x="90" y="182" width="40" height="12" rx="5" fill="#14181f"/><text x="136" y="192" font-size="13">B (0, −0.25)</text>
+<g transform="translate(270 125) rotate(-34)"><rect x="-18" y="-6" width="36" height="12" rx="5" fill="#b32130"/></g>
+<text x="250" y="160" font-size="13">C (0.4, 0), β_s</text>
+<defs><marker id="ar" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#1f6feb"/></marker></defs>
+</svg><figcaption>Figure 2 (top view, not to scale)</figcaption></figure>
+(b) An arm on the platform has position \(p=\big[C_1(q_2+0.2C_3),\ S_1(q_2+0.2C_3),\ 0.3-0.2S_3\big]^T\), where \(q_2\) is prismatic. Solve the inverse kinematics for \(p=(0.3,\,0.3,\,0.2)\) taking \(C_3>0\), and give the Jacobian column for \(q_3\) there. (10 marks)</div>
+
+<h3>(a) Wheel constraints <span class="tag">10 marks</span></h3>
+<div class="step" data-k="q3a_A"><p>1. Wheel A: \(\alpha=\) <input data-p="0" size="7"> rad, \(\beta=\) <input data-p="1" size="7"> rad</p>
+<details class="work"><summary>Worked line</summary>A is straight above \(P\): \(\alpha=\pi/2=1.5708\), \(l=0.25\). Its plane is along \(X_R\) with positive spin forward: \(\beta=0\) (Example 2).</details></div>
+<div class="step" data-k="q3a_B"><p>2. Wheel B: \(\alpha=\) <input data-p="0" size="7"> rad, \(\beta=\) <input data-p="1" size="7"> rad</p>
+<details class="hint"><summary>Hint</summary>Example 4, wheel B: positive spin must still drive \(+X_R\).</details>
+<details class="work"><summary>Worked line</summary>\(\alpha=-\pi/2=-1.5708\), \(\beta=\pi=3.1416\).</details></div>
+<div class="step" data-k="q3a_jB"><p>3. Rolling row of B, \([\sin(\alpha{+}\beta)\ \ {-\cos(\alpha{+}\beta)}\ \ {-l\cos\beta}]\): <input data-p="0" size="5"> <input data-p="1" size="5"> <input data-p="2" size="5"></p>
+<details class="work"><summary>Worked line</summary>\(\alpha+\beta=\pi/2\): \([1\ \ 0\ \ 0.25]\). Compare A: \([1\ \ 0\ \ {-0.25}]\). Both sliding rows are \([0\ \ 1\ \ 0]\).</details></div>
+<div class="step written" data-id="q3a_matrix"><p><span class="pill">written</span> 4. Write the full constraints in matrix form.</p>
+<details class="work"><summary>Model answer</summary>C: \(\alpha=0\), \(l=0.4\), \(\beta=\beta_s\).
+\[\begin{bmatrix}1&0&-0.25\\1&0&0.25\\\sin\beta_s&-\cos\beta_s&-0.4\cos\beta_s\end{bmatrix}R(\theta)\dot\xi_I-\begin{bmatrix}0.05&0&0\\0&0.05&0\\0&0&0.04\end{bmatrix}\begin{bmatrix}\dot\varphi_A\\\dot\varphi_B\\\dot\varphi_C\end{bmatrix}=0\]
+\[\begin{bmatrix}0&1&0\\0&1&0\\\cos\beta_s&\sin\beta_s&0.4\sin\beta_s\end{bmatrix}R(\theta)\dot\xi_I=0\]
+Marks: one rolling and one sliding row per wheel, \(\beta_s\) kept as a variable for C, and \(J_2\) with the right radii.</details>
+<label class="self"><input type="checkbox"> My rows and matrices match</label></div>
+<div class="step" data-k="q3a_phiA"><p>5. The robot moves at \(\dot x_r=0.3\) m/s, \(\dot y_r=0\), \(\dot\theta=0.5\) rad/s (robot frame). \(\dot\varphi_A=\) <input size="7"> rad/s</p>
+<details class="work"><summary>Worked line</summary>\((0.3-0.25\times0.5)/0.05=0.175/0.05=3.5\).</details></div>
+<div class="step" data-k="q3a_phiB"><p>6. \(\dot\varphi_B=\) <input size="7"> rad/s</p>
+<details class="work"><summary>Worked line</summary>\((0.3+0.125)/0.05=8.5\). The outer wheel spins faster: the robot turns left, about the point \((0,\ 0.6)\).</details></div>
+<div class="step" data-k="q3a_betaC"><p>7. The steering angle that satisfies C's sliding constraint with forward spin, \(\beta_s\in(0,\pi)\): <input size="7"> rad</p>
+<details class="hint"><summary>Hint</summary>\(0.3\cos\beta_s+0+0.4(0.5)\sin\beta_s=0\Rightarrow\tan\beta_s=-1.5\).</details>
+<details class="work"><summary>Worked line</summary>\(\beta_s=\pi-\tan^{-1}1.5=3.1416-0.9828=2.1588\) rad (123.7&deg;). The other root, \(-0.9828\), gives negative spin.</details></div>
+<div class="step" data-k="q3a_phiC"><p>8. \(\dot\varphi_C=\) <input size="7"> rad/s</p>
+<details class="work"><summary>Worked line</summary>\(\big(0.3\sin\beta_s-0-0.2\cos\beta_s\big)/0.04=(0.2496+0.1109)/0.04=9.0139\). Check: C's velocity is \((0.3,\ 0.5\times0.4)=(0.3,0.2)\), speed \(0.3606=0.04\times9.014\).</details></div>
+
+<h3>(b) Inverse kinematics and Jacobian <span class="tag">10 marks</span></h3>
+<div class="step" data-k="q3b_q"><p>1. \(q_1=\) <input data-p="0" size="7"> rad, \(q_2=\) <input data-p="1" size="7"> m, \(q_3=\) <input data-p="2" size="7"> rad</p>
+<details class="hint"><summary>Hint</summary>Rows 1&ndash;2 give \(q_1\) by atan2. Row 3 alone gives \(S_3\). Then \(\sqrt{x^2+y^2}=q_2+0.2C_3\).</details>
+<details class="work"><summary>Worked line</summary>\(q_1=\operatorname{atan2}(0.3,0.3)=\pi/4=0.7854\). \(0.3-0.2S_3=0.2\Rightarrow S_3=0.5\), \(C_3>0\Rightarrow q_3=\pi/6=0.5236\). \(\sqrt{0.18}=0.4243=q_2+0.1732\Rightarrow q_2=0.2511\). (With \(C_3&lt;0\): \(q_3=5\pi/6\), \(q_2=0.5975\), if the prismatic range allows.)</details></div>
+<div class="step" data-k="q3b_dp3"><p>2. \(\partial p/\partial q_3\) at that solution: <input data-p="0" size="6"> <input data-p="1" size="6"> <input data-p="2" size="6"></p>
+<details class="work"><summary>Worked line</summary>\(\partial p/\partial q_3=[-0.2C_1S_3,\ -0.2S_1S_3,\ -0.2C_3]=[-0.0707,\ -0.0707,\ -0.1732]\).</details></div>
+<div class="step written" data-id="q3b_jac"><p><span class="pill">written</span> 3. Write the full position Jacobian symbolically.</p>
+<details class="work"><summary>Model answer</summary>\[\frac{\partial p}{\partial q}=\begin{bmatrix}-S_1(q_2+0.2C_3)&C_1&-0.2C_1S_3\\C_1(q_2+0.2C_3)&S_1&-0.2S_1S_3\\0&0&-0.2C_3\end{bmatrix}\]
+If the paper gives the rotation part as well, the lower rows of the tool-configuration Jacobian are \(\partial(e^{q_4/\pi}r^3)/\partial q\).</details>
+<label class="self"><input type="checkbox"> My Jacobian matches</label></div>
+
+<!-- ======================= Q4 ======================= -->
+<h2 id="q4">Q4 &middot; Homography <span class="tag">20 marks</span></h2>
+<div class="stem">Eight coplanar feature points lie on a grid as in Figure 3 (unit spacing). A camera takes images at three poses \(F_a\), \(F_b\), \(F_c\). \(F_a\) sees \(O_1\)&ndash;\(O_7\); \(F_b\) sees all eight; \(F_c\) sees \(O_4\)&ndash;\(O_8\). \(G\), \(H\), \(K\) are the Euclidean homographies \(F_a\to F_b\), \(F_b\to F_c\), \(F_a\to F_c\); \(G_n\), \(H_n\), \(K_n\) are them divided by their (3,3) element. <a class="cite" href="../../resources/part-2/part-2-lecture-03-structure-and-pose-estimation.pdf#page=31" data-pages="part-2-lecture-03-structure-and-pose-estimation:31,32">HGQ Lec 3 pp. 31&ndash;32</a>
+<figure><svg viewBox="0 0 400 240" role="img" aria-label="Grid of eight points. Bottom row y=0: O1 at x=0, O2 at x=1, O3 at x=2, O4 at x=3. Middle row y=1: O5 at x=0, O6 at x=1, O7 at x=2. Top row y=2: O8 at x=0.">
+<g stroke="#d8dee7"><line x1="60" y1="200" x2="360" y2="200"/><line x1="60" y1="120" x2="360" y2="120"/><line x1="60" y1="40" x2="360" y2="40"/><line x1="60" y1="20" x2="60" y2="220"/><line x1="160" y1="20" x2="160" y2="220"/><line x1="260" y1="20" x2="260" y2="220"/><line x1="360" y1="20" x2="360" y2="220"/></g>
+<g fill="#14181f" font-size="14"><circle cx="60" cy="200" r="6"/><text x="68" y="194">O1 (0,0)</text><circle cx="160" cy="200" r="6"/><text x="168" y="194">O2 (1,0)</text><circle cx="260" cy="200" r="6"/><text x="268" y="194">O3 (2,0)</text><circle cx="360" cy="200" r="6"/><text x="312" y="225">O4 (3,0)</text>
+<circle cx="60" cy="120" r="6"/><text x="68" y="114">O5 (0,1)</text><circle cx="160" cy="120" r="6"/><text x="168" y="114">O6 (1,1)</text><circle cx="260" cy="120" r="6"/><text x="268" y="114">O7 (2,1)</text>
+<circle cx="60" cy="40" r="6"/><text x="68" y="34">O8 (0,2)</text></g>
+</svg><figcaption>Figure 3 (object plane)</figcaption></figure>
+(a) How many four-point groups can be used to derive \(G_n\)? Choose one and derive \(G_n\). (10) (b) How many groups give \(H_n\)? (4) (c) Can \(K_n\) be obtained? Justify. (6)</div>
+
+<div class="step written" data-id="q4_lines"><p><span class="pill">written</span> 1. List every set of three or more collinear points.</p>
+<details class="work"><summary>Model answer</summary>\(\{O_1,O_2,O_3,O_4\}\) (bottom row), \(\{O_5,O_6,O_7\}\) (middle row), \(\{O_1,O_5,O_8\}\) (left column), \(\{O_3,O_6,O_8\}\) (the diagonal \(x+y=2\)). The diagonal is the one most people miss.</details>
+<label class="self"><input type="checkbox"> I found all four, including the diagonal</label></div>
+<div class="step" data-k="q4_G"><p>2. Number of valid four-point groups for \(G_n\): <input size="6"></p>
+<details class="hint"><summary>Hint</summary>Common to \(F_a\) and \(F_b\): \(O_1\)&ndash;\(O_7\). Only the two rows have three or more of these points. Count \(\binom74\), then remove groups with \(\ge3\) points from one row.</details>
+<details class="work"><summary>Worked line</summary>\(\binom74=35\). Bottom row: \(\binom43\cdot3+\binom44=13\). Middle row: \(1\cdot4=4\). No group can contain both. \(35-13-4=18\).</details></div>
+<div class="step" data-k="q4_row"><p>3. One correspondence has \((x_a,y_a)=(0.2,0.1)\) and \((x_b,y_b)=(0.3,0.25)\). In its \(x_b\)-row of \(Mg=b\) with unknowns \((g_{11},g_{12},g_{13},g_{21},g_{22},g_{23},g_{31},g_{32})\), the coefficient of \(g_{31}\) is: <input size="7"></p>
+<details class="hint"><summary>Hint</summary>\(x_b=\dfrac{g_{11}x_a+g_{12}y_a+g_{13}}{g_{31}x_a+g_{32}y_a+1}\). Multiply out and move the \(g_{3j}\) terms to the left.</details>
+<details class="work"><summary>Worked line</summary>\(g_{11}x_a+g_{12}y_a+g_{13}-g_{31}x_ax_b-g_{32}y_ax_b=x_b\), so the coefficient is \(-x_ax_b=-0.06\).</details></div>
+<div class="step written" data-id="q4_derive"><p><span class="pill">written</span> 4. Choose a group and derive \(G_n\).</p>
+<details class="work"><summary>Model answer</summary>E.g. \(\{O_1,O_2,O_5,O_6\}\): two per row, and no column or diagonal holds three of them. For each \(i\), \(m_{ib}=\alpha_iG\,m_{ia}\); divide by \(g_{33}\) and eliminate \(\alpha_i\) with row 3, giving two linear rows per point:
+\[\begin{bmatrix}a_{ix}&a_{iy}&1&0&0&0&-a_{ix}b_{ix}&-a_{iy}b_{ix}\\0&0&0&a_{ix}&a_{iy}&1&-a_{ix}b_{iy}&-a_{iy}b_{iy}\end{bmatrix}g=\begin{bmatrix}b_{ix}\\b_{iy}\end{bmatrix}\]
+Stack the four points into \(Mg=b\) (\(8\times8\)), \(g=M^{-1}b\) (invertible because no three are collinear), and fold \(g\) back into \(G_n\) with \(g_{33}=1\).</details>
+<label class="self"><input type="checkbox"> My group is valid and my rows match</label></div>
+<div class="step" data-k="q4_H"><p>5. Number of valid groups for \(H_n\): <input size="6"></p>
+<details class="work"><summary>Worked line</summary>Common to \(F_b\) and \(F_c\): \(O_4\)&ndash;\(O_8\). The only collinear triple among them is \(\{O_5,O_6,O_7\}\). \(\binom54=5\), minus the 2 groups containing that triple, gives 3.</details></div>
+<div class="step" data-k="q4_Kdirect"><p>6. Number of valid groups for \(K_n\) <em>directly</em>: <input size="6"></p>
+<details class="work"><summary>Worked line</summary>Common to \(F_a\) and \(F_c\): \(O_4\)&ndash;\(O_7\), one group, and it contains the collinear \(O_5,O_6,O_7\), so 0.</details></div>
+<div class="step written" data-id="q4_K"><p><span class="pill">written</span> 7. So can \(K_n\) be obtained?</p>
+<details class="work"><summary>Model answer</summary>Yes, through the middle pose. \(m_c\propto Hm_b\) and \(m_b\propto Gm_a\) give \(m_c\propto HG\,m_a\), so \(K\propto HG\) and \(K_n=\dfrac{H_nG_n}{(H_nG_n)_{33}}\). Order matters: \(G\) acts first. Answering &ldquo;no, too few common points&rdquo; ignores the middle pose and loses most of the 6 marks.</details>
+<label class="self"><input type="checkbox"> I chained through \(F_b\) in the right order</label></div>
+
+<!-- ======================= Q5 ======================= -->
+<h2 id="q5">Q5 &middot; Multi-sensor Kalman <span class="tag">20 marks</span></h2>
+<div class="stem">Three sensors measure \(x_k\), with \(x_{k+1}=x_k\) and \(y_{ik}=x_k+v_{ik}\); the noises are zero-mean, mutually uncorrelated and uncorrelated with \(\tilde x_k\), with variances \(2a^2\), \(3a^2\), \(6a^2\). \(\tilde x_k=x_k-\hat x_k\), \(p_k=E[\tilde x_k^2]\). (a) For \(\hat x_{k+1}=\hat x_k+\sum_iL_{ik}(y_{ik}-\hat x_k)\), design the gains to minimise \(p_{k+1}\). (10) (b) Design an estimator with one gain for all three sensors, and compare. (10) <a class="cite" href="../../resources/part-2/part-2-lecture-04-kalman-filter-sensor-integration.pdf#page=26" data-pages="part-2-lecture-04-kalman-filter-sensor-integration:26,27,28,29,40,41,42">HGQ Lec 4 pp. 26&ndash;29, 40&ndash;42</a></div>
+
+<h3>(a) One gain per sensor <span class="tag">10 marks</span></h3>
+<div class="step written" data-id="q5a_deriv"><p><span class="pill">written</span> 1. Derive \(p_{k+1}\) and the optimal gains.</p>
+<details class="work"><summary>Model answer</summary>\(\tilde x_{k+1}=x_k-\hat x_k-\sum L_i(x_k+v_i-\hat x_k)=(1-\sum L_i)\tilde x_k-\sum L_iv_i\). Squaring, the cross terms have zero expectation: \(p_{k+1}=(1-\sum L_i)^2p_k+\sum L_i^2\sigma_i^2\). \(\partial p_{k+1}/\partial L_i=-2(1-\sum L)p_k+2L_i\sigma_i^2=0\Rightarrow L_i\sigma_i^2\) is the same for every \(i\). Writing \(L_i=c/\sigma_i^2\) gives \(c=p_k/(1+p_k\sum1/\sigma_j^2)\), so \(L_i=\dfrac{p_k}{\sigma_i^2(1+p_k/a^2)}\) since \(\sum1/\sigma_j^2=\frac1{2a^2}+\frac1{3a^2}+\frac1{6a^2}=\frac1{a^2}\). Then \(p_{k+1}=\dfrac{p_ka^2}{a^2+p_k}\), i.e. \(1/p_{k+1}=1/p_k+1/a^2\).</details>
+<label class="self"><input type="checkbox"> My derivation reaches the same gains</label></div>
+<div class="step" data-k="q5_L"><p>2. With \(a=1\), \(p_k=1\): \(L_1=\) <input data-p="0" size="6"> \(L_2=\) <input data-p="1" size="6"> \(L_3=\) <input data-p="2" size="6"></p>
+<details class="work"><summary>Worked line</summary>\(1+p_k\sum1/\sigma^2=2\). \(L_1=1/(2\cdot2)=0.25\), \(L_2=1/(3\cdot2)=0.1667\), \(L_3=1/(6\cdot2)=0.0833\). The least noisy sensor gets the largest gain.</details></div>
+<div class="step" data-k="q5_p"><p>3. \(p_{k+1}\): <input size="6"></p>
+<details class="work"><summary>Worked line</summary>\((1-0.5)^2(1)+0.25^2(2)+0.1667^2(3)+0.0833^2(6)=0.25+0.125+0.0833+0.0417=0.5\).</details></div>
+
+<h3>(b) One shared gain <span class="tag">10 marks</span></h3>
+<div class="step" data-k="q5_Ls"><p>1. \(\hat x_{k+1}=\hat x_k+L\sum_i(y_{ik}-\hat x_k)\). With \(a=1\), \(p_k=1\), the optimal \(L=\) <input size="6"></p>
+<details class="hint"><summary>Hint</summary>\(p_{k+1}=(1-3L)^2p_k+L^2(2+3+6)a^2\); differentiate once.</details>
+<details class="work"><summary>Worked line</summary>\(-6(1-3L)p_k+22La^2=0\Rightarrow L=\dfrac{3p_k}{9p_k+11a^2}=\dfrac3{20}=0.15\).</details></div>
+<div class="step" data-k="q5_ps"><p>2. \(p_{k+1}\) with the shared gain: <input size="6"></p>
+<details class="work"><summary>Worked line</summary>\((1-0.45)^2+0.15^2(11)=0.3025+0.2475=0.55\), larger than 0.5.</details></div>
+<div class="step" data-k="q5_info"><p>3. Information gained per step, \(a^2(1/p_{k+1}-1/p_k)\), for (a) <input data-p="0" size="6"> and (b) <input data-p="1" size="6"></p>
+<details class="work"><summary>Worked line</summary>(a) \(\sum a^2/\sigma_i^2=1\). (b) \(n^2a^2/\sum\sigma_i^2=9/11=0.8182\). This holds for every \(p_k\), so (a) is better at every step.</details></div>
+<div class="step written" data-id="q5b_cmp"><p><span class="pill">written</span> 4. Compare the two strategies.</p>
+<details class="work"><summary>Model answer</summary>Separate gains weight each sensor by \(1/\sigma_i^2\), so \(1/p_{k+1}-1/p_k=\sum1/\sigma_i^2\ge n^2/\sum\sigma_i^2\) (harmonic vs arithmetic mean), with equality only when all variances are equal. Advantage of (a): smallest error variance. Disadvantages: \(n\) gains to compute, and they need each \(\sigma_i^2\). Advantage of (b): one gain, simpler, and it still converges. Disadvantage: the noisy \(6a^2\) sensor gets the same weight as the best one, so the error is larger (0.55 vs 0.5 here).</details>
+<label class="self"><input type="checkbox"> I gave the inequality and both sides of the trade-off</label></div>
+
+<p class="sub" style="margin-top:28px">Done? Next is step 3: Mock B, sat cold in 3 hours. Ask for it when you are ready. Unofficial study aid; every key is recomputed by <code>final-check.py</code>.</p>
+</main>
+</div>
+
+<dialog id="srcDlg"><div class="row" style="justify-content:space-between"><b id="srcTitle"></b><span><a id="srcOpen" target="_blank">Open PDF</a> <button class="btn" id="srcClose">Close</button></span></div><div id="srcImgs"></div></dialog>
+
+<script type="application/json" id="keys">{"q1_r1": [0.47, 0], "q1_r2": [0.16, 0.15], "q1_r34": [0.18, 0.17], "q1_r56": [0.05, 0.2], "q1_tip": [0.71, 0.37], "q2a_wn": 6.0, "q2a_k": [14.4, 36.0], "q2a_b3": 80.4, "q2a_v": [0.72, 0.14], "q2a_u1": 13.3, "q2b_km": [12.6, 36.0], "q2b_kf": [12.0, 36.0], "q2b_v3": 0.6, "q2b_u3": 83.8, "q2b_ess": [0.0139, 0.0139], "q2c_rho": 1.0667, "q2c_wn": 6.1968, "q2c_zeta": 1.0328, "q3a_jB": [1.0, 0.0, 0.25], "q3a_phiA": 3.5, "q3a_phiB": 8.5, "q3a_betaC": 2.1588, "q3a_phiC": 9.0139, "q3b_q": [0.7854, 0.2511, 0.5236], "q3b_dp3": [-0.0707, -0.0707, -0.1732], "q4_G": 18, "q4_H": 3, "q4_Kdirect": 0, "q4_row": -0.06, "q5_L": [0.25, 0.1667, 0.0833], "q5_p": 0.5, "q5_Ls": 0.15, "q5_ps": 0.55, "q5_info": [1.0, 0.8182], "q2b_sub": "q3", "q2c_ok": "no", "q3a_A": [1.5708, 0.0], "q3a_B": [-1.5708, 3.1416]}</script>
+<script>
+(function () {
+  var KEY = 'ee6221-final-mock-a-v1', KEYS = JSON.parse(document.getElementById('keys').textContent);
+  var st = {}; try { st = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) {}
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
+  function num(s) { s = String(s).trim(); var m = s.match(/^(-?[\d.]+)\s*\/\s*(-?[\d.]+)$/); return m ? m[1] / m[2] : parseFloat(s); }
+  function same(ans, val) {
+    if (typeof ans === 'number') { var v = num(val); return isFinite(v) && Math.abs(v - ans) <= Math.max(0.0015, Math.abs(ans) * 0.002); }
+    return val !== '' && String(val) === String(ans);
+  }
+  var steps = [];
+  document.querySelectorAll('.step').forEach(function (s) {
+    var id = s.dataset.k || s.dataset.id, fields = s.querySelectorAll('input:not([type=checkbox]), select'), work = s.querySelector('details.work');
+    var rec = { id: id, el: s, sec: null };
+    steps.push(rec);
+    if (s.classList.contains('written')) {
+      var cb = s.querySelector('.self input'); cb.checked = !!(st[id] && st[id].ok); s.classList.toggle('done', cb.checked);
+      cb.addEventListener('change', function () { st[id] = { ok: cb.checked }; save(); s.classList.toggle('done', cb.checked); refresh(); });
+      return;
+    }
+    var p = s.querySelector('p'), btn = document.createElement('button'), fb = document.createElement('span');
+    btn.className = 'btn'; btn.textContent = 'check'; fb.className = 'fb'; p.appendChild(document.createTextNode(' ')); p.appendChild(btn); p.appendChild(fb);
+    function show(r) {
+      if (!r) return; fields.forEach(function (f, i) { f.classList.toggle('bad', !r.f[i]); f.classList.toggle('good', !!r.f[i]); });
+      fb.textContent = r.ok ? '✓ correct' : '✗ ' + r.f.filter(Boolean).length + '/' + fields.length + ' right — try the hint';
+      fb.style.color = r.ok ? 'var(--success)' : 'var(--danger)'; s.classList.toggle('done', r.ok); if (work) work.dataset.open = '1';
+    }
+    if (st[id]) { fields.forEach(function (f, i) { f.value = st[id].v[i] || ''; }); show(st[id]); }
+    btn.addEventListener('click', function () {
+      var v = [], f = [], key = KEYS[id];
+      fields.forEach(function (fl) { v.push(fl.value); f.push(same(fl.dataset.p !== undefined ? key[+fl.dataset.p] : key, fl.value)); });
+      st[id] = { v: v, f: f, ok: f.every(Boolean) }; save(); show(st[id]); refresh();
+    });
+    if (work) work.addEventListener('toggle', function () {
+      if (work.open && !work.dataset.open) { work.open = false; fb.textContent = 'Check once first — then the worked line unlocks.'; fb.style.color = 'var(--warning)'; }
+    });
+  });
+  var toc = document.getElementById('toc-links');
+  var secs = Array.prototype.map.call(document.querySelectorAll('main h2[id]'), function (h) {
+    var a = document.createElement('a'); a.href = '#' + h.id; a.innerHTML = '<span>' + h.firstChild.textContent + '</span><span class="sc"></span>'; toc.appendChild(a);
+    return { h: h, a: a };
+  });
+  steps.forEach(function (r) { secs.forEach(function (s) { if (s.h.compareDocumentPosition(r.el) & Node.DOCUMENT_POSITION_FOLLOWING) r.sec = s; }); });
+  function refresh() {
+    var tot = 0, ok = 0;
+    secs.forEach(function (s) {
+      var mine = steps.filter(function (r) { return r.sec === s; }), o = mine.filter(function (r) { return st[r.id] && st[r.id].ok; }).length;
+      var sc = s.a.querySelector('.sc'); sc.textContent = o + '/' + mine.length; sc.classList.toggle('ok', o === mine.length); tot += mine.length; ok += o;
+    });
+    document.getElementById('score').textContent = ok; document.getElementById('total').textContent = tot;
+  }
+  refresh();
+  document.getElementById('reset').onclick = function () { try { localStorage.removeItem(KEY); } catch (e) {} location.reload(); };
+  var root = document.documentElement; try { var th = localStorage.getItem('ee6221-theme'); if (th) root.dataset.theme = th; } catch (e) {}
+  document.getElementById('theme').onclick = function () { var n = root.dataset.theme === 'dark' ? 'light' : 'dark'; root.dataset.theme = n; try { localStorage.setItem('ee6221-theme', n); } catch (e) {} };
+  var dlg = document.getElementById('srcDlg');
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('a[data-pages]'); if (!a) return; e.preventDefault();
+    var parts = a.dataset.pages.split(':'), box = document.getElementById('srcImgs'); box.innerHTML = '';
+    parts[1].split(',').forEach(function (p) { var img = document.createElement('img'); img.loading = 'lazy'; img.alt = parts[0] + ' page ' + p; img.src = 'final-pages/' + parts[0] + '-p' + ('00' + p).slice(-3) + '.jpg'; box.appendChild(img); });
+    document.getElementById('srcTitle').textContent = a.textContent; document.getElementById('srcOpen').href = a.getAttribute('href'); dlg.showModal();
+  });
+  document.getElementById('srcClose').onclick = function () { dlg.close(); };
+  dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+})();
+</script>
+</body>
+</html>

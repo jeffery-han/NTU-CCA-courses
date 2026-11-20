@@ -14,7 +14,7 @@ Use an executable notebook such as `.ipynb` only when running code, changing par
 
 - Safari on `file://` refuses to load anything through `../`.  So every folder that holds HTML keeps its own `vendor/` (MathJax) and its own page-image folder beside the pages, and every course has a root `index.html` launcher that links to all pages.  Add each new page to the launcher.
 - The vendored MathJax bundle cannot autoload extensions: `\boldsymbol` stops all typesetting, so use `\mathbf`.
-- Put new pages in `quizzes/`, so one `vendor/` and one image folder serve them.  Name the image folder `<assessment>-pages/` (e.g. `quiz-03-pages/`, `final-pages/`) and each image `<pdf-stem>-pNNN.jpg`.
+- Put new pages in the assessment's own folder, `quizzes/<assessment>/` (`quiz-01/`, `quiz-02/`, `final/`; layout and migration rule in `docs/quiz-prep.md` "Folder layout").  Each such folder holds its own maths bundle (`quiz-assets/` or `vendor/`), figures and image folder, so Safari never needs `../` to render it.  Name the image folder `<assessment>-pages/` (e.g. `quiz-03-pages/`, `final-pages/`) and each image `<pdf-stem>-pNNN.jpg`.  Source-PDF hrefs from there are `../../resources/…`.
 - Each page with numeric keys has a checker script beside it (`<page>-check.py`) that recomputes every key.  Run it before handing off; `sh docs/run-checkers.sh EE-XXXX` runs every checker in a course.
 - Record each new page as one line in the course `STATUS.md` "Study pages" section: path, what it is, its checker.
 

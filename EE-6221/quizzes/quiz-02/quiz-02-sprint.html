@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EE6221 Quiz 2 Sprint</title>
+<link rel="stylesheet" href="quiz-assets/katex/katex.min.css">
+<style>
+:root { --ink:#172334; --muted:#435366; --bg:#eef2f5; --card:#fff; --line:#c8d2dc; --pill:#f3f6f9; --accent:#205d87; --ok:#1d7a46; --bad:#b03a2e; --warn:#b47412; --warnbg:#fff5e1;
+        font: 17px/1.55 system-ui,sans-serif; color: var(--ink); background: var(--bg); }
+@media (prefers-color-scheme: dark) { :root { --ink:#dfe7ef; --muted:#9fb0c2; --bg:#11181f; --card:#18222c; --line:#34475a; --pill:#1f2c38; --accent:#6fb3e0; --ok:#5fc48a; --bad:#e8786c; --warn:#e0a54a; --warnbg:#2b2416; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); }
+.app { display: grid; grid-template-columns: 270px minmax(0,1fr); }
+nav { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 20px 16px 3rem; border-right: 1px solid var(--line); background: var(--card); font-size: .9rem; }
+nav h2 { font-size: 1rem; margin: 0 0 .6rem; } nav a { color: var(--ink); text-decoration: none; }
+nav ol { list-style: none; padding: 0; margin: 0; } nav li { display: flex; justify-content: space-between; gap: .5em; padding: .25em .4em; border-radius: 6px; }
+nav li:hover { background: var(--pill); } nav .sc { color: var(--muted); font-variant-numeric: tabular-nums; } nav .sc.done { color: var(--ok); font-weight: 600; }
+nav .tools { margin-top: 1rem; border-top: 1px solid var(--line); padding-top: .7rem; color: var(--muted); }
+main { min-width: 0; width: 100%; max-width: 880px; margin: 24px auto; padding: 34px 46px 4rem; background: var(--card); box-shadow: 0 2px 18px #14263a19; }
+h1 { margin: 0; line-height: 1.2; } h2.sec { margin: 2.4rem 0 .5rem; border-top: 2px solid var(--accent); padding-top: 1rem; }
+p, li { max-width: 76ch; } .meta { color: var(--muted); }
+.notice { border-left: 4px solid var(--warn); background: var(--warnbg); padding: .65rem 1rem; }
+.qn { border: 1px solid var(--line); border-radius: 10px; padding: .3rem 1rem .7rem; margin: 1.1rem 0; }
+.qn > .stem { font-weight: 600; } .qn > .stem b { color: var(--accent); }
+details { margin: .45rem 0; } summary { cursor: pointer; display: inline-block; padding: .25em .8em; border: 1px solid var(--line); border-radius: 8px; background: var(--pill); }
+details[open] > summary { margin-bottom: .4rem; }
+details > div { border-left: 3px solid var(--accent); padding: .1rem 0 .1rem .9rem; }
+details.ans > div { border-left-color: var(--ok); }
+.verdict { font-weight: 700; color: var(--ok); }
+.write { background: var(--pill); border-radius: 8px; padding: .4rem .7rem; }
+.write::before { content: "Write: "; font-weight: 600; color: var(--accent); }
+.trap { color: var(--bad); } .trap::before { content: "Trap: "; font-weight: 600; }
+.got { color: var(--muted); font-size: .92rem; }
+.try textarea { font: inherit; font-size: .95rem; width: 100%; min-height: 3.2em; padding: .3em .5em; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); resize: vertical; }
+.try input { font: inherit; width: 5.5em; padding: .2em .4em; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--ink); }
+.try button.on { border-color: var(--accent); font-weight: 600; }
+.fb.ok { color: var(--ok); font-weight: 600; } .fb.bad { color: var(--bad); font-weight: 600; }
+.katex-display { overflow-x: auto; overflow-y: hidden; }
+button { font: inherit; padding: .35em .8em; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--ink); cursor: pointer; }
+a.cite { color: var(--accent); }
+dialog { max-width: 60rem; width: 94%; border: 1px solid var(--line); border-radius: 12px; background: var(--card); color: var(--ink); }
+dialog img { width: 100%; border: 1px solid var(--line); margin: .4rem 0; }
+@media (max-width: 860px) { .app { display: block; } nav { position: static; height: auto; padding-bottom: 1rem; border-right: 0; border-bottom: 1px solid var(--line); }
+  nav ol { display: grid; grid-template-columns: 1fr 1fr; gap: 0 .6em; } main { margin: 0; padding: 20px 16px 4rem; box-shadow: none; } }
+main h3 { margin: 1.6rem 0 .3rem; font-size: 1.08rem; }
+</style>
+<script defer src="quiz-assets/katex/katex.min.js"></script>
+<script defer src="quiz-assets/katex/contrib/auto-render.min.js"></script>
+<script defer src="quiz-assets/render-math.js"></script>
+</head>
+<body><div class="app">
+<nav><h2>Quiz 2 · Sprint</h2><ol id="toc"></ol>
+<div class="tools">Questions I can explain: <span id="total">0</span><br><a href="quiz-02-past-guided.html">Past-question guided test</a><br><a href="quiz-02-mock-01.html">Mock 1</a><br><a href="quiz-02-final-mocks.html">Final mocks A and B</a><br><button id="reset" type="button">Reset answers</button></div></nav>
+<main>
+<h1>EE6221 · Quiz #2 sprint (Wed 4 Nov, 8 pm, LT19A)</h1>
+<p class="meta">About 2 hours. This page is built around the strongest evidence we have: <strong>last year's actual Quiz 2</strong>, recorded in the peer tutor's deck <a class="cite" data-img="" data-title="Tutor deck slides 2–3 (text only, open the deck)">6221 tutor4, slides 2–3</a>. Its format was 7 True/False questions (10 marks each) plus 1 multiple-choice question (30 marks), 100 marks in total and worth 15%. <em>Every question needs a brief reason.</em></p>
+<p class="notice">Why this is the main bet. In the class WeChat group (exported 4 Nov), students who sat in on last semester's group say the question bank "hasn't changed in three years", and that "last semester most people got full marks on Quiz 2". This year's official notice says "short questions", closed book, no calculator, Weeks 8–11. All of that matches this format. These are student reports, so they are not guaranteed. Part 2 therefore drills the same bank with the statements reversed and reworded, plus the lecturer's own in-class questions.</p>
+
+<section data-sec="plan"><h2 class="sec" id="plan">Sprint plan</h2>
+<ol>
+<li><strong>0:00–0:20 · Part 1 cold.</strong> Answer all 8 items as if it were the real paper: a verdict plus one or two lines of reason. Then check.</li>
+<li><strong>0:20–0:55 · Part 2.</strong> The same bank reversed and reworded. If you get one wrong, open the cited slide and rewrite your reason.</li>
+<li><strong>0:55–1:25 · Part 3.</strong> Write out the V(X+Y) proof and the two-sensor fusion on paper. The tutor said on Monday that the expectation/variance part "should be tested".</li>
+<li><strong>1:25–1:45 · Phrase sheet</strong> (bottom of this page). Say each line out loud once.</li>
+<li><strong>At 7:50 pm before entering:</strong> read the phrase sheet once more. Nothing new after that.</li>
+</ol>
+<p><strong>Answer template for every T/F item:</strong> <em>“True/False. [The condition or definition from the slide]. [What would make it the other way].”</em> Marks are for the reason, so always name the <em>condition</em>: at least 8 points with no four coplanar; at least 4 coplanar points with no three collinear; linear system with white Gaussian noise; uncorrelated.</p>
+</section>
+
+<section data-sec="p1"><h2 class="sec" id="p1">Part 1 · Last year's paper (reproduced)</h2>
+<p>The wording of these 8 items is taken from the tutor's deck. The model answers are mine, grounded in the slides cited (the tutor's answer slides point to the same pages).</p>
+
+<div class="qn" data-id="s1" data-tf="T">
+<p class="stem"><b>1</b> · Can 8 points be used to obtain an essential matrix?</p>
+<details><summary>Hint</summary><div><p>Which algorithm, and what condition does it place on the 3D points?</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="verdict">True (yes), with a condition.</p>
+<p class="write">Yes. The 8-point algorithm estimates E from at least 8 matched points in two images, as long as the points are not coplanar (no four of the 3D points coplanar) and the camera translation is non-zero. Each match gives one linear equation $m_j^T E\, m_j^* = 0$ in the 9 entries of E, which is known only up to scale, so 8 equations are enough.</p>
+<p class="trap">Answering “yes” without the non-coplanar condition. That condition is what the marks are for. If all the points lie on a plane, E cannot be determined and you need the homography instead. <a class="cite" data-pages="L3:13-13">Lec 3 p. 13</a> <a class="cite" data-pages="L3:43-43">p. 43</a> <a class="cite" data-img="80,4" data-title="Tutor deck: E vs H answer slides">tutor slides</a></p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="s2" data-tf="T">
+<p class="stem"><b>2</b> · Can 4 coplanar points be used to obtain a Homography matrix?</p>
+<details><summary>Hint</summary><div><p>The 4-point algorithm has one extra condition besides “coplanar”.</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="verdict">True (yes), with a condition.</p>
+<p class="write">Yes. The 4-point algorithm computes the Euclidean homography H from at least 4 coplanar points matched in two images, provided they are non-collinear (no three on a line). Each match gives 2 equations, and H has 8 unknowns after fixing its scale ($h_{33}$), so 4 points are enough.</p>
+<p class="trap">Leaving out “non-collinear”. Also, H <em>requires</em> the points to be coplanar, which is exactly the case where E fails. <a class="cite" data-pages="L3:29-29">Lec 3 p. 29</a> <a class="cite" data-pages="L3:32-32">p. 32</a> <a class="cite" data-pages="L3:43-43">p. 43</a></p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="s3" data-tf="T">
+<p class="stem"><b>3</b> · Can both the Essential matrix (E) and the Homography matrix (H) be used to obtain R and a scaled translation x?</p>
+<details><summary>Hint</summary><div><p>What does each decomposition end with, and why is the translation only “scaled”?</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="verdict">True.</p>
+<p class="write">Yes. Decomposing E gives R and the translation up to an unknown scale, $x' = \lambda x$. Decomposing H gives R and $x/d^*$ (the translation divided by the plane's depth). In both cases the magnitude of the translation is lost (“loss of scale”), because one image pair cannot tell a large, distant scene from a small, near one.</p>
+<p>Extra detail for full marks: E gives four candidate solutions and keeps the one with positive depth; for H, two solutions usually pass the depth test and an extra view or prior knowledge is needed to choose. <a class="cite" data-pages="L3:19-19">Lec 3 p. 19</a> <a class="cite" data-pages="L3:38-38">p. 38</a> <a class="cite" data-pages="L3:15-15">p. 15</a></p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="s4" data-tf="F">
+<p class="stem"><b>4</b> · Precision describes the difference between the measurement and the true value, while accuracy relates to the reproducibility of sensor results.</p>
+<details><summary>Hint</summary><div><p>Read it slowly. Are the two definitions attached to the right words?</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="verdict">False: the definitions are swapped.</p>
+<p class="write">Accuracy is how close the measurement is to the true value: accuracy $= 1 - |m-v|/v$. Precision (repeatability) is about reproducing the same result: precision $=$ range / standard deviation. Example: a sensor that gives the same wrong reading every time is precise but not accurate.</p>
+<p class="trap">This is a swap trap. Expect it reversed this year too. <a class="cite" data-pages="L1:25-25">Lec 1 p. 25</a> (the tutor cites “p. 24”, but it is p. 25 in our copy)</p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="s5" data-tf="T">
+<p class="stem"><b>5</b> · Is Kalman filtering statistically optimal for linear systems?</p>
+<details><summary>Hint</summary><div><p>Linear is one condition. What is the other one?</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="verdict">True, under the noise condition.</p>
+<p class="write">Yes. If the system is linear and both the process and measurement noise are white, (unimodal) Gaussian, the Kalman filter gives the unique statistically optimal estimate (minimum error variance). If the system is nonlinear or the noise is non-Gaussian, it is no longer guaranteed to be optimal (hence the EKF).</p>
+<p class="trap">Saying just “yes, because it is linear”. You must state the Gaussian-noise assumption. <a class="cite" data-pages="L4:17-17">Lec 4 p. 17</a> <a class="cite" data-pages="L4:45-45">p. 45</a></p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="s6" data-tf="T">
+<p class="stem"><b>6</b> · If two random variables X and Y are (uncorrelated) independent, the variance of their sum equals the sum of their individual variances.</p>
+<details><summary>Hint</summary><div><p>Expand $V(X+Y)$. Which extra term appears, and when is it zero?</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="verdict">True.</p>
+<p class="write">$V(X+Y) = V(X) + V(Y) + 2\,\mathrm{Cov}(X,Y)$. Independence implies $\mathrm{Cov}(X,Y)=0$, so $V(X+Y)=V(X)+V(Y)$. Being uncorrelated is already enough; independence is the stronger condition.</p>
+<p>Be ready to write the full proof (Part 3). <a class="cite" data-pages="L4:15-15">Lec 4 p. 15</a></p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="s7" data-tf="T">
+<p class="stem"><b>7</b> · Structure from Motion (SFM) is the study of the rotation and translation that separates these two camera views and the relative structure of the observed feature points.</p>
+<details><summary>Hint</summary><div><p>What two things can be determined from two images of matched points?</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="verdict">True.</p>
+<p class="write">Given two images of matched feature points, SFM determines (1) the rotation and translation between the two camera views and (2) the relative structure (depths up to a common scale) of the feature points. It assumes the features are already detected and matched.</p>
+<p class="trap">“Relative” matters. The structure and translation are recovered only up to scale. If a variant says “absolute depth”, it is false. <a class="cite" data-pages="L3:4-4">Lec 3 p. 4</a></p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="s8">
+<p class="stem"><b>8</b> (MCQ, 30 marks) · Which of the following are advantages of multi-sensor integration and fusion? <em>Justify your answer in detail.</em> &nbsp;(A) Redundancy &nbsp;(B) Accuracy &nbsp;(C) Reliability</p>
+<details><summary>Hint</summary><div><p>Lec 1 names four advantages, starting with redundancy. Which two benefits does redundancy itself lead to?</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="verdict">All three: A, B and C.</p>
+<p class="write"><strong>Redundancy:</strong> several sensors (or one sensor over time) perceive the same feature, possibly with different fidelity. <strong>Accuracy:</strong> fusing this redundant information reduces overall uncertainty, so the feature is perceived more accurately. For example, optimal fusion of two sensors gives $1/p = 1/\sigma_1^2 + 1/\sigma_2^2$, a smaller variance than either sensor alone. <strong>Reliability:</strong> if one sensor fails or errs, the others still provide the information.</p>
+<p>For 30 marks, also name the other advantages from the same slides: <em>complementarity</em> (features impossible to perceive with any single sensor), <em>timeliness</em> (faster, through processing parallelism) and <em>lower cost</em> (several cheap, low-quality sensors can match one expensive sensor). A distractor such as “less computation” would be <em>false</em>, because fusion costs extra processing. <a class="cite" data-pages="L1:13-16">Lec 1 pp. 13–16</a> <a class="cite" data-img="10,11,12,13" data-title="Tutor deck slide 10 (answer)">tutor slide 10</a></p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+</section>
+
+<section data-sec="p2"><h2 class="sec" id="p2">Part 2 · The same bank, reversed and reworded</h2>
+<p>If the bank is reused, this year's items will likely be these statements reversed or reworded. Items marked “(class)” are the lecturer's own in-class questions from Weeks 8–9.</p>
+
+<div class="qn" data-id="v1" data-tf="F">
+<p class="stem"><b>V1</b> · The 8-point algorithm still works if all the feature points lie on one plane.</p>
+<details class="ans"><summary>Answer</summary><div><p class="write">False. E needs points that are not all coplanar (no four coplanar). For a planar scene, use the homography with the 4-point algorithm. <a class="cite" data-pages="L3:43-43">Lec 3 p. 43</a></p></div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="v2" data-tf="F">
+<p class="stem"><b>V2</b> · The essential-matrix method works well even when the camera only rotates (zero translation).</p>
+<details class="ans"><summary>Answer</summary><div><p class="write">False. $E = [x]_\times R$, so as $x \to 0$, E tends to 0 and the method degenerates. E requires non-zero translation. The homography has no such requirement. <a class="cite" data-pages="L3:43-43">Lec 3 p. 43</a></p></div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="v3" data-tf="F">
+<p class="stem"><b>V3</b> · Decomposing E gives the translation between the views with its true magnitude.</p>
+<details class="ans"><summary>Answer</summary><div><p class="write">False. Only a scaled translation $x' = \lambda x$ is recovered. The essential constraint $m^T E m^* = 0$ also holds for any multiple of E, so the scale is lost. <a class="cite" data-pages="L3:15-15">Lec 3 p. 15</a> <a class="cite" data-pages="L3:19-19">p. 19</a></p></div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="v4" data-tf="F">
+<p class="stem"><b>V4</b> · Decomposing the essential matrix gives a single (R, x) directly, with no need to check anything.</p>
+<details class="ans"><summary>Answer</summary><div><p class="write">False. Because of the ± sign of E and the two possible rotations, there are four candidate solutions. Three would put some points behind a camera, so the positive-depth constraint picks the physically valid one. <a class="cite" data-pages="L3:19-19">Lec 3 p. 19</a> <a class="cite" data-pages="L3:22-24">pp. 22–24</a></p></div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="v5" data-tf="T">
+<p class="stem"><b>V5</b> · After the positive-depth test, the homography method may still leave two valid solutions, so an extra view or prior knowledge is needed.</p>
+<details class="ans"><summary>Answer</summary><div><p class="write">True. In the general case two homography solutions pass the depth constraint. An extra view, or knowledge such as the plane normal, selects one. This is why the lecturer says H “requires an extra view or knowledge”. <a class="cite" data-pages="L3:43-43">Lec 3 p. 43</a></p></div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="v6" data-tf="F">
+<p class="stem"><b>V6</b> · The Kalman filter gives statistically optimal estimates for any nonlinear system with any noise distribution.</p>
+<details class="ans"><summary>Answer</summary><div><p class="write">False. It is optimal only if the system is linear and the noise is white Gaussian. Otherwise it is a sub-optimal approximation. <a class="cite" data-pages="L4:45-45">Lec 4 p. 45</a></p></div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="v7" data-tf="F">
+<p class="stem"><b>V7</b> · The Kalman filter must store all past measurements to compute the current estimate.</p>
+<details class="ans"><summary>Answer</summary><div><p class="write">False. It is recursive: the new estimate uses only the previous estimate, its variance and the new measurement. This is why it suits systems without large data storage. <a class="cite" data-pages="L4:17-17">Lec 4 p. 17</a></p></div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="v8" data-tf="F">
+<p class="stem"><b>V8</b> · For any two random variables, $V(X+Y) = V(X) + V(Y)$.</p>
+<details class="ans"><summary>Answer</summary><div><p class="write">False. In general $V(X+Y) = V(X) + V(Y) + 2\,\mathrm{Cov}(X,Y)$. The extra term vanishes only when X and Y are uncorrelated (for example, independent). <a class="cite" data-pages="L4:15-15">Lec 4 p. 15</a></p></div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="v9" data-tf="F">
+<p class="stem"><b>V9</b> · Uncorrelated random variables are always independent.</p>
+<details class="ans"><summary>Answer</summary><div><p class="write">False. Independent implies uncorrelated, but not the other way round. Zero covariance only rules out a <em>linear</em> relationship. (This is why the lecture's proof needs only “uncorrelated”.) <a class="cite" data-pages="L4:14-15">Lec 4 pp. 14–15</a></p></div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="v10" data-tf="T">
+<p class="stem"><b>V10</b> · Optimally fusing two independent noisy measurements of the same quantity gives an estimate whose variance is smaller than either sensor's variance.</p>
+<details class="ans"><summary>Answer</summary><div><p class="write">True. $1/p = 1/\sigma_1^2 + 1/\sigma_2^2$, so $p = \sigma_1^2\sigma_2^2/(\sigma_1^2 + \sigma_2^2) &lt; \min(\sigma_1^2, \sigma_2^2)$. Redundant information reduces uncertainty. <a class="cite" data-pages="L4:40-41">Lec 4 pp. 40–41</a></p></div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="v11" data-tf="T">
+<p class="stem"><b>V11</b> (class) · A sensor that gives the same wrong reading every time is precise but not accurate.</p>
+<details class="ans"><summary>Answer</summary><div><p class="write">True. The readings repeat (small spread, so precise) but are offset from the true value (systematic error, so not accurate). <a class="cite" data-pages="L1:25-25">Lec 1 p. 25</a></p></div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="v12" data-tf="F">
+<p class="stem"><b>V12</b> (class) · A robot can act intelligently in an unknown environment using only internal (proprioceptive) sensors.</p>
+<details class="ans"><summary>Answer</summary><div><p class="write">False. Internal sensors measure only the robot's own state. Reacting to the environment needs external sensors. The purpose of external sensors is to let the machine “act intelligently”. <a class="cite" data-pages="L1:12-13">Lec 1 pp. 12–13</a> <a class="cite" data-pages="L1:17-18">pp. 17–18</a></p></div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="v13" data-tf="F">
+<p class="stem"><b>V13</b> (class) · Camera, LiDAR and ultrasonic sensors are all active sensors.</p>
+<details class="ans"><summary>Answer</summary><div><p class="write">False. LiDAR and ultrasonic sensors are active (they emit a pulse and time the return). A normal camera is passive (it only receives light already in the scene). <a class="cite" data-pages="L1:19-19">Lec 1 p. 19</a></p></div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="v14" data-tf="T">
+<p class="stem"><b>V14</b> (class) · Position found by integrating IMU accelerations drifts without bound over time.</p>
+<details class="ans"><summary>Answer</summary><div><p class="write">True. Acceleration is integrated twice, so a constant bias $b$ grows into a position error of $\tfrac12 b t^2$. An absolute reference such as GPS is needed to correct it, which is a direct case for sensor fusion. <a class="cite" data-pages="L1:31-31">Lec 1 p. 31</a></p></div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="v15" data-tf="F">
+<p class="stem"><b>V15</b> (class) · GPS is purely an external-state sensor.</p>
+<details class="ans"><summary>Answer</summary><div><p class="write">False, by this course's convention. The lecturer said in Week 8: “we include GPS in both internal and external state sensors.” Lec 1 p. 17 lists it among the internal-state sensors too. <a class="cite" data-pages="L1:17-17">Lec 1 p. 17</a></p></div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="v16" data-tf="F">
+<p class="stem"><b>V16</b> (class) · From a single image with a known calibration matrix, the 3D (Euclidean) position of a point can be recovered.</p>
+<details class="ans"><summary>Answer</summary><div><p class="write">False. $m = A^{-1}p$ gives only the normalised coordinates $(x/z,\,y/z)$. Every point on the same ray has the same image point, so depth is ambiguous without additional information. <a class="cite" data-pages="L3:10-10">Lec 3 p. 10</a></p></div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="v17" data-tf="F">
+<p class="stem"><b>V17</b> (class) · A straight edge that appears curved in an image is caused by defocus.</p>
+<details class="ans"><summary>Answer</summary><div><p class="write">False. Lens distortion changes the geometry (straight lines bend). Defocus only blurs the image and does not bend lines. <a class="cite" data-pages="L2:20-20">Lec 2 p. 20</a></p></div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="v18" data-tf="F">
+<p class="stem"><b>V18</b> · Multi-sensor fusion always reduces the computation needed compared with using one sensor.</p>
+<details class="ans"><summary>Answer</summary><div><p class="write">False. Fusion adds processing. Its advantages are redundancy (giving accuracy and reliability), complementarity, timeliness through parallel processing, and lower total cost, not less computation. The tutor's Kalman comparison notes that batch processing gives a smaller error variance but needs more computation. <a class="cite" data-pages="L1:13-16">Lec 1 pp. 13–16</a></p></div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+</section>
+
+<section data-sec="p3"><h2 class="sec" id="p3">Part 3 · Derivations to write on paper</h2>
+
+<div class="qn" data-id="d1">
+<p class="stem"><b>D1</b> · Prove that $V(X+Y) = V(X) + V(Y)$ when X and Y are uncorrelated.</p>
+<details><summary>Hint</summary><div><p>Start from $V(Z) = E[Z^2] - (E[Z])^2$ with $Z = X+Y$, and use linearity of $E$.</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<ol>
+<li>$V(X+Y) = E[(X+Y)^2] - (E[X+Y])^2$ (definition of variance).</li>
+<li>$= E[X^2 + 2XY + Y^2] - (E[X] + E[Y])^2$ (linearity of expectation).</li>
+<li>$= E[X^2] + E[Y^2] + 2E[XY] - (E[X])^2 - (E[Y])^2 - 2E[X]E[Y]$.</li>
+<li>Regroup: $= \big(E[X^2] - (E[X])^2\big) + \big(E[Y^2] - (E[Y])^2\big) + 2\big(E[XY] - E[X]E[Y]\big)$.</li>
+<li>$= V(X) + V(Y) + 2\,\mathrm{Cov}(X,Y)$, and $\mathrm{Cov}(X,Y) = 0$ when X and Y are uncorrelated. ∎</li>
+</ol>
+<p class="trap">Forgetting the cross term $-2E[X]E[Y]$ when you square $(E[X] + E[Y])$. <a class="cite" data-pages="L4:15-15">Lec 4 p. 15</a></p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="d2" data-num="1.5" data-labels="fused variance">
+<p class="stem"><b>D2</b> · Two independent sensors measure the same constant. Their noise variances are $\sigma_1^2 = 2$ and $\sigma_2^2 = 6$. What is the variance of the optimally fused estimate? (No calculator.)</p>
+<details><summary>Hint</summary><div><p>For fusion, the reciprocals of the variances (the information) add.</p></div></details>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="write">$\dfrac1p = \dfrac12 + \dfrac16 = \dfrac46 \Rightarrow p = \dfrac32 = 1.5$, which is smaller than both 2 and 6. The fused estimate is $\hat x = \dfrac{\sigma_2^2 z_1 + \sigma_1^2 z_2}{\sigma_1^2 + \sigma_2^2} = \dfrac{6z_1 + 2z_2}{8}$, which weights the better sensor more.</p>
+<p>Derivation in one line: take $\hat x = (1-L)z_1 + L z_2$, so $p = (1-L)^2\sigma_1^2 + L^2\sigma_2^2$ (the errors are uncorrelated, so D1 applies). Setting $dp/dL = 0$ gives $L = \sigma_1^2/(\sigma_1^2 + \sigma_2^2)$. <a class="cite" data-pages="L4:40-42">Lec 4 pp. 40–42</a></p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+
+<div class="qn" data-id="d3">
+<p class="stem"><b>D3</b> · In a table or a few lines, compare the essential-matrix and homography methods.</p>
+<details class="ans"><summary>Answer &amp; guidance</summary><div>
+<p class="write">Points: E needs ≥ 8; H needs ≥ 4. Geometry: E needs points not all coplanar (no four coplanar); H needs coplanar points with no three collinear. Translation: E needs $x \ne 0$ (degenerates as $x \to 0$); H has no such requirement. Solutions: E gives 4 candidates and positive depth leaves 1; H usually leaves 2 after the depth test, so an extra view or prior knowledge is needed. Both: recover R and translation only up to scale. In the lecturer's experience, H is more accurate.</p>
+<p><a class="cite" data-pages="L3:43-43">Lec 3 p. 43</a> <a class="cite" data-img="4" data-title="Tutor deck: E vs H table">tutor table</a></p>
+</div></details>
+<label class="got"><input type="checkbox"> I can explain this</label></div>
+</section>
+
+<section data-sec="z"><h2 class="sec" id="z">Phrase sheet (read at 7:50 pm)</h2>
+<ul>
+<li><strong>E / 8-point:</strong> ≥ 8 matched points, not coplanar (no four coplanar), non-zero translation, 4 solutions → positive depth → 1.</li>
+<li><strong>H / 4-point:</strong> ≥ 4 coplanar, non-collinear points; H fixed by $h_{33}$; 2 solutions survive → extra view or knowledge needed; more accurate.</li>
+<li><strong>Both</strong> give R and a <em>scaled</em> translation (E: $\lambda x$; H: $x/d^*$). Scale is lost, and depth is only relative.</li>
+<li><strong>SFM:</strong> from two views of matched points → R, t between the views and the relative structure.</li>
+<li><strong>Accuracy</strong> = closeness to the true value, $1 - |m-v|/v$. <strong>Precision</strong> = repeatability, range/σ. Expect them swapped in a trap.</li>
+<li><strong>Kalman:</strong> optimal when the system is linear and the noise is white Gaussian; recursive, so little storage is needed.</li>
+<li><strong>Variance:</strong> $V(X+Y) = V(X) + V(Y) + 2\mathrm{Cov}$. Uncorrelated (implied by independent) makes the covariance term 0.</li>
+<li><strong>Fusion:</strong> $1/p = \sum 1/\sigma_i^2$, so the result is better than the best single sensor.</li>
+<li><strong>Multi-sensor advantages:</strong> redundancy (→ accuracy and reliability), complementarity, timeliness, lower cost.</li>
+<li><strong>Sensors:</strong> internal sensors alone cannot act intelligently; LiDAR and ultrasonic are active, a camera is passive; IMU drift grows as $\tfrac12bt^2$; GPS counts as both internal and external here; ultrasonic range is $ct/2$.</li>
+<li><strong>Not on this quiz</strong> (per the official notice and the lecturer): robot control, mobile robots, Week 12 visual servoing / Lyapunov, and the E/H decomposition details (Lec 3 p. 18 and pp. 33–36).</li>
+</ul>
+</section>
+</main>
+</div>
+<dialog id="pages"><p><strong id="ptitle"></strong> · <a id="plink" target="_blank">open PDF at this page</a> <button type="button" id="pclose" style="float:right">Close</button></p><div id="pimgs"></div></dialog>
+<script>
+addEventListener("DOMContentLoaded", () => {
+const LEC = s => [`../resources/part-2/${s}.pdf`, `quiz-02-primer-pages/${s}`];
+const EX = "../../resources/public-archive-2026-08-24/";
+const SRC = { L1: LEC("part-2-lecture-01-introduction-and-sensors"), L2: LEC("part-2-lecture-02-vision-sensors-and-systems"),
+  L3: LEC("part-2-lecture-03-structure-and-pose-estimation"), L4: LEC("part-2-lecture-04-kalman-filter-sensor-integration"),
+  E1516: [EX + "past-exam-solutions-2015-2018/EE6221%202015-2016.pdf", "quiz-02-past-pages/exam-2015-2016"],
+  E1617: [EX + "past-exam-solutions-2015-2018/EE6221%202016-2017.pdf", "quiz-02-past-pages/exam-2016-2017"],
+  E1718: [EX + "past-exam-solutions-2015-2018/EE6221%202017-2018.pdf", "quiz-02-past-pages/exam-2017-2018"],
+  E2425: [EX + "past-exam-2024-2025/test-final-2024-2025-semester-1.pdf", "quiz-02-past-pages/exam-2024-2025-s1"] };
+const KEY = "ee6221-quiz2-sprint-v1";
+let state = {};
+try { state = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} };
+
+// citations: data-pages="L1:13-15" or "E1617:6-7" -> PDF link + pop-up of the rendered pages
+const dlg = document.getElementById("pages");
+document.querySelectorAll("a.cite[data-img]").forEach(a => {
+  a.href = "../../resources/peer-tutor-deck-04-quiz2-mobile-kalman.pptx";
+  a.addEventListener("click", ev => {
+    ev.preventDefault();
+    document.getElementById("ptitle").textContent = a.dataset.title;
+    document.getElementById("plink").href = a.href;
+    const box = document.getElementById("pimgs"); box.innerHTML = a.dataset.img ? "" : "<p>These slides are text only. Open the deck to read them.</p>";
+    a.dataset.img.split(",").filter(Boolean).forEach(n => { const img = new Image(); img.alt = `${a.dataset.title}, image ${n}`;
+      img.src = `quiz-02-sprint-pages/tutor4-image${n}.png`; box.append(img); });
+    dlg.showModal();
+  });
+});
+document.querySelectorAll("a.cite[data-pages]").forEach(a => {
+  const [k, r] = a.dataset.pages.split(":"), [lo, hi] = r.split("-").map(Number);
+  a.href = `${SRC[k][0]}#page=${lo}`;
+  a.addEventListener("click", ev => {
+    ev.preventDefault();
+    document.getElementById("ptitle").textContent = a.textContent;
+    document.getElementById("plink").href = a.href;
+    const box = document.getElementById("pimgs"); box.innerHTML = "";
+    for (let p = lo; p <= hi; p++) { const img = new Image(); img.alt = `${a.textContent}, PDF page ${p}`;
+      img.src = `${SRC[k][1]}-p${String(p).padStart(3, "0")}.jpg`; box.append(img); }
+    dlg.showModal();
+  });
+});
+document.getElementById("pclose").onclick = () => dlg.close();
+
+// per question: { tf, txt, num:[...], got } saved under the question id
+const st = id => state[id] || (state[id] = {});
+const frac = v => { const [a, b] = v.trim().split("/"); return b === undefined ? Number(a) : Number(a) / Number(b); };
+const toc = document.getElementById("toc");
+function tally() {
+  toc.innerHTML = ""; let all = 0;
+  document.querySelectorAll("section[data-sec]").forEach(s => {
+    const qs = [...s.querySelectorAll(".qn")], ok = qs.filter(q => st(q.dataset.id).got).length; all += ok;
+    const li = document.createElement("li");
+    li.innerHTML = `<a href="#${s.dataset.sec}">${s.querySelector("h2").textContent}</a>` +
+      (qs.length ? `<span class="sc${ok === qs.length ? " done" : ""}">${ok}/${qs.length}</span>` : "");
+    toc.append(li);
+  });
+  document.getElementById("total").textContent = `${all}/${document.querySelectorAll(".qn").length}`;
+}
+document.querySelectorAll(".qn").forEach(q => {
+  const id = q.dataset.id, s0 = st(id), ans = q.querySelector("details.ans");
+  const box = document.createElement("div"); box.className = "try";
+  const fb = document.createElement("p"); fb.className = "fb";
+  const ta = document.createElement("textarea");
+  ta.placeholder = q.dataset.tf ? "Your one-line reason…" : "Your working (or do it on paper)…";
+  ta.value = s0.txt || ""; ta.oninput = () => { st(id).txt = ta.value; save(); };
+  box.append(ta);
+  if (q.dataset.tf) {
+    const row = document.createElement("p"), btns = [];
+    const pick = (v, restore) => {
+      st(id).tf = v; if (!restore) save();
+      btns.forEach(b => b.classList.toggle("on", b.dataset.v === v));
+      const ok = v === q.dataset.tf, word = q.dataset.tf === "T" ? "TRUE" : "FALSE";
+      fb.className = "fb " + (ok ? "ok" : "bad");
+      fb.textContent = ok ? `✓ Correct: ${word}. Now compare your reason with the guidance below.` : `✗ Not quite: it is ${word}. Read the guidance below and find where your reasoning went off.`;
+      ans.open = true;
+    };
+    ["T", "F"].forEach(v => { const b = document.createElement("button"); b.type = "button"; b.dataset.v = v;
+      b.textContent = v === "T" ? "True" : "False"; b.onclick = () => pick(v); btns.push(b); row.append(b, " "); });
+    box.append(row, fb);
+    if (s0.tf) pick(s0.tf, true);
+  } else if (q.dataset.num) {
+    const keys = q.dataset.num.split(",").map(frac), labels = q.dataset.labels.split(","), row = document.createElement("p"), ins = [];
+    labels.forEach((l, n) => { const i = document.createElement("input"); i.setAttribute("aria-label", l); i.value = (s0.num || [])[n] || "";
+      ins.push(i); row.append(`${l} = `, i, "  "); });
+    const b = document.createElement("button"); b.type = "button"; b.textContent = "Check";
+    const check = restore => {
+      const vals = ins.map(i => i.value); st(id).num = vals; if (!restore) save();
+      const bad = vals.map((v, n) => v.trim() === "" || !(Math.abs(frac(v) - keys[n]) < 1e-3) ? labels[n] : null).filter(Boolean);
+      fb.className = "fb " + (bad.length ? "bad" : "ok");
+      fb.textContent = bad.length ? `✗ Check ${bad.join(", ")}. The guidance below shows each step.` : "✓ All correct. Compare your working with the guidance below.";
+      ans.open = true;
+    };
+    b.onclick = () => check(false); row.append(b); box.append(row, fb);
+    if (s0.num) check(true);
+  } else {
+    const b = document.createElement("button"); b.type = "button"; b.textContent = "I've written my answer: show guidance";
+    b.onclick = () => { ans.open = true; }; const row = document.createElement("p"); row.append(b); box.append(row);
+  }
+  q.querySelector("details").before(box);
+  const cb = q.querySelector(".got input");
+  cb.checked = !!s0.got;
+  cb.onchange = () => { st(id).got = cb.checked; save(); tally(); };
+});
+document.getElementById("reset").onclick = () => { state = {}; save(); location.reload(); };
+tally();
+});
+</script>
+</body>
+</html>

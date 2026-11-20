@@ -46,7 +46,7 @@ for i, s in enumerate(s for s in bank['sections'] if 'quiz' not in s):
     sections.append(f'<section id="module-{i}"><p class="eyebrow">MODULE {i+1:02d} / 06</p><h2>{short[i]}</h2>' + before +
                     '<p class="source">' + sources[i] + ' <a href="../../resources/lecture-01-manipulator-kinematics.pdf">Open source handout</a></p>' +
                     '<details class="reference"><summary>Reference and further practice</summary>' + reference + '</details><fieldset' + check +
-                    (f'<a class="next" href="#module-{i+1}">Continue to {short[i+1]} →</a>' if i < 5 else '<p>Ready to apply the ideas? <a href="../../quizzes/quiz-01-mock-01.html">Open the timed mock</a>.</p>') + '</section>')
+                    (f'<a class="next" href="#module-{i+1}">Continue to {short[i+1]} →</a>' if i < 5 else '<p>Ready to apply the ideas? <a href="../../quizzes/quiz-01/quiz-01-mock-01.html">Open the timed mock</a>.</p>') + '</section>')
 page = '''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>EE6221 Quiz 1 — Visual beginner notes</title>
@@ -91,7 +91,7 @@ side = ''.join(f'<a href="#q2-{i}"><span>{i+1:02d} {s["short"]}</span><span clas
 mods = []
 for i, s in enumerate(quiz2):
     nxt = (f'<a class="next" href="#q2-{i+1}">Continue to {quiz2[i+1]["short"]} →</a>' if i < n2 - 1 else
-           '<p>Ready? <a href="../../quizzes/quiz-02-mock-01.html">Sit the timed Quiz 2 mock</a> (closed book, 60 min).</p>')
+           '<p>Ready? <a href="../../quizzes/quiz-02/quiz-02-mock-01.html">Sit the timed Quiz 2 mock</a> (closed book, 60 min).</p>')
     mods.append(cite(f'<section id="q2-{i}"><p class="eyebrow">MODULE {i+1:02d} / {n2:02d}</p><h2>{s["short"]}</h2>' + s['visual_lesson_html'] +
                      '<p class="source">Sources: ' + html.escape(s['source_note']) + '</p>' + nxt + '</section>'))
 page2 = '''<!doctype html>
@@ -107,7 +107,7 @@ page2 = '''<!doctype html>
 <script defer src="self-study-assets/progress.js"></script></head>
 <body><a class="skip" href="#main">Skip to lessons</a><div class="app">
 <aside aria-label="Contents"><p class="eyebrow">EE6221 · QUIZ 2</p><p class="side-title">Sensors, vision, pose, Kalman fusion</p><nav>''' + side + '''</nav>
-<p class="side-tools"><a href="review-page.html">Review page</a> · <a href="../../quizzes/quiz-02-mock-01.html">Timed mock</a> · <a href="beginner-notes.html">Quiz 1 notes</a></p><p class="side-tools">Answers are saved in this browser. <button type="button" data-reset-progress>Reset my answers</button></p></aside>
+<p class="side-tools"><a href="review-page.html">Review page</a> · <a href="../../quizzes/quiz-02/quiz-02-mock-01.html">Timed mock</a> · <a href="beginner-notes.html">Quiz 1 notes</a></p><p class="side-tools">Answers are saved in this browser. <button type="button" data-reset-progress>Reset my answers</button></p></aside>
 <div class="content"><header><p class="eyebrow">EE6221 · QUIZ 2 STUDY COMPANION</p><h1>From a sensor reading<br>to a fused estimate.</h1><p>Lec 1–4 of Part 2, one step at a time. Click any slide citation to see the slide itself.</p><p class="meta">''' + str(n2) + ''' modules · interactive diagrams · worked examples · offline</p></header>
 <main id="main"><noscript><p class="notice">JavaScript is disabled. Worked explanations and expandable solutions remain available; enable JavaScript for diagrams, typeset mathematics, slide pop-ups and feedback buttons.</p></noscript>''' + '\n'.join(mods) + '''</main>
 <footer>Supplementary teaching companion; canonical PDFs remain in notes/. Built from notes-bank.json with build-beginner.py. Generated examples are labelled; format predictions are unofficial.</footer></div></div>

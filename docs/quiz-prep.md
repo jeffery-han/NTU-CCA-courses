@@ -7,11 +7,31 @@ The learning happens when the learner sits a paper cold, finds out exactly why e
 ## Start here: find the current step
 
 1. Read the course `STATUS.md`.  "Now" names the next assessment and the current step of this loop.
-2. Read `quizzes/<assessment>-intel.md` and `quizzes/<assessment>-mistakes.md` if they exist.
+2. Read `quizzes/<assessment>/<assessment>-intel.md` and `quizzes/<assessment>/<assessment>-mistakes.md` if they exist.
 3. Resume at the first step below that is not done.  Do not rebuild a file that exists; `STATUS.md` "Study pages" lists them.
 4. When a step finishes, update "Now" in `STATUS.md` with the next step, in the same change.
 
 `<assessment>` is `quiz-01`, `quiz-02`, … or `final` (follow the course's existing pattern, e.g. `quiz-2` in EE-6204 and EE-6407).
+
+## Folder layout: one folder per assessment
+
+Every prep file for an assessment lives in its own folder, `quizzes/<assessment>/`, named exactly like the file prefix: `quizzes/quiz-01/`, `quizzes/quiz-02/`, `quizzes/final/` (or `quizzes/quiz-1/` where the course uses `quiz-1-…`).  Nothing for a specific assessment sits loose in `quizzes/`.
+
+```text
+quizzes/
+  quiz-01/
+    quiz-01-intel.md  quiz-01-mistakes.md
+    quiz-01-primer.html  quiz-01-mock-a.html  quiz-01-mock-a.md  quiz-01-mock-a-check.py
+    quiz-01-pages/      # rendered source pages for citation pop-ups
+    quiz-assets/        # this folder's own KaTeX/MathJax copy and figures (Safari: no ../)
+    attempts/           # the learner's scanned scripts for this assessment
+  quiz-02/  …
+  final/    …
+```
+
+- Create the folder when the first file for that assessment is made.  Each folder is self-contained for Safari: its own maths bundle, page images and figures; copy a shared figure rather than linking across folders.
+- Links inside a page: siblings in the same folder by bare name; the course's source PDFs as `../../resources/<file>.pdf#page=N`; a page in another assessment's folder as `../<other>/<page>.html`, with a note that Safari users open it from the course `index.html`.
+- **Migrating a course still laid out flat**: the first time a course's `quizzes/` is touched under this rule, move every `<assessment>-*` file (and its `-pages/` folder, figures and attempts) into its folder; give each folder its own asset copy; rewrite `../resources/` to `../../resources/`, cross-assessment links, export/key paths (`quizzes/<assessment>/…`) and any links from `index.html`, `output/` or notes; record the mapping in `LOG.md`; run `sh docs/run-checkers.sh EE-XXXX` and open a page in a browser.  Do it in a change of its own, and not while another job has uncommitted edits in that course's `quizzes/`.  EE-6221 is the reference layout (migrated 2026-11-21).
 
 ## Step 1 – Sync NTULearn (every session, before anything else)
 
@@ -22,7 +42,7 @@ A mock built on stale sources teaches wrong formulas and misses topics.
 - Never report a transcript as "not posted" without a screenshot of its Attachments tab.
 - Read the official announcement for date, venue, duration, format, aids and scope.  Put those facts, with their source, in `STATUS.md` "Now".
 
-## Step 2 – Gather evidence into `quizzes/<assessment>-intel.md`
+## Step 2 – Gather evidence into `quizzes/<assessment>/<assessment>-intel.md`
 
 Check sources in this order:
 
@@ -49,21 +69,21 @@ Everything from student recollection is unofficial: label it so in every file it
 
 ## Step 3 – Light primer
 
-`quizzes/<assessment>-primer.html`: per in-scope topic, the idea in two or three sentences, the formulas, one worked example, one or two checks with immediate feedback.  No long derivations.  Link to an existing study page instead of rewriting it.  Skip topics the learner already passes.
+`quizzes/<assessment>/<assessment>-primer.html`: per in-scope topic, the idea in two or three sentences, the formulas, one worked example, one or two checks with immediate feedback.  No long derivations.  Link to an existing study page instead of rewriting it.  Skip topics the learner already passes.
 
 If the learner then asks for more explanation of one part, rebuild that part from zero as a collapsible "Start here" block: picture first, a symbol table, each formula derived, the reason behind each condition, one verified example, one self-check.
 
 ## Step 4 – Guided mock (optional; use when the learner cannot yet attempt the paper)
 
-`quizzes/<assessment>-mock-a-guided.html`: a full paper in the real format, broken into checked steps.  The learner answers each step first; the hint and worked line open only after an attempt.
+`quizzes/<assessment>/<assessment>-mock-a-guided.html`: a full paper in the real format, broken into checked steps.  The learner answers each step first; the hint and worked line open only after an attempt.
 
 ## Step 5 – Cold mock
 
 Two files, kept separate on purpose:
 
-- `quizzes/<assessment>-mock-<x>.html` – the paper, with **no answers** in it.  Real section counts, question types, marks and time limit; a timer; autosave; an "answered on paper" toggle for written questions; an export button that produces one plain-text block (paper name, key-file path, marks, elapsed time, each answer, `<blank>` markers) readable in a fresh conversation.
-- `quizzes/<assessment>-mock-<x>.md` – questions, full key, a per-checkpoint marking rubric with a stated total, and "common wrong paths and what each implies" for every question.
-- `quizzes/<assessment>-mock-<x>-check.py` – recomputes every key.  Run `docs/run-checkers.sh EE-XXXX` before handing the paper over.
+- `quizzes/<assessment>/<assessment>-mock-<x>.html` – the paper, with **no answers** in it.  Real section counts, question types, marks and time limit; a timer; autosave; an "answered on paper" toggle for written questions; an export button that produces one plain-text block (paper name, key-file path, marks, elapsed time, each answer, `<blank>` markers) readable in a fresh conversation.
+- `quizzes/<assessment>/<assessment>-mock-<x>.md` – questions, full key, a per-checkpoint marking rubric with a stated total, and "common wrong paths and what each implies" for every question.
+- `quizzes/<assessment>/<assessment>-mock-<x>-check.py` – recomputes every key.  Run `docs/run-checkers.sh EE-XXXX` before handing the paper over.
 
 Rules for the paper:
 
@@ -74,7 +94,7 @@ Rules for the paper:
 - Pitch difficulty at or slightly above the real paper.  This semester's quizzes ran harder than the recollections predicted.
 - Include one unseen item from an in-scope topic that circulating papers omit, labelled as a prediction in the `.md`.
 
-The learner sits it closed book and timed, handwritten when the real paper is handwritten.  Handwritten scripts go to `quizzes/attempts/<paper>-<date>.pdf` (or `.jpg`).
+The learner sits it closed book and timed, handwritten when the real paper is handwritten.  Handwritten scripts go to `quizzes/<assessment>/attempts/<paper>-<date>.pdf` (or `.jpg`).
 
 ## Step 6 – Grade
 
@@ -95,7 +115,7 @@ For each wrong or blank item, largest mark loss first:
 3. **One rule to remember**, in one line.
 4. **Retry** on a fresh variant.  The item stays open until the retry is right.
 
-Log each item in `quizzes/<assessment>-mistakes.md`: question, what was written, why wrong, rule, retry result (open / closed).  Then run the next cold mock weighted toward the open items, and repeat steps 5–7.
+Log each item in `quizzes/<assessment>/<assessment>-mistakes.md`: question, what was written, why wrong, rule, retry result (open / closed).  Then run the next cold mock weighted toward the open items, and repeat steps 5–7.
 
 ## Step 8 – Fold back into the notes
 
@@ -103,7 +123,7 @@ For each mistake that showed a real gap (not a slip): add the explanation to the
 
 ## Final-exam protocol
 
-Use this sequence for a final; write the chosen steps as a table in `quizzes/final-intel.md` and track the current step in `STATUS.md` "Now".
+Use this sequence for a final; write the chosen steps as a table in `quizzes/final/final-intel.md` and track the current step in `STATUS.md` "Now".
 
 | Step | Material | Mode |
 |---|---|---|
