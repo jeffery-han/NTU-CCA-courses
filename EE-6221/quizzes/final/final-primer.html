@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>EE6221 Final Primer</title>
-<meta name="description" content="Step 1 of the EE6221 final-prep protocol: one card per exam slot, formulas in the slides' convention, a quick check each.">
+<title>EE6221 Final Primer &mdash; Self-Taught Study Guide</title>
+<meta name="description" content="Step 1 of the EE6221 final-prep protocol: full self-taught explanations, diagrams, symbol tables, step-by-step derivations, worked examples, slide citations, and checks for every exam slot Q1 to Q5.">
 <link rel="stylesheet" href="quiz-assets/katex/katex.min.css">
 <style>
 :root {
@@ -23,37 +23,53 @@
   --accent: #6ea8ff; --accent-soft: #17233a; --success: #56d39b; --success-soft: #10281f;
   --warning: #e5b567; --warning-soft: #2b2113; --danger: #ff8189; --danger-soft: #2e1519; }
 * { box-sizing: border-box; }
-body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.62 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
 a { color: var(--accent); }
 .app { display: grid; grid-template-columns: 270px minmax(0, 1fr); }
 nav.toc { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 18px 14px; border-right: 1px solid var(--border); background: var(--surface); font-size: .9rem; }
 nav.toc b { display: block; margin-bottom: 8px; }
-nav.toc a { display: flex; justify-content: space-between; gap: 8px; padding: 3px 6px; border-radius: 7px; text-decoration: none; color: var(--text); }
+nav.toc a { display: flex; justify-content: space-between; gap: 8px; padding: 4px 6px; border-radius: 7px; text-decoration: none; color: var(--text); }
 nav.toc a:hover { background: var(--surface-2); }
 nav.toc .sc { color: var(--muted); font-family: var(--mono); font-size: .8rem; }
 nav.toc .sc.ok { color: var(--success); font-weight: 700; }
 nav.toc .tools { margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--border); }
-main { min-width: 0; max-width: 900px; padding: 24px 22px 120px; }
+main { min-width: 0; max-width: 920px; padding: 24px 22px 120px; }
 h1 { font-size: 1.65rem; margin: 0 0 .4rem; }
-h2 { font-size: 1.25rem; margin: 2.2rem 0 .4rem; padding-top: .6rem; border-top: 2px solid var(--border); }
-h3 { font-size: 1.04rem; margin: 0 0 .3rem; }
+h2 { font-size: 1.28rem; margin: 2.4rem 0 .5rem; padding-top: .7rem; border-top: 2px solid var(--border); }
+h3 { font-size: 1.08rem; margin: 0 0 .6rem; }
+h4 { font-size: .95rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin: 1.1rem 0 .35rem; }
+p { margin: .5rem 0; }
 .sub { color: var(--muted); }
-.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 18px; margin: 14px 0; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; margin: 16px 0; }
 .card.done { border-color: var(--success); }
 .notice { background: var(--warning-soft); border: 1px solid var(--border); border-radius: 12px; padding: 12px 15px; margin: 14px 0; }
 .notice.info { background: var(--accent-soft); }
-.tag { float: right; color: var(--muted); font-size: .82rem; font-weight: 600; }
+.tag { float: right; color: var(--muted); font-size: .82rem; font-weight: 600; margin-left: 8px; }
 .badge { display: inline-block; border-radius: 999px; padding: 0 9px; font-size: .78rem; font-weight: 700; vertical-align: middle; }
-.badge.focus { background: var(--danger-soft); color: var(--danger); } .badge.ref { background: var(--surface-2); color: var(--muted); }
-.ex { background: var(--surface-2); border-radius: 10px; padding: 8px 12px; margin: 8px 0; font-size: .95rem; }
-.pit { background: var(--warning-soft); border-radius: 10px; padding: 8px 12px; margin: 8px 0; font-size: .95rem; }
-.chk { border-top: 1px dashed var(--border); padding-top: 8px; margin-top: 10px; }
+.badge.focus { background: var(--danger-soft); color: var(--danger); }
+.badge.ref { background: var(--surface-2); color: var(--muted); }
+.fig { margin: 12px 0; padding: 12px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; text-align: center; }
+.fig svg { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+.fig .cap { font-size: .86rem; color: var(--muted); margin-top: 6px; text-align: left; }
+.tbl-wrap { overflow-x: auto; margin: 10px 0; }
+table.sym { width: 100%; border-collapse: collapse; font-size: .92rem; }
+table.sym th, table.sym td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+table.sym th { background: var(--surface-2); font-weight: 600; color: var(--muted); font-size: .84rem; text-transform: uppercase; letter-spacing: .03em; }
+.formula { background: var(--accent-soft); border-left: 3px solid var(--accent); border-radius: 8px; padding: 10px 14px; margin: 10px 0; }
+.steps { margin: 8px 0 10px; padding-left: 1.35rem; }
+.steps li { margin: .45rem 0; }
+.why { background: var(--success-soft); border-left: 3px solid var(--success); border-radius: 8px; padding: 9px 13px; margin: 10px 0; font-size: .95rem; }
+.ex { background: var(--surface-2); border-radius: 10px; padding: 10px 14px; margin: 10px 0; font-size: .95rem; }
+.ex p:first-child { margin-top: 0; } .ex p:last-child { margin-bottom: 0; }
+.pit { background: var(--warning-soft); border-left: 3px solid var(--warning); border-radius: 8px; padding: 9px 13px; margin: 10px 0; font-size: .95rem; }
+.refs { margin: 10px 0 4px; padding-top: 8px; border-top: 1px solid var(--border); font-size: .88rem; color: var(--muted); }
+.chk { border-top: 1px dashed var(--border); padding-top: 10px; margin-top: 12px; }
 .chk input, .chk select, .btn { font: inherit; font-size: .92rem; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 4px 10px; }
 .btn { cursor: pointer; } .btn:hover { border-color: var(--accent); }
 .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 600; text-decoration: none; padding: 8px 16px; }
 .fb { font-weight: 600; margin-left: 6px; }
 .katex-display { overflow-x: auto; overflow-y: hidden; }
-a.cite { font-size: .85rem; }
+a.cite { font-size: .86rem; }
 dialog { max-width: min(900px, 94vw); border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text); padding: 14px; }
 dialog img { width: 100%; display: block; margin: 8px 0; border: 1px solid var(--border); background: #fff; }
 dialog::backdrop { background: rgba(0, 0, 0, .5); }
@@ -62,7 +78,9 @@ dialog::backdrop { background: rgba(0, 0, 0, .5); }
   .app { grid-template-columns: 1fr; }
   nav.toc { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--border); }
   nav.toc #toc-links { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 8px; }
-  main { padding: 16px 16px 80px; }
+  main { padding: 16px 14px 80px; }
+  .card { padding: 14px 14px; }
+  .tag { float: none; display: inline-block; margin-left: 0; margin-top: 2px; }
 }
 </style>
 <script defer src="quiz-assets/katex/katex.min.js"></script>
@@ -82,10 +100,10 @@ dialog::backdrop { background: rgba(0, 0, 0, .5); }
   </div>
 </nav>
 <main>
-<h1>EE6221 Final &mdash; Step 1: Primer</h1>
-<p class="sub">A light primer, not a course. Each card gives the idea, the formula exactly as the slides write it, one example and a quick check. Robot control (Q2) and the wheel constraints (Q3a) get full cards because no notes or study page covered them before. The other slots get a short refresher and a link to the page where you already drilled them. Sections follow the paper: Q1 to Q5.</p>
+<h1>EE6221 Final &mdash; Step 1: Self-Taught Primer</h1>
+<p class="sub">Complete self-taught reading material for every exam slot (Q1 to Q5). Each section starts from the physical picture, defines every symbol, derives the slide formulas step by step, explains why each exam condition matters, walks through worked examples, flags common pitfalls, and ends with a self-check. Every slide citation opens a pop-up of the full cited section.</p>
 <p class="sub">Links to Quiz 1 and Quiz 2 pages live in sibling folders: they open in Chrome, but Safari blocks them, so in Safari open those pages from the course <code>index.html</code>.</p>
-<p class="sub">Badges: <span class="badge focus">Exam focus</span> is taught here at full depth. <span class="badge ref">Refresh</span> is a reminder; the depth lives on the linked Quiz 1 / Quiz 2 page.</p>
+<p class="sub">Badges: <span class="badge focus">Exam focus</span> marks topics newly taught for the final (robot control and mobile-robot constraints). <span class="badge ref">Refresh</span> marks topics also drilled in Quiz 1 / Quiz 2, now expanded here into full self-contained reading.</p>
 
 <div class="notice info" id="protocol">
 <h3>The paper and the plan</h3>
@@ -102,106 +120,1011 @@ dialog::backdrop { background: rgba(0, 0, 0, .5); }
 </ol>
 </div>
 
+<!-- ======================== Q1 · D-H ======================== -->
 <h2 id="s-dh">Q1 &middot; D-H <span class="badge ref">Refresh</span></h2>
 
-<div class="card" data-k="d1" data-sel="along x_k"><h3>D1. Link-coordinate diagram and parameter table <span class="tag">5 of 5 papers</span></h3>
-<p>Steps: put \(z_{k-1}\) on joint \(k\)'s axis; \(x_k\) along the common normal from \(z_{k-1}\) to \(z_k\); \(y_k\) completes a right-handed frame; the tool frame has \(z_n\) as the approach vector. Then \(\theta_k\) = rotation about \(z_{k-1}\), \(d_k\) = shift along \(z_{k-1}\), \(a_k\) = shift along \(x_k\), \(\alpha_k\) = twist about \(x_k\). Marks: about 11&ndash;12 for the diagram, 8&ndash;9 for the table plus the first three \(T^{k}_{k-1}\) (no multiplication). You drilled four of these arms in <a href="../quiz-01/quiz-01-mock-05.html">Quiz 1 mock 5</a>. <a class="cite" href="../../resources/lecture-01-manipulator-kinematics.pdf#page=53" data-pages="lecture-01-manipulator-kinematics:53,54,55,56,57,58,59,60,61,62,63,64,65">Lec 1 pp. 53&ndash;65 (link coordinates, D-H algorithm, Example 2.10)</a> &middot; <a class="cite" href="../../resources/lecture-01-manipulator-kinematics.pdf#page=66" data-pages="lecture-01-manipulator-kinematics:66,67,68,69,70,71">Lec 1 pp. 66&ndash;71 (the link transform \(T^k_{k-1}\))</a></p>
-<div class="chk">The link length \(a_k\) is measured&hellip; <select><option value="">&mdash;</option><option>along z_(k-1)</option><option>along x_k</option><option>about x_k</option></select> <button class="btn">check</button><span class="fb"></span></div></div>
+<div class="card" data-k="d1" data-sel="along x_k">
+<h3>D1. Link-coordinate diagram and parameter table <span class="tag">5 of 5 papers</span></h3>
 
+<h4>1. The big picture</h4>
+<p>A rigid-body robot arm is a chain of links connected by joints (revolute = rotating hinge, prismatic = sliding rail). To find where the tool tip sits in space, we attach one right-handed coordinate frame \(\{x_k, y_k, z_k\}\) to every link \(k\), then chain the \(4\times 4\) transforms \(T^1_0, T^2_1, \dots, T^n_{n-1}\) from base to tool. The <b>Denavit&ndash;Hartenberg (D-H) convention</b> fixes the rules for placing those frames so that each link-to-link transform needs only <b>4 numbers</b> instead of 6.</p>
+
+<div class="fig">
+<svg viewBox="0 0 640 210" width="640" height="210" role="img" aria-label="Denavit-Hartenberg link geometry between joint axis z_{k-1} and z_k">
+  <defs>
+    <marker id="arr-dh" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="currentColor"/>
+    </marker>
+  </defs>
+  <!-- z_{k-1} axis -->
+  <line x1="120" y1="180" x2="120" y2="30" stroke="var(--accent)" stroke-width="2.5" marker-end="url(#arr-dh)"/>
+  <text x="102" y="25" fill="var(--accent)" font-size="14" font-weight="700">z_(k-1)</text>
+  <rect x="96" y="130" width="48" height="26" rx="4" fill="var(--surface)" stroke="var(--text)" stroke-width="1.6"/>
+  <text x="120" y="148" fill="var(--text)" font-size="12" text-anchor="middle">Joint k</text>
+  <!-- origin k-1 -->
+  <circle cx="120" cy="143" r="4" fill="var(--text)"/>
+  <text x="72" y="172" fill="var(--muted)" font-size="12">O_(k-1)</text>
+  <!-- x_{k-1} -->
+  <line x1="120" y1="143" x2="195" y2="143" stroke="var(--muted)" stroke-width="1.8" stroke-dasharray="4 3" marker-end="url(#arr-dh)"/>
+  <text x="200" y="147" fill="var(--muted)" font-size="13">x_(k-1)</text>
+  <!-- d_k shift along z_{k-1} -->
+  <line x1="145" y1="143" x2="145" y2="85" stroke="var(--success)" stroke-width="1.8"/>
+  <text x="152" y="118" fill="var(--success)" font-size="13" font-weight="700">d_k</text>
+  <!-- common normal x_k -->
+  <line x1="120" y1="85" x2="430" y2="85" stroke="var(--danger)" stroke-width="2.5" marker-end="url(#arr-dh)"/>
+  <text x="255" y="75" fill="var(--danger)" font-size="13" font-weight="700">common normal x_k (length a_k)</text>
+  <!-- z_k axis (twisted by alpha_k) -->
+  <line x1="400" y1="175" x2="455" y2="28" stroke="var(--accent)" stroke-width="2.5" marker-end="url(#arr-dh)"/>
+  <text x="462" y="34" fill="var(--accent)" font-size="14" font-weight="700">z_k</text>
+  <circle cx="433" cy="85" r="4" fill="var(--text)"/>
+  <text x="444" y="102" fill="var(--muted)" font-size="12">O_k (Joint k+1)</text>
+  <!-- annotations -->
+  <rect x="490" y="55" width="140" height="120" rx="8" fill="var(--surface)" stroke="var(--border)"/>
+  <text x="502" y="77" fill="var(--text)" font-size="12" font-weight="700">4 D-H moves:</text>
+  <text x="502" y="98" fill="var(--accent)" font-size="12">1. Rot z_(k-1) by θ_k</text>
+  <text x="502" y="118" fill="var(--success)" font-size="12">2. Shift z_(k-1) by d_k</text>
+  <text x="502" y="138" fill="var(--danger)" font-size="12">3. Shift x_k by a_k</text>
+  <text x="502" y="158" fill="var(--warning)" font-size="12">4. Twist x_k by α_k</text>
+</svg>
+<div class="cap"><b>How to read the diagram:</b> \(z_{k-1}\) is joint \(k\)'s axis and \(z_k\) is joint \(k+1\)'s axis. The unique line perpendicular to both is the common normal \(x_k\). Moving from frame \(k-1\) to frame \(k\) requires two operations along/about \(z_{k-1}\) (\(\theta_k, d_k\)) followed by two operations along/about \(x_k\) (\(a_k, \alpha_k\)).</div>
+</div>
+
+<h4>2. Symbol table</h4>
+<div class="tbl-wrap"><table class="sym">
+<thead><tr><th>Symbol</th><th>Meaning</th><th>How to measure it</th></tr></thead>
+<tbody>
+<tr><td>\(z_{k-1}\)</td><td>Axis of joint \(k\)</td><td>Points along the rotation axis (revolute) or sliding axis (prismatic).</td></tr>
+<tr><td>\(x_k\)</td><td>Common normal from \(z_{k-1}\) to \(z_k\)</td><td>Perpendicular to both \(z_{k-1}\) and \(z_k\), pointing from \(z_{k-1}\) toward \(z_k\).</td></tr>
+<tr><td>\(\theta_k\)</td><td>Joint angle (variable if revolute)</td><td>Right-hand angle from \(x_{k-1}\) to \(x_k\), measured <b>about</b> \(z_{k-1}\).</td></tr>
+<tr><td>\(d_k\)</td><td>Joint distance (variable if prismatic)</td><td>Signed distance from \(O_{k-1}\) to the intersection of \(x_k\) and \(z_{k-1}\), measured <b>along</b> \(z_{k-1}\).</td></tr>
+<tr><td>\(a_k\)</td><td>Link length (always constant)</td><td>Distance from \(z_{k-1}\) to \(z_k\), measured <b>along</b> \(x_k\) (positive when \(x_k\) points from \(z_{k-1}\) to \(z_k\)).</td></tr>
+<tr><td>\(\alpha_k\)</td><td>Link twist (always constant)</td><td>Right-hand angle from \(z_{k-1}\) to \(z_k\), measured <b>about</b> \(x_k\).</td></tr>
+</tbody>
+</table></div>
+
+<h4>3. Step-by-step D-H algorithm and link transform</h4>
+<ol class="steps">
+  <li><b>Place every \(z\)-axis first:</b> Put \(z_{k-1}\) along joint \(k\)'s axis for \(k = 1, \dots, n\). For the tool frame (frame \(n\)), align \(z_n\) with the tool <em>approach vector</em> (pointing out of the gripper).</li>
+  <li><b>Place the base frame \(\{x_0, y_0, z_0\}\):</b> Put \(O_0\) on \(z_0\) (conveniently at joint 1 or where \(z_0\) meets \(z_1\)), choose \(x_0\) convenient (often parallel to the base), and complete right-handed \(y_0 = z_0 \times x_0\).</li>
+  <li><b>Place each \(x_k\) for \(k = 1, \dots, n-1\):</b>
+    <ul>
+      <li>If \(z_{k-1}\) and \(z_k\) are <b>skew</b> (do not intersect, not parallel): \(x_k\) is their unique common normal, from \(z_{k-1}\) to \(z_k\).</li>
+      <li>If \(z_{k-1}\) and \(z_k\) <b>intersect</b>: \(O_k\) is at the intersection (\(a_k = 0\)), and \(x_k = \pm(z_{k-1} \times z_k)\) (perpendicular to both).</li>
+      <li>If \(z_{k-1}\) and \(z_k\) are <b>parallel</b>: any perpendicular line between them works; choose the one that passes through \(O_{k-1}\) so \(d_k = 0\).</li>
+    </ul>
+  </li>
+  <li><b>Complete \(y_k = z_k \times x_k\)</b> (right-hand rule) and read off \((\theta_k, d_k, a_k, \alpha_k)\) row by row.</li>
+  <li><b>Write each link transform \(T^k_{k-1}\):</b> Multiplying the four elementary motions \(\mathrm{Rot}(z, \theta_k)\,\mathrm{Trans}(0,0,d_k)\,\mathrm{Trans}(a_k,0,0)\,\mathrm{Rot}(x,\alpha_k)\) yields the standard matrix:</li>
+</ol>
+<div class="formula">
+\[T^k_{k-1} = \begin{bmatrix} \cos\theta_k & -\cos\alpha_k\sin\theta_k & \sin\alpha_k\sin\theta_k & a_k\cos\theta_k \\ \sin\theta_k & \cos\alpha_k\cos\theta_k & -\sin\alpha_k\cos\theta_k & a_k\sin\theta_k \\ 0 & \sin\alpha_k & \cos\alpha_k & d_k \\ 0 & 0 & 0 & 1 \end{bmatrix}.\]
+</div>
+
+<div class="why"><b>Why Q1 is structured this way in the exam:</b> Marks split roughly <b>11&ndash;12 for the link-coordinate diagram</b> and <b>8&ndash;9 for the parameter table plus the first three \(T^k_{k-1}\)</b> (the paper does not ask you to multiply all 6 matrices by hand). Every sign in the table comes directly from your drawn arrows, so neat, consistent right-handed axes earn most of the marks.</div>
+
+<div class="ex">
+<p><b>Worked mini-example (first link of a 2-link arm with vertical base):</b> Suppose joint 1 rotates about vertical \(z_0\) by \(\theta_1\), joint 2's axis \(z_1\) is horizontal (pointing out of the page) at height \(L_1\) above \(O_0\), intersecting \(z_0\). Then \(O_1\) is at height \(L_1\) on \(z_0\), \(x_1\) points along the link at \(\theta_1 = 0\), giving: \(\theta_1\) (variable), \(d_1 = L_1\), \(a_1 = 0\), \(\alpha_1 = +90^\circ\) (right-hand thumb along \(x_1\) rotates \(z_0\) to \(z_1\)). Plugging \(\cos 90^\circ = 0\), \(\sin 90^\circ = 1\) into \(T^1_0\) gives:</p>
+\[T^1_0 = \begin{bmatrix} C_1 & 0 & S_1 & 0 \\ S_1 & 0 & -C_1 & 0 \\ 0 & 1 & 0 & L_1 \\ 0 & 0 & 0 & 1 \end{bmatrix}.\]
+</div>
+
+<div class="pit"><b>Pitfalls.</b> (1) Never forget to draw \(y_k\) or check right-handedness (\(x_k \times y_k = z_k\)) at every frame. (2) Check the sign of \(\alpha_k\) with your right hand: thumb along \(x_k\), fingers curl from \(z_{k-1}\) toward \(z_k\). (3) You drilled four full 6-DOF exam arms in <a href="../quiz-01/quiz-01-mock-05.html">Quiz 1 mock 5</a>.</div>
+
+<div class="refs"><b>References:</b> <a class="cite" href="../../resources/lecture-01-manipulator-kinematics.pdf#page=53" data-pages="lecture-01-manipulator-kinematics:53,54,55,56,57,58,59,60,61,62,63,64,65">Lec 1 pp. 53&ndash;65 (link coordinates, D-H algorithm, Example 2.10)</a> &middot; <a class="cite" href="../../resources/lecture-01-manipulator-kinematics.pdf#page=66" data-pages="lecture-01-manipulator-kinematics:66,67,68,69,70,71">Lec 1 pp. 66&ndash;71 (the link transform \(T^k_{k-1}\))</a></div>
+
+<div class="chk">The link length \(a_k\) is measured&hellip; <select><option value="">&mdash;</option><option>along z_(k-1)</option><option>along x_k</option><option>about x_k</option></select> <button class="btn">check</button><span class="fb"></span></div>
+</div>
+
+<!-- ======================== Q2 · ROBOT CONTROL ======================== -->
 <h2 id="s-ctl">Q2 &middot; Robot control <span class="badge focus">Exam focus</span></h2>
 
-<div class="card" data-k="c1"><h3>C1. Partitioned (computed-torque) control <span class="tag">5 of 5 papers</span></h3>
-<p><b>Idea.</b> A robot's dynamics are nonlinear and coupled. Computed torque cancels the model so that each joint behaves like a unit mass, then a linear PD servo drives that unit mass. Write the dynamics as \(M(q)\,\ddot q + (\text{everything else}) = \tau\) and split the controller into a <em>model-based part</em> and a <em>servo part</em>:</p>
-\[\tau=\alpha v+\beta,\qquad \alpha=M(q)\ \ (\text{what multiplies }\ddot q),\qquad \beta=\text{all other terms}\ \Rightarrow\ \ddot q=v.\]
-<p>Then \(v=\ddot q_d+k_v\dot e+k_p e\) with \(e=q_d-q\) gives the error equation \(\ddot e+k_v\dot e+k_p e=0\). <a class="cite" href="../../resources/lecture-02-robot-control.pdf#page=6" data-pages="lecture-02-robot-control:6,7,8,9">Lec 2 pp. 6&ndash;9 (partitioned control, one joint)</a> &middot; <a class="cite" href="../../resources/lecture-02-robot-control.pdf#page=20" data-pages="lecture-02-robot-control:20,21,22,23,24,25,26,27,28,29,30,31">Lec 2 pp. 20&ndash;31 (mass matrix \(M(q)\), computed torque for \(n\) joints)</a> &middot; <a class="cite" href="../../resources/additional-materials/robot-control-examples-additional-info.pdf#page=1" data-pages="robot-control-examples-additional-info:1,2,3">lecturer's worked examples (single link, 2-link polar)</a></p>
-<div class="ex"><b>Slide example.</b> \(m\ddot x+b\dot x+kx^3=u\): \(\alpha=m\), \(\beta=b\dot x+kx^3\). <b>Exercise 1(a).</b> \(3\theta\ddot\theta+5\dot\theta^2-2\cos\theta=\tau\): \(\alpha=3\theta\), \(\beta=5\dot\theta^2-2\cos\theta\). <b>Exercise 2 (3 joints).</b> \(\alpha=\mathrm{diag}(m_2r^2,\ m_1+m_2,\ m_2)\), \(\beta=[\,2m_2r\dot r\dot\theta,\ (m_1+m_2)gh,\ -m_2r\dot\theta^2\,]^T\). <a class="cite" href="../../resources/exercises-robot-control-not-for-submission.pdf#page=1" data-pages="exercises-robot-control-not-for-submission:1">exercise sheet</a> &middot; <a class="cite" href="../../resources/exercises-robot-control-solutions.pdf#page=1" data-pages="exercises-robot-control-solutions:1,2,3,4,5">solutions</a></div>
-<div class="pit"><b>Pitfall.</b> In a coupled model such as \(2\ddot q_1+\ddot q_2+\dots=u_1\), the \(\ddot q_2\) term is inertia: it goes into \(\alpha\) as an off-diagonal entry, never into \(\beta\). Gravity constants (e.g. \(+100\)) and the contact force \(f\) go into \(\beta\).</div>
-<div class="chk">For \(3\theta\ddot\theta+5\dot\theta^2-2\cos\theta=\tau\), evaluate \(\beta\) at \(\theta=0\), \(\dot\theta=2\): <input data-num size="9"> <button class="btn">check</button><span class="fb"></span></div></div>
+<!-- C1 -->
+<div class="card" data-k="c1">
+<h3>C1. Partitioned (computed-torque) control <span class="tag">5 of 5 papers</span></h3>
 
-<div class="card" data-k="c2" data-k2="c2b"><h3>C2. Choosing \(k_v\) and \(k_p\) <span class="tag">5 of 5 papers</span></h3>
-<p>Match \(s^2+k_vs+k_p=0\) to the standard form \(s^2+2\zeta\omega_ns+\omega_n^2=0\):</p>
-\[k_v=2\zeta\omega_n,\qquad k_p=\omega_n^2,\qquad \zeta\ge 1,\qquad \omega_n\le 0.5\,\omega_{res}.\]
-<p>\(\zeta\ge1\) means no overshoot (an overshooting arm hits the workpiece). \(\omega_{res}\) is the <b>lowest</b> unmodelled structural resonance, so the closed loop never excites any of them. The lecturer in Week 6: &ldquo;Remember these two specifications.&rdquo; When the paper says &ldquo;gains as high as possible&rdquo; or gives no other rule, take \(\omega_n=0.5\,\omega_{res,\min}\). <a class="cite" href="../../resources/lecture-02-robot-control.pdf#page=10" data-pages="lecture-02-robot-control:10,11">Lec 2 pp. 10&ndash;11 (performance specifications)</a> &middot; <a class="cite" href="../../resources/lecture-02-robot-control.pdf#page=32" data-pages="lecture-02-robot-control:32,33,34,35,36,37">Lec 2 pp. 32&ndash;37 (2-link polar example)</a> &middot; <a class="cite" href="../../resources/additional-materials/review-week-06-control.pdf#page=1" data-pages="review-week-06-control:1">Week 6 review sheet (setting the gains)</a></p>
-<div class="ex"><b>Lecture example.</b> Resonance 12 rad/s, critically damped: \(\omega_n=6\), \(k_v=12\), \(k_p=36\). <b>Exercise 2.</b> 14.5 Hz is \(2\pi\cdot14.5=91.1\) rad/s, so \(\omega_n\le45.55\); the solution takes \(\omega_n=45\), giving \(k_v=90\), \(k_p=2025\).</div>
-<div class="pit"><b>Pitfalls.</b> (1) A resonance in Hz must be multiplied by \(2\pi\) first. (2) Use the <em>lowest</em> resonance, not the one &ldquo;for this joint&rdquo;. (3) &ldquo;Overdamped with \(\zeta=1.25\)&rdquo; changes only \(k_v\); \(k_p=\omega_n^2\) is the same.</div>
-<div class="chk">Resonances at 10, 18 and 30 rad/s, \(\zeta=1.25\), gains as high as allowed. \(k_v=\) <input data-num size="9"> <button class="btn">check</button><span class="fb"></span><br>
-\(k_p=\) <input data-num="2" size="9"> <button class="btn">check</button><span class="fb"></span></div></div>
+<h4>1. The big picture</h4>
+<p>A real robot arm is hard to control with a plain PD controller because its equations of motion are <b>nonlinear</b> (gravity \(\cos q\), Coriolis \(\dot q_1 \dot q_2 \sin q_2\), nonlinear springs \(kx^3\)) and <b>coupled</b> (accelerating joint 2 creates a reaction torque on joint 1). A plain PD controller tuned for one pose behaves sluggishly or oscillates wildly at another pose.</p>
+<p><b>Computed-torque (partitioned) control</b> solves this in two clean layers:</p>
+<ul>
+  <li><b>Inner layer (model-based portion):</b> Uses the known physics model of the robot to <em>cancel</em> all nonlinearities, gravity, friction, and joint coupling. After cancellation, every joint looks like a completely decoupled <b>unit mass</b> \(\ddot q_i = v_i\).</li>
+  <li><b>Outer layer (servo portion):</b> Designs a simple linear PD controller \(v_i\) for that unit mass so the tracking error decays cleanly to zero at any pose.</li>
+</ul>
 
-<div class="card" data-k="c3"><h3>C3. Constant disturbance and integral action <span class="tag">4 of 5 papers</span></h3>
-<p>If an unmodelled force \(d\) acts, \(m\ddot x+b\dot x+kx^3+d=u\), the same controller leaves \(m(\ddot e+k_v\dot e+k_pe)=d\). By the final-value theorem with \(D(s)=d/s\):</p>
-\[e_{ss}=\lim_{s\to0}\frac{s\,d/s}{m(s^2+k_vs+k_p)}=\frac{d}{m\,k_p}\neq0.\]
-<p>Fix: add an integral term, \(v=\ddot x_d+k_v\dot e+k_pe+k_i\!\int e\,dt\). Now \(E(s)/D(s)=s/\big(m(s^3+k_vs^2+k_ps+k_i)\big)\), and the extra \(s\) in the numerator drives \(e_{ss}\) to 0. For several joints, \(\ddot E+K_v\dot E+K_pE=M^{-1}d\), so every joint the disturbance reaches has a steady error. <a class="cite" href="../../resources/lecture-02-robot-control.pdf#page=11" data-pages="lecture-02-robot-control:11,12,13">Lec 2 pp. 11&ndash;13 (disturbance rejection)</a> &middot; <a class="cite" href="../../resources/lecture-02-robot-control.pdf#page=31" data-pages="lecture-02-robot-control:31">Lec 2 p. 31 (PID computed torque, \(n\) joints)</a></p>
-<div class="chk">\(m=2\), constant \(d=3\), \(k_p=36\), PD only. \(e_{ss}\) (4 d.p.): <input data-num size="9"> <button class="btn">check</button><span class="fb"></span></div></div>
+<div class="fig">
+<svg viewBox="0 0 680 185" width="680" height="185" role="img" aria-label="Block diagram of partitioned computed-torque control">
+  <defs>
+    <marker id="arr-c1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="currentColor"/>
+    </marker>
+  </defs>
+  <!-- dashed outer box: Servo -->
+  <rect x="16" y="18" width="215" height="106" rx="10" fill="none" stroke="var(--accent)" stroke-dasharray="5 4" stroke-width="1.5"/>
+  <text x="26" y="34" fill="var(--accent)" font-size="11" font-weight="700">SERVO PORTION (linear PD)</text>
+  <!-- Servo block -->
+  <rect x="30" y="46" width="188" height="64" rx="8" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.8"/>
+  <text x="124" y="72" fill="var(--text)" font-size="13" font-weight="700" text-anchor="middle">v = q̈_d + k_v ė + k_p e</text>
+  <text x="124" y="94" fill="var(--muted)" font-size="11" text-anchor="middle">where e = q_d − q</text>
+  <!-- arrow v -->
+  <line x1="218" y1="78" x2="262" y2="78" stroke="var(--text)" stroke-width="1.8" marker-end="url(#arr-c1)"/>
+  <text x="240" y="70" fill="var(--text)" font-size="13" font-weight="700" text-anchor="middle">v</text>
+  <!-- dashed box: Model-based -->
+  <rect x="255" y="18" width="192" height="106" rx="10" fill="none" stroke="var(--success)" stroke-dasharray="5 4" stroke-width="1.5"/>
+  <text x="265" y="34" fill="var(--success)" font-size="11" font-weight="700">MODEL-BASED PORTION</text>
+  <rect x="266" y="46" width="170" height="64" rx="8" fill="var(--surface)" stroke="var(--success)" stroke-width="1.8"/>
+  <text x="351" y="72" fill="var(--text)" font-size="13" font-weight="700" text-anchor="middle">τ = α v + β</text>
+  <text x="351" y="94" fill="var(--muted)" font-size="11" text-anchor="middle">α = M(q), β = rest</text>
+  <!-- arrow tau -->
+  <line x1="436" y1="78" x2="480" y2="78" stroke="var(--text)" stroke-width="1.8" marker-end="url(#arr-c1)"/>
+  <text x="458" y="70" fill="var(--text)" font-size="13" font-weight="700" text-anchor="middle">τ</text>
+  <!-- Robot plant -->
+  <rect x="484" y="46" width="166" height="64" rx="8" fill="var(--surface)" stroke="var(--text)" stroke-width="1.8"/>
+  <text x="567" y="72" fill="var(--text)" font-size="13" font-weight="700" text-anchor="middle">Robot Dynamics</text>
+  <text x="567" y="94" fill="var(--muted)" font-size="11" text-anchor="middle">M(q) q̈ + β(q, q̇) = τ</text>
+  <!-- output q -->
+  <line x1="650" y1="78" x2="674" y2="78" stroke="var(--text)" stroke-width="1.8"/>
+  <text x="665" y="68" fill="var(--text)" font-size="12" font-weight="700">q, q̇</text>
+  <!-- feedback line -->
+  <polyline points="662,78 662,158 124,158 124,114" fill="none" stroke="var(--muted)" stroke-width="1.6" marker-end="url(#arr-c1)"/>
+  <line x1="351" y1="158" x2="351" y2="114" stroke="var(--muted)" stroke-width="1.6" marker-end="url(#arr-c1)"/>
+  <text x="390" y="174" fill="var(--muted)" font-size="12" text-anchor="middle">Measured state (q, q̇) feeds both the model-based cancellation and the PD servo</text>
+</svg>
+<div class="cap"><b>Key insight:</b> Putting \(\tau = \alpha v + \beta\) directly in front of the robot turns the combined green + black blocks into a pure double integrator \(\ddot q = v\).</div>
+</div>
 
-<div class="card" data-k="c4"><h3>C4. Force control <span class="tag">5 of 5 papers (inside hybrid)</span></h3>
-<p>Model the surface as a spring: \(f=k_e(x-x_e)\), with \(k_e\) the stiffness and \(x_e\) where the surface is. The dynamics \(m\ddot x+f=\alpha v+\beta\) with \(\alpha=m\), \(\beta=f\) give \(\ddot x=v\). Since \(\ddot f=k_e\ddot x\), the plant is \(\tfrac1{k_e}\ddot f=v\), so servo the <em>force</em>:</p>
-\[v=\frac1{k_e}\big(\ddot f_d+k_{vf}\dot e_f+k_{pf}e_f\big),\quad e_f=f_d-f\ \Rightarrow\ \ddot e_f+k_{vf}\dot e_f+k_{pf}e_f=0.\]
-<p>The force loop obeys the same gain rules (its own \(\zeta\), and \(\omega_n\le0.5\,\omega_{res}\)). With no force sensor, \(f\) and \(\dot f=k_e\dot x\) are computed from the measured position and velocity, which is only as good as the known \(k_e\) and \(x_e\). <a class="cite" href="../../resources/lecture-02-robot-control.pdf#page=38" data-pages="lecture-02-robot-control:38,39,40,41">Lec 2 pp. 38&ndash;41 (force control)</a></p>
-<div class="chk">\(k_e=25\), force loop critically damped, lowest resonance 8 rad/s, so \(k_{vf}=8\), \(k_{pf}=16\). Compute \(v\) when \(\ddot f_d=0\), \(e_f=1\), \(\dot e_f=-1\): <input data-num size="9"> <button class="btn">check</button><span class="fb"></span></div></div>
+<h4>2. Symbol table</h4>
+<div class="tbl-wrap"><table class="sym">
+<thead><tr><th>Symbol</th><th>Meaning</th><th>Role in the equations</th></tr></thead>
+<tbody>
+<tr><td>\(q,\ \dot q,\ \ddot q\)</td><td>Joint position, velocity, acceleration (scalar or \(n\times 1\) vector)</td><td>Measured state of the robot.</td></tr>
+<tr><td>\(q_d,\ \dot q_d,\ \ddot q_d\)</td><td>Desired trajectory (position, velocity, acceleration)</td><td>Reference motion we want the robot to follow.</td></tr>
+<tr><td>\(e = q_d - q\)</td><td>Tracking error (and \(\dot e = \dot q_d - \dot q\), \(\ddot e = \ddot q_d - \ddot q\))</td><td>Note the sign: <b>desired minus actual</b>.</td></tr>
+<tr><td>\(\tau\) (or \(u\))</td><td>Actuator torque / force vector sent to the motors</td><td>Output of the complete controller.</td></tr>
+<tr><td>\(\alpha = M(q)\)</td><td>Inertia (mass) matrix multiplying \(\ddot q\)</td><td>\(n\times n\) matrix (scalar \(m\) for 1 DOF).</td></tr>
+<tr><td>\(\beta(q,\dot q)\)</td><td>All non-acceleration terms: Coriolis, centrifugal, friction, gravity, contact force</td><td>Everything left over on the LHS besides \(M(q)\ddot q\).</td></tr>
+<tr><td>\(v\)</td><td>Auxiliary (virtual) acceleration input</td><td>Output of the linear PD servo portion.</td></tr>
+<tr><td>\(k_p,\ k_v\) (or \(K_p, K_v\))</td><td>Position and velocity feedback gains</td><td>Chosen to set the closed-loop damping and speed (see C2).</td></tr>
+</tbody>
+</table></div>
 
-<div class="card" data-k="c5" data-sel="q3"><h3>C5. Hybrid position/force control <span class="tag">5 of 5 papers</span></h3>
-<p>In contact, the environment fixes one direction (the <b>force subspace</b>, normal to the surface) and leaves the others free (the <b>motion subspace</b>). Read the contact model: in \(f=25(q_3-0.2)\) only \(q_3\) changes the force, so \(q_3\) is force-controlled and the other coordinates are position-controlled.</p>
-<ol>
-<li>One model-based part for the whole robot: \(\alpha=M(q)\), \(\beta=\) everything else <b>including \(f\)</b>, so \(\ddot q=v\).</li>
-<li>Motion coordinates: \(v_i=\ddot q_{id}+k_v\dot e_i+k_pe_i\), with the motion \(\zeta\).</li>
-<li>Force coordinate: \(v_3=\frac1{k_e}(\ddot f_d+k_{vf}\dot e_f+k_{pf}e_f)\), with the force \(\zeta\).</li>
-<li>Both loops: \(\omega_n\le0.5\,\omega_{res,\min}\). Write \(\tau=\alpha v+\beta\) out in full and state the error equations.</li>
+<h4>3. Step-by-step derivation</h4>
+<ol class="steps">
+  <li><b>Start with the robot's equation of motion:</b> Collect every term multiplying \(\ddot q\) into \(M(q)\ddot q\), and lump everything else (Coriolis, friction, nonlinear springs, gravity, contact forces) into \(h(q,\dot q)\):
+    \[M(q)\,\ddot q + h(q,\dot q) = \tau.\]
+  </li>
+  <li><b>Choose the model-based control law \(\tau = \alpha v + \beta\):</b> Substitute it into the dynamics:
+    \[M(q)\,\ddot q + h(q,\dot q) = \alpha v + \beta.\]
+    If we choose <b>\(\alpha = M(q)\)</b> and <b>\(\beta = h(q,\dot q)\)</b>, the \(h(q,\dot q)\) terms cancel identically, leaving \(M(q)\ddot q = M(q)v\). Because the mass matrix \(M(q)\) is always invertible, multiplying by \(M(q)^{-1}\) gives:
+    \[\ddot q = v.\]
+    The nonlinear coupled robot now behaves as \(n\) independent unit masses!
+  </li>
+  <li><b>Design the linear servo \(v\):</b> We want the error \(e = q_d - q\) to satisfy a stable linear second-order ODE \(\ddot e + k_v \dot e + k_p e = 0\). Since \(\ddot e = \ddot q_d - \ddot q = \ddot q_d - v\), rearranging for \(v\) gives:
+    \[v = \ddot q_d + k_v \dot e + k_p e.\]
+  </li>
+  <li><b>Check the closed-loop error equation:</b> Substitute \(v\) back into \(\ddot q = v\):
+    \[\ddot q = \ddot q_d + k_v \dot e + k_p e \;\Longrightarrow\; (\ddot q_d - \ddot q) + k_v \dot e + k_p e = 0 \;\Longrightarrow\; \ddot e + k_v \dot e + k_p e = 0.\]
+    Notice that <b>no nonlinear terms and no mass parameters remain</b> in the error equation.</li>
 </ol>
-<p>With constant disturbances on the motion joints, the error equations are \(\ddot E+K_v\dot E+K_pE=M^{-1}d\) (motion) and \(\ddot e_f+k_{vf}\dot e_f+k_{pf}e_f=0\) (force, if no disturbance reaches it): state the steady error and add integral action. <a class="cite" href="../../resources/lecture-02-robot-control.pdf#page=42" data-pages="lecture-02-robot-control:42,43,44,45,46,47,48,49,50,51,52,53,54">Lec 2 pp. 42&ndash;54 (hybrid position/force control)</a></p>
-<div class="chk">Contact force \(f=22(q_3-0.2)\) on a 3-joint robot. Which coordinate gets the force servo? <select><option value="">&mdash;</option><option>q1</option><option>q2</option><option>q3</option><option>all three</option></select> <button class="btn">check</button><span class="fb"></span></div></div>
 
-<div class="card" data-k="c6"><h3>C6. When the model is wrong <span class="tag">23-24 S2, 25-26 S2</span></h3>
-<p>Two papers ask what happens when the controller's contact model is off. The slides do not cover this case; the result below is derived here from the slide equations (C4), so present it as your own derivation. Basis: <a class="cite" href="../../resources/lecture-02-robot-control.pdf#page=38" data-pages="lecture-02-robot-control:38,39,40,41">Lec 2 pp. 38&ndash;41 (force control)</a></p>
-<p><b>Stiffness misjudged</b> (controller uses \(\hat k\), truth is \(k\)). The real plant gives \(\ddot f=k\,v=\rho(\ddot f_d+k_{vf}\dot e_f+k_{pf}e_f)\) with \(\rho=k/\hat k\), so</p>
-\[\ddot e_f+\rho k_{vf}\dot e_f+\rho k_{pf}e_f=(1-\rho)\ddot f_d.\]
-<p>For a constant \(f_d\) the error still goes to 0, but \(\omega_n'=\omega_n\sqrt\rho\) and \(\zeta'=\zeta\sqrt\rho\): the response changes, and \(\omega_n'\) can break the resonance limit.</p>
-<p><b>No force sensor and \(x_e\) drifts</b> (assumed \(x_e\), true \(x_e'\)). The computed force \(\hat f=k(x-x_e)\) is driven to \(f_d\), so the true force settles at \(f_d+k(x_e-x_e')\), a steady bias that integral action on \(\hat f\) cannot see. The fix is to measure the force (sensor feedback) or re-identify \(x_e\).</p>
-<div class="chk">Controller uses \(\hat k=30\), true \(k=32\), designed force \(\zeta=1\). Actual \(\zeta'\) (4 d.p.): <input data-num size="9"> <button class="btn">check</button><span class="fb"></span></div></div>
+<div class="formula">
+\[\tau = \alpha v + \beta,\qquad \alpha = M(q),\qquad \beta = \text{all other terms},\qquad v = \ddot q_d + K_v \dot e + K_p e \;\Longrightarrow\; \ddot e + K_v \dot e + K_p e = 0.\]
+</div>
 
+<h4>4. Worked examples</h4>
+<div class="ex">
+<p><b>Slide example (1-DOF nonlinear mass-spring-damper):</b> Given \(m\ddot x + b\dot x + kx^3 = u\).</p>
+<p>Only \(m\) multiplies \(\ddot x\), so \(\alpha = m\) and \(\beta = b\dot x + kx^3\). Complete control law: \(u = m(\ddot x_d + k_v\dot e + k_p e) + b\dot x + kx^3\).</p>
+<p><b>Exercise 1(a) (1-DOF rotary):</b> Given \(3\theta\ddot\theta + 5\dot\theta^2 - 2\cos\theta = \tau\).</p>
+<p>The inertia depends on \(\theta\): \(\alpha = 3\theta\), and everything else is \(\beta = 5\dot\theta^2 - 2\cos\theta\).</p>
+<p><b>Exercise 2 (3-joint manipulator):</b> The three equations give a diagonal mass matrix \(\alpha = \mathrm{diag}(m_2 r^2,\ m_1+m_2,\ m_2)\) and \(\beta = [\,2m_2 r\dot r\dot\theta,\ (m_1+m_2)gh,\ -m_2 r\dot\theta^2\,]^T\).</p>
+<p><b>Coupled 2-DOF example (like past finals):</b> Suppose
+\(2\ddot q_1 + \ddot q_2 + 4\dot q_1 = u_1\) and \(\ddot q_1 + 3\ddot q_2 + 10 = u_2\). Rewrite in matrix form:</p>
+\[\begin{bmatrix} 2 & 1 \\ 1 & 3 \end{bmatrix} \begin{bmatrix} \ddot q_1 \\ \ddot q_2 \end{bmatrix} + \begin{bmatrix} 4\dot q_1 \\ 10 \end{bmatrix} = \begin{bmatrix} u_1 \\ u_2 \end{bmatrix} \;\Longrightarrow\; \alpha = \begin{bmatrix} 2 & 1 \\ 1 & 3 \end{bmatrix},\quad \beta = \begin{bmatrix} 4\dot q_1 \\ 10 \end{bmatrix}.\]
+<p>Then \(u_1 = 2v_1 + v_2 + 4\dot q_1\) and \(u_2 = v_1 + 3v_2 + 10\). Notice how \(v_2\) appears inside \(u_1\) because of the off-diagonal inertia term!</p>
+</div>
+
+<div class="pit"><b>Pitfall.</b> In a coupled model such as \(2\ddot q_1+\ddot q_2+\dots=u_1\), the \(\ddot q_2\) term is inertia: it goes into \(\alpha\) as an off-diagonal entry, <b>never</b> into \(\beta\). Constant gravity terms (e.g. \(+100\)) and contact forces \(f\) have no \(\ddot q\), so they always go into \(\beta\).</div>
+
+<div class="refs"><b>References:</b> <a class="cite" href="../../resources/lecture-02-robot-control.pdf#page=6" data-pages="lecture-02-robot-control:6,7,8,9">Lec 2 pp. 6&ndash;9 (partitioned control, one joint)</a> &middot; <a class="cite" href="../../resources/lecture-02-robot-control.pdf#page=20" data-pages="lecture-02-robot-control:20,21,22,23,24,25,26,27,28,29,30,31">Lec 2 pp. 20&ndash;31 (mass matrix \(M(q)\), computed torque for \(n\) joints)</a> &middot; <a class="cite" href="../../resources/additional-materials/robot-control-examples-additional-info.pdf#page=1" data-pages="robot-control-examples-additional-info:1,2,3">lecturer's worked examples (single link, 2-link polar)</a> &middot; <a class="cite" href="../../resources/exercises-robot-control-not-for-submission.pdf#page=1" data-pages="exercises-robot-control-not-for-submission:1">exercise sheet</a> &middot; <a class="cite" href="../../resources/exercises-robot-control-solutions.pdf#page=1" data-pages="exercises-robot-control-solutions:1,2,3,4,5">solutions</a></div>
+
+<div class="chk">For \(3\theta\ddot\theta+5\dot\theta^2-2\cos\theta=\tau\), evaluate \(\beta\) at \(\theta=0\), \(\dot\theta=2\): <input data-num size="9"> <button class="btn">check</button><span class="fb"></span></div>
+</div>
+
+<!-- C2 -->
+<div class="card" data-k="c2" data-k2="c2b">
+<h3>C2. Choosing \(k_v\) and \(k_p\) <span class="tag">5 of 5 papers</span></h3>
+
+<h4>1. The big picture</h4>
+<p>Once computed torque gives us the linear error equation \(\ddot e + k_v \dot e + k_p e = 0\), we must pick numerical values for \(k_v\) and \(k_p\). Making the gains too small makes the robot sluggish; making them too large excites hidden mechanical vibrations (gears, belts, flexible links) that were ignored in the rigid-body model. Two simple rules govern every exam question.</p>
+
+<div class="fig">
+<svg viewBox="0 0 640 160" width="640" height="160" role="img" aria-label="Step response damping and frequency resonance limit">
+  <!-- Left: step response -->
+  <text x="150" y="18" fill="var(--text)" font-size="12" font-weight="700" text-anchor="middle">Rule 1: Damping ζ ≥ 1 (no overshoot)</text>
+  <line x1="35" y1="130" x2="275" y2="130" stroke="var(--muted)" stroke-width="1.4"/>
+  <line x1="35" y1="130" x2="35" y2="30" stroke="var(--muted)" stroke-width="1.4"/>
+  <line x1="35" y1="62" x2="270" y2="62" stroke="var(--muted)" stroke-dasharray="4 3" stroke-width="1.2"/>
+  <text x="12" y="66" fill="var(--muted)" font-size="11">q_d</text>
+  <!-- Underdamped (overshoot) -->
+  <path d="M 35 130 C 70 128, 95 28, 130 48 C 160 66, 185 70, 265 62" fill="none" stroke="var(--danger)" stroke-width="2" stroke-dasharray="4 3"/>
+  <text x="148" y="40" fill="var(--danger)" font-size="11">ζ &lt; 1 (hits wall!)</text>
+  <!-- Critically damped -->
+  <path d="M 35 130 C 80 128, 115 66, 265 62" fill="none" stroke="var(--success)" stroke-width="2.4"/>
+  <text x="195" y="84" fill="var(--success)" font-size="11" font-weight="700">ζ = 1 (fastest safe)</text>
+  <!-- Overdamped -->
+  <path d="M 35 130 C 105 128, 160 88, 265 68" fill="none" stroke="var(--accent)" stroke-width="1.8"/>
+  <text x="180" y="108" fill="var(--accent)" font-size="11">ζ &gt; 1 (slower, safe)</text>
+
+  <!-- Right: frequency line -->
+  <text x="480" y="18" fill="var(--text)" font-size="12" font-weight="700" text-anchor="middle">Rule 2: Bandwidth ω_n ≤ 0.5 ω_res,min</text>
+  <line x1="330" y1="100" x2="620" y2="100" stroke="var(--text)" stroke-width="2"/>
+  <rect x="330" y="72" width="115" height="28" fill="var(--success-soft)" stroke="var(--success)"/>
+  <text x="387" y="90" fill="var(--success)" font-size="11" font-weight="700" text-anchor="middle">Safe ω_n zone</text>
+  <line x1="445" y1="62" x2="445" y2="112" stroke="var(--success)" stroke-width="2"/>
+  <text x="445" y="128" fill="var(--success)" font-size="11" font-weight="700" text-anchor="middle">0.5 ω_res,min</text>
+  <!-- Resonances -->
+  <circle cx="535" cy="100" r="5" fill="var(--danger)"/>
+  <text x="535" y="84" fill="var(--danger)" font-size="11" font-weight="700" text-anchor="middle">ω_res,1</text>
+  <text x="535" y="124" fill="var(--danger)" font-size="10" text-anchor="middle">(lowest!)</text>
+  <circle cx="578" cy="100" r="4" fill="var(--muted)"/>
+  <text x="578" y="84" fill="var(--muted)" font-size="10" text-anchor="middle">ω_res,2</text>
+  <circle cx="608" cy="100" r="4" fill="var(--muted)"/>
+  <text x="608" y="84" fill="var(--muted)" font-size="10" text-anchor="middle">ω_res,3</text>
+</svg>
+<div class="cap"><b>Two specifications to memorize:</b> (1) \(\zeta \ge 1\) avoids overshoot; (2) \(\omega_n \le 0.5\,\omega_{res,\min}\) stays at least a factor of 2 below the lowest structural resonance.</div>
+</div>
+
+<h4>2. Symbol table</h4>
+<div class="tbl-wrap"><table class="sym">
+<thead><tr><th>Symbol</th><th>Meaning</th><th>Units</th></tr></thead>
+<tbody>
+<tr><td>\(\zeta\)</td><td>Damping ratio (\(\zeta = 1\) critically damped; \(\zeta \gt 1\) overdamped)</td><td>dimensionless</td></tr>
+<tr><td>\(\omega_n\)</td><td>Closed-loop natural frequency (bandwidth / speed of response)</td><td>rad/s</td></tr>
+<tr><td>\(\omega_{res}\)</td><td>Unmodelled structural resonance frequency of the robot</td><td>rad/s (convert Hz via \(\omega = 2\pi f\))</td></tr>
+<tr><td>\(k_v,\ k_p\)</td><td>Derivative (velocity) and proportional (position) servo gains</td><td>\(k_v\): s\(^{-1}\), \(k_p\): s\(^{-2}\)</td></tr>
+</tbody>
+</table></div>
+
+<h4>3. Step-by-step derivation</h4>
+<ol class="steps">
+  <li><b>Take the characteristic polynomial</b> of \(\ddot e + k_v \dot e + k_p e = 0\):
+    \[s^2 + k_v s + k_p = 0.\]
+  </li>
+  <li><b>Compare term-by-term with the standard second-order prototype</b> \(s^2 + 2\zeta\omega_n s + \omega_n^2 = 0\):
+    \[k_v = 2\zeta\omega_n,\qquad k_p = \omega_n^2.\]
+  </li>
+  <li><b>Apply the two physical constraints:</b>
+    <ul>
+      <li><b>No overshoot:</b> \(\zeta \ge 1\). (Critically damped \(\zeta = 1\) gives \(k_v = 2\omega_n = 2\sqrt{k_p}\), the fastest non-overshooting response.)</li>
+      <li><b>Do not excite structural vibration:</b> \(\omega_n \le 0.5\,\omega_{res,\min}\), using the <b>lowest</b> resonance listed in the problem.</li>
+    </ul>
+  </li>
+</ol>
+
+<div class="formula">
+\[k_v = 2\zeta\omega_n,\qquad k_p = \omega_n^2,\qquad \zeta \ge 1,\qquad \omega_n \le 0.5\,\omega_{res,\min}.\]
+</div>
+
+<div class="why"><b>Why each condition matters:</b> An overshooting robot arm (\(\zeta \lt 1\)) swings past its target and crashes into the workpiece or fixture. Setting \(\omega_n\) near \(\omega_{res}\) pumps energy into flexible structural modes that our rigid-body model ignores, causing violent shaking or instability. The lecturer in Week 6 explicitly stressed: &ldquo;Remember these two specifications.&rdquo; When an exam says &ldquo;gains as high as possible&rdquo; or gives no other speed rule, choose the boundary value \(\omega_n = 0.5\,\omega_{res,\min}\).</div>
+
+<h4>4. Worked examples</h4>
+<div class="ex">
+<p><b>Lecture example:</b> Structural resonance is \(\omega_{res} = 12\text{ rad/s}\), critically damped (\(\zeta = 1\)).<br>
+Step 1: \(\omega_n = 0.5 \times 12 = 6\text{ rad/s}\).<br>
+Step 2: \(k_v = 2(1)(6) = 12\), \(k_p = 6^2 = 36\).</p>
+<p><b>Exercise 2 (Hz to rad/s conversion):</b> Lowest resonance is \(14.5\text{ Hz}\), critically damped.<br>
+Step 1: Convert to rad/s: \(\omega_{res} = 2\pi(14.5) = 91.11\text{ rad/s}\).<br>
+Step 2: \(\omega_n \le 0.5(91.11) = 45.55\text{ rad/s}\). The lecturer's solution picks the clean round number \(\omega_n = 45\), giving \(k_v = 2(1)(45) = 90\) and \(k_p = 45^2 = 2025\).</p>
+</div>
+
+<div class="pit"><b>Pitfalls.</b> (1) Always check units: Hz must be multiplied by \(2\pi\) before taking \(0.5\,\omega_{res}\). (2) Always use the <em>lowest</em> resonance across the whole robot, never a higher resonance &ldquo;for joint 2&rdquo;. (3) Changing \(\zeta\) (e.g. overdamped \(\zeta = 1.25\)) changes <b>only \(k_v\)</b>; \(k_p = \omega_n^2\) stays unchanged.</div>
+
+<div class="refs"><b>References:</b> <a class="cite" href="../../resources/lecture-02-robot-control.pdf#page=10" data-pages="lecture-02-robot-control:10,11">Lec 2 pp. 10&ndash;11 (performance specifications)</a> &middot; <a class="cite" href="../../resources/lecture-02-robot-control.pdf#page=32" data-pages="lecture-02-robot-control:32,33,34,35,36,37">Lec 2 pp. 32&ndash;37 (2-link polar example)</a> &middot; <a class="cite" href="../../resources/additional-materials/review-week-06-control.pdf#page=1" data-pages="review-week-06-control:1">Week 6 review sheet (setting the gains)</a></div>
+
+<div class="chk">Resonances at 10, 18 and 30 rad/s, \(\zeta=1.25\), gains as high as allowed. \(k_v=\) <input data-num size="9"> <button class="btn">check</button><span class="fb"></span><br>
+\(k_p=\) <input data-num="2" size="9"> <button class="btn">check</button><span class="fb"></span></div>
+</div>
+
+<!-- C3 -->
+<div class="card" data-k="c3">
+<h3>C3. Constant disturbance and integral action <span class="tag">4 of 5 papers</span></h3>
+
+<h4>1. The big picture</h4>
+<p>Our computed-torque law \(\tau = \alpha v + \beta\) cancels every term we <em>knew</em> about. What if an <b>unknown constant disturbance</b> \(d\) pushes on the robot (for example, an unmeasured payload weight or constant joint friction)? With PD control alone, the robot stops slightly short of its target because it needs a nonzero error \(e_{ss}\) to generate a steady restoring force \(m k_p e_{ss}\) that balances \(d\). Adding an <b>integral term</b> \(k_i \int e\,dt\) builds up torque automatically until \(e\) is driven all the way to zero.</p>
+
+<h4>2. Symbol table</h4>
+<div class="tbl-wrap"><table class="sym">
+<thead><tr><th>Symbol</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td>\(d\)</td><td>Unknown constant disturbance force/torque (Laplace transform \(D(s) = d/s\)).</td></tr>
+<tr><td>\(e_{ss}\)</td><td>Steady-state tracking error, \(\lim_{t\to\infty} e(t) = \lim_{s\to 0} s E(s)\).</td></tr>
+<tr><td>\(k_i\) (or \(K_i\))</td><td>Integral gain added to the servo law \(v\) to eliminate steady-state error.</td></tr>
+</tbody>
+</table></div>
+
+<h4>3. Step-by-step derivation</h4>
+<ol class="steps">
+  <li><b>Insert the unknown disturbance \(d\) into the plant:</b>
+    \[m\ddot x + b\dot x + kx^3 + d = u.\]
+    We do not know \(d\), so the controller still applies \(u = m(\ddot x_d + k_v \dot e + k_p e) + b\dot x + kx^3\).
+  </li>
+  <li><b>Cancel the known terms:</b> \(b\dot x + kx^3\) cancels, leaving:
+    \[m\ddot x + d = m(\ddot x_d + k_v \dot e + k_p e) \;\Longrightarrow\; m(\ddot e + k_v \dot e + k_p e) = d.\]
+  </li>
+  <li><b>Compute the steady-state error under PD control:</b> Take the Laplace transform with \(D(s) = d/s\):
+    \[E(s) = \frac{D(s)}{m(s^2 + k_v s + k_p)} = \frac{d/s}{m(s^2 + k_v s + k_p)}.\]
+    By the Final-Value Theorem (valid because \(k_v, k_p \gt 0\) makes all poles stable):
+    \[e_{ss} = \lim_{s\to 0} s E(s) = \lim_{s\to 0} \frac{s \cdot (d/s)}{m(s^2 + k_v s + k_p)} = \frac{d}{m\,k_p} \neq 0.\]
+  </li>
+  <li><b>Fix with integral action (PID computed torque):</b> Change the servo to \(v = \ddot x_d + k_v\dot e + k_p e + k_i\!\int e\,dt\). Now the error equation becomes:
+    \[m\left(\ddot e + k_v\dot e + k_p e + k_i\!\int e\,dt\right) = d \;\Longrightarrow\; m\left(s^2 + k_v s + k_p + \frac{k_i}{s}\right)E(s) = \frac{d}{s}.\]
+    Multiply numerator and denominator by \(s\):
+    \[E(s) = \frac{s\,D(s)}{m(s^3 + k_v s^2 + k_p s + k_i)} = \frac{d}{m(s^3 + k_v s^2 + k_p s + k_i)}.\]
+    Applying the Final-Value Theorem now gives:
+    \[e_{ss} = \lim_{s\to 0} s E(s) = \lim_{s\to 0} \frac{s\,d}{m(s^3 + k_v s^2 + k_p s + k_i)} = 0.\]
+  </li>
+  <li><b>Multi-joint generalization:</b> For \(n\) joints with disturbance vector \(d\), \(M(q)(\ddot E + K_v\dot E + K_p E) = d\), so:
+    \[\ddot E + K_v \dot E + K_p E = M(q)^{-1} d.\]
+    Even if \(d\) acts on only one joint, a non-diagonal \(M(q)^{-1}\) spreads steady-state error to every coupled joint. Adding \(K_i \int E\,dt\) drives the entire error vector \(E_{ss}\) to \(0\).</li>
+</ol>
+
+<div class="formula">
+\[\text{PD only: } e_{ss} = \frac{d}{m\,k_p} \quad\big(\text{multi-joint: } E_{ss} = K_p^{-1}M^{-1}d\big);\qquad \text{PID } (+k_i\!\int e\,dt)\text{: } e_{ss} = 0.\]
+</div>
+
+<div class="ex">
+<p><b>Worked example (coupled 2-joint steady error):</b> Suppose \(M = \begin{bmatrix} 3 & 1 \\ 1 & 1 \end{bmatrix}\), \(K_p = 36 I\), and constant disturbance \(d = \begin{bmatrix} 2 \\ 1 \end{bmatrix}\). First invert \(M\): \(\det M = 3(1) - 1(1) = 2\), so \(M^{-1} = \frac{1}{2}\begin{bmatrix} 1 & -1 \\ -1 & 3 \end{bmatrix}\). Then \(M^{-1}d = \frac{1}{2}\begin{bmatrix} 2-1 \\ -2+3 \end{bmatrix} = \begin{bmatrix} 0.5 \\ 0.5 \end{bmatrix}\), and \(E_{ss} = \frac{1}{36}\begin{bmatrix} 0.5 \\ 0.5 \end{bmatrix} = \begin{bmatrix} 0.0139 \\ 0.0139 \end{bmatrix}\). Adding \(K_i \int E\,dt\) removes both errors.</p>
+</div>
+
+<div class="pit"><b>Pitfall.</b> When adding integral action, the characteristic polynomial becomes cubic: \(s^3 + k_v s^2 + k_p s + k_i = 0\). By Routh&ndash;Hurwitz, stability requires \(k_i \gt 0\) and \(k_v k_p \gt k_i\), so \(k_i\) must not be made arbitrarily large.</div>
+
+<div class="refs"><b>References:</b> <a class="cite" href="../../resources/lecture-02-robot-control.pdf#page=11" data-pages="lecture-02-robot-control:11,12,13">Lec 2 pp. 11&ndash;13 (disturbance rejection)</a> &middot; <a class="cite" href="../../resources/lecture-02-robot-control.pdf#page=31" data-pages="lecture-02-robot-control:31">Lec 2 p. 31 (PID computed torque, \(n\) joints)</a></div>
+
+<div class="chk">\(m=2\), constant \(d=3\), \(k_p=36\), PD only. \(e_{ss}\) (4 d.p.): <input data-num size="9"> <button class="btn">check</button><span class="fb"></span></div>
+</div>
+
+<!-- C4 -->
+<div class="card" data-k="c4">
+<h3>C4. Force control <span class="tag">5 of 5 papers (inside hybrid)</span></h3>
+
+<h4>1. The big picture</h4>
+<p>When a robot polishes a car hood or pushes a peg into a hole, commanding <em>position</em> into a stiff surface is dangerous: even a 1 mm position error against a rigid wall produces a huge crushing force. Instead, we command the <b>contact force</b> \(f_d\) directly. We model the contact surface as a linear spring of stiffness \(k_e\) located at \(x_e\): pushing the robot to position \(x \gt x_e\) compresses the surface and creates force \(f = k_e(x - x_e)\).</p>
+
+<div class="fig">
+<svg viewBox="0 0 600 130" width="600" height="130" role="img" aria-label="Robot mass pressing against compliant spring surface">
+  <!-- Mass block -->
+  <rect x="70" y="38" width="90" height="54" rx="6" fill="var(--surface)" stroke="var(--text)" stroke-width="2"/>
+  <text x="115" y="70" fill="var(--text)" font-size="14" font-weight="700" text-anchor="middle">mass m</text>
+  <!-- Actuator arrow u -->
+  <line x1="20" y1="65" x2="66" y2="65" stroke="var(--accent)" stroke-width="2.5"/>
+  <polygon points="68,65 58,60 58,70" fill="var(--accent)"/>
+  <text x="36" y="55" fill="var(--accent)" font-size="13" font-weight="700">u</text>
+  <!-- Spring -->
+  <polyline points="160,65 180,65 190,48 206,82 222,48 238,82 254,48 270,82 280,65 300,65" fill="none" stroke="var(--success)" stroke-width="2.2"/>
+  <text x="230" y="36" fill="var(--success)" font-size="13" font-weight="700" text-anchor="middle">stiffness k_e</text>
+  <!-- Wall -->
+  <line x1="300" y1="22" x2="300" y2="108" stroke="var(--text)" stroke-width="3"/>
+  <line x1="300" y1="30" x2="315" y2="20" stroke="var(--muted)" stroke-width="1.5"/>
+  <line x1="300" y1="50" x2="315" y2="40" stroke="var(--muted)" stroke-width="1.5"/>
+  <line x1="300" y1="70" x2="315" y2="60" stroke="var(--muted)" stroke-width="1.5"/>
+  <line x1="300" y1="90" x2="315" y2="80" stroke="var(--muted)" stroke-width="1.5"/>
+  <!-- Contact force f -->
+  <text x="230" y="106" fill="var(--danger)" font-size="12" font-weight="700" text-anchor="middle">f = k_e (x − x_e)</text>
+  <!-- Right summary box -->
+  <rect x="350" y="22" width="235" height="86" rx="8" fill="var(--surface)" stroke="var(--border)"/>
+  <text x="364" y="45" fill="var(--text)" font-size="12" font-weight="700">Differentiate twice (x_e const):</text>
+  <text x="364" y="66" fill="var(--accent)" font-size="12">ḟ = k_e ẋ ,   f̈ = k_e ẍ</text>
+  <text x="364" y="89" fill="var(--muted)" font-size="12">So ẍ = v  becomes  (1/k_e) f̈ = v</text>
+</svg>
+<div class="cap"><b>Core bridge:</b> Because \(f\) is proportional to \(x - x_e\), controlling acceleration \(\ddot x = v\) directly controls the second derivative of force \(\ddot f = k_e v\).</div>
+</div>
+
+<h4>2. Symbol table</h4>
+<div class="tbl-wrap"><table class="sym">
+<thead><tr><th>Symbol</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td>\(k_e\)</td><td>Environment (surface) stiffness (N/m).</td></tr>
+<tr><td>\(x_e\)</td><td>Undeformed surface location (constant unless the surface drifts).</td></tr>
+<tr><td>\(f = k_e(x - x_e)\)</td><td>Contact force exerted by the robot on the surface.</td></tr>
+<tr><td>\(f_d,\ \dot f_d,\ \ddot f_d\)</td><td>Desired force trajectory (often constant, so \(\dot f_d = \ddot f_d = 0\)).</td></tr>
+<tr><td>\(e_f = f_d - f\)</td><td>Force tracking error (desired minus actual).</td></tr>
+<tr><td>\(k_{vf},\ k_{pf}\)</td><td>Force-loop derivative and proportional gains (obeying the same \(\zeta, \omega_n\) rules as C2).</td></tr>
+</tbody>
+</table></div>
+
+<h4>3. Step-by-step derivation</h4>
+<ol class="steps">
+  <li><b>Write the robot dynamics in contact:</b> The surface pushes back on the robot with force \(f\), so:
+    \[m\ddot x + f = u.\]
+  </li>
+  <li><b>Apply the model-based partition \(u = \alpha v + \beta\):</b> Choose \(\alpha = m\) and <b>\(\beta = f\)</b> (include the contact force in \(\beta\) so it is cancelled!). Then \(m\ddot x + f = m v + f \implies \ddot x = v\).</li>
+  <li><b>Convert \(\ddot x = v\) into a force plant:</b> Differentiate \(f = k_e(x - x_e)\) twice (assuming constant \(x_e\)):
+    \[\dot f = k_e \dot x,\qquad \ddot f = k_e \ddot x \;\Longrightarrow\; \frac{1}{k_e}\ddot f = v.\]
+  </li>
+  <li><b>Design the force servo \(v\):</b> To make \(e_f = f_d - f\) obey \(\ddot e_f + k_{vf}\dot e_f + k_{pf} e_f = 0\), we need \(\ddot f = \ddot f_d + k_{vf}\dot e_f + k_{pf} e_f\). Divide by \(k_e\):
+    \[v = \frac{1}{k_e}\big(\ddot f_d + k_{vf}\dot e_f + k_{pf} e_f\big).\]
+  </li>
+  <li><b>Check the closed-loop force error:</b> Substituting \(v\) into \(\frac{1}{k_e}\ddot f = v\) cancels \(1/k_e\) and leaves:
+    \[\ddot e_f + k_{vf}\dot e_f + k_{pf} e_f = 0.\]
+    We then pick \(k_{vf} = 2\zeta_f\omega_{nf}\) and \(k_{pf} = \omega_{nf}^2\) with \(\zeta_f \ge 1\) and \(\omega_{nf} \le 0.5\,\omega_{res,\min}\).</li>
+</ol>
+
+<div class="formula">
+\[u = m v + f,\qquad v = \frac{1}{k_e}\big(\ddot f_d + k_{vf}\dot e_f + k_{pf} e_f\big),\qquad e_f = f_d - f \;\Longrightarrow\; \ddot e_f + k_{vf}\dot e_f + k_{pf} e_f = 0.\]
+</div>
+
+<div class="why"><b>With vs. without a force sensor:</b> If a force sensor is mounted at the wrist, \(f\) is measured directly. If <b>no force sensor</b> is available (tested in 25-26 S2), we estimate \(f = k_e(x - x_e)\) and \(\dot f = k_e \dot x\) from the joint encoder and tachometer. That works only as long as our assumed \(k_e\) and \(x_e\) match the real surface (see C6).</div>
+
+<div class="ex">
+<p><b>Worked example:</b> Surface stiffness \(k_e = 50\text{ N/m}\), lowest resonance \(10\text{ rad/s}\), critically damped force loop (\(\zeta_f = 1\)).<br>
+Step 1: \(\omega_n = 0.5(10) = 5\text{ rad/s}\), so \(k_{vf} = 2(1)(5) = 10\) and \(k_{pf} = 5^2 = 25\).<br>
+Step 2: Suppose we want constant \(f_d = 10\text{ N}\), and right now \(f = 8\text{ N}\) (\(e_f = 2\)) with \(\dot f = 0\) (\(\dot e_f = 0\)). Then \(v = \frac{1}{50}(0 + 10(0) + 25(2)) = 1\text{ m/s}^2\), and the motor applies \(u = m(1) + 8\).</p>
+</div>
+
+<div class="pit"><b>Pitfall.</b> Do not forget the \(\frac{1}{k_e}\) factor in \(v\), and do not forget to include \(+f\) inside \(\beta\). Omitting \(1/k_e\) scales the force gains by \(k_e\) and makes the closed-loop \(\omega_n\) jump by \(\sqrt{k_e}\)!</div>
+
+<div class="refs"><b>References:</b> <a class="cite" href="../../resources/lecture-02-robot-control.pdf#page=38" data-pages="lecture-02-robot-control:38,39,40,41">Lec 2 pp. 38&ndash;41 (force control)</a></div>
+
+<div class="chk">\(k_e=25\), force loop critically damped, lowest resonance 8 rad/s, so \(k_{vf}=8\), \(k_{pf}=16\). Compute \(v\) when \(\ddot f_d=0\), \(e_f=1\), \(\dot e_f=-1\): <input data-num size="9"> <button class="btn">check</button><span class="fb"></span></div>
+</div>
+
+<!-- C5 -->
+<div class="card" data-k="c5" data-sel="q3">
+<h3>C5. Hybrid position/force control <span class="tag">5 of 5 papers</span></h3>
+
+<h4>1. The big picture</h4>
+<p>In real contact tasks (writing on a whiteboard, wiping a table), you cannot control both position and force along the <em>same</em> axis at the same time. Instead, space splits into two orthogonal subspaces:</p>
+<ul>
+  <li><b>Force subspace</b> (normal to the surface): the environment constrains motion here, so we control the <b>contact force</b>.</li>
+  <li><b>Motion subspace</b> (tangent to the surface): the robot is free to slide here, so we control the <b>position</b>.</li>
+</ul>
+<p>Every final exam Q2 puts C1&ndash;C4 together into one hybrid controller for a 2-, 3-, or 4-DOF robot.</p>
+
+<div class="fig">
+<svg viewBox="0 0 580 140" width="580" height="140" role="img" aria-label="Hybrid position and force subspaces on a surface">
+  <!-- Table surface -->
+  <rect x="40" y="96" width="240" height="18" fill="var(--surface-2)" stroke="var(--text)" stroke-width="1.6"/>
+  <text x="160" y="128" fill="var(--muted)" font-size="11" text-anchor="middle">Workpiece surface (q_3 = q_3e)</text>
+  <!-- Tool -->
+  <rect x="142" y="42" width="36" height="54" rx="4" fill="var(--surface)" stroke="var(--text)" stroke-width="1.8"/>
+  <text x="160" y="73" fill="var(--text)" font-size="11" font-weight="700" text-anchor="middle">Tool</text>
+  <!-- Motion arrow -->
+  <line x1="186" y1="70" x2="256" y2="70" stroke="var(--accent)" stroke-width="2.5"/>
+  <polygon points="260,70 250,65 250,75" fill="var(--accent)"/>
+  <text x="225" y="58" fill="var(--accent)" font-size="12" font-weight="700" text-anchor="middle">Motion subspace</text>
+  <text x="225" y="86" fill="var(--muted)" font-size="11" text-anchor="middle">Position servo (q_1, q_2)</text>
+  <!-- Force arrow -->
+  <line x1="160" y1="12" x2="160" y2="38" stroke="var(--danger)" stroke-width="2.5"/>
+  <polygon points="160,41 155,31 165,31" fill="var(--danger)"/>
+  <text x="108" y="25" fill="var(--danger)" font-size="12" font-weight="700" text-anchor="end">Force subspace</text>
+  <text x="108" y="39" fill="var(--muted)" font-size="11" text-anchor="end">Force servo (q_3)</text>
+  <!-- Right recipe box -->
+  <rect x="315" y="14" width="250" height="112" rx="8" fill="var(--surface)" stroke="var(--border)"/>
+  <text x="328" y="34" fill="var(--text)" font-size="12" font-weight="700">Exam Q2 Hybrid Blueprint:</text>
+  <text x="328" y="54" fill="var(--text)" font-size="11.5">1. One α = M(q), β = rest + f</text>
+  <text x="328" y="72" fill="var(--accent)" font-size="11.5">2. Free joints → v_i = q̈_id + k_v ė_i + k_p e_i</text>
+  <text x="328" y="90" fill="var(--danger)" font-size="11.5">3. Contact joint → v_f = (1/k_e)(f̈_d + k_vf ė_f + k_pf e_f)</text>
+  <text x="328" y="108" fill="var(--success)" font-size="11.5">4. Assemble τ = α v + β &amp; state error ODEs</text>
+</svg>
+<div class="cap"><b>How to identify the subspace instantly:</b> Read the contact-force equation given in the question. Whichever coordinate appears inside \(f = k_e(q_j - q_{je})\) is the force-controlled coordinate; all remaining coordinates are position-controlled.</div>
+</div>
+
+<h4>2. Complete 5-step exam procedure</h4>
+<ol class="steps">
+  <li><b>Split the coordinates:</b> Look at the given force law, e.g. \(f = 25(q_3 - 0.2)\). Only \(q_3\) changes \(f\), so \(q_3\) is in the <b>force subspace</b> and \(q_1, q_2\) are in the <b>motion subspace</b>.</li>
+  <li><b>Build one shared model-based layer for the whole robot:</b> Collect all \(\ddot q\) terms into \(\alpha = M(q)\) and all remaining terms&mdash;<b>including \(f\)</b>&mdash;into \(\beta\). Setting \(\tau = \alpha v + \beta\) decouples every joint to \(\ddot q = v\).</li>
+  <li><b>Write the motion-subspace servo laws:</b> For each free coordinate \(i\),
+    \[v_i = \ddot q_{id} + k_v \dot e_i + k_p e_i,\qquad e_i = q_{id} - q_i,\]
+    using the motion loop's specified damping ratio \(\zeta_m\) and \(\omega_n \le 0.5\,\omega_{res,\min}\).</li>
+  <li><b>Write the force-subspace servo law:</b> For the contact coordinate (say \(q_3\)),
+    \[v_3 = \frac{1}{k_e}\big(\ddot f_d + k_{vf}\dot e_f + k_{pf} e_f\big),\qquad e_f = f_d - f,\]
+    using the force loop's specified damping ratio \(\zeta_f\) and the same \(\omega_n \le 0.5\,\omega_{res,\min}\).</li>
+  <li><b>Write \(\tau = \alpha v + \beta\) out in full and state the error equations:</b>
+    <ul>
+      <li>Without disturbances: \(\ddot e_i + k_v \dot e_i + k_p e_i = 0\) (motion) and \(\ddot e_f + k_{vf}\dot e_f + k_{pf} e_f = 0\) (force).</li>
+      <li>With constant disturbances \(d\) on the motion joints: \(\ddot E + K_v \dot E + K_p E = M^{-1} d\) (motion, giving steady error \(E_{ss} = K_p^{-1} M^{-1} d\)) and \(\ddot e_f + k_{vf}\dot e_f + k_{pf} e_f = 0\) (force, if no disturbance reaches the force joint). State that adding integral action \(K_i \int E\,dt\) drives \(E_{ss} \to 0\).</li>
+    </ul>
+  </li>
+</ol>
+
+<div class="ex">
+<p><b>Worked example (2-DOF Cartesian \(xy\) robot):</b> Dynamics \(m_1\ddot x + f = u_1\), \(m_2\ddot y = u_2\), with \(f = k_e(x - x_e)\). Here \(x\) is force-controlled and \(y\) is position-controlled.<br>
+Model-based part: \(\alpha = \mathrm{diag}(m_1, m_2)\), \(\beta = [f,\ 0]^T\).<br>
+Servo part: \(v_1 = \frac{1}{k_e}(\ddot f_d + k_{vf}\dot e_f + k_{pf} e_f)\) and \(v_2 = \ddot y_d + k_v \dot e_y + k_p e_y\).<br>
+Complete law: \(u_1 = \frac{m_1}{k_e}(\ddot f_d + k_{vf}\dot e_f + k_{pf} e_f) + f\), \(u_2 = m_2(\ddot y_d + k_v \dot e_y + k_p e_y)\).</p>
+</div>
+
+<div class="pit"><b>Pitfall.</b> Exam questions often give <b>different damping ratios</b> for the two loops (e.g. motion \(\zeta = 1.05\), force \(\zeta = 1\)). Keep \(k_v, k_p\) and \(k_{vf}, k_{pf}\) clearly labelled so you do not mix them up.</div>
+
+<div class="refs"><b>References:</b> <a class="cite" href="../../resources/lecture-02-robot-control.pdf#page=42" data-pages="lecture-02-robot-control:42,43,44,45,46,47,48,49,50,51,52,53,54">Lec 2 pp. 42&ndash;54 (hybrid position/force control)</a></div>
+
+<div class="chk">Contact force \(f=22(q_3-0.2)\) on a 3-joint robot. Which coordinate gets the force servo? <select><option value="">&mdash;</option><option>q1</option><option>q2</option><option>q3</option><option>all three</option></select> <button class="btn">check</button><span class="fb"></span></div>
+</div>
+
+<!-- C6 -->
+<div class="card" data-k="c6">
+<h3>C6. When the model is wrong <span class="tag">23-24 S2, 25-26 S2</span></h3>
+
+<h4>1. The big picture</h4>
+<p>Two official finals ask a follow-up &ldquo;what if?&rdquo; part: what happens when the controller's assumed contact model does not match the real surface? <em>Note: the lecture slides do not derive these two mismatch cases; the derivations below are our own, built directly from the slide force-control equations (C4).</em></p>
+
+<h4>2. Case A: Surface stiffness is misjudged (\(\hat k \neq k\))</h4>
+<div class="tbl-wrap"><table class="sym">
+<thead><tr><th>Symbol</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td>\(\hat k\)</td><td>Stiffness assumed inside the controller's servo law \(v = \frac{1}{\hat k}(\ddot f_d + k_{vf}\dot e_f + k_{pf} e_f)\).</td></tr>
+<tr><td>\(k\)</td><td>True stiffness of the physical surface (\(\ddot f = k\,\ddot x = k\,v\)).</td></tr>
+<tr><td>\(\rho = k/\hat k\)</td><td>Stiffness ratio (true divided by assumed).</td></tr>
+</tbody>
+</table></div>
+
+<ol class="steps">
+  <li><b>Plug the controller's \(v\) into the true plant \(\ddot f = k\,v\):</b>
+    \[\ddot f = k \cdot \frac{1}{\hat k}\big(\ddot f_d + k_{vf}\dot e_f + k_{pf} e_f\big) = \rho\big(\ddot f_d + k_{vf}\dot e_f + k_{pf} e_f\big).\]
+  </li>
+  <li><b>Form the error equation</b> using \(\ddot e_f = \ddot f_d - \ddot f\):
+    \[\ddot e_f + \rho k_{vf}\dot e_f + \rho k_{pf} e_f = (1 - \rho)\ddot f_d.\]
+  </li>
+  <li><b>Extract the actual closed-loop \(\omega_n'\) and \(\zeta'\):</b> Compare \(s^2 + \rho k_{vf} s + \rho k_{pf}\) with \(s^2 + 2\zeta'\omega_n' s + (\omega_n')^2\), remembering \(k_{pf} = \omega_n^2\) and \(k_{vf} = 2\zeta\omega_n\):
+    \[(\omega_n')^2 = \rho\,\omega_n^2 \;\Longrightarrow\; \omega_n' = \omega_n\sqrt{\rho},\qquad 2\zeta'\omega_n' = \rho(2\zeta\omega_n) \;\Longrightarrow\; \zeta' = \zeta\sqrt{\rho}.\]
+  </li>
+</ol>
+<div class="formula">
+\[\ddot e_f + \rho k_{vf}\dot e_f + \rho k_{pf} e_f = (1 - \rho)\ddot f_d,\qquad \omega_n' = \omega_n\sqrt{\rho},\qquad \zeta' = \zeta\sqrt{\rho},\qquad \rho = \frac{k}{\hat k}.\]
+</div>
+<div class="why"><b>Physical consequence:</b> For a constant desired force (\(\ddot f_d = 0\)), the steady-state error still goes to \(0\) (as long as \(\rho \gt 0\)). However, if the true surface is <b>stiffer</b> than assumed (\(\rho \gt 1\)), \(\omega_n' = \omega_n\sqrt{\rho}\) exceeds the designed \(\omega_n\) and can <b>violate the resonance limit \(\omega_n' \le 0.5\,\omega_{res}\)</b>! If the surface is <b>softer</b> (\(\rho \lt 1\)), \(\zeta' = \zeta\sqrt{\rho}\) drops below \(1\) when designed at \(\zeta = 1\), introducing <b>overshoot</b>.</div>
+
+<h4>3. Case B: No force sensor and the surface position \(x_e\) drifts</h4>
+<ol class="steps">
+  <li><b>What the controller sees:</b> Without a force sensor, the controller estimates force from position using its assumed surface location \(x_e\): \(\hat f = k(x - x_e)\).</li>
+  <li><b>Where the controller drives the robot:</b> The servo drives \(\hat f \to f_d\), so the robot settles at \(x = x_e + f_d / k\).</li>
+  <li><b>What the true force actually is:</b> Because the surface really sits at \(x_e'\), the true contact force is:
+    \[f = k(x - x_e') = k\!\left(x_e + \frac{f_d}{k} - x_e'\right) = f_d + k(x_e - x_e').\]
+  </li>
+</ol>
+<div class="formula">
+\[\text{True steady force: } f_{ss} = f_d + k(x_e - x_e'),\qquad \text{unseen force bias} = k(x_e - x_e').\]
+</div>
+<div class="pit"><b>Why integral action cannot fix Case B:</b> The integrator only sees \(\hat e_f = f_d - \hat f\), which is already \(0\)! The only true fixes are to <b>add a force sensor</b> (direct feedback of \(f\)) or <b>re-identify \(x_e'\)</b> before contact.</div>
+
+<div class="refs"><b>Basis:</b> <a class="cite" href="../../resources/lecture-02-robot-control.pdf#page=38" data-pages="lecture-02-robot-control:38,39,40,41">Lec 2 pp. 38&ndash;41 (force control)</a></div>
+
+<div class="chk">Controller uses \(\hat k=30\), true \(k=32\), designed force \(\zeta=1\). Actual \(\zeta'\) (4 d.p.): <input data-num size="9"> <button class="btn">check</button><span class="fb"></span></div>
+</div>
+
+<!-- ======================== Q3(a) · MOBILE PLATFORM ======================== -->
 <h2 id="s-mob">Q3(a) &middot; Mobile-platform constraints <span class="badge focus">Exam focus</span></h2>
 
-<div class="card" data-k="m1"><h3>M1. One fixed standard wheel <span class="tag">5 of 5 papers</span></h3>
-<p>Locate the wheel from the robot point \(P\) in polar form: distance \(l\) and angle \(\alpha\) from \(X_R\). \(\beta\) is the angle of the wheel plane relative to the chassis, so the wheel rolls along the direction \(\alpha+\beta\) rotated by \(-90^\circ\). Resolve the chassis velocity \((\dot x_r,\dot y_r,\dot\theta)\) along the rolling direction and along the axle:</p>
-\[\text{rolling: }[\sin(\alpha{+}\beta)\ \ {-\cos(\alpha{+}\beta)}\ \ {-l\cos\beta}]\,R(\theta)\dot\xi_I-r\dot\varphi=0\]
-\[\text{sliding: }[\cos(\alpha{+}\beta)\ \ \sin(\alpha{+}\beta)\ \ l\sin\beta]\,R(\theta)\dot\xi_I=0\]
-<p>The \(\dot\theta l\) term is the velocity the wheel gets from the chassis spinning about \(P\). <a class="cite" href="../../resources/lecture-03-mobile-robot-kinematics.pdf#page=20" data-pages="lecture-03-mobile-robot-kinematics:20,21,22,23,24,25">Lec 3 pp. 20&ndash;25 (wheel constraints, fixed standard wheel, Example 2)</a> &middot; <a class="cite" href="../../resources/additional-materials/review-week-07-mobile-robot-kinematics.pdf#page=1" data-pages="review-week-07-mobile-robot-kinematics:1,2,3,4,5,6">Week 7 review sheet</a></p>
-<div class="ex"><b>Example 2</b> (wheel 1 above \(P\), rolling along \(+X_R\)): \(\alpha=\pi/2\), \(\beta=0\) give rolling \([1\ \ 0\ \ {-l}]\) and sliding \([0\ \ 1\ \ 0]\). <b>Example 4</b>, wheel B below \(P\): \(\alpha=-\pi/2\), and \(\beta=\pi\) so that positive spin still drives \(+X_R\).</div>
-<div class="pit"><b>Pitfall.</b> Read \(\beta\) so that positive \(\dot\varphi\) moves the robot forward. On the mirror-image wheel that means \(\beta=\pi\), which flips the sign of \(l\cos\beta\).</div>
-<div class="chk">Wheel B of Example 4 (\(\alpha=-\pi/2\), \(\beta=\pi\), \(l=0.25\)). Third entry of its rolling row, \(-l\cos\beta\): <input data-num size="9"> <button class="btn">check</button><span class="fb"></span></div></div>
+<!-- M1 -->
+<div class="card" data-k="m1">
+<h3>M1. One fixed standard wheel <span class="tag">5 of 5 papers</span></h3>
 
-<div class="card" data-k="m2" data-sel="sliding"><h3>M2. Steered standard and castor wheels <span class="tag">5 of 5 papers</span></h3>
-<p><b>Steered standard wheel:</b> the same two rows, but \(\beta=\beta(t)\) is a variable (the steering angle). Write the rows with \(\beta_s\), not with a number. <b>Castor wheel:</b> the steering axis is offset by \(d\) from the contact point. Rolling is unchanged, but sliding gains a term:</p>
-\[[\cos(\alpha{+}\beta)\ \ \sin(\alpha{+}\beta)\ \ l\sin\beta]\,R(\theta)\dot\xi_I+d\dot\beta=0.\]
-<p>For any chassis motion there is a \(\dot\varphi\) and a \(\dot\beta\) that satisfy both rows, so a castor imposes no real constraint on the chassis (the office chair). <a class="cite" href="../../resources/lecture-03-mobile-robot-kinematics.pdf#page=26" data-pages="lecture-03-mobile-robot-kinematics:26,27,28,29,30,31">Lec 3 pp. 26&ndash;31 (steered standard and castor wheels)</a> &middot; <a class="cite" href="../../resources/lecture-03-mobile-robot-kinematics.pdf#page=35" data-pages="lecture-03-mobile-robot-kinematics:35">Lec 3 p. 35 (Example 3, steered wheel)</a></p>
-<div class="pit"><b>Pitfall.</b> For a castor, \(\beta\) is a variable like the steered wheel's, and the \(d\dot\beta\) term must appear in its sliding row. Writing the castor exactly like a steered wheel loses that mark.</div>
-<div class="chk">For a castor wheel, which constraint gains the \(d\dot\beta\) term? <select><option value="">&mdash;</option><option>rolling</option><option>sliding</option><option>both</option></select> <button class="btn">check</button><span class="fb"></span></div></div>
+<h4>1. The big picture</h4>
+<p>A wheeled mobile robot moves on a flat floor with 3 chassis velocities in its own body frame \(\{X_R, Y_R\}\): forward \(\dot x_r\), sideways \(\dot y_r\), and spin rate \(\dot\theta\). Every standard wheel attached to the chassis obeys two physical laws at its contact patch:</p>
+<ul>
+  <li><b>Rolling constraint:</b> The component of chassis velocity <em>along the wheel's rolling direction</em> must equal the wheel's rim speed \(r\dot\varphi\) (no wheelspin/skidding).</li>
+  <li><b>Sliding constraint:</b> The component of chassis velocity <em>along the wheel's axle (sideways)</em> must equal \(0\) (no sideways slip).</li>
+</ul>
 
-<div class="card" data-k="m3"><h3>M3. Assemble the platform <span class="tag">5 of 5 papers</span></h3>
-<p>Stack one rolling row per wheel and one sliding row per standard wheel (Example 4):</p>
-\[J_1(\beta_s)\,R(\theta)\dot\xi_I-J_2\dot\varphi=0,\qquad C_1(\beta_s)\,R(\theta)\dot\xi_I=0,\qquad J_2=\mathrm{diag}(r_1,\dots,r_N).\]
-<p>\(R(\theta)\dot\xi_I=[\dot x_r,\dot y_r,\dot\theta]^T\) is the velocity in the robot frame. Wheel speeds then follow row by row: \(\dot\varphi_i=j_i\,[\dot x_r,\dot y_r,\dot\theta]^T/r_i\). Two parallel fixed wheels share the sliding row \([0\ 1\ 0]\): the robot cannot move sideways. <a class="cite" href="../../resources/lecture-03-mobile-robot-kinematics.pdf#page=36" data-pages="lecture-03-mobile-robot-kinematics:36,37,38,39,40">Lec 3 pp. 36&ndash;40 (robot constraints, Example 4)</a></p>
-<div class="chk">A fixed wheel with rolling row \([1\ 0\ {-0.2}]\), \(r=0.05\) m. The robot moves at \(\dot x_r=0.4\) m/s, \(\dot y_r=0\), \(\dot\theta=1\) rad/s. \(\dot\varphi=\) <input data-num size="9"> <button class="btn">check</button><span class="fb"></span></div></div>
+<div class="fig">
+<svg viewBox="0 0 640 230" width="640" height="230" role="img" aria-label="Polar geometry of a fixed standard wheel with l, alpha, and beta">
+  <defs>
+    <marker id="arr-m1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="currentColor"/>
+    </marker>
+  </defs>
+  <!-- Robot axes X_R, Y_R -->
+  <line x1="65" y1="195" x2="310" y2="195" stroke="var(--text)" stroke-width="2" marker-end="url(#arr-m1)"/>
+  <text x="316" y="200" fill="var(--text)" font-size="13" font-weight="700">X_R</text>
+  <line x1="65" y1="195" x2="65" y2="25" stroke="var(--text)" stroke-width="2" marker-end="url(#arr-m1)"/>
+  <text x="58" y="18" fill="var(--text)" font-size="13" font-weight="700">Y_R</text>
+  <circle cx="65" cy="195" r="4" fill="var(--text)"/>
+  <text x="50" y="210" fill="var(--text)" font-size="13" font-weight="700">P</text>
+  <!-- Line P to A (length l, angle alpha = 32 deg) -->
+  <line x1="65" y1="195" x2="225" y2="95" stroke="var(--accent)" stroke-width="2.2"/>
+  <text x="140" y="135" fill="var(--accent)" font-size="13" font-weight="700">l</text>
+  <!-- Extension of PA -->
+  <line x1="225" y1="95" x2="290" y2="54" stroke="var(--muted)" stroke-width="1.4" stroke-dasharray="4 3"/>
+  <!-- Angle alpha arc -->
+  <path d="M 118 195 A 53 53 0 0 0 110 167" fill="none" stroke="var(--accent)" stroke-width="1.8"/>
+  <text x="125" y="183" fill="var(--accent)" font-size="13" font-weight="700">α</text>
+  <!-- Axle direction (angle alpha + beta = 62 deg) -->
+  <line x1="225" y1="95" x2="262" y2="25" stroke="var(--warning)" stroke-width="2" marker-end="url(#arr-m1)"/>
+  <text x="268" y="28" fill="var(--warning)" font-size="12" font-weight="700">axle (α+β)</text>
+  <!-- Angle beta arc -->
+  <path d="M 262 72 A 44 44 0 0 0 246 56" fill="none" stroke="var(--warning)" stroke-width="1.8"/>
+  <text x="262" y="56" fill="var(--warning)" font-size="13" font-weight="700">β</text>
+  <!-- Wheel rectangle rotated along rolling direction (alpha+beta-90 = -28 deg) -->
+  <g transform="translate(225,95) rotate(28)">
+    <rect x="-24" y="-8" width="48" height="16" rx="6" fill="var(--surface)" stroke="var(--text)" stroke-width="2"/>
+    <line x1="0" y1="0" x2="68" y2="0" stroke="var(--success)" stroke-width="2.4" marker-end="url(#arr-m1)"/>
+  </g>
+  <text x="292" y="138" fill="var(--success)" font-size="12" font-weight="700">rolling dir (α+β−90°)</text>
+  <circle cx="225" cy="95" r="3.5" fill="var(--text)"/>
+  <text x="210" y="114" fill="var(--text)" font-size="12" font-weight="700">A</text>
+  <!-- Right summary box -->
+  <rect x="365" y="22" width="262" height="186" rx="8" fill="var(--surface)" stroke="var(--border)"/>
+  <text x="378" y="45" fill="var(--text)" font-size="12" font-weight="700">Unit vectors in robot frame:</text>
+  <text x="378" y="68" fill="var(--success)" font-size="12">Rolling û_∥ = (sin(α+β), −cos(α+β))</text>
+  <text x="378" y="90" fill="var(--warning)" font-size="12">Axle û_⊥ = (cos(α+β), sin(α+β))</text>
+  <text x="378" y="118" fill="var(--text)" font-size="12" font-weight="700">Velocity of wheel hub A:</text>
+  <text x="378" y="140" fill="var(--muted)" font-size="11.5">v_A = (ẋ_r − θ̇ l sin α, ẏ_r + θ̇ l cos α)</text>
+  <text x="378" y="168" fill="var(--text)" font-size="12" font-weight="700">Dot v_A with û_∥ and û_⊥:</text>
+  <text x="378" y="190" fill="var(--accent)" font-size="11.5">Rolling: v_A · û_∥ = r φ̇ ,  Sliding: v_A · û_⊥ = 0</text>
+</svg>
+<div class="cap"><b>How the slides define \(\alpha\) and \(\beta\):</b> \(P\) is the robot reference point, \(l\) is distance \(PA\), \(\alpha\) is the angle of \(PA\) from \(X_R\), and \(\beta\) is the angle from the extension of \(PA\) to the wheel's axle line. Positive wheel spin \(\dot\varphi\) drives the wheel along the rolling direction \((\alpha+\beta-90^\circ)\).</div>
+</div>
 
+<h4>2. Symbol table</h4>
+<div class="tbl-wrap"><table class="sym">
+<thead><tr><th>Symbol</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td>\(l,\ \alpha\)</td><td>Polar coordinates of wheel hub \(A\) relative to \(P\) in robot frame \(\{X_R, Y_R\}\).</td></tr>
+<tr><td>\(\beta\)</td><td>Fixed angle of the wheel plane relative to line \(PA\) (chosen so positive \(\dot\varphi\) rolls forward).</td></tr>
+<tr><td>\(r,\ \dot\varphi\)</td><td>Wheel radius and wheel angular velocity.</td></tr>
+<tr><td>\(R(\theta)\dot\xi_I = [\dot x_r,\ \dot y_r,\ \dot\theta]^T\)</td><td>Robot chassis velocity expressed in the robot's local frame \(\{X_R, Y_R\}\).</td></tr>
+</tbody>
+</table></div>
+
+<h4>3. Step-by-step derivation (so you never guess a sign)</h4>
+<ol class="steps">
+  <li><b>Velocity of wheel hub \(A\) on the rigid chassis:</b> Point \(A\) sits at \(\mathbf{r}_A = (l\cos\alpha,\ l\sin\alpha)\). Spinning the chassis at \(\dot\theta\) adds \(\dot\theta \hat k \times \mathbf{r}_A = (-\dot\theta l\sin\alpha,\ +\dot\theta l\cos\alpha)\), so:
+    \[\mathbf{v}_A = \begin{bmatrix} \dot x_r - \dot\theta l\sin\alpha \\ \dot y_r + \dot\theta l\cos\alpha \end{bmatrix}.\]
+  </li>
+  <li><b>Project onto the rolling unit vector</b> \(\hat{\mathbf{u}}_\parallel = (\sin(\alpha+\beta),\ -\cos(\alpha+\beta))\):
+    \[\mathbf{v}_A \cdot \hat{\mathbf{u}}_\parallel = \dot x_r\sin(\alpha+\beta) - \dot y_r\cos(\alpha+\beta) - \dot\theta l\big(\sin\alpha\sin(\alpha+\beta) + \cos\alpha\cos(\alpha+\beta)\big).\]
+    By the cosine difference identity \(\cos(A-B) = \cos A\cos B + \sin A\sin B\), the bracket collapses cleanly to \(\cos\beta\)! Setting \(\mathbf{v}_A \cdot \hat{\mathbf{u}}_\parallel = r\dot\varphi\) gives the <b>rolling constraint</b>.</li>
+  <li><b>Project onto the axle unit vector</b> \(\hat{\mathbf{u}}_\perp = (\cos(\alpha+\beta),\ \sin(\alpha+\beta))\):
+    \[\mathbf{v}_A \cdot \hat{\mathbf{u}}_\perp = \dot x_r\cos(\alpha+\beta) + \dot y_r\sin(\alpha+\beta) + \dot\theta l\big(\cos\alpha\sin(\alpha+\beta) - \sin\alpha\cos(\alpha+\beta)\big).\]
+    By the sine difference identity \(\sin(A-B) = \sin A\cos B - \cos A\sin B\), the bracket collapses to \(\sin\beta\)! Setting \(\mathbf{v}_A \cdot \hat{\mathbf{u}}_\perp = 0\) gives the <b>sliding constraint</b>.</li>
+</ol>
+
+<div class="formula">
+\[\text{Rolling: }\big[\sin(\alpha{+}\beta)\ \ {-\cos(\alpha{+}\beta)}\ \ {-l\cos\beta}\big]\,R(\theta)\dot\xi_I - r\dot\varphi = 0\]
+\[\text{Sliding: }\big[\cos(\alpha{+}\beta)\ \ \sin(\alpha{+}\beta)\ \ l\sin\beta\big]\,R(\theta)\dot\xi_I = 0\]
+</div>
+
+<h4>4. Worked examples</h4>
+<div class="ex">
+<p><b>Example 2 (left wheel, above \(P\) on \(+Y_R\), rolling along \(+X_R\)):</b> \(\alpha = \pi/2\), \(\beta = 0\).<br>
+Then \(\alpha+\beta = \pi/2\), \(\sin(\pi/2) = 1\), \(\cos(\pi/2) = 0\), \(\cos 0 = 1\), \(\sin 0 = 0\):<br>
+Rolling: \([1\ \ 0\ \ {-l}]\,R(\theta)\dot\xi_I - r\dot\varphi = 0 \implies \dot x_r - l\dot\theta = r\dot\varphi\). (Sanity check: turning left, \(\dot\theta \gt 0\), slows the left wheel &mdash; right!)<br>
+Sliding: \([0\ \ 1\ \ 0]\,R(\theta)\dot\xi_I = 0 \implies \dot y_r = 0\).</p>
+<p><b>Example 4, Wheel B (right wheel, below \(P\) on \(-Y_R\), also rolling along \(+X_R\)):</b> \(\alpha = -\pi/2\), and we set <b>\(\beta = \pi\)</b> so \(\alpha + \beta = +\pi/2\) and positive \(\dot\varphi\) still drives along \(+X_R\).<br>
+Then \(\cos\beta = \cos\pi = -1\), so \(-l\cos\beta = +l\):<br>
+Rolling: \([1\ \ 0\ \ {+l}]\,R(\theta)\dot\xi_I - r\dot\varphi = 0 \implies \dot x_r + l\dot\theta = r\dot\varphi\). (Sanity check: turning left speeds up the right wheel &mdash; right!)</p>
+</div>
+
+<div class="pit"><b>Pitfall.</b> Always sanity-check your signs with a physical test! Plug \(\dot x_r = 1, \dot y_r = 0, \dot\theta = 0\) into your rolling row: you should get \(+1\) if positive \(\dot\varphi\) moves the robot forward. On the mirror-image wheel, forgetting \(\beta = \pi\) flips the sign of \(-l\cos\beta\).</div>
+
+<div class="refs"><b>References:</b> <a class="cite" href="../../resources/lecture-03-mobile-robot-kinematics.pdf#page=20" data-pages="lecture-03-mobile-robot-kinematics:20,21,22,23,24,25">Lec 3 pp. 20&ndash;25 (wheel constraints, fixed standard wheel, Example 2)</a> &middot; <a class="cite" href="../../resources/additional-materials/review-week-07-mobile-robot-kinematics.pdf#page=1" data-pages="review-week-07-mobile-robot-kinematics:1,2,3,4,5,6">Week 7 review sheet</a></div>
+
+<div class="chk">Wheel B of Example 4 (\(\alpha=-\pi/2\), \(\beta=\pi\), \(l=0.25\)). Third entry of its rolling row, \(-l\cos\beta\): <input data-num size="9"> <button class="btn">check</button><span class="fb"></span></div>
+</div>
+
+<!-- M2 -->
+<div class="card" data-k="m2" data-sel="sliding">
+<h3>M2. Steered standard and castor wheels <span class="tag">5 of 5 papers</span></h3>
+
+<h4>1. The big picture</h4>
+<p>Not every wheel is bolted at a fixed angle. Exam platforms mix fixed standard wheels with two rotating-axis wheel types:</p>
+<ul>
+  <li><b>Steered standard wheel:</b> The vertical steering shaft passes <b>directly through the wheel contact point \(A\)</b>. Turning the steering angle \(\beta(t)\) rotates the wheel in place without dragging the contact patch sideways.</li>
+  <li><b>Castor wheel (shopping-cart / office-chair wheel):</b> The vertical swivel shaft at \(A\) is <b>offset by a rigid arm of length \(d\)</b> from the contact point \(B\). Swivelling the arm at rate \(\dot\beta\) swings the contact point sideways at speed \(d\dot\beta\).</li>
+</ul>
+
+<div class="fig">
+<svg viewBox="0 0 600 145" width="600" height="145" role="img" aria-label="Comparison of steered standard wheel and offset castor wheel">
+  <!-- Left: Steered -->
+  <rect x="18" y="14" width="265" height="118" rx="8" fill="var(--surface)" stroke="var(--border)"/>
+  <text x="150" y="34" fill="var(--text)" font-size="12.5" font-weight="700" text-anchor="middle">Steered standard wheel (d = 0)</text>
+  <g transform="translate(92,82) rotate(-25)">
+    <rect x="-24" y="-8" width="48" height="16" rx="5" fill="var(--surface-2)" stroke="var(--text)" stroke-width="2"/>
+  </g>
+  <circle cx="92" cy="82" r="4.5" fill="var(--accent)"/>
+  <text x="92" y="114" fill="var(--accent)" font-size="11" text-anchor="middle">pivot A = contact</text>
+  <text x="150" y="66" fill="var(--text)" font-size="11.5">β = β_s(t) varies</text>
+  <text x="150" y="86" fill="var(--muted)" font-size="11">Same 2 rows as M1,</text>
+  <text x="150" y="102" fill="var(--muted)" font-size="11">no β̇ term anywhere.</text>
+
+  <!-- Right: Castor -->
+  <rect x="305" y="14" width="278" height="118" rx="8" fill="var(--surface)" stroke="var(--border)"/>
+  <text x="444" y="34" fill="var(--text)" font-size="12.5" font-weight="700" text-anchor="middle">Castor wheel (offset arm d &gt; 0)</text>
+  <circle cx="348" cy="84" r="4.5" fill="var(--accent)"/>
+  <text x="340" y="104" fill="var(--accent)" font-size="11">A</text>
+  <line x1="348" y1="84" x2="394" y2="62" stroke="var(--danger)" stroke-width="2.5"/>
+  <text x="366" y="66" fill="var(--danger)" font-size="12" font-weight="700">d</text>
+  <g transform="translate(394,62) rotate(-25)">
+    <rect x="-20" y="-7" width="40" height="14" rx="5" fill="var(--surface-2)" stroke="var(--text)" stroke-width="2"/>
+  </g>
+  <circle cx="394" cy="62" r="3.5" fill="var(--text)"/>
+  <text x="415" y="56" fill="var(--text)" font-size="11">B</text>
+  <text x="440" y="76" fill="var(--text)" font-size="11.5">Swivel β̇ adds</text>
+  <text x="440" y="94" fill="var(--danger)" font-size="12" font-weight="700">+ d β̇ to sliding!</text>
+  <text x="440" y="114" fill="var(--muted)" font-size="10.5">Never constrains chassis.</text>
+</svg>
+<div class="cap"><b>Key geometric difference:</b> Because the castor arm \(AB\) of length \(d\) lies along the wheel plane, rotating it at \(\dot\beta\) creates a sideways velocity \(d\dot\beta\) perpendicular to the wheel plane &mdash; i.e. purely in the <b>sliding</b> direction.</div>
+</div>
+
+<h4>2. Exact equations for both wheel types</h4>
+<ol class="steps">
+  <li><b>Steered standard wheel:</b> Replace the constant \(\beta\) in M1 with the time-varying steering angle \(\beta_s(t)\):
+    \[\text{Rolling: }\big[\sin(\alpha{+}\beta_s)\ \ {-\cos(\alpha{+}\beta_s)}\ \ {-l\cos\beta_s}\big]\,R(\theta)\dot\xi_I - r\dot\varphi = 0\]
+    \[\text{Sliding: }\big[\cos(\alpha{+}\beta_s)\ \ \sin(\alpha{+}\beta_s)\ \ l\sin\beta_s\big]\,R(\theta)\dot\xi_I = 0.\]
+    Keep \(\beta_s\) symbolic in the equations (do not substitute a fixed number unless a later part asks for the steering angle at a specific motion).</li>
+  <li><b>Castor wheel:</b> Rolling is unchanged, while the sideways velocity at contact point \(B\) gains \(+d\dot\beta\):
+    \[\text{Rolling: }\big[\sin(\alpha{+}\beta)\ \ {-\cos(\alpha{+}\beta)}\ \ {-l\cos\beta}\big]\,R(\theta)\dot\xi_I - r\dot\varphi = 0\]
+    \[\text{Sliding: }\big[\cos(\alpha{+}\beta)\ \ \sin(\alpha{+}\beta)\ \ l\sin\beta\big]\,R(\theta)\dot\xi_I + d\dot\beta = 0.\]
+  </li>
+</ol>
+
+<div class="why"><b>Why a castor wheel never restricts the chassis:</b> For <em>any</em> chassis velocity \((\dot x_r, \dot y_r, \dot\theta)\), we can pick \(\dot\varphi\) to satisfy the rolling equation and pick \(\dot\beta\) to satisfy the sliding equation (because \(d \neq 0\)). That is why an office chair can move in any direction immediately &mdash; its castors just swivel to follow.</div>
+
+<div class="pit"><b>Pitfall.</b> On a platform with a castor wheel, \(\beta\) is a variable just like the steered wheel's, <b>and</b> the \(+d\dot\beta\) term must appear in its sliding row. Writing the castor identically to a steered wheel loses that mark.</div>
+
+<div class="refs"><b>References:</b> <a class="cite" href="../../resources/lecture-03-mobile-robot-kinematics.pdf#page=26" data-pages="lecture-03-mobile-robot-kinematics:26,27,28,29,30,31">Lec 3 pp. 26&ndash;31 (steered standard and castor wheels)</a> &middot; <a class="cite" href="../../resources/lecture-03-mobile-robot-kinematics.pdf#page=35" data-pages="lecture-03-mobile-robot-kinematics:35">Lec 3 p. 35 (Example 3, steered wheel)</a></div>
+
+<div class="chk">For a castor wheel, which constraint gains the \(d\dot\beta\) term? <select><option value="">&mdash;</option><option>rolling</option><option>sliding</option><option>both</option></select> <button class="btn">check</button><span class="fb"></span></div>
+</div>
+
+<!-- M3 -->
+<div class="card" data-k="m3">
+<h3>M3. Assemble the platform <span class="tag">5 of 5 papers</span></h3>
+
+<h4>1. The big picture</h4>
+<p>Once you have written the rolling and sliding rows for each individual wheel, stack them into two compact matrix equations for the whole mobile robot. The sliding equation \(C_1 R(\theta)\dot\xi_I = 0\) tells you which chassis motions are physically allowed (e.g. \(\dot y_r = 0\)); the rolling equation \(J_1 R(\theta)\dot\xi_I = J_2 \dot\varphi\) immediately gives the required spin speed \(\dot\varphi_i\) of every wheel.</p>
+
+<h4>2. Symbol table &amp; stacked form</h4>
+<div class="tbl-wrap"><table class="sym">
+<thead><tr><th>Symbol</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td>\(J_1(\beta_s)\)</td><td>Stacked rolling rows of all fixed and steered standard wheels (one row per wheel).</td></tr>
+<tr><td>\(J_2 = \mathrm{diag}(r_1,\dots,r_N)\)</td><td>Diagonal matrix of wheel radii.</td></tr>
+<tr><td>\(C_1(\beta_s)\)</td><td>Stacked sliding rows of all fixed and steered standard wheels (castors are omitted from \(C_1\) because they impose no chassis constraint, or written separately with \(+d\dot\beta\)).</td></tr>
+<tr><td>\(\dot\varphi = [\dot\varphi_1,\dots,\dot\varphi_N]^T\)</td><td>Vector of wheel angular speeds.</td></tr>
+</tbody>
+</table></div>
+
+<div class="formula">
+\[J_1(\beta_s)\,R(\theta)\dot\xi_I - J_2\dot\varphi = 0,\qquad C_1(\beta_s)\,R(\theta)\dot\xi_I = 0,\qquad J_2 = \mathrm{diag}(r_1,\dots,r_N).\]
+</div>
+
+<h4>3. How to use the stacked equations in an exam</h4>
+<ol class="steps">
+  <li><b>Check feasible chassis motion with \(C_1\):</b> Two parallel fixed wheels (like a differential-drive robot) both give the sliding row \([0\ 1\ 0]\), which forces \(\dot y_r = 0\): the robot cannot slide sideways.</li>
+  <li><b>Find a steered wheel's angle \(\beta_s\) (if asked):</b> Plug the given chassis velocity \([\dot x_r, \dot y_r, \dot\theta]^T\) into the steered wheel's sliding row \(\cos(\alpha+\beta_s)\dot x_r + \sin(\alpha+\beta_s)\dot y_r + l\sin\beta_s\,\dot\theta = 0\) and solve for \(\beta_s\).</li>
+  <li><b>Compute each wheel speed row by row:</b> Since \(J_2\) is diagonal, row \(i\) of the rolling equation solves directly for \(\dot\varphi_i\):
+    \[\dot\varphi_i = \frac{1}{r_i}\,j_i\,\begin{bmatrix} \dot x_r \\ \dot y_r \\ \dot\theta \end{bmatrix}.\]
+  </li>
+</ol>
+
+<div class="ex">
+<p><b>Worked example (tricycle: 2 fixed rear wheels + 1 steered front wheel):</b><br>
+Wheel A at \((0, l)\) with \(\alpha=\pi/2, \beta=0\); Wheel B at \((0, -l)\) with \(\alpha=-\pi/2, \beta=\pi\); steered Wheel C at \((L, 0)\) with \(\alpha=0, \beta=\beta_s\). Stacking gives:</p>
+\[J_1(\beta_s) = \begin{bmatrix} 1 & 0 & -l \\ 1 & 0 & l \\ \sin\beta_s & -\cos\beta_s & -L\cos\beta_s \end{bmatrix},\qquad C_1(\beta_s) = \begin{bmatrix} 0 & 1 & 0 \\ 0 & 1 & 0 \\ \cos\beta_s & \sin\beta_s & L\sin\beta_s \end{bmatrix}.\]
+<p>Rows 1&ndash;2 of \(C_1\) give \(\dot y_r = 0\). Row 3 then gives \(\dot x_r\cos\beta_s + L\dot\theta\sin\beta_s = 0 \implies \tan\beta_s = -\dot x_r / (L\dot\theta)\), which steers wheel C tangent to the turning circle!</p>
+</div>
+
+<div class="refs"><b>References:</b> <a class="cite" href="../../resources/lecture-03-mobile-robot-kinematics.pdf#page=36" data-pages="lecture-03-mobile-robot-kinematics:36,37,38,39,40">Lec 3 pp. 36&ndash;40 (robot constraints, Example 4)</a></div>
+
+<div class="chk">A fixed wheel with rolling row \([1\ 0\ {-0.2}]\), \(r=0.05\) m. The robot moves at \(\dot x_r=0.4\) m/s, \(\dot y_r=0\), \(\dot\theta=1\) rad/s. \(\dot\varphi=\) <input data-num size="9"> <button class="btn">check</button><span class="fb"></span></div>
+</div>
+
+<!-- ======================== Q3(b) · ARM ON THE PLATFORM ======================== -->
 <h2 id="s-ik">Q3(b) &middot; Arm on the platform <span class="badge ref">Refresh</span></h2>
 
-<div class="card" data-k="ik"><h3>I1. Tool-configuration vector, Jacobian, analytic IK <span class="tag">5 of 5 papers</span></h3>
-<p>The tool-configuration vector is \(w=[\,p;\ e^{q_n/\pi}\,r^3\,]\), with \(p\) the 4th column of \(T\) and \(r^3\) its 3rd column (the approach vector). The tool-configuration Jacobian is \(\partial w/\partial q\), one column per joint. For IK, solve the position equations in an order that isolates one joint at a time: usually \(q_1=\operatorname{atan2}(y,x)\) from the first two rows, then the \(z\) row, then the remaining length. <a class="cite" href="../../resources/lecture-01-manipulator-kinematics.pdf#page=91" data-pages="lecture-01-manipulator-kinematics:91,92,93,94,95">Lec 1 pp. 91&ndash;95 (tool configuration)</a> &middot; <a class="cite" href="../../resources/lecture-01-manipulator-kinematics.pdf#page=96" data-pages="lecture-01-manipulator-kinematics:96,97,98,99,100,101,102,103,104,105,106,107,108">Lec 1 pp. 96&ndash;108 (inverse kinematics, atan2, Examples 3.1–3.2)</a> &middot; <a class="cite" href="../../resources/lecture-01-manipulator-kinematics.pdf#page=133" data-pages="lecture-01-manipulator-kinematics:133,134,135,136,137,138,139,140,141">Lec 1 pp. 133&ndash;141 (tool-configuration Jacobian)</a> Drilled in <a href="../quiz-01/quiz-01-mock-05.html">Quiz 1 mock 5, Section B</a>.</p>
-<div class="pit"><b>Pitfall.</b> Use atan2, not \(\tan^{-1}(y/x)\): the quadrant matters.</div>
-<div class="chk">\(p_x=C_1\rho\), \(p_y=S_1\rho\) with \(\rho>0\), target \((x,y)=(-0.1,\ 0.1)\). \(q_1\) in rad (4 d.p.): <input data-num size="9"> <button class="btn">check</button><span class="fb"></span></div></div>
+<div class="card" data-k="ik">
+<h3>I1. Tool-configuration vector, Jacobian, analytic IK <span class="tag">5 of 5 papers</span></h3>
 
+<h4>1. The big picture</h4>
+<p>The second half of Q3 mounts a small 3- or 4-joint arm on top of the mobile platform and asks for some combination of three tools from Lecture 1: (1) the <b>tool-configuration vector \(w(q)\)</b> (a compact 6-element pose description), (2) the <b>tool-configuration Jacobian \(V(q)\)</b> (how small joint changes move \(w\)), and (3) <b>analytic inverse kinematics (IK)</b> (solving for the joint values \(q\) that put the tip at a given target \((x,y,z)\)).</p>
+
+<h4>2. Symbol table</h4>
+<div class="tbl-wrap"><table class="sym">
+<thead><tr><th>Symbol</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td>\(T^n_0 = \begin{bmatrix} r^1 & r^2 & r^3 & p \\ 0 & 0 & 0 & 1 \end{bmatrix}\)</td><td>Forward kinematics matrix from base to tool.</td></tr>
+<tr><td>\(p = [p_x, p_y, p_z]^T\)</td><td>Tool tip position (4th column of \(T^n_0\)).</td></tr>
+<tr><td>\(r^3 = [r_{13}, r_{23}, r_{33}]^T\)</td><td>Tool <b>approach vector</b> (3rd column of \(T^n_0\), unit vector along \(z_n\)).</td></tr>
+<tr><td>\(q_n\)</td><td>Last joint variable (tool roll angle in radians).</td></tr>
+<tr><td>\(w(q) \in \mathbb{R}^6\)</td><td>Tool-configuration vector combining position \(p\) and scaled approach vector.</td></tr>
+<tr><td>\(V(q) = \frac{\partial w}{\partial q}\)</td><td>Tool-configuration Jacobian (\(6 \times n\) matrix, one column per joint).</td></tr>
+</tbody>
+</table></div>
+
+<h4>3. Step-by-step formulas and IK method</h4>
+<ol class="steps">
+  <li><b>Tool-configuration vector \(w(q)\):</b> A \(3\times 3\) rotation matrix has 9 entries for only 3 orientation degrees of freedom. The slides pack position + orientation into 6 numbers by scaling the unit approach vector \(r^3\) by \(e^{q_n/\pi}\):
+    \[w(q) = \begin{bmatrix} p(q) \\ e^{q_n/\pi}\,r^3(q) \end{bmatrix}.\]
+    Because \(\|r^3\| = 1\), the length \(\|w_{4:6}\| = e^{q_n/\pi}\) uniquely recovers the roll angle \(q_n = \pi\ln\|w_{4:6}\|\) with no angle-wrap ambiguity, and dividing by that length recovers \(r^3\).</li>
+  <li><b>Tool-configuration Jacobian \(V(q)\):</b> Differentiate every entry of \(w(q)\) with respect to each joint variable \(q_j\):
+    \[V(q) = \frac{\partial w}{\partial q} = \begin{bmatrix} \dfrac{\partial w}{\partial q_1} & \dfrac{\partial w}{\partial q_2} & \cdots & \dfrac{\partial w}{\partial q_n} \end{bmatrix}.\]
+    Remember the chain rule on the bottom 3 rows when differentiating with respect to \(q_n\): \(\frac{\partial}{\partial q_n}\big(e^{q_n/\pi} r^3\big) = \frac{1}{\pi}e^{q_n/\pi} r^3 + e^{q_n/\pi}\frac{\partial r^3}{\partial q_n}\).</li>
+  <li><b>Analytic Inverse Kinematics (decoupling order):</b> Read \(p_x(q), p_y(q), p_z(q)\) from column 4 of \(T^n_0\) and solve in the order that isolates one joint at a time:
+    <ul>
+      <li><b>First, base rotation \(q_1\):</b> Usually \(p_x = C_1 \rho\) and \(p_y = S_1 \rho\). If \(\rho \gt 0\), then \(q_1 = \operatorname{atan2}(p_y, p_x)\).</li>
+      <li><b>Second, height \(z\):</b> Often \(p_z\) depends on only one joint (e.g. \(q_3\) or a prismatic \(q_2\)), so solve that joint directly.</li>
+      <li><b>Third, radial reach \(\rho = \sqrt{p_x^2 + p_y^2}\):</b> Substitute the solved joint into \(\rho = p_x C_1 + p_y S_1\) to get the last joint.</li>
+      <li><b>Always substitute your \(q\) back into \(p(q)\)</b> to verify you hit \((x, y, z)\) exactly!</li>
+    </ul>
+  </li>
+</ol>
+
+<div class="formula">
+\[w(q) = \begin{bmatrix} p(q) \\ e^{q_n/\pi}\,r^3(q) \end{bmatrix},\qquad V(q) = \frac{\partial w}{\partial q},\qquad q_1 = \operatorname{atan2}(p_y, p_x)\ \ (\text{when } \rho \gt 0).\]
+</div>
+
+<div class="ex">
+<p><b>Worked example (3-joint arm IK):</b> Suppose \(p = \begin{bmatrix} C_1(q_2 + 0.2 C_3) \\ S_1(q_2 + 0.2 C_3) \\ 0.3 - 0.2 S_3 \end{bmatrix}\), and the target is \((0.3, 0.3, 0.2)\) with \(q_2 \gt 0\), \(q_3 \in [-\pi/2, \pi/2]\).<br>
+1. \(q_1 = \operatorname{atan2}(0.3, 0.3) = \pi/4 \approx 0.7854\text{ rad}\).<br>
+2. From \(p_z\): \(0.3 - 0.2 S_3 = 0.2 \implies S_3 = 0.5 \implies q_3 = \pi/6 \approx 0.5236\text{ rad}\), so \(C_3 = \sqrt{3}/2 \approx 0.8660\).<br>
+3. Radial reach: \(\rho = \sqrt{0.3^2 + 0.3^2} = 0.3\sqrt{2} \approx 0.4243 = q_2 + 0.2(0.8660) \implies q_2 \approx 0.2511\text{ m}\).</p>
+</div>
+
+<div class="pit"><b>Pitfall.</b> Always use \(\operatorname{atan2}(y, x)\), never \(\tan^{-1}(y/x)\): \(\tan^{-1}(-1)\) gives \(-\pi/4\) (Quadrant IV), whereas \((-0.1, +0.1)\) is in Quadrant II where the true angle is \(+3\pi/4\)! You also drilled this in <a href="../quiz-01/quiz-01-mock-05.html">Quiz 1 mock 5, Section B</a>.</div>
+
+<div class="refs"><b>References:</b> <a class="cite" href="../../resources/lecture-01-manipulator-kinematics.pdf#page=91" data-pages="lecture-01-manipulator-kinematics:91,92,93,94,95">Lec 1 pp. 91&ndash;95 (tool configuration)</a> &middot; <a class="cite" href="../../resources/lecture-01-manipulator-kinematics.pdf#page=96" data-pages="lecture-01-manipulator-kinematics:96,97,98,99,100,101,102,103,104,105,106,107,108">Lec 1 pp. 96&ndash;108 (inverse kinematics, atan2, Examples 3.1&ndash;3.2)</a> &middot; <a class="cite" href="../../resources/lecture-01-manipulator-kinematics.pdf#page=133" data-pages="lecture-01-manipulator-kinematics:133,134,135,136,137,138,139,140,141">Lec 1 pp. 133&ndash;141 (tool-configuration Jacobian)</a></div>
+
+<div class="chk">\(p_x=C_1\rho\), \(p_y=S_1\rho\) with \(\rho\gt 0\), target \((x,y)=(-0.1,\ 0.1)\). \(q_1\) in rad (4 d.p.): <input data-num size="9"> <button class="btn">check</button><span class="fb"></span></div>
+</div>
+
+<!-- ======================== Q4 · HOMOGRAPHY ======================== -->
 <h2 id="s-hom">Q4 &middot; Homography <span class="badge ref">Refresh</span></h2>
 
-<div class="card" data-k="h1"><h3>H1. Which four-point groups work <span class="tag">5 of 5 papers</span></h3>
-<p>Each matched point gives 2 equations for the 8 unknowns of \(H_n=H/h_{33}\), so 4 coplanar points seen in <em>both</em> images are needed, and <b>no three of them collinear</b> (otherwise the \(8\times8\) system is singular). Count by \(\binom n4\) minus every group containing a collinear triple. If two poses share too few usable points, chain through the third pose: \(K\propto HG\), then divide by the (3,3) entry. <a class="cite" href="../../resources/part-2/part-2-lecture-03-structure-and-pose-estimation.pdf#page=28" data-pages="part-2-lecture-03-structure-and-pose-estimation:28,29,30,31,32">HGQ Lec 3 pp. 28&ndash;32 (homography, 4-point algorithm)</a> Full drill: <a href="../quiz-02/quiz-02-past-guided.html">Quiz 2 past-paper guided page</a>.</p>
-<div class="chk">Five coplanar points, exactly one collinear triple among them. How many valid four-point groups? <input data-num size="9"> <button class="btn">check</button><span class="fb"></span></div></div>
+<div class="card" data-k="h1">
+<h3>H1. Which four-point groups work <span class="tag">5 of 5 papers</span></h3>
 
+<h4>1. The big picture</h4>
+<p>When a camera views points lying on a <b>flat plane</b> (a poster, floor, or calibration board) from two different poses, the pixel coordinates \((x, y)\) in image 1 and \((u, v)\) in image 2 are linked by a single \(3\times 3\) projective matrix \(H\) called a <b>homography</b>. Exam Q4 tests three things every year: (1) counting which 4-point subsets can uniquely determine \(H\), (2) writing out the \(8\times 8\) linear system for the normalized matrix \(H_n\), and (3) chaining homographies across a third camera pose when two poses do not share enough usable points.</p>
+
+<div class="fig">
+<svg viewBox="0 0 600 135" width="600" height="135" role="img" aria-label="Valid four-point configuration vs invalid collinear triple">
+  <!-- Left: valid -->
+  <rect x="16" y="12" width="270" height="112" rx="8" fill="var(--surface)" stroke="var(--success)"/>
+  <text x="151" y="32" fill="var(--success)" font-size="12" font-weight="700" text-anchor="middle">VALID: 4 coplanar, no 3 collinear</text>
+  <polygon points="75,98 220,98 200,50 105,54" fill="var(--success-soft)" stroke="var(--success)" stroke-width="1.5"/>
+  <circle cx="75" cy="98" r="4.5" fill="var(--success)"/>
+  <circle cx="220" cy="98" r="4.5" fill="var(--success)"/>
+  <circle cx="200" cy="50" r="4.5" fill="var(--success)"/>
+  <circle cx="105" cy="54" r="4.5" fill="var(--success)"/>
+  <text x="151" y="116" fill="var(--muted)" font-size="11" text-anchor="middle">8 independent equations → unique H_n</text>
+
+  <!-- Right: invalid -->
+  <rect x="310" y="12" width="274" height="112" rx="8" fill="var(--surface)" stroke="var(--danger)"/>
+  <text x="447" y="32" fill="var(--danger)" font-size="12" font-weight="700" text-anchor="middle">INVALID: 3 points on one line</text>
+  <line x1="345" y1="96" x2="545" y2="96" stroke="var(--danger)" stroke-width="2" stroke-dasharray="4 3"/>
+  <circle cx="365" cy="96" r="4.5" fill="var(--danger)"/>
+  <circle cx="445" cy="96" r="4.5" fill="var(--danger)"/>
+  <circle cx="525" cy="96" r="4.5" fill="var(--danger)"/>
+  <circle cx="445" cy="52" r="4.5" fill="var(--text)"/>
+  <text x="447" y="116" fill="var(--muted)" font-size="11" text-anchor="middle">8×8 matrix is singular (rank &lt; 8)</text>
+</svg>
+<div class="cap"><b>The geometry rule:</b> Any 4 points that form a non-degenerate quadrilateral (or triangle + interior point) work. As soon as 3 or more lie on one straight line, the 8 equations lose rank and fail.</div>
+</div>
+
+<h4>2. Step-by-step derivation of the 4-point linear system</h4>
+<ol class="steps">
+  <li><b>Projective relation up to scale:</b> In homogeneous coordinates, \(\lambda [u,\ v,\ 1]^T = H [x,\ y,\ 1]^T\). Multiplying \(H\) by any nonzero constant represents the same mapping, so we normalize by \(h_{33}\):
+    \[H_n = \frac{H}{h_{33}} = \begin{bmatrix} h_{11} & h_{12} & h_{13} \\ h_{21} & h_{22} & h_{23} \\ h_{31} & h_{32} & 1 \end{bmatrix} \quad (\text{8 unknowns}).\]
+  </li>
+  <li><b>Eliminate the unknown scale \(\lambda\):</b> The third row gives \(\lambda = h_{31}x + h_{32}y + 1\). Substitute \(\lambda\) into the first two rows to get <b>2 linear equations per matched point</b>:
+    \[h_{11}x + h_{12}y + h_{13} - u x\,h_{31} - u y\,h_{32} = u,\]
+    \[h_{21}x + h_{22}y + h_{23} - v x\,h_{31} - v y\,h_{32} = v.\]
+  </li>
+  <li><b>Stack 4 matched points:</b> Four points give \(4 \times 2 = 8\) linear equations \(A h = b\) for the 8 unknowns \(h = [h_{11}, h_{12}, h_{13}, h_{21}, h_{22}, h_{23}, h_{31}, h_{32}]^T\). The matrix \(A\) is invertible if and only if all 4 points are visible in <b>both</b> images, coplanar, and <b>no three are collinear</b>.</li>
+  <li><b>Counting valid groups:</b> Given \(n\) coplanar points visible in both poses, start with all \(\binom{n}{4}\) 4-point subsets and subtract every subset that contains a collinear triple (a line with 3 points knocks out \(n - 3\) subsets; a line with 4 points knocks out \(\binom{4}{3}(n-4) + 1\) subsets &mdash; always check for overlaps between lines!).</li>
+  <li><b>Chaining through a third pose:</b> If pose \(a \to b\) has homography \(G\) and pose \(b \to c\) has homography \(H\), then even when poses \(a\) and \(c\) share fewer than 4 usable points, their homography is:
+    \[K \propto H G \;\Longrightarrow\; K_n = \frac{H G}{(HG)_{33}}.\]
+  </li>
+</ol>
+
+<div class="formula">
+\[\text{Valid groups} = \binom{n}{4} - \#\{\text{groups with }\ge 3\text{ collinear}\};\qquad K_n = \frac{HG}{(HG)_{33}}.\]
+</div>
+
+<div class="ex">
+<p><b>Worked example (counting with two lines):</b> Suppose 6 coplanar points have one line of 3 points \(\{1,2,3\}\) and no other collinear triples. Total 4-point groups: \(\binom{6}{4} = 15\). Bad groups must contain all of \(\{1,2,3\}\) plus 1 of the other 3 points \(\{4,5,6\}\), giving \(3\) bad groups. Valid groups: \(15 - 3 = 12\).</p>
+</div>
+
+<div class="pit"><b>Pitfall.</b> When a line has 4 points (e.g. \(\{1,2,3,4\}\)), do not double-count the single 4-point group \(\{1,2,3,4\}\) as four separate collinear triples! Also remember order matters in chaining: if \(p_b \propto G p_a\) and \(p_c \propto H p_b\), then \(p_c \propto H G p_a\) (not \(G H\)), and you must divide by the \((3,3)\) entry to get \(K_n\). Full drill: <a href="../quiz-02/quiz-02-past-guided.html">Quiz 2 past-paper guided page</a>.</div>
+
+<div class="refs"><b>References:</b> <a class="cite" href="../../resources/part-2/part-2-lecture-03-structure-and-pose-estimation.pdf#page=28" data-pages="part-2-lecture-03-structure-and-pose-estimation:28,29,30,31,32">HGQ Lec 3 pp. 28&ndash;32 (homography, 4-point algorithm)</a></div>
+
+<div class="chk">Five coplanar points, exactly one collinear triple among them. How many valid four-point groups? <input data-num size="9"> <button class="btn">check</button><span class="fb"></span></div>
+</div>
+
+<!-- ======================== Q5 · MULTI-SENSOR KALMAN ======================== -->
 <h2 id="s-kal">Q5 &middot; Multi-sensor Kalman <span class="badge ref">Refresh</span></h2>
 
-<div class="card" data-k="k1"><h3>K1. One gain per sensor vs one shared gain <span class="tag">5 of 5 papers</span></h3>
-<p>Four moves every year: write \(\tilde x_{k+1}=(1-\sum L_i)\tilde x_k-\sum L_iv_{ik}\); square and take expectations, \(p_{k+1}=(1-\sum L_i)^2p_k+\sum L_i^2\sigma_i^2\); set each \(\partial p_{k+1}/\partial L_i=0\); substitute back:</p>
-\[L_i=\frac{p_k}{\sigma_i^2\,(1+p_k\sum_j1/\sigma_j^2)},\qquad \frac1{p_{k+1}}=\frac1{p_k}+\sum_i\frac1{\sigma_i^2}.\]
-<p>One shared gain for \(n\) sensors gives \(\frac1{p_{k+1}}=\frac1{p_k}+\frac{n^2}{\sum\sigma_i^2}\), which is never larger, so it is never better (equal only when all \(\sigma_i\) are equal), but it needs only one gain. To compare two sensor groups, compare \(\sum1/\sigma_i^2\): the group with the larger sum gives the smaller error. Week 11: two sensors is the key case, three work the same way. <a class="cite" href="../../resources/part-2/part-2-lecture-04-kalman-filter-sensor-integration.pdf#page=25" data-pages="part-2-lecture-04-kalman-filter-sensor-integration:25,26,27,28,29,30,31">HGQ Lec 4 pp. 25&ndash;31 (scalar Kalman gain derivation)</a> &middot; <a class="cite" href="../../resources/part-2/part-2-lecture-04-kalman-filter-sensor-integration.pdf#page=33" data-pages="part-2-lecture-04-kalman-filter-sensor-integration:33,34,35,36,37,38,39,40,41,42,43,44">HGQ Lec 4 pp. 33&ndash;44 (multi-sensor fusion: batch, sequential, interpretation)</a> Full drill: <a href="../quiz-02/quiz-02-past-guided.html">Quiz 2 past-paper guided page</a>.</p>
-<div class="chk">Two sensors, \(\sigma^2=a^2\) and \(4a^2\), with \(a=1\) and \(p_k=1\). Optimal \(p_{k+1}\) (4 d.p.): <input data-num size="9"> <button class="btn">check</button><span class="fb"></span></div></div>
+<div class="card" data-k="k1">
+<h3>K1. One gain per sensor vs one shared gain <span class="tag">5 of 5 papers</span></h3>
+
+<h4>1. The big picture</h4>
+<p>We want to estimate an unknown constant quantity \(x\) (\(x_{k+1} = x_k\)) using our prior estimate \(\hat x_k\) (with error variance \(p_k\)) plus \(n\) independent noisy sensors \(y_{ik} = x_k + v_{ik}\) (with noise variances \(\sigma_i^2\)). A better sensor has a <em>smaller</em> variance \(\sigma_i^2\), so it should receive a <em>larger</em> weight \(L_i\). The Kalman filter finds the exact gains \(L_i\) that minimize the posterior error variance \(p_{k+1}\).</p>
+
+<div class="fig">
+<svg viewBox="0 0 600 130" width="600" height="130" role="img" aria-label="Multi-sensor Kalman fusion weighting by inverse variance">
+  <!-- Prior -->
+  <rect x="16" y="16" width="145" height="36" rx="6" fill="var(--surface)" stroke="var(--accent)"/>
+  <text x="88" y="38" fill="var(--text)" font-size="12" text-anchor="middle">Prior x̂_k (info 1/p_k)</text>
+  <!-- Sensors -->
+  <rect x="16" y="64" width="145" height="26" rx="6" fill="var(--surface)" stroke="var(--success)"/>
+  <text x="88" y="81" fill="var(--text)" font-size="11.5" text-anchor="middle">Sensor 1 (info 1/σ₁²)</text>
+  <rect x="16" y="96" width="145" height="26" rx="6" fill="var(--surface)" stroke="var(--success)"/>
+  <text x="88" y="113" fill="var(--text)" font-size="11.5" text-anchor="middle">Sensor n (info 1/σₙ²)</text>
+  <!-- Arrows to fusion -->
+  <line x1="161" y1="34" x2="232" y2="62" stroke="var(--accent)" stroke-width="1.8"/>
+  <line x1="161" y1="77" x2="232" y2="68" stroke="var(--success)" stroke-width="1.8"/>
+  <line x1="161" y1="109" x2="232" y2="75" stroke="var(--success)" stroke-width="1.8"/>
+  <!-- Fusion box -->
+  <rect x="234" y="34" width="160" height="66" rx="8" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.8"/>
+  <text x="314" y="58" fill="var(--text)" font-size="12" font-weight="700" text-anchor="middle">Optimal Fusion</text>
+  <text x="314" y="78" fill="var(--accent)" font-size="11.5" font-weight="700" text-anchor="middle">L_i ∝ 1/σ_i²</text>
+  <!-- Arrow to output -->
+  <line x1="394" y1="67" x2="424" y2="67" stroke="var(--text)" stroke-width="1.8"/>
+  <!-- Output -->
+  <rect x="426" y="34" width="158" height="66" rx="8" fill="var(--success-soft)" stroke="var(--success)" stroke-width="1.8"/>
+  <text x="505" y="57" fill="var(--text)" font-size="12" font-weight="700" text-anchor="middle">Posterior x̂_(k+1)</text>
+  <text x="505" y="79" fill="var(--success)" font-size="12" font-weight="700" text-anchor="middle">1/p_(k+1) = 1/p_k + Σ 1/σ_i²</text>
+</svg>
+<div class="cap"><b>Information adds:</b> Define <em>information</em> (precision) as \(1/\text{variance}\). With optimal separate gains, the posterior information is simply the prior information plus the sum of every sensor's information.</div>
+</div>
+
+<h4>2. Symbol table</h4>
+<div class="tbl-wrap"><table class="sym">
+<thead><tr><th>Symbol</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td>\(\tilde x_k = x_k - \hat x_k\)</td><td>Estimation error at step \(k\), with zero mean and variance \(p_k = \mathbb{E}[\tilde x_k^2]\).</td></tr>
+<tr><td>\(v_{ik}\)</td><td>Zero-mean noise of sensor \(i\) (\(\mathbb{E}[v_{ik}^2] = \sigma_i^2\)), independent of \(\tilde x_k\) and other sensors.</td></tr>
+<tr><td>\(L_i\)</td><td>Kalman gain (weight) assigned to sensor \(i\)'s innovation \((y_{ik} - \hat x_k)\).</td></tr>
+<tr><td>\(p_{k+1}\)</td><td>Updated (posterior) error variance \(\mathbb{E}[\tilde x_{k+1}^2]\) &mdash; smaller is better.</td></tr>
+</tbody>
+</table></div>
+
+<h4>3. The four-move exam derivation (separate gains)</h4>
+<ol class="steps">
+  <li><b>Write the update and subtract from \(x_{k+1} = x_k\):</b> From \(\hat x_{k+1} = \hat x_k + \sum_{i=1}^n L_i(y_{ik} - \hat x_k)\) and \(y_{ik} - \hat x_k = \tilde x_k + v_{ik}\):
+    \[\tilde x_{k+1} = \Big(1 - \sum_{i=1}^n L_i\Big)\tilde x_k - \sum_{i=1}^n L_i v_{ik}.\]
+  </li>
+  <li><b>Square and take expectations:</b> All cross terms vanish because \(\tilde x_k\) and \(v_{ik}\) are independent and zero-mean:
+    \[p_{k+1} = \Big(1 - \sum_{i=1}^n L_i\Big)^2 p_k + \sum_{i=1}^n L_i^2 \sigma_i^2.\]
+  </li>
+  <li><b>Minimize \(p_{k+1}\) by setting \(\partial p_{k+1}/\partial L_i = 0\):</b>
+    \[-2\Big(1 - \sum_j L_j\Big) p_k + 2 L_i \sigma_i^2 = 0 \;\Longrightarrow\; L_i = \frac{p_k}{\sigma_i^2}\Big(1 - \sum_j L_j\Big).\]
+    Sum this equation over all \(i = 1,\dots,n\) to find \(\sum_j L_j = p_k\big(\sum_j 1/\sigma_j^2\big)(1 - \sum_j L_j)\), which solves cleanly for \(1 - \sum_j L_j = \dfrac{1}{1 + p_k \sum_j 1/\sigma_j^2}\). Plugging back gives each gain:
+    \[L_i = \frac{p_k}{\sigma_i^2\,\big(1 + p_k \sum_j 1/\sigma_j^2\big)}.\]
+  </li>
+  <li><b>Substitute back into \(p_{k+1}\):</b> Using \(L_i \sigma_i^2 = (1 - \sum_j L_j)p_k\), the variance simplifies immediately to \(p_{k+1} = (1 - \sum_j L_j)p_k = \dfrac{p_k}{1 + p_k \sum_i 1/\sigma_i^2}\), or in reciprocal form:
+    \[\frac{1}{p_{k+1}} = \frac{1}{p_k} + \sum_{i=1}^n \frac{1}{\sigma_i^2}.\]
+  </li>
+</ol>
+
+<h4>4. One shared gain vs. separate gains, and comparing sensor groups</h4>
+<ol class="steps">
+  <li><b>One shared gain (\(L_1 = \dots = L_n = L\)):</b> Setting all gains equal gives \(p_{k+1} = (1 - nL)^2 p_k + L^2 \sum_i \sigma_i^2\). Differentiating with respect to \(L\) gives:
+    \[L = \frac{n p_k}{n^2 p_k + \sum_i \sigma_i^2},\qquad \frac{1}{p_{k+1}^{\text{shared}}} = \frac{1}{p_k} + \frac{n^2}{\sum_{i=1}^n \sigma_i^2}.\]
+  </li>
+  <li><b>Why separate gains are never worse:</b> By Cauchy&ndash;Schwarz, \(\big(\sum_i 1/\sigma_i^2\big)\big(\sum_i \sigma_i^2\big) \ge n^2\), so:
+    \[\sum_{i=1}^n \frac{1}{\sigma_i^2} \ge \frac{n^2}{\sum_{i=1}^n \sigma_i^2} \;\Longrightarrow\; p_{k+1}^{\text{separate}} \le p_{k+1}^{\text{shared}},\]
+    with equality <b>only when all \(\sigma_i\) are equal</b>. The trade-off: a single shared gain is simpler to implement (one gain to compute instead of \(n\)), but it wastes accuracy whenever one sensor is much noisier than another because it cannot down-weight the noisy sensor.</li>
+  <li><b>Comparing two sensor groups (e.g. \(\{S_1, S_2\}\) vs \(\{S_3, S_4, S_5\}\)):</b> Compute \(\sum 1/\sigma_i^2\) for each group. The group with the <b>larger sum of inverse variances</b> always yields the smaller \(p_{k+1}\).</li>
+</ol>
+
+<div class="formula">
+\[\text{Separate gains: }\frac{1}{p_{k+1}} = \frac{1}{p_k} + \sum_{i=1}^n \frac{1}{\sigma_i^2}\qquad\text{vs.}\qquad \text{Shared gain: }\frac{1}{p_{k+1}} = \frac{1}{p_k} + \frac{n^2}{\sum_{i=1}^n \sigma_i^2}.\]
+</div>
+
+<div class="ex">
+<p><b>Worked example (2 sensors, \(\sigma_1^2 = a^2\), \(\sigma_2^2 = 9a^2\)):</b><br>
+Separate gains: \(\sum 1/\sigma_i^2 = \frac{1}{a^2} + \frac{1}{9a^2} = \frac{10}{9a^2} \approx \frac{1.111}{a^2}\).<br>
+One shared gain: \(\frac{n^2}{\sum \sigma_i^2} = \frac{4}{a^2 + 9a^2} = \frac{4}{10a^2} = \frac{0.4}{a^2}\).<br>
+Since \(\frac{10}{9} \gt \frac{4}{10}\), separate gains give a much smaller posterior variance \(p_{k+1}\)! Notice also that in the shared-gain case, the noisy \(9a^2\) sensor drags the pair down below even using sensor 1 alone (\(1/a^2\)).</p>
+</div>
+
+<div class="pit"><b>Pitfall.</b> Always check whether the question gives sensor <b>variance</b> (\(\sigma_i^2\)) or <b>standard deviation</b> (\(\sigma_i\)). Week 11 transcript note: two sensors is the key case, and three sensors work identically. Full drill: <a href="../quiz-02/quiz-02-past-guided.html">Quiz 2 past-paper guided page</a>.</div>
+
+<div class="refs"><b>References:</b> <a class="cite" href="../../resources/part-2/part-2-lecture-04-kalman-filter-sensor-integration.pdf#page=25" data-pages="part-2-lecture-04-kalman-filter-sensor-integration:25,26,27,28,29,30,31">HGQ Lec 4 pp. 25&ndash;31 (scalar Kalman gain derivation)</a> &middot; <a class="cite" href="../../resources/part-2/part-2-lecture-04-kalman-filter-sensor-integration.pdf#page=33" data-pages="part-2-lecture-04-kalman-filter-sensor-integration:33,34,35,36,37,38,39,40,41,42,43,44">HGQ Lec 4 pp. 33&ndash;44 (multi-sensor fusion: batch, sequential, interpretation)</a></div>
+
+<div class="chk">Two sensors, \(\sigma^2=a^2\) and \(4a^2\), with \(a=1\) and \(p_k=1\). Optimal \(p_{k+1}\) (4 d.p.): <input data-num size="9"> <button class="btn">check</button><span class="fb"></span></div>
+</div>
 
 <p style="text-align:center;margin-top:28px"><a class="btn btn-primary" href="final-mock-a-guided.html">Step 2: guided mock A &rarr;</a></p>
 <p class="sub" style="font-size:.85rem">Unofficial study aid. Formulas follow the cited slides, and every key is recomputed by <code>final-check.py</code>.</p>
