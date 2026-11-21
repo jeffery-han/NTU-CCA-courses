@@ -83,7 +83,7 @@ dialog::backdrop { background: rgba(0, 0, 0, .5); }
 </nav>
 <main>
 <h1>EE6221 Final &mdash; Step 1: Primer</h1>
-<p class="sub">A light primer, not a course. Each card gives the idea, the formula exactly as the slides write it, one example and a quick check. Robot control (Q2) and the wheel constraints (Q3a) get full cards because no notes or study page covered them before. The other slots get a short refresher and a link to the page where you already drilled them.</p>
+<p class="sub">A light primer, not a course. Each card gives the idea, the formula exactly as the slides write it, one example and a quick check. Robot control (Q2) and the wheel constraints (Q3a) get full cards because no notes or study page covered them before. The other slots get a short refresher and a link to the page where you already drilled them. Sections follow the paper: Q1 to Q5.</p>
 <p class="sub">Links to Quiz 1 and Quiz 2 pages live in sibling folders: they open in Chrome, but Safari blocks them, so in Safari open those pages from the course <code>index.html</code>.</p>
 <p class="sub">Badges: <span class="badge focus">Exam focus</span> is taught here at full depth. <span class="badge ref">Refresh</span> is a reminder; the depth lives on the linked Quiz 1 / Quiz 2 page.</p>
 
@@ -101,6 +101,12 @@ dialog::backdrop { background: rgba(0, 0, 0, .5); }
   <li><b>Official 2025-26 S2</b>: the dress rehearsal.</li>
 </ol>
 </div>
+
+<h2 id="s-dh">Q1 &middot; D-H <span class="badge ref">Refresh</span></h2>
+
+<div class="card" data-k="d1" data-sel="along x_k"><h3>D1. Link-coordinate diagram and parameter table <span class="tag">5 of 5 papers</span></h3>
+<p>Steps: put \(z_{k-1}\) on joint \(k\)'s axis; \(x_k\) along the common normal from \(z_{k-1}\) to \(z_k\); \(y_k\) completes a right-handed frame; the tool frame has \(z_n\) as the approach vector. Then \(\theta_k\) = rotation about \(z_{k-1}\), \(d_k\) = shift along \(z_{k-1}\), \(a_k\) = shift along \(x_k\), \(\alpha_k\) = twist about \(x_k\). Marks: about 11&ndash;12 for the diagram, 8&ndash;9 for the table plus the first three \(T^{k}_{k-1}\) (no multiplication). You drilled four of these arms in <a href="../quiz-01/quiz-01-mock-05.html">Quiz 1 mock 5</a>. <a class="cite" href="../../resources/lecture-01-manipulator-kinematics.pdf#page=59" data-pages="lecture-01-manipulator-kinematics:59,60">Lec 1 pp. 59&ndash;60</a></p>
+<div class="chk">The link length \(a_k\) is measured&hellip; <select><option value="">&mdash;</option><option>along z_(k-1)</option><option>along x_k</option><option>about x_k</option></select> <button class="btn">check</button><span class="fb"></span></div></div>
 
 <h2 id="s-ctl">Q2 &middot; Robot control <span class="badge focus">Exam focus</span></h2>
 
@@ -175,12 +181,6 @@ dialog::backdrop { background: rgba(0, 0, 0, .5); }
 \[J_1(\beta_s)\,R(\theta)\dot\xi_I-J_2\dot\varphi=0,\qquad C_1(\beta_s)\,R(\theta)\dot\xi_I=0,\qquad J_2=\mathrm{diag}(r_1,\dots,r_N).\]
 <p>\(R(\theta)\dot\xi_I=[\dot x_r,\dot y_r,\dot\theta]^T\) is the velocity in the robot frame. Wheel speeds then follow row by row: \(\dot\varphi_i=j_i\,[\dot x_r,\dot y_r,\dot\theta]^T/r_i\). Two parallel fixed wheels share the sliding row \([0\ 1\ 0]\): the robot cannot move sideways. <a class="cite" href="../../resources/lecture-03-mobile-robot-kinematics.pdf#page=38" data-pages="lecture-03-mobile-robot-kinematics:37,38,39">Lec 3 pp. 37&ndash;39</a></p>
 <div class="chk">A fixed wheel with rolling row \([1\ 0\ {-0.2}]\), \(r=0.05\) m. The robot moves at \(\dot x_r=0.4\) m/s, \(\dot y_r=0\), \(\dot\theta=1\) rad/s. \(\dot\varphi=\) <input data-num size="9"> <button class="btn">check</button><span class="fb"></span></div></div>
-
-<h2 id="s-dh">Q1 &middot; D-H <span class="badge ref">Refresh</span></h2>
-
-<div class="card" data-k="d1" data-sel="along x_k"><h3>D1. Link-coordinate diagram and parameter table <span class="tag">5 of 5 papers</span></h3>
-<p>Steps: put \(z_{k-1}\) on joint \(k\)'s axis; \(x_k\) along the common normal from \(z_{k-1}\) to \(z_k\); \(y_k\) completes a right-handed frame; the tool frame has \(z_n\) as the approach vector. Then \(\theta_k\) = rotation about \(z_{k-1}\), \(d_k\) = shift along \(z_{k-1}\), \(a_k\) = shift along \(x_k\), \(\alpha_k\) = twist about \(x_k\). Marks: about 11&ndash;12 for the diagram, 8&ndash;9 for the table plus the first three \(T^{k}_{k-1}\) (no multiplication). You drilled four of these arms in <a href="../quiz-01/quiz-01-mock-05.html">Quiz 1 mock 5</a>. <a class="cite" href="../../resources/lecture-01-manipulator-kinematics.pdf#page=59" data-pages="lecture-01-manipulator-kinematics:59,60">Lec 1 pp. 59&ndash;60</a></p>
-<div class="chk">The link length \(a_k\) is measured&hellip; <select><option value="">&mdash;</option><option>along z_(k-1)</option><option>along x_k</option><option>about x_k</option></select> <button class="btn">check</button><span class="fb"></span></div></div>
 
 <h2 id="s-ik">Q3(b) &middot; Arm on the platform <span class="badge ref">Refresh</span></h2>
 
