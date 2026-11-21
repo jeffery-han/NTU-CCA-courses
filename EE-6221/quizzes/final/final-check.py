@@ -145,6 +145,9 @@ def page_checks(f):
         if not (HERE / href).exists(): bad += 1; print("MISSING PDF", f.name, href)
     for spec in re.findall(r'data-pages="([^"]+)"', txt):
         stem, pages = spec.split(":")
+        nums = [int(p) for p in pages.split(",")]
+        if nums != list(range(nums[0], nums[-1] + 1)):  # a pop-up must show its whole stated range
+            bad += 1; print("GAP IN CITED RANGE", f.name, spec)
         for p in pages.split(","):
             img = HERE / "final-pages" / f"{stem}-p{int(p):03d}.jpg"
             if not img.exists(): bad += 1; print("MISSING IMAGE", f.name, img.name)

@@ -22,11 +22,11 @@ Robotics and Intelligent Sensors.  Part 1: manipulator kinematics, robot control
 
 | Source (`resources/`) | Pages | Covered in | Qualifier |
 |---|---|---|---|
-| `lecture-01-manipulator-kinematics.pdf` | 1–156 | beginner §1–8; review note | Long manipulator derivations summarised. |
+| `lecture-01-manipulator-kinematics.pdf` | 1–156 | beginner §1–8; review note; pp. 53–71, 91–108, 133–141 cited in `quizzes/final/` pages | Long manipulator derivations summarised. |
 | `additional-materials/` (13 review and section PDFs) | all | partly, beginner §3–7 | Not cross-checked.  In that folder `example-3.1.pdf`, `week-05-velocity-kinematics.pdf` and `control-worked-example.pdf` are not covered. |
 | `exercises-kinematics-not-for-submission.pdf`, `exercises-kinematics-solutions.pdf` | 1–2, 1–3 | Problem 1(c), 1(d) in both notes | Problem 1(a), (b) and Problem 2 not covered. |
-| `lecture-02-robot-control.pdf` | 1–54 | pp. 8–13, 32–54 in `quizzes/final/final-primer.html` (C1–C6) | HTML only; dynamics derivation pp. 14–31 not covered. |
-| `lecture-03-mobile-robot-kinematics.pdf` | 1–40 | pp. 21–39 in `quizzes/final/final-primer.html` (M1–M3) | HTML only; wheel types, Swedish wheel, pp. 1–20 not covered. |
+| `lecture-02-robot-control.pdf` | 1–54 | pp. 6–13, 20–54 in `quizzes/final/final-primer.html` (C1–C6) | HTML only; single-link and polar dynamics derivation pp. 14–19 not covered. |
+| `lecture-03-mobile-robot-kinematics.pdf` | 1–40 | pp. 20–31, 35–40 in `quizzes/final/final-primer.html` (M1–M3) | HTML only; wheel types, kinematic models (pp. 1–19) and Swedish wheel (pp. 32–34) not covered. |
 | `additional-materials/review-week-06-control.pdf`, `robot-control-examples-additional-info.pdf`, `review-week-07-mobile-robot-kinematics.pdf` | 1, 3, 6 | `quizzes/final/final-primer.html` | Lecturer review sheets. |
 | `exercises-robot-control-not-for-submission.pdf`, `exercises-robot-control-solutions.pdf` | 1, 5 | `quizzes/final/final-primer.html` C1–C2 | Handwritten solutions. |
 | `../tests/test-final-2023-24-s2.pdf` … `-2025-26-s2.pdf` | 5 papers | topic map in `quizzes/final/final-intel.md` | Official, NTU-only, git-ignored.  2025-26 S1/S2 reserved for steps 7–8. |
