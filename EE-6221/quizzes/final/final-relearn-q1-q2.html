@@ -198,9 +198,41 @@ where \(\beta\) cancels the known forces and \(\alpha\) rescales the mass, "so t
 <tr><td>contact force \(f\), when it is measured or given by \(f=k_e(x-x_e)\)</td><td>\(\beta\)</td><td>Lec 2 p. 40 chooses \(\beta=f\)</td></tr>
 <tr><td>unknown disturbance \(d\)</td><td><b>neither</b></td><td>you cannot cancel what you cannot compute</td></tr>
 </table>
-<p><b>What happens to \(d\).</b> It stays in the plant, so it survives into the error equation (Lec 2 p. 12):
+<p><b>What happens to \(d\).</b> It stays in the plant, so it survives into the error equation (<a class="cite" href="../../resources/lecture-02-robot-control.pdf#page=11" data-pages="lecture-02-robot-control:11,12,13">Lec 2 pp. 11&ndash;13 (disturbance rejection)</a>):
 \[m(\ddot e+k_v\dot e+k_pe)=d\quad\Rightarrow\quad e_{ss}=\lim_{s\to0}\frac{s\cdot d/s}{m(s^2+k_vs+k_p)}=\frac{d}{mk_p}.\]
-The fix is an integral term, \(v=\ddot x_d+k_v\dot e+k_pe+k_i\int e\,dt\), which puts an \(s\) in the numerator of \(E(s)/D(s)\) and drives \(e_{ss}\) to 0 (Lec 2 p. 13). In the Week 6 lecture (machine transcript, unofficial), the lecturer said that a disturbance which is known "is not a disturbance anymore, it's part of your model".</p>
+The fix is an integral term, \(v=\ddot x_d+k_v\dot e+k_pe+k_i\int e\,dt\), which puts an \(s\) in the numerator of \(E(s)/D(s)\) and drives \(e_{ss}\) to 0 (Lec 2 p. 13).</p>
+
+<h3>Reading that equation line by line</h3>
+<p><b>Picture.</b> The slide's block, \(m\ddot x+b\dot x+kx^3+d=u\) (Lec 2 p. 11), now has an extra steady push \(d\) that the controller does not know about. Because \(d\) sits on the same side as the friction and spring, it is a load the motor must overcome, like a constant headwind. The PD part of \(v\) acts like a spring pulling the block toward \(x_d\). The block settles where that spring's pull exactly balances the headwind, which is slightly short of the target. That leftover gap is \(e_{ss}\).</p>
+<table class="sym">
+<tr><th>Symbol</th><th>Meaning</th></tr>
+<tr><td>\(e=x_d-x\)</td><td>tracking error; \(e&gt;0\) means the block is short of the target</td></tr>
+<tr><td>\(k_p,\;k_v\)</td><td>PD gains chosen for the unit-mass system, \(k_p=\omega_n^2\), \(k_v=2\zeta\omega_n\) (Lec 2 p. 11)</td></tr>
+<tr><td>\(d\)</td><td>constant unknown disturbance force (N)</td></tr>
+<tr><td>\(E(s),\,D(s)\)</td><td>Laplace transforms of \(e(t)\) and \(d(t)\)</td></tr>
+<tr><td>\(e_{ss}\)</td><td>steady-state error, \(\lim_{t\to\infty}e(t)\)</td></tr>
+</table>
+<p><b>Step 1: why the left side has an \(m\).</b> \(\beta\) cancelled \(b\dot x+kx^3\), but nothing cancelled \(d\). What remains is \(m\ddot x+d=mv\). Moving \(m\ddot x\) to the right and writing \(v\) out gives \(m(\ddot x_d-\ddot x+k_v\dot e+k_pe)=d\), which is \(m(\ddot e+k_v\dot e+k_pe)=d\). (This is Check 6.5 below.) The controller scaled \(v\) by \(\alpha=m\), so the error dynamics carry the \(m\) as well, while \(d\) arrives unscaled.</p>
+<p><b>Step 2: Laplace transform.</b> Take zero initial conditions, which is what a transfer function assumes. Each derivative becomes a factor of \(s\): \(\ddot e\to s^2E\), \(\dot e\to sE\), \(e\to E\). So
+\[m(s^2+k_vs+k_p)\,E(s)=D(s)\quad\Rightarrow\quad\frac{E(s)}{D(s)}=\frac{1}{m(s^2+k_vs+k_p)}.\]</p>
+<p><b>Step 3: the disturbance as a step.</b> A constant force \(d\) that switches on at \(t=0\) is a step of height \(d\), and \(\mathcal L\{d\cdot1(t)\}=d/s\). So \(E(s)=\dfrac{d/s}{m(s^2+k_vs+k_p)}\).</p>
+<p><b>Step 4: final value theorem.</b> \(\lim_{t\to\infty}e(t)=\lim_{s\to0}sE(s)\). It is valid here because the closed loop is stable: with \(k_v,k_p&gt;0\), both roots of \(s^2+k_vs+k_p\) lie in the left half-plane. Multiplying by \(s\) cancels the \(1/s\) from the step:
+\[e_{ss}=\lim_{s\to0}\frac{s\cdot d/s}{m(s^2+k_vs+k_p)}=\lim_{s\to0}\frac{d}{m(s^2+k_vs+k_p)}=\frac{d}{m(0+0+k_p)}=\frac{d}{mk_p}.\]
+At \(s=0\) the \(s^2\) and \(k_vs\) terms vanish, so only \(k_p\) survives. In plain terms, at steady state nothing is moving or accelerating any more, so damping and inertia have no effect. Only the spring-like \(k_p\) term holds the block against \(d\).</p>
+<p><b>Shortcut without Laplace</b> (our own check, not on the slide). At steady state \(e\) is constant, so \(\dot e=\ddot e=0\). The error equation collapses to \(mk_pe_{ss}=d\), which again gives \(e_{ss}=d/(mk_p)\). This is Hooke's law: a spring of stiffness \(mk_p\) (N/m) under a force \(d\) stretches by \(d/(mk_p)\).</p>
+<p><b>What the formula tells you.</b></p>
+<ul>
+<li>\(e_{ss}\propto d\): twice the disturbance gives twice the error.</li>
+<li>\(e_{ss}\propto1/k_p\): a stiffer loop gives a smaller error, but the error never reaches 0 for finite \(k_p\), and a large \(k_p\) is limited by the structural resonance: \(k_p=\omega_n^2\) with \(\omega_n\le0.5\,\omega_{res}\) (Lec 2 pp. 10&ndash;11).</li>
+<li>\(k_v\) does not appear: damping shapes the transient but not where the block settles.</li>
+<li>The sign is positive: \(d\) resists \(u\), so the block stops short of \(x_d\).</li>
+</ul>
+<p><b>Why the integral term reaches 0.</b> With \(k_i\int e\,dt\), the same steps give \(E(s)/D(s)=s/\big(m(s^3+k_vs^2+k_ps+k_i)\big)\) (Lec 2 p. 13). Then \(e_{ss}=\lim_{s\to0}s\cdot\frac{d}{s}\cdot\frac{s}{m(\cdots)}=\frac{0}{mk_i}=0\). Intuitively, as long as any error remains, \(\int e\,dt\) keeps growing and the controller pushes harder, so it can only stop growing when \(e=0\).</p>
+<div class="ex"><p style="margin:0"><b>Worked example.</b> \(m=2\) kg, \(k_v=20\), \(k_p=100\), \(d=10\) N. The poles are the roots of \(s^2+20s+100=(s+10)^2\), so the loop is stable and critically damped. Then \(e_{ss}=10/(2\times100)=0.05\) m, so the block settles 5 cm short of \(x_d\). The checker script integrates this ODE numerically and reaches the same value.</p></div>
+<div class="step" data-k="b_kp"><p>Check 6.0. Same block, \(m=2\), \(d=10\). What is the smallest \(k_p\) that keeps \(e_{ss}\le0.02\) m without an integral term? \(k_p=\) <input size="7"></p>
+<details class="hint"><summary>Hint</summary>Set \(d/(mk_p)=0.02\) and solve for \(k_p\).</details>
+<details class="work"><summary>Worked line</summary>\(k_p=d/(m\,e_{ss})=10/(2\times0.02)=250\).</details></div>
+<p> In the Week 6 lecture (machine transcript, unofficial), the lecturer said that a disturbance which is known "is not a disturbance anymore, it's part of your model".</p>
 <p><b>Back to your question.</b> In Mock A Q2(a), the question sets \(f=0\) and \(d_1=d_2=0\), so \(\beta\) has nothing to add. In Q2(b), \(f\) enters \(\beta_3\) (step 5 there), while \(d\) stays out and shows up as \(\bar M^{-1}d\) on the right of the error equation (steps 6&ndash;7 there).</p>
 <div class="step" data-k="b_class"><p>Check 6.1. For joint 3 of Mock A Q2(b), \(8\ddot q_3+4\dot q_3+78.4+f=u_3\), with \(f\) measured, plus an unknown \(d\) on joint 1. Where does each term go?<br>
 \(8\) (on \(\ddot q_3\)): <select data-fb='{"beta":"β holds forces; 8 multiplies the acceleration, so it is α₃₃ = 8.","none":"It is known (the mass), so the controller uses it — as α."}'><option value="">&mdash;</option><option value="alpha">α</option><option value="beta">β</option><option value="none">neither</option></select>
@@ -238,7 +270,7 @@ The fix is an integral term, \(v=\ddot x_d+k_v\dot e+k_pe+k_i\int e\,dt\), which
 
 <dialog id="srcDlg"><div class="row" style="justify-content:space-between"><b id="srcTitle"></b><span><a id="srcOpen" target="_blank">Open PDF</a> <button class="btn" id="srcClose">Close</button></span></div><div id="srcImgs"></div></dialog>
 
-<script type="application/json" id="keys">{"r_theta": "false", "r_dim1": ["d1", "d2", "a2", "a3"], "r_dim2": ["a4", "d5", "d6"], "r_alpha": [90, -90], "r_alpha_tf": "false", "r_y": ["in", "up", "down"], "r_retry": [0.17, -0.05, 0.25], "r_retry_al": [90, -90], "r_retry_tip": [0.76, 0.27], "b_class": ["alpha", "beta", "beta", "beta", "none", "beta"], "b_beta3": 81.6, "b_ess": 0.06, "b_known": "true"}</script>
+<script type="application/json" id="keys">{"r_theta": "false", "r_dim1": ["d1", "d2", "a2", "a3"], "r_dim2": ["a4", "d5", "d6"], "r_alpha": [90, -90], "r_alpha_tf": "false", "r_y": ["in", "up", "down"], "r_retry": [0.17, -0.05, 0.25], "r_retry_al": [90, -90], "r_retry_tip": [0.76, 0.27], "b_class": ["alpha", "beta", "beta", "beta", "none", "beta"], "b_beta3": 81.6, "b_ess": 0.06, "b_known": "true", "b_kp": 250}</script>
 <script>
 (function () {
   var KEY = 'ee6221-final-relearn-q1q2-v1', KEYS = JSON.parse(document.getElementById('keys').textContent);

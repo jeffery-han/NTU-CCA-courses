@@ -70,6 +70,12 @@ K["b_class"] = ["alpha", "beta", "beta", "beta", "none", "beta"]
 K["b_beta3"] = round(4 * 0.5 + 78.4 + 1.2, 4)
 K["b_ess"] = round(6 / (4 * 25), 4)
 K["b_known"] = "true"
+K["b_kp"] = round(10 / (2 * 0.02), 4)
+# Worked example: integrate m(e'' + kv e' + kp e) = d and confirm e_ss = d/(m kp) = 0.05.
+m_, kv_, kp_, d_, e_, de_, dt_ = 2, 20, 100, 10, 0.0, 0.0, 1e-4
+for _ in range(int(3 / dt_)):
+    de_ += (d_ / m_ - kv_ * de_ - kp_ * e_) * dt_; e_ += de_ * dt_
+assert abs(e_ - d_ / (m_ * kp_)) < 1e-4 and d_ / (m_ * kp_) == 0.05, e_
 
 page_keys = json.loads(re.search(r'<script type="application/json" id="keys">(.*?)</script>', PAGE, re.S).group(1))
 bad = [k for k in set(K) | set(page_keys) if K.get(k) != page_keys.get(k)]
