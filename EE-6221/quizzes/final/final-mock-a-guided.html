@@ -121,6 +121,43 @@ h3 .tag, h2 .tag { float: right; color: var(--muted); font-size: .82rem; font-we
 \[T^1_0=\begin{bmatrix}C_1&0&S_1&0\\S_1&0&-C_1&0\\0&1&0&0.47\\0&0&0&1\end{bmatrix},\ T^2_1=\begin{bmatrix}C_2&0&S_2&0.15C_2\\S_2&0&-C_2&0.15S_2\\0&1&0&0.16\\0&0&0&1\end{bmatrix},\ T^3_2=\begin{bmatrix}C_3&-S_3&0&0.18C_3\\S_3&C_3&0&0.18S_3\\0&0&1&0\\0&0&0&1\end{bmatrix}\]</details>
 <label class="self"><input type="checkbox"> My table and three matrices match</label></div>
 
+<div class="notice info" id="q1-graded">
+<p style="margin-top:0"><b>Your attempt, graded 2026-11-24: 12 / 20</b> (the three matrices were left blank). Scan: <a href="attempts/final-mock-a-q1-2026-11-24.jpg">attempts/final-mock-a-q1-2026-11-24.jpg</a>. Graded against <i>your own</i> frames, with the mock 5 rubric. In the scan, ↗ is read as "into the page" and ↙ as "out of the page", the usual way to sketch a third axis. Your \(\theta_1\)&ndash;\(\theta_3\) and \(\alpha_1\)&ndash;\(\alpha_3\) all match that reading.</p>
+<p><b>(a) Diagram: 9 / 12</b></p>
+<ul>
+<li>\(z\) on the joint axes, 5/6. \(z_0\)&ndash;\(z_4\) are correct. You drew \(z_5\) below the arm, but the q6 roll axis is 0.05&nbsp;m <i>above</i> the 0.17&nbsp;m link.</li>
+<li>\(x\) on the common normals, with origins, 2/3. \(x_1\), \(x_2\) (down the 0.15&nbsp;m drop) and \(x_3\) are correct. Frame 4's origin must sit on the q5 axis, 0.17&nbsp;m from q4. Frame 5's origin must be 0.05&nbsp;m <i>up</i> \(z_4\).</li>
+<li>Right-handed \(y\), 0/1. \(y_0\), \(y_1\), \(y_2\) and \(y_4\) are each reversed. Check with \(y=z\times x\): in frame 1, \(z_1\) (right) \(\times\) \(x_1\) (into the page) points up, but you drew \(y_1\) down. <i>Convention-dependent:</i> if your ↗ meant "out of the page", the \(y\) axes are fine, but then \(\theta_1\), \(\alpha_1\) and \(\alpha_2\) change sign. Either way, the drawing and the table disagree.</li>
+<li>Base frame 1/1. Tool frame (\(z_6\) is the approach direction) 1/1.</li>
+</ul>
+<p><b>(b) Table: 3 / 8</b> (the mock 5 rubric covers only the table)</p>
+<ul>
+<li>Rows 1&ndash;3 are correct, 3/3. Your row 2 has \(d_2=0.16\) and \(a_2=0.15\), so you avoided the usual swap.</li>
+<li>Row 4 is wrong. \(a_4=0\) should be <b>0.17</b>: the common normal runs from the q4 axis to the q5 axis. Your \(\alpha_4=-90^\circ\) turns \(z_4\) horizontal. With your \(x_4\) pointing right and \(z_4\) up, \(\alpha_4=+90^\circ\).</li>
+<li>Row 5 is wrong. \(d_5=0.2\) should be <b>0.05</b>, the raise along \(z_4\). Also, \(\alpha_5=0\) cannot be right, because \(z_4\) (up) is perpendicular to \(z_5\) (right). With your \(x_5\), \(\alpha_5=-90^\circ\).</li>
+<li>Row 6 is blank. It should be \(\theta_6=q_6\), \(d_6=0.20\), \(a_6=0\), \(\alpha_6=0\). The 0.20 m you put in row 5 belongs here.</li>
+<li>Variables identified, 0/1. Your \(\theta\) column holds only the angles of the sketched pose. Write \(\theta_k=q_k\).</li>
+<li>\(\alpha\) signs consistent with the drawing, 0/1, because of \(\alpha_4\) and \(\alpha_5\).</li>
+<li>\(T^1_0\), \(T^2_1\), \(T^3_2\) were left blank, which is not the same as wrong. In the real paper they share these 8 marks. Your formula \(T^k_{k-1}=R(\theta_k)\,T(d_k)\,T(a_k)\,R(\alpha_k)\) is in the right order.</li>
+</ul>
+<p><b>Corrected table on your frames</b> (checked numerically):</p>
+<table style="border-collapse:collapse;margin:6px 0" border="1" cellpadding="4">
+<tr><th>k</th><th>\(\theta\)</th><th>d (m)</th><th>a (m)</th><th>\(\alpha\)</th></tr>
+<tr><td>1</td><td>\(q_1\)</td><td>0.47</td><td>0</td><td>\(90^\circ\)</td></tr>
+<tr><td>2</td><td>\(q_2\)</td><td>0.16</td><td>0.15</td><td>\(-90^\circ\)</td></tr>
+<tr><td>3</td><td>\(q_3\)</td><td>0</td><td>0.18</td><td>0</td></tr>
+<tr><td>4</td><td>\(q_4\)</td><td>0</td><td><b>0.17</b></td><td><b>\(+90^\circ\)</b></td></tr>
+<tr><td>5</td><td>\(q_5\)</td><td><b>0.05</b></td><td>0</td><td><b>\(-90^\circ\)</b></td></tr>
+<tr><td>6</td><td>\(q_6\)</td><td><b>0.20</b></td><td>0</td><td><b>0</b></td></tr>
+</table>
+<p>Check at your sketched pose, \(q=(90^\circ,-90^\circ,-90^\circ,0,-90^\circ,0)\). The corrected table puts the tip at \((0.71,\,0,\,0.37)\)&nbsp;m, which equals \((0.16+0.18+0.17+0.20,\ 0,\ 0.47-0.15+0.05)\), with \(z_6\) pointing right. Your table as written puts it at \((0.54,\,0,\,0.32)\): both the 0.17 and the 0.05 are missing.</p>
+<p>The three matrices with this \(\alpha\) column:
+\[T^1_0=\begin{bmatrix}C_1&0&S_1&0\\S_1&0&-C_1&0\\0&1&0&0.47\\0&0&0&1\end{bmatrix},\ T^2_1=\begin{bmatrix}C_2&0&-S_2&0.15C_2\\S_2&0&C_2&0.15S_2\\0&-1&0&0.16\\0&0&0&1\end{bmatrix},\ T^3_2=\begin{bmatrix}C_3&-S_3&0&0.18C_3\\S_3&C_3&0&0.18S_3\\0&0&1&0\\0&0&0&1\end{bmatrix}\]
+(The model answer above has \(\alpha_2=+90^\circ\) because it points \(z_2\) out of the page. Your \(z_2\) points into the page, so yours is \(-90^\circ\). Both are valid.)</p>
+<p><b>Diagnosis.</b> This is a concept gap, not a slip. The 0.17 and 0.05 offsets were dropped, and the 0.20 moved up a row. You also put frame 4 at q4 instead of on the q5 axis. <b>Rule:</b> before you finish the table, tick each dimension in the figure into exactly one \(d\) or \(a\) cell (here there are 7 numbers and 6 rows). Also, when two consecutive \(z\) axes are perpendicular, \(\alpha=\pm90^\circ\), never 0.</p>
+<details class="work"><summary>Retry (answer on paper first): keep your frames, but the gripper axis is 0.05&nbsp;m <i>below</i> the 0.17&nbsp;m link and the tool length is 0.25&nbsp;m. Write rows 4&ndash;6.</summary>Row 4: \(q_4,\ 0,\ 0.17,\ +90^\circ\). Row 5: \(q_5,\ -0.05,\ 0,\ -90^\circ\) (with \(z_4\) still up, a drop is a negative \(d\)). Row 6: \(q_6,\ 0.25,\ 0,\ 0\).</details>
+</div>
+
 <!-- ======================= Q2 ======================= -->
 <h2 id="q2">Q2 &middot; Robot control <span class="tag">20 marks</span></h2>
 <div class="stem">The dynamic equations of a robot are
