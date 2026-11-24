@@ -399,7 +399,7 @@ Stack the four points into \(Mg=b\) (\(8\times8\)), \(g=M^{-1}b\) (invertible be
     var a = e.target.closest('a[data-pages]'); if (!a) return; e.preventDefault();
     var parts = a.dataset.pages.split(':'), box = document.getElementById('srcImgs'); box.innerHTML = '';
     parts[1].split(',').forEach(function (p) { var img = document.createElement('img'); img.loading = 'lazy'; img.alt = parts[0] + ' page ' + p; img.src = 'final-pages/' + parts[0] + '-p' + ('00' + p).slice(-3) + '.jpg'; box.appendChild(img); });
-    document.getElementById('srcTitle').textContent = a.textContent; document.getElementById('srcOpen').href = a.getAttribute('href'); dlg.showModal();
+    var t = a.cloneNode(true); t.querySelectorAll('.katex-mathml').forEach(function (m) { m.remove(); }); document.getElementById('srcTitle').textContent = t.textContent; document.getElementById('srcOpen').href = a.getAttribute('href'); dlg.showModal();
   });
   document.getElementById('srcClose').onclick = function () { dlg.close(); };
   dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });

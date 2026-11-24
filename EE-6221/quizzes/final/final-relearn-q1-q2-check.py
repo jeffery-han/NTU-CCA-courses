@@ -1,0 +1,106 @@
+"""Independent key checker for final-relearn-q1-q2.html.
+
+Recomputes every key from geometry (D-H forward kinematics, cross products) and the
+computed-torque formulas, asserts that the page's embedded keys match, that every distractor
+feedback map is valid JSON naming a real wrong option, that progress keys are unique, and that
+every cited PDF and pop-up image exists with no gap inside a cited range.
+Run:  python3 final-relearn-q1-q2-check.py
+"""
+import json, math, re, sys
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+PAGE = (HERE / "final-relearn-q1-q2.html").read_text()
+
+# World frame of the sketch: right = +x, up = +z, into page = +y (x0 right, z0 up).
+V = {"right": (1, 0, 0), "left": (-1, 0, 0), "up": (0, 0, 1), "down": (0, 0, -1), "in": (0, 1, 0), "out": (0, -1, 0)}
+NAME = {v: k for k, v in V.items()}
+cross = lambda a, b: (a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0])
+neg = lambda a: tuple(-c for c in a)
+
+
+def alpha(z_prev, x, z):                     # quarter-turn twist about x carrying z_prev onto z
+    c = cross(z_prev, z)
+    return 90 if c == x else -90 if c == neg(x) else (0 if z_prev == z else None)
+
+
+def dh(t, d, a, al):
+    t, al = math.radians(t), math.radians(al)
+    ct, st, ca, sa = math.cos(t), math.sin(t), math.cos(al), math.sin(al)
+    return [[ct, -ca * st, sa * st, a * ct], [st, ca * ct, -sa * ct, a * st], [0, sa, ca, d], [0, 0, 0, 1]]
+
+
+def fk(rows):
+    M = [[float(i == j) for j in range(4)] for i in range(4)]
+    for r in rows:
+        T = dh(*r); M = [[sum(M[i][k] * T[k][j] for k in range(4)) for j in range(4)] for i in range(4)]
+    return M
+
+
+K = {}
+K["r_theta"] = "false"                        # θ of a revolute joint is the variable (Lec 1 p. 56)
+# Figure 1 dimensions -> cells: verified below by FK reproducing the figure's tip.
+K["r_dim1"] = ["d1", "d2", "a2", "a3"]
+K["r_dim2"] = ["a4", "d5", "d6"]
+cells = dict(zip(K["r_dim1"] + K["r_dim2"], [.47, .16, .15, .18, .17, .05, .20]))
+c = lambda n: cells.get(n, 0)
+z = {0: V["up"], 1: V["right"], 2: V["in"], 3: V["in"], 4: V["up"], 5: V["right"], 6: V["right"]}
+x = {1: V["in"], 2: V["down"], 3: V["right"], 4: V["right"], 5: V["out"], 6: V["out"]}
+al = [alpha(z[k - 1], x[k], z[k]) for k in range(1, 7)]
+assert al == [90, -90, 0, 90, -90, 0], al
+pose = [90, -90, -90, 0, -90, 0]                # the learner's sketched (stretched) pose
+rows = [(pose[k], c(f"d{k+1}"), c(f"a{k+1}"), al[k]) for k in range(6)]
+M = fk(rows); tip = [round(M[i][3], 6) for i in range(3)]
+assert tip == [0.71, 0, 0.37], tip
+for k in range(1, 7):                          # every frame's x and z axes match the drawing
+    Mk = fk(rows[:k])
+    assert tuple(round(Mk[i][0]) for i in range(3)) == x[k] and tuple(round(Mk[i][2]) for i in range(3)) == z[k], k
+K["r_alpha"] = [al[3], al[4]]
+K["r_alpha_tf"] = "false"
+K["r_y"] = [NAME[cross(z[0], V["right"])], NAME[cross(z[1], x[1])], NAME[cross(z[5], x[5])]]
+# Retry variant: gripper axis 0.05 below, tool 0.25.
+rv = list(rows); rv[4] = (pose[4], -0.05, 0, al[4]); rv[5] = (pose[5], 0.25, 0, al[5])
+M = fk(rv); tipv = [round(M[i][3], 6) for i in range(3)]
+assert tipv[1] == 0
+K["r_retry"] = [0.17, -0.05, 0.25]
+K["r_retry_al"] = [al[3], al[4]]
+K["r_retry_tip"] = [tipv[0], tipv[2]]
+assert K["r_retry_tip"] == [0.76, 0.27]
+K["b_class"] = ["alpha", "beta", "beta", "beta", "none", "beta"]
+K["b_beta3"] = round(4 * 0.5 + 78.4 + 1.2, 4)
+K["b_ess"] = round(6 / (4 * 25), 4)
+K["b_known"] = "true"
+
+page_keys = json.loads(re.search(r'<script type="application/json" id="keys">(.*?)</script>', PAGE, re.S).group(1))
+bad = [k for k in set(K) | set(page_keys) if K.get(k) != page_keys.get(k)]
+assert not bad, {k: (K.get(k), page_keys.get(k)) for k in bad}
+
+ids = re.findall(r'data-(?:k|id)="([^"]+)"', PAGE)
+assert len(ids) == len(set(ids)), "duplicate progress keys"
+assert set(K) <= set(ids), set(K) - set(ids)
+
+# Distractor feedback: valid JSON, keys are real options that are wrong answers.
+for step in re.findall(r'<div class="step[^"]*" data-k="([^"]+)">(.*?)</div>\s*(?=<div class="step|<!--|<h2|<div class="pit|$)', PAGE, re.S):
+    sid, html = step
+    sels = re.findall(r"<select( data-fb='([^']*)')?>(.*?)</select>", html, re.S)
+    for i, (_, fb, opts) in enumerate(sels):
+        if not fb:
+            continue
+        m = json.loads(fb)
+        values = re.findall(r'<option value="([^"]*)"', opts)
+        ans = K[sid][i] if isinstance(K[sid], list) else K[sid]
+        for v in m:
+            assert v in values and v != ans, (sid, v)
+        assert "<" not in fb and ">" not in fb, sid
+
+# Citations: PDFs exist; images exist; no gap inside a range.
+for href, pages in re.findall(r'href="([^"#]+)#page=\d+" data-pages="([^"]+)"', PAGE):
+    assert (HERE / href).resolve().exists(), href
+    stem, nums = pages.split(":"); nums = [int(n) for n in nums.split(",")]
+    assert nums == list(range(nums[0], nums[-1] + 1)), pages
+    for n in nums:
+        assert (HERE / "final-pages" / f"{stem}-p{n:03d}.jpg").exists(), (stem, n)
+for src in re.findall(r'<img src="([^"]+)"', PAGE):
+    assert (HERE / src).exists(), src
+
+print(json.dumps(K))
