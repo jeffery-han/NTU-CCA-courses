@@ -100,6 +100,46 @@ for t1, t2, t4, t5, t6 in itertools.product((0, 90, 180, -90), repeat=5):
 assert hit, "wall-arm table does not reach (0, -15, 80)"
 K["w_tip"] = [80, 15]
 
+# Part 8: official 2024-25 S1 Q2 (3-DOF hybrid position/force control with disturbances).
+# Plant: (5 q2^2 + 1) q1'' + ... + d1 = u1;  5 q2'' + ... + d2 = u2;  3 q3'' + 2 q3' + 29.4 + d3 + f = u3
+# f = 22(q3 - 0.2), resonances 5, 10, 15 rad/s; motion zeta = 1.05, force zeta = 1.
+K["c_sub"] = ["q3", "yes", "no"]
+w_res_min = min(5, 10, 15)
+wn = 0.5 * w_res_min
+K["c_wn"] = wn
+zeta_m, zeta_f = 1.05, 1.0
+kvm, kpm = round(2 * zeta_m * wn, 6), round(wn ** 2, 6)
+kvf, kpf = round(2 * zeta_f * wn, 6), round(wn ** 2, 6)
+K["c_gains"] = [kvm, kpm, kvf, kpf]
+m3, ke = 3, 22
+K["c_v3_coeff"] = round(m3 / ke, 6)
+# Spot-check u3 at q3 = 0.25, dq3 = 0.5, ddf_d = 0, ef = 1.6, def = 0.2.
+q3_s, dq3_s, ef_s, def_s = 0.25, 0.5, 1.6, 0.2
+f_s = round(ke * (q3_s - 0.2), 6)
+v3_s = (0 + kvf * def_s + kpf * ef_s) / ke
+beta3_s = 2 * dq3_s + 29.4 + f_s
+u3_s = round(m3 * v3_s + beta3_s, 6)
+K["c_u3"] = [f_s, u3_s]
+# Part (b) error-equation RHS at q2 = 1, d1 = 6, d2 = 5, d3 = 3.
+q2_e, d1_e, d2_e, d3_e = 1, 6, 5, 3
+K["c_dist_rhs"] = [round(d1_e / (5 * q2_e ** 2 + 1), 6), round(d2_e / 5, 6), round(ke * d3_e / m3, 6)]
+# Numerically integrate joint 3 plant 3 q3'' + 2 q3' + 29.4 + d3 + f = u3 with constant fd = 10, d3 = 3
+# and confirm steady-state force error ef_ss = (22 * d3) / (3 * kpf).
+q3_, dq3_, fd_, dt_ = 0.2, 0.0, 10.0, 1e-4
+for _ in range(int(12 / dt_)):
+    f_ = ke * (q3_ - 0.2)
+    df_ = ke * dq3_
+    ef_ = fd_ - f_
+    def_ = -df_
+    v3_ = (kvf * def_ + kpf * ef_) / ke
+    u3_ = m3 * v3_ + 2 * dq3_ + 29.4 + f_
+    ddq3_ = (u3_ - 2 * dq3_ - 29.4 - d3_e - f_) / m3
+    dq3_ += ddq3_ * dt_
+    q3_ += dq3_ * dt_
+ef_ss_num = fd_ - ke * (q3_ - 0.2)
+ef_ss_ana = (ke * d3_e) / (m3 * kpf)
+assert abs(ef_ss_num - ef_ss_ana) < 1e-3, (ef_ss_num, ef_ss_ana)
+
 page_keys = json.loads(re.search(r'<script type="application/json" id="keys">(.*?)</script>', PAGE, re.S).group(1))
 bad = [k for k in set(K) | set(page_keys) if K.get(k) != page_keys.get(k)]
 assert not bad, {k: (K.get(k), page_keys.get(k)) for k in bad}
