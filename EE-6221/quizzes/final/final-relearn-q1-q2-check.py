@@ -77,6 +77,29 @@ for _ in range(int(3 / dt_)):
     de_ += (d_ / m_ - kv_ * de_ - kp_ * e_) * dt_; e_ += de_ * dt_
 assert abs(e_ - d_ / (m_ * kp_)) < 1e-4 and d_ / (m_ * kp_) == 0.05, e_
 
+# Part 6: official 2024-25 S2 Q1 (wall arm, cm).  Tutor-verified table (quiz-01-mock-05.md Q3).
+W = [("t1", 25, 0, 90), ("t2", 11, 0, -90), (-90, "d3", 0, -90), ("t4", 0, 15, -90), ("t5", 4, 0, 90), ("t6", 20, 0, 0)]
+K["w_z0"] = "right"; K["w_var"] = "d3"; K["w_theta3"] = "false"
+lengths = {25: None, 11: None, 15: None, 4: None, 20: None}
+for k, (_, d, a, _) in enumerate(W, 1):
+    if isinstance(d, (int, float)) and d: lengths[d] = f"d{k}"
+    if a: lengths[a] = f"a{k}"
+assert None not in lengths.values(), lengths          # every printed length lands in exactly one cell
+K["w_dims"] = [lengths[n] for n in (25, 11, 15, 4, 20)]
+K["w_alpha"] = [abs(r[3]) for r in W]
+# Straightened pose with d3 = 20: search revolute angles in 90° steps for tip (0, -15, 80) cm
+# (z0 out of the wall, y0 down): 25+20+15+20 out, 11+4 up.
+import itertools
+hit = None
+for t1, t2, t4, t5, t6 in itertools.product((0, 90, 180, -90), repeat=5):
+    th = {"t1": t1, "t2": t2, "t4": t4, "t5": t5, "t6": t6}
+    rows = [(th.get(t, t), 20 if d == "d3" else d, a, al) for t, d, a, al in W]
+    M = fk(rows)
+    if [round(M[i][3], 6) for i in range(3)] == [0, -15, 80]:
+        hit = (t1, t2, t4, t5, t6); break
+assert hit, "wall-arm table does not reach (0, -15, 80)"
+K["w_tip"] = [80, 15]
+
 page_keys = json.loads(re.search(r'<script type="application/json" id="keys">(.*?)</script>', PAGE, re.S).group(1))
 bad = [k for k in set(K) | set(page_keys) if K.get(k) != page_keys.get(k)]
 assert not bad, {k: (K.get(k), page_keys.get(k)) for k in bad}
@@ -107,6 +130,9 @@ for href, pages in re.findall(r'href="([^"#]+)#page=\d+" data-pages="([^"]+)"', 
     for n in nums:
         assert (HERE / "final-pages" / f"{stem}-p{n:03d}.jpg").exists(), (stem, n)
 for src in re.findall(r'<img src="([^"]+)"', PAGE):
+    # ntu-only/ holds crops of official papers; it is git-ignored, so a fresh clone lacks it.
+    if src.startswith("ntu-only/") and not (HERE / "ntu-only").exists():
+        continue
     assert (HERE / src).exists(), src
 
 print(json.dumps(K))

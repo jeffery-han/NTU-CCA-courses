@@ -21,3 +21,6 @@ EE-*/tests/test-final-*.pdf
 *.synctex.gz
 .slides-build/
 node_modules/
+
+# Crops of the NTU-only exam papers used on study pages: keep local.
+EE-*/quizzes/*/ntu-only/
