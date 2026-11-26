@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en" data-theme="system">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EE6221 Final Relearn: Q2 to Q5 equations</title>
+<meta name="description" content="Relearn page built from the graded Mock B attempt: computed torque in Hz, hybrid force control, wheel constraints, tool-configuration IK, homography rows, multi-sensor Kalman.">
+<link rel="stylesheet" href="quiz-assets/katex/katex.min.css">
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: #f6f7f9; --surface: #fff; --surface-2: #eef1f5; --text: #14181f; --muted: #5b6472; --border: #d8dee7;
+  --accent: #1f6feb; --accent-soft: #e5efff; --success: #17794b; --success-soft: #e2f5ec;
+  --warning: #9a6200; --warning-soft: #fdf1dc; --danger: #b32130; --danger-soft: #fdeaec;
+  --radius: 14px; --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0e1117; --surface: #161b23; --surface-2: #1d232d; --text: #e7ecf3; --muted: #99a3b3; --border: #2a323e;
+  --accent: #6ea8ff; --accent-soft: #17233a; --success: #56d39b; --success-soft: #10281f;
+  --warning: #e5b567; --warning-soft: #2b2113; --danger: #ff8189; --danger-soft: #2e1519; } }
+:root[data-theme="dark"] {
+  --bg: #0e1117; --surface: #161b23; --surface-2: #1d232d; --text: #e7ecf3; --muted: #99a3b3; --border: #2a323e;
+  --accent: #6ea8ff; --accent-soft: #17233a; --success: #56d39b; --success-soft: #10281f;
+  --warning: #e5b567; --warning-soft: #2b2113; --danger: #ff8189; --danger-soft: #2e1519; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.62 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+a { color: var(--accent); }
+.app { display: grid; grid-template-columns: 270px minmax(0, 1fr); }
+nav.toc { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 18px 14px; border-right: 1px solid var(--border); background: var(--surface); font-size: .9rem; }
+nav.toc b { display: block; margin-bottom: 8px; }
+nav.toc a { display: flex; justify-content: space-between; gap: 8px; padding: 3px 6px; border-radius: 7px; text-decoration: none; color: var(--text); }
+nav.toc a:hover { background: var(--surface-2); }
+nav.toc .sc { color: var(--muted); font-family: var(--mono); font-size: .8rem; }
+nav.toc .sc.ok { color: var(--success); font-weight: 700; }
+nav.toc .tools { margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--border); }
+main { min-width: 0; max-width: 900px; padding: 24px 22px 120px; }
+h1 { font-size: 1.65rem; margin: 0 0 .4rem; }
+h2 { font-size: 1.25rem; margin: 2.2rem 0 .4rem; padding-top: .6rem; border-top: 2px solid var(--border); }
+h3 { font-size: 1.04rem; margin: 1.2rem 0 .3rem; }
+.sub { color: var(--muted); }
+.notice { background: var(--warning-soft); border: 1px solid var(--border); border-radius: 12px; padding: 12px 15px; margin: 14px 0; }
+.notice.info { background: var(--accent-soft); }
+.btn { font: inherit; font-size: .92rem; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 4px 10px; cursor: pointer; }
+.btn:hover { border-color: var(--accent); }
+.fb { font-weight: 600; margin-left: 6px; }
+.katex-display { overflow-x: auto; overflow-y: hidden; }
+a.cite { font-size: .85rem; }
+dialog { max-width: min(900px, 94vw); border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text); padding: 14px; }
+dialog img { width: 100%; display: block; margin: 8px 0; border: 1px solid var(--border); background: #fff; }
+dialog::backdrop { background: rgba(0, 0, 0, .5); }
+.row { display: flex; gap: 10px; align-items: center; }
+figure { margin: 10px 0; background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 8px; }
+figure img, figure svg { display: block; width: 100%; height: auto; max-width: 560px; margin: 0 auto; }
+figcaption { color: #5b6472; font-size: .85rem; text-align: center; }
+.stem { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 10px; padding: 10px 14px; margin: 8px 0 12px; }
+.step { border-left: 3px solid var(--border); padding: 4px 0 4px 12px; margin: 10px 0; }
+.step.done { border-left-color: var(--success); }
+.step p { margin: 4px 0; }
+.step input:not([type=checkbox]), .step select { font: inherit; font-size: .9rem; font-family: var(--mono); background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 7px; padding: 3px 7px; }
+.step input.good, .step select.good { border-color: var(--success); } .step input.bad, .step select.bad { border-color: var(--danger); }
+details { margin: 3px 0; font-size: .94rem; } details summary { cursor: pointer; color: var(--muted); font-weight: 600; }
+details.work[open] { background: var(--success-soft); border-radius: 8px; padding: 6px 10px; }
+details.hint[open] { background: var(--accent-soft); border-radius: 8px; padding: 6px 10px; }
+.pill { display: inline-block; background: var(--warning-soft); border: 1px solid var(--border); border-radius: 999px; padding: 0 9px; font-size: .78rem; font-weight: 700; }
+label.self { display: block; font-size: .92rem; margin-top: 4px; }
+h3 .tag, h2 .tag { float: right; color: var(--muted); font-size: .82rem; font-weight: 600; }
+@media (max-width: 860px) {
+  .app { grid-template-columns: 1fr; }
+  nav.toc { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--border); }
+  nav.toc #toc-links { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 8px; }
+  main { padding: 16px 16px 80px; }
+}
+
+.badge { display: inline-block; background: var(--accent-soft); color: var(--accent); border: 1px solid var(--border); border-radius: 999px; padding: 0 9px; font-size: .75rem; font-weight: 700; vertical-align: middle; }
+h2 .badge { float: right; }
+table.sym { border-collapse: collapse; width: 100%; font-size: .92rem; margin: 8px 0; display: block; overflow-x: auto; }
+table.sym th, table.sym td { border: 1px solid var(--border); padding: 5px 8px; text-align: left; vertical-align: top; }
+table.sym th { background: var(--surface-2); }
+.pit { background: var(--danger-soft); border: 1px solid var(--border); border-left: 4px solid var(--danger); border-radius: 10px; padding: 8px 12px; margin: 10px 0; }
+.ex { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--success); border-radius: 10px; padding: 8px 14px; margin: 10px 0; }
+.trip { text-align: center; font-weight: 600; }
+.why { color: var(--danger); font-size: .9rem; margin: 3px 0; }
+.step select { margin: 2px 4px 2px 0; }
+figure svg { max-width: 720px; }
+</style>
+<script defer src="quiz-assets/katex/katex.min.js"></script>
+<script defer src="quiz-assets/katex/contrib/auto-render.min.js"></script>
+<script defer src="quiz-assets/render-math.js"></script>
+</head>
+<body>
+<div class="app">
+<nav class="toc" aria-label="Contents">
+  <b>EE6221 Final &mdash; Relearn Q2&ndash;Q5</b>
+  <div id="toc-links"></div>
+  <div class="tools">
+    <div>Checks right <b id="score" style="display:inline">0</b>/<span id="total">0</span></div>
+    <p><button class="btn" id="reset">Reset my answers</button> <button class="btn" id="theme">Theme</button></p>
+    <a href="final-mock-b.html">&larr; Mock B</a><br><a href="final-relearn-q1-q2.html">Relearn Q1&ndash;Q2</a><br><a href="final-primer.html">Step 1 primer</a><br><a href="final-mock-c.html">Mock C (after this page)</a>
+  </div>
+</nav>
+<main>
+<h1>EE6221 Final &mdash; Relearn: the equations of Q2 to Q5</h1>
+<p class="sub">Built from your Mock B attempt. Q1 is now solid (19/20 twice). Q2(b)&ndash;(c) and Q3 were where the marks went, and Q4&ndash;Q5 were not attempted. You said you understand the general picture of Q4 and Q5 but cannot hold the equations. So every part here rebuilds one equation from a picture you <i>can</i> remember. The goal is that you can re-derive the equation in the exam in under a minute, instead of having to recall it. Type answers in the boxes. Fractions such as <code>1/6</code> are accepted. Angles are in degrees unless a box says rad.</p>
+<div class="notice info"><p style="margin:0"><span class="badge">Exam focus</span> marks a part tested directly in its fixed exam slot (Q2 control, Q3 mobile platform + arm, Q4 homography, Q5 Kalman, 20 marks each). Every part here is exam focus. The full derivations are in <a href="final-primer.html">the step 1 primer</a>. This page is the short, re-derivable version, plus drills. Open mistakes are tracked in <code>final-mistakes.md</code> (#6&ndash;#14).</p></div>
+
+<!-- ======================= Part 1 ======================= -->
+<h2 id="p1">1 &middot; Computed torque in three moves <span class="badge">Exam focus</span></h2>
+<p><b>The one picture.</b> The robot's equation is "push = mass &times; acceleration + everything else". The controller does three things. It <b>cancels</b> everything else (\(\beta\)). It <b>scales</b> by the mass (\(\alpha\)). Then it <b>commands</b> the acceleration it wants (\(v\)). <a class="cite" href="../../resources/lecture-02-robot-control.pdf#page=6" data-pages="lecture-02-robot-control:6,7,8,9,10,11,12,13">Lec 2 pp. 6&ndash;13 (partitioned control, gains, resonance rule, disturbances)</a></p>
+\[u=\alpha v+\beta,\qquad v=\ddot q_d+k_v\dot e+k_pe,\qquad e=q_d-q.\]
+<p>If you substitute this into \(M\ddot q+(\text{rest})=u\), with \(\alpha=M\) and \(\beta=\text{rest}\), you get \(M\ddot q=Mv\), so \(\ddot q=v\), which is \(\ddot e+k_v\dot e+k_pe=0\). <b>In the exam, write all three lines</b>: the law, the servo \(v\) written out in full, and the error equation. Writing "\(v=\ddot q\)" loses the servo (mistake #8).</p>
+<p><b>Gains: the resonance rule.</b> The loop must be slower than half the lowest structural resonance: \(\omega_n\le\tfrac12\omega_{res,\min}\) (Lec 2 pp. 10&ndash;11). Then \(k_p=\omega_n^2\) and \(k_v=2\zeta\omega_n\). The trap (mistake #7) is that \(\omega_n\) must be in <b>rad/s</b>. If the paper gives Hz, multiply by \(2\pi\) <i>first</i>:</p>
+\[\omega_n=\tfrac12\cdot(2\pi\cdot f_{\min}).\]
+<div class="ex"><p style="margin:0"><b>Worked example</b> (Mock B Q2(a)). Resonances 2, 3.5 and 5 Hz, \(\zeta=1.1\). Lowest = 2 Hz = \(4\pi=12.566\) rad/s, so \(\omega_n=6.2832\), \(k_p=39.478\) and \(k_v=2(1.1)(6.2832)=13.823\). Your answer used \(\omega_n=1\), which is 2&pi; times too slow.</p></div>
+<div class="step" data-k="c_gain"><p>Check 1.1. Resonances 1.5 Hz and 4 Hz, critically damped (\(\zeta=1\)), as fast as allowed. \(\omega_n=\) <input size="7"> rad/s, \(k_p=\) <input size="7">, \(k_v=\) <input size="7"></p>
+<details class="hint"><summary>Hint</summary>Lowest is 1.5 Hz. Convert to rad/s (&times;2&pi;), then halve.</details>
+<details class="work"><summary>Worked line</summary>\(\omega_n=0.5\times1.5\times2\pi=4.7124\); \(k_p=22.207\); \(k_v=2(4.7124)=9.4248\).</details></div>
+<div class="step" data-k="c_u"><p>Check 1.2. One joint, \(4\ddot q+2\dot q+39.2=u\), with \(k_v=10\) and \(k_p=25\). At an instant where \(\ddot q_d=0.3\), \(e=0.1\), \(\dot e=-0.2\) and \(\dot q=0.5\): \(v=\) <input size="7">, \(u=\) <input size="7"></p>
+<details class="hint"><summary>Hint</summary>\(v=\ddot q_d+k_v\dot e+k_pe\). Then \(u=4v+(2\dot q+39.2)\).</details>
+<details class="work"><summary>Worked line</summary>\(v=0.3-2+2.5=0.8\); \(u=3.2+1+39.2=43.4\).</details></div>
+
+<!-- ======================= Part 2 ======================= -->
+<h2 id="p2">2 &middot; Hybrid position/force control <span class="badge">Exam focus</span></h2>
+<p><b>The one picture.</b> A joint presses on a wall that behaves like a stiff spring: \(f=k_e(q-q_e)\), where \(q_e\) is where the wall starts. You can choose <i>where the joint is</i> or <i>how hard it pushes</i>, but not both, because the wall links them. So the paper splits the joints. Joints that move freely are <b>position-controlled</b>, exactly as in Part 1. The joint that touches the wall is <b>force-controlled</b>. <a class="cite" href="../../resources/lecture-02-robot-control.pdf#page=38" data-pages="lecture-02-robot-control:38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54">Lec 2 pp. 38&ndash;54 (force control, hybrid position/force control)</a></p>
+<p><b>Rebuild the force servo in three lines.</b> You want the force error \(e_f=f_d-f\) to obey the same tidy equation as a position error: \(\ddot e_f+k_{vf}\dot e_f+k_{pf}e_f=0\). That needs \(\ddot f=\ddot f_d+k_{vf}\dot e_f+k_{pf}e_f\). The wall turns acceleration into force: \(\ddot f=k_e\ddot q\). And the inner loop makes \(\ddot q=v\). So</p>
+\[v_f=\frac{1}{k_e}\big(\ddot f_d+k_{vf}\dot e_f+k_{pf}e_f\big).\]
+<p>The \(1/k_e\) is there only because \(v\) must be an <i>acceleration</i>, while the bracket is a rate of change of force. If you forget it, the units are wrong. The rest of the law is unchanged: \(u=\alpha v+\beta\). The measured contact force \(f\) is a known force, so it goes in \(\beta\) (Lec 2 p. 40).</p>
+<table class="sym">
+<tr><th>Line to write</th><th>Mock B Q2(b), with \(f=40(q_3-0.3)\) and \(m_3=4\)</th></tr>
+<tr><td>Subspaces</td><td>\(q_1,q_2\) position, \(q_3\) force (f depends only on \(q_3\))</td></tr>
+<tr><td>Motion servo</td><td>\(v_i=\ddot q_{id}+k_v\dot e_i+k_pe_i\), \(i=1,2\)</td></tr>
+<tr><td>Force servo</td><td>\(v_3=\tfrac{1}{40}(\ddot f_d+k_{vf}\dot e_f+k_{pf}e_f)\), \(k_{vf}=2(1)\omega_n=12.566\), \(k_{pf}=39.478\)</td></tr>
+<tr><td>Law</td><td>\(u=\alpha v+\beta\), with \(\beta_3=2\dot q_3+39.2+f\)</td></tr>
+<tr><td>Error equations</td><td>\(\ddot e_i+k_v\dot e_i+k_pe_i=0\); \(\ddot e_f+k_{vf}\dot e_f+k_{pf}e_f=0\)</td></tr>
+<tr><td>Steady state</td><td>\(f=f_d=10\Rightarrow40(q_3-0.3)=10\Rightarrow q_3=0.55\) m</td></tr>
+</table>
+<div class="step" data-k="h_u3"><p>Check 2.1. Joint 3 is \(5\ddot q_3+3\dot q_3+49+f=u_3\), with wall \(f=50(q_3-0.2)\) and \(k_{vf}=10\), \(k_{pf}=25\). At an instant where \(\ddot f_d=0\), \(e_f=4\), \(\dot e_f=-2\), \(\dot q_3=0.2\) and the sensor reads \(f=12\): \(v_3=\) <input size="7">, \(u_3=\) <input size="7"></p>
+<details class="hint"><summary>Hint</summary>Divide the bracket by \(k_e=50\). Then \(u_3=5v_3+(3\dot q_3+49+f)\).</details>
+<details class="work"><summary>Worked line</summary>\(v_3=(0-20+100)/50=1.6\); \(u_3=8+0.6+49+12=69.6\).</details></div>
+<div class="step" data-k="h_ss"><p>Check 2.2. Same wall, desired force a constant 15 N, no disturbance. At steady state \(q_3=\) <input size="7"> m</p>
+<details class="work"><summary>Worked line</summary>\(e_f\to0\), so \(f=15\): \(50(q_3-0.2)=15\Rightarrow q_3=0.5\).</details></div>
+<div class="step" data-k="h_tf"><p>Check 2.3. True or false: "You may write \(e_f=f-f_d\) as long as you use it consistently." <select data-fb='{"true":"Every other error on the slides is desired − actual. Flipping it flips the sign of every gain term, so v₃ pushes the wrong way."}'><option value="">&mdash;</option><option value="true">true</option><option value="false">false</option></select></p>
+<details class="work"><summary>Worked line</summary>False. Use \(e_f=f_d-f\), the same convention as \(e=q_d-q\), or every term of the servo changes sign.</details></div>
+
+<!-- ======================= Part 3 ======================= -->
+<h2 id="p3">3 &middot; An unknown disturbance on the force joint <span class="badge">Exam focus</span></h2>
+<p><b>The one picture.</b> An unknown constant push \(d\) is like a headwind. \(\beta\) cannot cancel it, because you cannot put a number you do not know into the controller. So it survives into the error equation. You have seen the position version: \(m(\ddot e+k_v\dot e+k_pe)=d\), giving \(e_{ss}=d/(mk_p)\) (Lec 2 pp. 11&ndash;13). The force version differs by one factor, \(k_e\).</p>
+<p><b>Derive it.</b> The plant has an extra \(d\): \(m\ddot q=mv-d\), so \(\ddot q=v-d/m\). Multiply by \(k_e\): \(\ddot f=k_ev-k_ed/m=\ddot f_d+k_{vf}\dot e_f+k_{pf}e_f-k_ed/m\). Rearranging gives</p>
+\[\ddot e_f+k_{vf}\dot e_f+k_{pf}e_f=\frac{k_e\,d}{m}\qquad\Rightarrow\qquad e_{f,ss}=\frac{k_e\,d}{m\,k_{pf}}.\]
+<p>At steady state nothing changes, so the derivatives are 0 and only \(k_{pf}e_f\) is left. The fix is the same as for position: add \(k_{if}\int e_f\,dt\) to the bracket.</p>
+<div class="ex"><p style="margin:0"><b>Worked example</b> (Mock B Q2(c)). \(k_e=40\), \(m_3=4\), \(d_3=2\), \(k_{pf}=39.478\). The right-hand side is \(40\cdot2/4=20\), so \(e_{f,ss}=20/39.478=0.5066\) N. The force settles 0.51 N short of \(f_d\).</p></div>
+<div class="step" data-k="d_force"><p>Check 3.1. Wall \(k_e=50\), \(m_3=5\), \(k_{pf}=25\), unknown \(d_3=1.5\) N. Right-hand side of the force error equation \(=\) <input size="7">, \(e_{f,ss}=\) <input size="7"> N. For comparison, the same \(d\) on a <i>position</i> joint with \(m=5\), \(k_p=25\) gives \(e_{ss}=\) <input size="7"> m</p>
+<details class="hint"><summary>Hint</summary>Force: \(k_ed/m\), then divide by \(k_{pf}\). Position: \(d/(mk_p)\).</details>
+<details class="work"><summary>Worked line</summary>\(50(1.5)/5=15\); \(15/25=0.6\) N; position \(1.5/(5\cdot25)=0.012\) m.</details></div>
+<div class="step written" data-id="d_derive"><p><span class="pill">written</span> Check 3.2. On paper, from \(m\ddot q+(\text{known})+f+d=u\), with \(u=mv+(\text{known})+f\), \(v=\frac1{k_e}(\ddot f_d+k_{vf}\dot e_f+k_{pf}e_f)\) and \(f=k_e(q-q_e)\), derive the force error equation.</p>
+<details class="work"><summary>Model answer</summary>The known terms and \(f\) cancel, leaving \(m\ddot q+d=mv\), so \(\ddot q=v-d/m\). Since \(\ddot f=k_e\ddot q\), \(\ddot f=\ddot f_d+k_{vf}\dot e_f+k_{pf}e_f-k_ed/m\). With \(\ddot e_f=\ddot f_d-\ddot f\): \(\ddot e_f+k_{vf}\dot e_f+k_{pf}e_f=k_ed/m\).</details>
+<label class="self"><input type="checkbox"> My derivation reaches \(\ddot e_f+k_{vf}\dot e_f+k_{pf}e_f=k_ed/m\)</label></div>
+
+<!-- ======================= Part 4 ======================= -->
+<h2 id="p4">4 &middot; A wheel's \(l\), \(\alpha\), \(\beta\) <span class="badge">Exam focus</span></h2>
+<p><b>The one picture.</b> Draw an arrow from \(P\) to the wheel centre \(A\). Its <b>length</b> is \(l\), and its <b>angle from \(X_R\)</b> is \(\alpha\). The wheel's rolling direction then points at angle \(\alpha+\beta-90^\circ\), so \(\beta\) is whatever makes that come out right. <a class="cite" href="../../resources/lecture-03-mobile-robot-kinematics.pdf#page=20" data-pages="lecture-03-mobile-robot-kinematics:20,21,22,23,24,25">Lec 3 pp. 20&ndash;25 (robot frame, fixed standard wheel)</a> &middot; <a class="cite" href="../../resources/lecture-03-mobile-robot-kinematics.pdf#page=26" data-pages="lecture-03-mobile-robot-kinematics:26,27,28,29,30,31">Lec 3 pp. 26&ndash;31 (steered wheel, constraints in matrix form)</a></p>
+\[l=\sqrt{x_A^2+y_A^2},\qquad\alpha=\operatorname{atan2}(y_A,x_A),\qquad\underbrace{\alpha+\beta-90^\circ}_{\text{rolling direction}}=\text{given direction}.\]
+<p>For the usual fixed rear wheel that rolls along \(+X_R\), the rolling direction is \(0^\circ\), so \(\beta=90^\circ-\alpha\).</p>
+<p><b>What went wrong in Mock B</b> (mistakes #10&ndash;#12). You wrote \(l=\sqrt{0.2^2-0.15^2}\). A distance is Pythagoras with a <b>plus</b>: \(\sqrt{0.04+0.0225}=0.25\). You also wrote \(\operatorname{atan2}(2,-1.5)\). The order is \(\operatorname{atan2}(y,x)\), so for \(A(-0.2,0.15)\) it is \(\operatorname{atan2}(0.15,-0.2)=143.13^\circ\), in the second quadrant because \(A\) is behind and to the left. Then \(\beta=90^\circ-143.13^\circ=-53.13^\circ\).</p>
+<div class="step" data-k="w_geo"><p>Check 4.1. Fixed wheel at \(A(-0.3,\ 0.4)\) m, rolling along \(+X_R\). \(l=\) <input size="7">, \(\alpha=\) <input size="7">&deg;, \(\beta=\) <input size="7">&deg;</p>
+<details class="hint"><summary>Hint</summary>\(l=\sqrt{0.09+0.16}\). \(\alpha=\operatorname{atan2}(0.4,-0.3)\) is in the second quadrant. \(\beta=90^\circ-\alpha\).</details>
+<details class="work"><summary>Worked line</summary>\(l=0.5\), \(\alpha=126.87^\circ\), \(\beta=-36.87^\circ\).</details></div>
+<div class="step" data-k="w_geo2"><p>Check 4.2. Its mirror wheel \(B(-0.3,\ -0.4)\), also rolling along \(+X_R\). \(\alpha=\) <input size="7">&deg;, \(\beta=\) <input size="7">&deg; (give \(\beta\) between &minus;180&deg; and 180&deg;)</p>
+<details class="work"><summary>Worked line</summary>\(\alpha=-126.87^\circ\); \(\beta=90^\circ+126.87^\circ=216.87^\circ\equiv-143.13^\circ\).</details></div>
+<div class="step" data-k="w_tf"><p>Check 4.3. True or false: "A wheel on the left side of the robot always has \(\alpha=90^\circ\)." <select data-fb='{"true":"α is the polar angle of the wheel position measured from X_R. Only a wheel exactly on the +Y_R axis has α = 90°."}'><option value="">&mdash;</option><option value="true">true</option><option value="false">false</option></select></p>
+<details class="work"><summary>Worked line</summary>False. \(\alpha=\operatorname{atan2}(y_A,x_A)\). It is 90&deg; only when \(x_A=0\).</details></div>
+
+<!-- ======================= Part 5 ======================= -->
+<h2 id="p5">5 &middot; The two constraint rows, rebuilt in 30 seconds <span class="badge">Exam focus</span></h2>
+<p><b>The one picture.</b> A standard wheel obeys two laws. Along its rolling direction, the hub's speed equals the rim speed \(r\dot\varphi\). Along its axle, the hub's speed is <b>zero</b>, because the wheel cannot skid sideways. Each law is "hub velocity &middot; direction". So you only need two things: the hub velocity and the two directions.</p>
+<ol>
+<li><b>Hub velocity</b> (rigid body, \(v_A=v_P+\dot\theta\times r_A\)): \(\big(\dot x_r-\dot\theta\,l\sin\alpha,\ \ \dot y_r+\dot\theta\,l\cos\alpha\big)\).</li>
+<li><b>Axle direction</b> is the "natural" one, at angle \(\alpha+\beta\): \((\cos(\alpha+\beta),\ \sin(\alpha+\beta))\).</li>
+<li><b>Rolling direction</b> is the axle turned by &minus;90&deg;: \((\sin(\alpha+\beta),\ -\cos(\alpha+\beta))\).</li>
+</ol>
+<p>Take the dot products. The \(\dot\theta\) coefficient collapses with \(\sin(A-B)\) and \(\cos(A-B)\): for the axle, \(l(-\sin\alpha\cos(\alpha+\beta)+\cos\alpha\sin(\alpha+\beta))=l\sin\beta\). For rolling, \(l(-\sin\alpha\sin(\alpha+\beta)-\cos\alpha\cos(\alpha+\beta))=-l\cos\beta\). That gives the two slide rows (Lec 3 pp. 26&ndash;31):</p>
+\[\underbrace{[\sin(\alpha+\beta)\ \ -\cos(\alpha+\beta)\ \ -l\cos\beta]}_{\text{rolling}}\,R(\theta)\dot\xi_I-r\dot\varphi=0,\qquad\underbrace{[\cos(\alpha+\beta)\ \ \sin(\alpha+\beta)\ \ l\sin\beta]}_{\text{sliding}}\,R(\theta)\dot\xi_I=0.\]
+<p><b>Memory hook:</b> <i>sliding = cos, sin, + l sin. Rolling = that turned &minus;90&deg;: sin, &minus;cos, &minus; l cos.</i> In Mock B you had sin and cos swapped between the rows and the wrong sign on \(l\cos\beta\) (mistake #13). You also left out \(R(\theta)\). The rows act on the robot-frame velocity \(\dot\xi_R=R(\theta)\dot\xi_I\), so write \(R(\theta)\dot\xi_I\), or say explicitly that you use robot-frame velocities.</p>
+<p><b>Sanity check you can always do.</b> For a fixed wheel at \((x_A,y_A)\) rolling along \(+X_R\), the hub velocity is \((\dot x_r-\dot\theta y_A,\ \dot y_r+\dot\theta x_A)\). So the rows must come out as rolling \([1,\ 0,\ -y_A]\) and sliding \([0,\ 1,\ x_A]\). If the general formula does not reproduce that, you have a sign wrong.</p>
+<div class="step" data-k="w_rows"><p>Check 5.1. Wheel \(A(-0.3,0.4)\) from Check 4.1. Rolling row: [<input size="5">, <input size="5">, <input size="5">]. Sliding row: [<input size="5">, <input size="5">, <input size="5">]</p>
+<details class="hint"><summary>Hint</summary>\(\alpha+\beta=90^\circ\). Use the sanity check: rolling \([1,0,-y_A]\), sliding \([0,1,x_A]\).</details>
+<details class="work"><summary>Worked line</summary>Rolling \([1,\ 0,\ -0.5\cos(-36.87^\circ)]=[1,0,-0.4]\). Sliding \([0,\ 1,\ 0.5\sin(-36.87^\circ)]=[0,1,-0.3]\).</details></div>
+<div class="step" data-k="w_rowsC"><p>Check 5.2. Steered wheel \(C\) at \((0.3,\ 0)\), so \(\alpha=0\) and \(l=0.3\), at \(\beta_C=120^\circ\). Rolling row: [<input size="5">, <input size="5">, <input size="5">]. Sliding row: [<input size="5">, <input size="5">, <input size="5">]</p>
+<details class="hint"><summary>Hint</summary>\(\alpha+\beta=120^\circ\): \(\sin=0.8660\), \(\cos=-0.5\). \(\sin\beta=0.8660\), \(\cos\beta=-0.5\).</details>
+<details class="work"><summary>Worked line</summary>Rolling \([0.866,\ 0.5,\ 0.15]\). Sliding \([-0.5,\ 0.866,\ 0.2598]\).</details></div>
+
+<!-- ======================= Part 6 ======================= -->
+<h2 id="p6">6 &middot; Solving for speeds and the steering angle <span class="badge">Exam focus</span></h2>
+<p><b>Order of attack.</b> The paper gives \(\dot x_r\) and \(\dot\theta\) and asks for the rest.</p>
+<ol>
+<li>The <b>sliding rows of the fixed wheels</b> fix \(\dot y_r\): \(\dot y_r+\dot\theta x_A=0\). If the rear axle passes through \(P\) (\(x_A=0\)), then \(\dot y_r=0\). If it does not, \(P\) slides sideways while turning.</li>
+<li>The <b>rolling rows</b> give each spin: \(\dot\varphi=(\dot x_r-\dot\theta y_A)/r\).</li>
+<li>The steered wheel's <b>sliding row</b> fixes \(\beta_C\): its hub velocity must be perpendicular to its axle.</li>
+<li>Its <b>rolling row</b> gives \(\dot\varphi_C\). Check it: \(r\dot\varphi_C\) equals the hub speed.</li>
+</ol>
+<p><a class="cite" href="../../resources/lecture-03-mobile-robot-kinematics.pdf#page=36" data-pages="lecture-03-mobile-robot-kinematics:36,37,38,39,40">Lec 3 pp. 36&ndash;40 (worked platform examples)</a> &middot; <a class="cite" href="../../resources/additional-materials/review-week-07-mobile-robot-kinematics.pdf#page=1" data-pages="review-week-07-mobile-robot-kinematics:1,2,3,4,5,6">Week 7 review sheet</a></p>
+<div class="step" data-k="w_speed"><p>Check 6.1. Fixed wheels at \((-0.3,\pm0.4)\), radius 0.05, rolling along \(+X_R\). Steered wheel at \((0.3,0)\), radius 0.04. The robot moves with \(\dot x_r=0.5\) m/s and \(\dot\theta=0.4\) rad/s. \(\dot y_r=\) <input size="6"> m/s, \(\dot\varphi\) of the left wheel \((-0.3,0.4)=\) <input size="6">, \(\dot\varphi\) of the right wheel \(=\) <input size="6">, \(\beta_C\in(0,\pi)=\) <input size="6"> rad, \(\dot\varphi_C=\) <input size="6"> rad/s</p>
+<details class="hint"><summary>Hint</summary>\(\dot y_r=0.3\dot\theta\). C's hub velocity is \((0.5,\ \dot y_r+0.3\dot\theta)=(0.5,0.24)\). Its axle must be perpendicular to that: \(0.5\cos\beta_C+0.24\sin\beta_C=0\).</details>
+<details class="work"><summary>Worked line</summary>\(\dot y_r=0.12\); left \((0.5-0.16)/0.05=6.8\); right \((0.5+0.16)/0.05=13.2\); \(\tan\beta_C=-0.5/0.24\), so \(\beta_C=\pi-\tan^{-1}(2.0833)=2.0183\) rad; \(\dot\varphi_C=\sqrt{0.5^2+0.24^2}/0.04=13.865\) rad/s.</details></div>
+
+<!-- ======================= Part 7 ======================= -->
+<h2 id="p7">7 &middot; Arm on the platform: \(w\), \(V\) and IK <span class="badge">Exam focus</span></h2>
+<p><b>The one picture.</b> The tool needs 6 numbers: where the tip is (\(p\), column 4 of \(T\)) and which way the tool points (\(r^3\), column 3 of \(T\)). The roll angle \(q_n\) is hidden in the <i>length</i> of the pointing vector by scaling it with \(e^{q_n/\pi}\). <a class="cite" href="../../resources/lecture-01-manipulator-kinematics.pdf#page=91" data-pages="lecture-01-manipulator-kinematics:91,92,93,94,95">Lec 1 pp. 91&ndash;95 (tool-configuration vector)</a> &middot; <a class="cite" href="../../resources/lecture-01-manipulator-kinematics.pdf#page=96" data-pages="lecture-01-manipulator-kinematics:96,97,98,99,100,101,102,103,104,105,106,107,108">Lec 1 pp. 96&ndash;108 (inverse kinematics, atan2)</a> &middot; <a class="cite" href="../../resources/lecture-01-manipulator-kinematics.pdf#page=133" data-pages="lecture-01-manipulator-kinematics:133,134,135,136,137,138,139,140,141">Lec 1 pp. 133&ndash;141 (tool-configuration Jacobian)</a></p>
+\[w=\begin{bmatrix}p\\e^{q_n/\pi}r^3\end{bmatrix},\qquad V=\frac{\partial w}{\partial q}\ (6\times n,\ \text{one column per joint}).\]
+<p><b>IK recipe for the usual SCARA-type arm</b>, with \(p=(aC_1+bC_{12},\ aS_1+bS_{12},\ h-q_3)\) and \(r^3=(0,0,-1)\):</p>
+<ol>
+<li>\(q_n\) from the length: \(w_6=-e^{q_n/\pi}\), so \(q_n=\pi\ln|w_6|\).</li>
+<li>\(q_3\) from the height: \(q_3=h-w_3\).</li>
+<li>\(q_2\) from the law of cosines: \(C_2=\dfrac{x^2+y^2-a^2-b^2}{2ab}\), so \(q_2=\pm\cos^{-1}C_2\). There are <b>two</b> elbows.</li>
+<li>\(q_1=\operatorname{atan2}(y,x)-\operatorname{atan2}(bS_2,\ a+bC_2)\), once for each \(q_2\).</li>
+</ol>
+<div class="step" data-k="ik"><p>Check 7.1. \(p=(0.4C_1+0.3C_{12},\ 0.4S_1+0.3S_{12},\ 0.6-q_3)\), \(r^3=(0,0,-1)\), target \(w=(0.5,\ 0.2,\ 0.25,\ 0,\ 0,\ -e^{0.5})\). \(q_4=\) <input size="6"> rad, \(q_3=\) <input size="6"> m, \(C_2=\) <input size="6">, elbow with \(q_2\gt0\): \(q_2=\) <input size="6">, \(q_1=\) <input size="6"> rad</p>
+<details class="hint"><summary>Hint</summary>\(q_4=\pi(0.5)\). \(C_2=(0.25+0.04-0.16-0.09)/(2\cdot0.4\cdot0.3)\).</details>
+<details class="work"><summary>Worked line</summary>\(q_4=1.5708\), \(q_3=0.35\), \(C_2=0.04/0.24=1/6\), \(q_2=1.4033\), \(q_1=\operatorname{atan2}(0.2,0.5)-\operatorname{atan2}(0.3S_2,0.4+0.3C_2)=0.3805-0.5815=-0.2010\). The other elbow is \(q_2=-1.4033\), \(q_1=0.9620\).</details></div>
+<div class="step" data-k="ikV"><p>Check 7.2. For the same arm, the entry of \(V\) in row 6, column 4 (\(\partial w_6/\partial q_4\)) at \(q_4=\pi/2\) \(=\) <input size="7">, and row 3, column 3 (\(\partial w_3/\partial q_3\)) \(=\) <input size="7"></p>
+<details class="hint"><summary>Hint</summary>\(w_6=-e^{q_4/\pi}\). Chain rule: the derivative brings down \(1/\pi\).</details>
+<details class="work"><summary>Worked line</summary>\(-\tfrac1\pi e^{0.5}=-0.5248\); \(w_3=0.6-q_3\), so \(-1\).</details></div>
+
+<!-- ======================= Part 8 ======================= -->
+<h2 id="p8">8 &middot; Homography: two rows per point, and who counts <span class="badge">Exam focus</span></h2>
+<p><b>The one picture.</b> A flat poster photographed from two poses. Every point of image a maps to image b through one \(3\times3\) matrix, up to an unknown scale: \(\lambda\,m_b=G\,m_a\), with \(m=(x,y,1)^T\). <a class="cite" href="../../resources/part-2/part-2-lecture-03-structure-and-pose-estimation.pdf#page=28" data-pages="part-2-lecture-03-structure-and-pose-estimation:28,29,30,31,32">HGQ Lec 3 pp. 28&ndash;32 (homography, four-point algorithm)</a></p>
+<p><b>Rebuild the rows.</b> Divide \(G\) by \(g_{33}\), which leaves 8 unknowns. The third row says \(\lambda=g_{31}a_x+g_{32}a_y+1\). Put that into rows 1 and 2 and move everything with \(b\) to the left:</p>
+\[\begin{bmatrix}a_x&a_y&1&0&0&0&-a_xb_x&-a_yb_x\\0&0&0&a_x&a_y&1&-a_xb_y&-a_yb_y\end{bmatrix}g=\begin{bmatrix}b_x\\b_y\end{bmatrix}.\]
+<p><b>Memory hook:</b> <i>"a, a, 1, then zeros; zeros, then a, a, 1; then minus a-times-b for the last two."</i> 8 unknowns at 2 rows per point means 4 points. If three of them are collinear, the rows become dependent, so \(\det M=0\) and you cannot solve.</p>
+<p><b>Counting groups.</b> Take the points that both views see. Count \(\binom{n}{4}\). Then list every line that holds 3 of those points. Check the sides, but also the <b>diagonals, medians and lines through a centre</b>, which are the usual trap. A line with exactly 3 points removes \(n-3\) groups. <b>Chaining:</b> if \(m_b\propto Gm_a\) and \(m_c\propto Hm_b\), then \(m_c\propto HGm_a\). The first map goes on the right, and \(K_n=HG/(HG)_{33}\). A chain needs every link to exist.</p>
+<div class="step" data-k="hg_row"><p>Check 8.1. Point \(a=(2,1)\) maps to \(b=(3,4)\). The last two entries of row 1 are <input size="4">, <input size="4">, and the last two entries of row 2 are <input size="4">, <input size="4"></p>
+<details class="work"><summary>Worked line</summary>Row 1: \(-a_xb_x=-6\), \(-a_yb_x=-3\). Row 2: \(-a_xb_y=-8\), \(-a_yb_y=-4\).</details></div>
+<div class="step" data-k="hg_count"><p>Check 8.2. Both views see a square's corners \((0,0),(2,0),(2,2),(0,2)\) and its centre \((1,1)\). Number of valid groups: <input size="4">. Second case: both see \((0,0),(1,0),(2,0),(0,1),(0,2),(1,1)\). Valid groups: <input size="4"></p>
+<details class="hint"><summary>Hint</summary>Square: the two diagonals pass through the centre. Second case: two axes of 3 points each, plus the slanted line \((2,0),(1,1),(0,2)\).</details>
+<details class="work"><summary>Worked line</summary>Square: \(\binom54=5\), each diagonal removes 2, leaving 1 (the four corners). Second: \(\binom64=15\), three lines remove 3 each, leaving 6. No group can hold two triples, because two lines share at most one point.</details></div>
+<div class="step" data-k="hg_chain"><p>Check 8.3. \(G\): a&rarr;b and \(H\): b&rarr;c. Then \(K\) (a&rarr;c) \(\propto\) <select data-fb='{"GH":"Apply G first, so G sits next to m_a on the right: m_c ∝ H(G m_a)."}'><option value="">&mdash;</option><option value="HG">HG</option><option value="GH">GH</option></select>. True or false: "If a and c share fewer than 4 usable points, \(K\) cannot be found." <select data-fb='{"true":"It can, through b, as long as both G and H can be found."}'><option value="">&mdash;</option><option value="true">true</option><option value="false">false</option></select></p>
+<details class="work"><summary>Worked line</summary>\(HG\); false, because the chain works when both links exist.</details></div>
+
+<!-- ======================= Part 9 ======================= -->
+<h2 id="p9">9 &middot; Multi-sensor Kalman: information adds <span class="badge">Exam focus</span></h2>
+<p><b>The one picture.</b> You hold a guess with uncertainty \(p\). Each sensor offers another guess with uncertainty \(\sigma_i^2\). Trust each source in proportion to <b>1/variance</b>, its "information". When you combine optimally, the information just adds. <a class="cite" href="../../resources/part-2/part-2-lecture-04-kalman-filter-sensor-integration.pdf#page=25" data-pages="part-2-lecture-04-kalman-filter-sensor-integration:25,26,27,28,29,30,31">HGQ Lec 4 pp. 25&ndash;31 (scalar Kalman derivation)</a> &middot; <a class="cite" href="../../resources/part-2/part-2-lecture-04-kalman-filter-sensor-integration.pdf#page=33" data-pages="part-2-lecture-04-kalman-filter-sensor-integration:33,34,35,36,37,38,39,40,41,42,43,44">HGQ Lec 4 pp. 33&ndash;44 (multiple sensors, sensor integration)</a></p>
+\[\boxed{\frac1{p_{k+1}}=\frac1{p_k}+\sum_i\frac1{\sigma_i^2}},\qquad\boxed{L_i=\frac{p_{k+1}}{\sigma_i^2}}.\]
+<p>The gain rule reads as "the new uncertainty divided by this sensor's own uncertainty". A good sensor (small \(\sigma_i^2\)) gets a big gain.</p>
+<p><b>The four exam moves</b> that produce it, which you must show:</p>
+<ol>
+<li><b>Error recursion.</b> \(y_i-\hat x=\tilde x+v_i\), so \(\tilde x_{k+1}=(1-\sum L_i)\tilde x_k-\sum L_iv_i\).</li>
+<li><b>Square and take expectations.</b> The cross terms vanish because the noises are independent and zero-mean: \(p_{k+1}=(1-\sum L_i)^2p_k+\sum L_i^2\sigma_i^2\).</li>
+<li><b>Minimise.</b> \(\partial/\partial L_i=0\) gives \(L_i\sigma_i^2=(1-\sum L_j)p_k\), the same for every \(i\).</li>
+<li><b>Solve.</b> Sum over \(i\) to get \(1-\sum L_j=1/(1+p_k\sum1/\sigma_j^2)\). Then \(p_{k+1}=(1-\sum L_j)p_k\), which is the boxed form.</li>
+</ol>
+<p><b>One shared gain</b> (\(L_i=L\)) cannot favour the good sensor. Then \(p_{k+1}=(1-nL)^2p_k+L^2\sum\sigma_i^2\), giving \(L=\dfrac{np_k}{n^2p_k+\sum\sigma_i^2}\) and \(\dfrac1{p_{k+1}}=\dfrac1{p_k}+\dfrac{n^2}{\sum\sigma_i^2}\). This is never better than separate gains, and equal only when all \(\sigma_i\) are equal.</p>
+<div class="step" data-k="k_sep"><p>Check 9.1. \(p_k=1\), three sensors with variances 2, 3 and 6, separate gains. \(p_{k+1}=\) <input size="6">, \(L_1=\) <input size="6">, \(L_2=\) <input size="6">, \(L_3=\) <input size="6"></p>
+<details class="hint"><summary>Hint</summary>\(1/2+1/3+1/6=1\).</details>
+<details class="work"><summary>Worked line</summary>\(1/p_{k+1}=1+1=2\), so \(p_{k+1}=1/2\). Gains: \(0.5/2=1/4\), \(0.5/3=1/6\), \(0.5/6=1/12\).</details></div>
+<div class="step" data-k="k_shared"><p>Check 9.2. The same three sensors with one shared gain. \(L=\) <input size="6">, \(p_{k+1}=\) <input size="6"></p>
+<details class="hint"><summary>Hint</summary>\(n=3\), \(\sum\sigma_i^2=11\).</details>
+<details class="work"><summary>Worked line</summary>\(L=3/(9+11)=0.15\); \(1/p_{k+1}=1+9/11=20/11\), so \(p_{k+1}=0.55\), worse than 0.5.</details></div>
+<div class="step written" data-id="k_derive"><p><span class="pill">written</span> Check 9.3. On paper, with two sensors (\(\sigma_1^2,\sigma_2^2\)) and separate gains, run all four moves and reach \(1/p_{k+1}=1/p_k+1/\sigma_1^2+1/\sigma_2^2\).</p>
+<details class="work"><summary>Model answer</summary>\(\tilde x_{k+1}=(1-L_1-L_2)\tilde x_k-L_1v_1-L_2v_2\). \(p_{k+1}=(1-L_1-L_2)^2p_k+L_1^2\sigma_1^2+L_2^2\sigma_2^2\). \(\partial/\partial L_i\): \(-2(1-L_1-L_2)p_k+2L_i\sigma_i^2=0\). So \(L_i=c\,p_k/\sigma_i^2\) with \(c=1-L_1-L_2\). Summing: \(1-c=cp_k(1/\sigma_1^2+1/\sigma_2^2)\), so \(c=1/(1+p_k\Sigma)\). Then \(p_{k+1}=c\,p_k\) (substitute \(L_i\sigma_i^2=cp_k\)), which gives \(1/p_{k+1}=1/p_k+\Sigma\).</details>
+<label class="self"><input type="checkbox"> My derivation reaches the information form</label></div>
+
+<!-- ======================= Part 10 ======================= -->
+<h2 id="p10">10 &middot; One-screen formula card <span class="badge">Exam focus</span></h2>
+<div class="ex">
+<p><b>Q2.</b> \(u=\alpha v+\beta\). \(\alpha\) holds the \(\ddot q\) coefficients. \(\beta\) holds known forces, including measured \(f\), but never the unknown \(d\). \(v=\ddot q_d+k_v\dot e+k_pe\). \(\omega_n=\tfrac12\cdot2\pi f_{\min}\) when the resonances are in Hz. \(k_p=\omega_n^2\), \(k_v=2\zeta\omega_n\). Force servo: \(v_f=\frac1{k_e}(\ddot f_d+k_{vf}\dot e_f+k_{pf}e_f)\). Disturbance: position \(e_{ss}=d/(mk_p)\); force \(e_{ss}=k_ed/(mk_{pf})\).</p>
+<p><b>Q3(a).</b> \(l=\sqrt{x^2+y^2}\), \(\alpha=\operatorname{atan2}(y,x)\), rolling direction \(=\alpha+\beta-90^\circ\). Sliding \([\cos(\alpha+\beta),\ \sin(\alpha+\beta),\ l\sin\beta]\). Rolling \([\sin(\alpha+\beta),\ -\cos(\alpha+\beta),\ -l\cos\beta]\). Both act on \(R(\theta)\dot\xi_I\). Fixed wheel along \(X_R\): rolling \([1,0,-y]\), sliding \([0,1,x]\).</p>
+<p><b>Q3(b).</b> \(w=[p;\ e^{q_n/\pi}r^3]\), \(V=\partial w/\partial q\). IK: \(q_n=\pi\ln|w_6|\), then the height, then \(C_2\) by the law of cosines (two elbows), then \(q_1\) by atan2.</p>
+<p><b>Q4.</b> Rows \([a_x,a_y,1,0,0,0,-a_xb_x,-a_yb_x]\) and \([0,0,0,a_x,a_y,1,-a_xb_y,-a_yb_y]\). Use 4 points with no 3 collinear. Groups \(=\binom n4-\sum(n-3)\) over the 3-point lines (look for medians and diagonals). \(K\propto HG\).</p>
+<p style="margin-bottom:0"><b>Q5.</b> \(1/p_+=1/p+\sum1/\sigma_i^2\), \(L_i=p_+/\sigma_i^2\). Shared gain: \(1/p_+=1/p+n^2/\sum\sigma_i^2\), \(L=np/(n^2p+\sum\sigma_i^2)\).</p>
+</div>
+<p>Practise writing this card from memory: cover it and write it out on paper in 5 minutes. When every check here is green, sit <a href="final-mock-c.html">Mock C</a> cold.</p>
+
+</main>
+</div>
+
+<dialog id="srcDlg"><div class="row" style="justify-content:space-between"><b id="srcTitle"></b><span><a id="srcOpen" target="_blank">Open PDF</a> <button class="btn" id="srcClose">Close</button></span></div><div id="srcImgs"></div></dialog>
+
+<script type="application/json" id="keys">{"c_gain": [4.712389, 22.20661, 9.424778], "c_u": [0.8, 43.4], "h_u3": [1.6, 69.6], "h_ss": 0.5, "h_tf": "false", "d_force": [15, 0.6, 0.012], "w_geo": [0.5, 126.869898, -36.869898], "w_geo2": [-126.869898, -143.130102], "w_tf": "false", "w_rows": [1, 0, -0.4, 0, 1, -0.3], "w_rowsC": [0.866025, 0.5, 0.15, -0.5, 0.866025, 0.259808], "w_speed": [0.12, 6.8, 13.2, 2.018316, 13.865425], "ik": [1.570796, 0.35, 0.166667, 1.403348, -0.201013], "ikV": [-0.524804, -1], "hg_row": [-6, -3, -8, -4], "hg_count": [1, 6], "hg_chain": ["HG", "false"], "k_sep": [0.5, 0.25, 0.166667, 0.083333], "k_shared": [0.15, 0.55]}</script>
+<script>
+(function () {
+  var KEY = 'ee6221-final-relearn-q2q5-v1', KEYS = JSON.parse(document.getElementById('keys').textContent);
+  var st = {}; try { st = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) {}
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
+  function num(s) { s = String(s).trim(); var m = s.match(/^(-?[\d.]+)\s*\/\s*(-?[\d.]+)$/); return m ? m[1] / m[2] : parseFloat(s); }
+  function same(ans, val) {
+    if (typeof ans === 'number') { var v = num(val); return isFinite(v) && Math.abs(v - ans) <= Math.max(0.0015, Math.abs(ans) * 0.002); }
+    return val !== '' && String(val) === String(ans);
+  }
+  var steps = [];
+  document.querySelectorAll('.step').forEach(function (s) {
+    var id = s.dataset.k || s.dataset.id, fields = s.querySelectorAll('input:not([type=checkbox]), select'), work = s.querySelector('details.work');
+    var rec = { id: id, el: s, sec: null };
+    steps.push(rec);
+    if (s.classList.contains('written')) {
+      var cb = s.querySelector('.self input'); cb.checked = !!(st[id] && st[id].ok); s.classList.toggle('done', cb.checked);
+      cb.addEventListener('change', function () { st[id] = { ok: cb.checked }; save(); s.classList.toggle('done', cb.checked); refresh(); });
+      return;
+    }
+    var p = s.querySelector('p'), btn = document.createElement('button'), fb = document.createElement('span');
+    btn.className = 'btn'; btn.textContent = 'check'; fb.className = 'fb'; p.appendChild(document.createTextNode(' ')); p.appendChild(btn); p.appendChild(fb); var why = document.createElement('div'); why.className = 'why'; p.parentNode.insertBefore(why, p.nextSibling);
+    function show(r) {
+      if (!r) return; fields.forEach(function (f, i) { f.classList.toggle('bad', !r.f[i]); f.classList.toggle('good', !!r.f[i]); });
+      fb.textContent = r.ok ? '✓ correct' : '✗ ' + r.f.filter(Boolean).length + '/' + fields.length + ' right — try the hint';
+      fb.style.color = r.ok ? 'var(--success)' : 'var(--danger)'; s.classList.toggle('done', r.ok); if (work) work.dataset.open = '1';
+      why.textContent = ''; if (!r.ok) fields.forEach(function (f, i) { if (r.f[i] || why.textContent || f.tagName !== 'SELECT' || !f.dataset.fb) return; try { var m = JSON.parse(f.dataset.fb); if (m[f.value]) why.textContent = m[f.value]; } catch (e) {} });
+    }
+    if (st[id]) { fields.forEach(function (f, i) { f.value = st[id].v[i] || ''; }); show(st[id]); }
+    btn.addEventListener('click', function () {
+      var v = [], f = [], key = KEYS[id];
+      fields.forEach(function (fl, i) { v.push(fl.value); f.push(same(Array.isArray(key) ? key[fl.dataset.p !== undefined ? +fl.dataset.p : i] : key, fl.value)); });
+      st[id] = { v: v, f: f, ok: f.every(Boolean) }; save(); show(st[id]); refresh();
+    });
+    if (work) work.addEventListener('toggle', function () {
+      if (work.open && !work.dataset.open) { work.open = false; fb.textContent = 'Check once first — then the worked line unlocks.'; fb.style.color = 'var(--warning)'; }
+    });
+  });
+  var toc = document.getElementById('toc-links');
+  var secs = Array.prototype.map.call(document.querySelectorAll('main h2[id]'), function (h) {
+    var a = document.createElement('a'); a.href = '#' + h.id; a.innerHTML = '<span>' + h.firstChild.textContent + '</span><span class="sc"></span>'; toc.appendChild(a);
+    return { h: h, a: a };
+  });
+  steps.forEach(function (r) { secs.forEach(function (s) { if (s.h.compareDocumentPosition(r.el) & Node.DOCUMENT_POSITION_FOLLOWING) r.sec = s; }); });
+  function refresh() {
+    var tot = 0, ok = 0;
+    secs.forEach(function (s) {
+      var mine = steps.filter(function (r) { return r.sec === s; }), o = mine.filter(function (r) { return st[r.id] && st[r.id].ok; }).length;
+      var sc = s.a.querySelector('.sc'); sc.textContent = o + '/' + mine.length; sc.classList.toggle('ok', o === mine.length); tot += mine.length; ok += o;
+    });
+    document.getElementById('score').textContent = ok; document.getElementById('total').textContent = tot;
+  }
+  refresh();
+  document.getElementById('reset').onclick = function () { try { localStorage.removeItem(KEY); } catch (e) {} location.reload(); };
+  var root = document.documentElement; try { var th = localStorage.getItem('ee6221-theme'); if (th) root.dataset.theme = th; } catch (e) {}
+  document.getElementById('theme').onclick = function () { var n = root.dataset.theme === 'dark' ? 'light' : 'dark'; root.dataset.theme = n; try { localStorage.setItem('ee6221-theme', n); } catch (e) {} };
+  var dlg = document.getElementById('srcDlg');
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('a[data-pages]'); if (!a) return; e.preventDefault();
+    var parts = a.dataset.pages.split(':'), box = document.getElementById('srcImgs'); box.innerHTML = '';
+    parts[1].split(',').forEach(function (p) { var img = document.createElement('img'); img.loading = 'lazy'; img.alt = parts[0] + ' page ' + p; img.src = 'final-pages/' + parts[0] + '-p' + ('00' + p).slice(-3) + '.jpg'; box.appendChild(img); });
+    var t = a.cloneNode(true); t.querySelectorAll('.katex-mathml').forEach(function (m) { m.remove(); }); document.getElementById('srcTitle').textContent = t.textContent; document.getElementById('srcOpen').href = a.getAttribute('href'); dlg.showModal();
+  });
+  document.getElementById('srcClose').onclick = function () { dlg.close(); };
+  dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+})();
+</script>
+</body>
+</html>

@@ -348,7 +348,7 @@ Wrong paths:
 
 ---
 
-## Your attempt, graded 2026-11-26 (Q1 and Q2 only; Q3–Q5 not sat)
+## Your attempt, graded 2026-11-26 (Q1–Q3; Q4–Q5 not attempted)
 
 Scans: `attempts/final-mock-b-q1-2026-11-26.jpg`, `attempts/final-mock-b-q2-2026-11-26.jpg`.
 
@@ -356,4 +356,8 @@ Scans: `attempts/final-mock-b-q1-2026-11-26.jpg`, `attempts/final-mock-b-q2-2026
 
 **Q2: 7 / 20.** (a) 7/9: α 2, β 2, resonance 1/2 (lowest one and the 0.5 factor right, the 2π missing), gains 1 (follow-through), error equation 1, u1 0. (b) 0/8 and (c) 0/3: blank. Note that "v = q̈" should be written as the servo v = q̈d + kv ė + kp e.
 
-Running total for the parts sat: 26 / 40.
+**Q3: 2 / 20** (scan `attempts/final-mock-b-q3-2026-11-26.jpg`). (a) 2/10: one rolling and one sliding row per wheel, β_C kept symbolic and rφ̇ on the right (structure 1, J2 1). Lost: l = √(0.2² − 0.15²) = 0.132 (should be +, giving 0.25); α = atan2(2, −1.5) (arguments swapped; should be atan2(0.15, −0.2) = 143.13°); β = 2.857 (should be 90° − α = −53.13°); the row entries have sin and cos swapped between rolling and sliding and the wrong sign on l cos β; R(θ) is missing; (iii) not done. (b) 0/10, blank.
+
+**Q4, Q5:** not attempted (the learner understands the picture but not the equations).
+
+Running total: 28 / 60 on Q1–Q3. Retraining: `final-relearn-q2-q5.html`, then `final-mock-c.html`.

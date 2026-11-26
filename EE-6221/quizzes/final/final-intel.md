@@ -70,8 +70,8 @@ computed from position by `k_e Δx_e`.
 | 1 | `final-primer.html` | Light primer, one card per slot, quick checks |
 | 2 | `final-mock-a-guided.html` | Full 5 × 20 paper as checked steps (Q1 reuses the 23-24 S2 arm) |
 | 3 | `final-mock-b.html` + key `final-mock-b.md` | Cold, 3 h, handwritten; graded against a rubric |
-| 4 | `final-mistakes.md` (to create) | Diagnose every lost mark, fresh variant until right |
-| 5 | Mock C (to build) | Cold re-test on new numbers + the step-4 weak spots |
+| 4 | `final-mistakes.md` + `final-relearn-q2-q5.html` | Diagnose every lost mark, fresh variant until right |
+| 5 | `final-mock-c.html` + key `final-mock-c.md` | Cold re-test on new numbers + the step-4 weak spots |
 | 6 | Hard mock H (to build) | Cold; wider traps (no force sensor, x_e drift, stiffness matrix, castor wheels, grouped sensors) |
 | 7 | Official **2025-26 S1** | Cold under exam conditions; graded, retrained |
 | 8 | Official **2025-26 S2** | Dress rehearsal, then a final re-test from the mistakes log |

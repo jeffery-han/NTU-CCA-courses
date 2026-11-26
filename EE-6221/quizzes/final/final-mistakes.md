@@ -14,3 +14,8 @@ One row per lost mark.  An item stays open until a fresh-variant retry is right.
 | 7 | Mock B Q2(a) gains | ωn = 0.5 × 2 = 1 "Hz", kp = 1, kv = 2.2 | 2 Hz = 2·2π = 12.566 rad/s; ωn = 6.2832, kp = 39.478, kv = 13.823 | Resonance in Hz → multiply by 2π before halving | open |
 | 8 | Mock B Q2(a) v, u1 | v = q̈; u1 not computed | v = q̈d + kv ė + kp e is the servo; u1 = 7.568 | Write v in full, then plug numbers into αv + β | open |
 | 9 | Mock B Q2(b), (c) | blank (not wrong) | hybrid force/position control and force-subspace disturbance not yet understood | Relearn: subspaces, force servo with 1/ke, disturbance → e_ss = ke d/(m kpf) | open |
+| 10 | Mock B Q3(a) l | l = √(0.2² − 0.15²) = 0.132 | distance from P is Pythagoras with a plus: √(0.04 + 0.0225) = 0.25 | l = √(x² + y²) | open |
+| 11 | Mock B Q3(a) α | α = atan2(2, −1.5) = 4.428 rad | α = atan2(y, x) of the wheel position = atan2(0.15, −0.2) = 143.13° | atan2(y, x), y first; check the quadrant | open |
+| 12 | Mock B Q3(a) β | β = 2.857 rad | rolling direction α + β − 90° = 0 (along +X_R), so β = 90° − α = −53.13° | Set the rolling direction, then solve for β | open |
+| 13 | Mock B Q3(a) rows | rolling [cos, −sin, l cosβ], sliding [sin, −cos, l sinβ]; no R(θ) | rolling [sin(α+β), −cos(α+β), −l cosβ], sliding [cos(α+β), sin(α+β), l sinβ], acting on R(θ)ξ̇_I | Sliding = axle (cos, sin, +l sin); rolling = turned −90° (sin, −cos, −l cos); sanity check fixed wheel: [1, 0, −y], [0, 1, x] | open |
+| 14 | Mock B Q3(a)(iii), Q3(b), Q4, Q5 | blank (not wrong) | equations not held in memory: speeds from rows, w/V/IK, homography rows and group count, Kalman derivation | Rebuild each from its picture (relearn Q2–Q5 Parts 6–10), then Mock C | open |

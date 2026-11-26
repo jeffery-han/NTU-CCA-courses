@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EE6221 Final Mock C</title>
+<link rel="stylesheet" href="quiz-assets/katex/katex.min.css">
+<style>
+:root { --ink:#172334; --muted:#435366; --bg:#eef2f5; --card:#fff; --line:#c8d2dc; --pill:#f3f6f9; --accent:#205d87; --ok:#1d7a46; --warn:#b47412; --warnbg:#fff5e1;
+        font: 17px/1.55 system-ui,sans-serif; color: var(--ink); background: var(--bg); }
+@media (prefers-color-scheme: dark) { :root { --ink:#dfe7ef; --muted:#9fb0c2; --bg:#11181f; --card:#18222c; --line:#34475a; --pill:#1f2c38; --accent:#6fb3e0; --ok:#5fc48a; --warn:#e0a54a; --warnbg:#2b2416; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); }
+.app { display: grid; grid-template-columns: 270px minmax(0,1fr); }
+nav { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 20px 16px 5rem; border-right: 1px solid var(--line); background: var(--card); font-size: .9rem; }
+nav h2 { font-size: 1rem; margin: 0 0 .6rem; } nav a { color: var(--ink); text-decoration: none; }
+nav ol { list-style: none; padding: 0; margin: 0; } nav li { display: flex; justify-content: space-between; gap: .5em; padding: .25em .4em; border-radius: 6px; }
+nav li:hover { background: var(--pill); } nav .sc { color: var(--muted); font-variant-numeric: tabular-nums; } nav .sc.done { color: var(--ok); font-weight: 600; }
+nav .tools { margin-top: 1rem; border-top: 1px solid var(--line); padding-top: .7rem; color: var(--muted); }
+main { min-width: 0; width: 100%; max-width: 880px; margin: 24px auto; padding: 34px 46px 6rem; background: var(--card); box-shadow: 0 2px 18px #14263a19; }
+h1 { margin: 0; line-height: 1.2; } h2.sec { margin: 2.2rem 0 .5rem; border-top: 2px solid var(--accent); padding-top: 1rem; }
+h3 { margin: 1.8rem 0 .3rem; } p,li { max-width: 76ch; }
+.meta { color: var(--muted); } .notice { border-left: 4px solid var(--warn); background: var(--warnbg); padding: .65rem 1rem; }
+.marks { float: right; color: var(--muted); font-size: .92rem; }
+.tf { display: flex; gap: 1.2em; margin: .5em 0; } .tf label { display: flex; gap: .35em; align-items: center; cursor: pointer; }
+.katex-display { overflow-x: auto; overflow-y: hidden; }
+.answered-toggle { display: flex; align-items: center; gap: .55em; margin: .6em 0 .2em; font-size: .92rem; padding: .45em .7em; border: 1px dashed var(--line); border-radius: 8px; background: var(--pill); }
+textarea.work { width: 100%; min-height: 2.6em; font: 14px ui-monospace, monospace; padding: .6em; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); resize: vertical; }
+#bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 5; background: var(--card); border-top: 1px solid var(--line); padding: .55em 1rem; display: flex; gap: .7em; align-items: center; justify-content: center; flex-wrap: wrap; font-size: .92rem; }
+#timer { font: 600 1.05rem ui-monospace, monospace; } #timer.over { color: #c0392b; }
+button { font: inherit; padding: .4em .85em; border: 1px solid var(--line); border-radius: 8px; background: var(--pill); color: var(--ink); cursor: pointer; }
+dialog { max-width: 46rem; width: 92%; border: 1px solid var(--line); border-radius: 12px; background: var(--card); color: var(--ink); }
+dialog textarea { width: 100%; min-height: 20em; font: 12px ui-monospace, monospace; background: var(--bg); color: var(--ink); }
+@media (max-width: 860px) { .app { display: block; } nav { position: static; height: auto; padding-bottom: 1rem; border-right: 0; border-bottom: 1px solid var(--line); }
+  nav ol { display: grid; grid-template-columns: 1fr 1fr; gap: 0 .6em; } main { margin: 0; padding: 20px 16px 6rem; box-shadow: none; } }
+@media print { #bar, nav, .answered-toggle, textarea.work { display: none; } .app { display: block; } main { margin: 0; padding: 0; box-shadow: none; max-width: none; } }
+</style>
+<script defer src="quiz-assets/katex/katex.min.js"></script>
+<script defer src="quiz-assets/katex/contrib/auto-render.min.js"></script>
+<script defer src="quiz-assets/render-math.js"></script>
+</head>
+<body><div class="app">
+<nav><h2>Final · Mock C</h2><ol id="toc"></ol>
+<div class="tools">Parts done on paper: <span id="tally">0</span><br>Key (after attempting): <code>final-mock-c.md</code><br>Intel: <code>final-intel.md</code><br><a href="final-mock-b.html">Mock B</a> · <a href="final-relearn-q2-q5.html">Relearn Q2–Q5</a></div></nav>
+<main>
+<h1>EE6221 · Final examination · Mock C</h1>
+<p class="meta">100 marks · 3 hours · closed book · answer all five questions · 20 marks each · handwritten</p>
+<p class="notice"><strong>Unofficial practice paper.</strong> The format follows the official past papers: five questions, each in its fixed topic slot. The numbers are new, and the paper is weighted towards what you missed in Mock B: offset angles inside the link matrices, resonances given in Hz, the full servo law, hybrid force control, wheel geometry and constraint rows, the arm's inverse kinematics, the homography equations and the Kalman derivation. Sit it <strong>cold and timed</strong>: no notes, primer, relearn page or formula card. Write everything on paper. Tick “Answered on paper” for each part, press Export, and send the text with photos of your sheets. The key is <code>final-mock-c.md</code>; do not open it until you have finished.</p>
+
+<h2 class="sec" id="q1">Q1 · Link coordinates <span class="marks">20 marks</span></h2>
+<p>The six-joint arm in Figure 1 is drawn in the pose where all joint variables are zero. Joint 1 (\(\theta_1\)) turns the column about its vertical axis. Joints 2 and 3 (\(\theta_2\), \(\theta_3\)) have axes perpendicular to the page (⊙). The upper arm points straight up, and the forearm points horizontally to the right. Joint 4 (\(\theta_4\)) rolls the forearm about its own axis. Joint 5 (\(\theta_5\)) has an axis perpendicular to the page at the wrist. The tool hangs straight down from the wrist and rolls about its own axis (\(\theta_6\)). T is the tool tip. Put frame 0 at the base, on the \(\theta_1\) axis, at floor level.</p>
+<figure style="margin:1rem 0">
+<svg viewBox="0 0 470 470" style="width:100%;max-width:470px;display:block;margin:auto;color:var(--ink)" role="img" aria-label="Figure 1. Side view. A vertical column rises 40 cm from the floor base to the shoulder joint theta 2. The upper arm points straight up 30 cm to the elbow joint theta 3. Both joint axes are perpendicular to the page. The forearm runs 20 cm horizontally to the right, from the elbow centre to the wrist centre, and rolls about its own axis, theta 4. The wrist joint theta 5 has an axis perpendicular to the page. The tool hangs straight down 12 cm from the wrist centre to the tip T and rolls about its own axis, theta 6." font-family="system-ui,sans-serif" font-size="17">
+<g stroke="currentColor" fill="none" stroke-width="2">
+<line x1="60" y1="420" x2="300" y2="420"/>
+<path d="M75 420l-12 14M100 420l-12 14M125 420l-12 14M150 420l-12 14M175 420l-12 14M200 420l-12 14M225 420l-12 14M250 420l-12 14M275 420l-12 14M300 420l-12 14" stroke-width="1.2"/>
+<rect x="130" y="396" width="60" height="24" fill="var(--card)"/>
+<line x1="160" y1="396" x2="160" y2="232" stroke-width="9" stroke-linecap="round" opacity=".35"/>
+<line x1="160" y1="208" x2="160" y2="82" stroke-width="9" stroke-linecap="round" opacity=".35"/>
+<line x1="172" y1="70" x2="248" y2="70" stroke-width="9" stroke-linecap="round" opacity=".35"/>
+<line x1="260" y1="82" x2="260" y2="130" stroke-width="5" stroke-linecap="round" opacity=".55"/>
+<line x1="160" y1="445" x2="160" y2="396" stroke-dasharray="6 5" stroke-width="1.3"/>
+<path d="M140 446 a22 7 0 1 0 40 0" stroke-width="1.6"/><path d="M180 446l-7 -5m7 5l-8 3" stroke-width="1.6"/>
+<line x1="248" y1="70" x2="330" y2="70" stroke-dasharray="6 5" stroke-width="1.3"/>
+<path d="M310 52 a7 18 0 1 1 0 36" stroke-width="1.6"/><path d="M310 88l6 -6m-6 6l7 3" stroke-width="1.6"/>
+<line x1="260" y1="130" x2="260" y2="175" stroke-dasharray="6 5" stroke-width="1.3"/>
+<path d="M240 160 a20 7 0 1 0 40 0" stroke-width="1.6"/><path d="M280 160l-7 -5m7 5l-8 3" stroke-width="1.6"/>
+<circle cx="160" cy="220" r="12" fill="var(--card)"/><circle cx="160" cy="220" r="3" fill="currentColor"/>
+<circle cx="160" cy="70" r="12" fill="var(--card)"/><circle cx="160" cy="70" r="3" fill="currentColor"/>
+<circle cx="260" cy="70" r="12" fill="var(--card)"/><circle cx="260" cy="70" r="3" fill="currentColor"/>
+<circle cx="260" cy="130" r="4" fill="currentColor"/>
+<g stroke-width="1.2"><line x1="60" y1="420" x2="60" y2="220"/><line x1="52" y1="420" x2="68" y2="420"/><line x1="52" y1="220" x2="68" y2="220"/>
+<line x1="60" y1="220" x2="60" y2="70"/><line x1="52" y1="70" x2="68" y2="70"/>
+<line x1="160" y1="28" x2="260" y2="28"/><line x1="160" y1="20" x2="160" y2="36"/><line x1="260" y1="20" x2="260" y2="36"/>
+<line x1="390" y1="70" x2="390" y2="130"/><line x1="382" y1="70" x2="398" y2="70"/><line x1="382" y1="130" x2="398" y2="130"/>
+<line x1="264" y1="130" x2="382" y2="130" stroke-dasharray="3 4"/><line x1="272" y1="70" x2="300" y2="70" stroke-dasharray="3 4" opacity="0"/></g>
+</g>
+<g fill="currentColor">
+<text x="52" y="326" text-anchor="end">40 cm</text><text x="52" y="150" text-anchor="end">30 cm</text><text x="186" y="18">20 cm</text><text x="402" y="106">12 cm</text>
+<text x="178" y="226">θ2 ⊙</text><text x="112" y="62">θ3 ⊙</text><text x="270" y="50">θ5 ⊙</text>
+<text x="336" y="76">θ4</text><text x="290" y="182">θ6</text><text x="190" y="452">θ1</text>
+<text x="270" y="140">T</text><text x="196" y="414" font-size="15">base</text>
+</g>
+</svg>
+<figcaption style="text-align:center;font-weight:600">Figure 1 (side view, all joint variables zero; ⊙ joint axes perpendicular to the page)</figcaption>
+</figure>
+<div data-item="Q1a"><h3>(a) <span class="marks">11</span></h3>
+<p>Obtain the link-coordinate diagram using the Denavit-Hartenberg (D-H) algorithm. Show the \(x\), \(y\) and \(z\) axes of every frame, frames 0 to 6.</p></div>
+<div data-item="Q1b"><h3>(b) <span class="marks">9</span></h3>
+<p>Tabulate the kinematic parameters, writing each \(\theta_k\) in terms of the joint variable \(q_k\) for the pose drawn. Then write \(T^1_0\), \(T^2_1\) and \(T^3_2\) with every entry simplified to \(C_k\), \(S_k\) or a number. Use
+\[T^k_{k-1}=\begin{bmatrix}C\theta_k&-C\alpha_kS\theta_k&S\alpha_kS\theta_k&a_kC\theta_k\\S\theta_k&C\alpha_kC\theta_k&-S\alpha_kC\theta_k&a_kS\theta_k\\0&S\alpha_k&C\alpha_k&d_k\\0&0&0&1\end{bmatrix}.\]</p></div>
+
+<h2 class="sec" id="q2">Q2 · Robot control <span class="marks">20 marks</span></h2>
+<p>The dynamic equations of a three-joint robot are</p>
+\[\begin{aligned}
+(4+C_2)\ddot q_1+(0.5+0.5C_2)\ddot q_2-0.5S_2\,(2\dot q_1\dot q_2+\dot q_2^2)+2\dot q_1+14.7C_1+4.9C_{12}+d_1&=u_1\\
+(0.5+0.5C_2)\ddot q_1+0.5\ddot q_2+0.5S_2\,\dot q_1^2+4.9\,C_{12}+d_2&=u_2\\
+6\ddot q_3+3\dot q_3+58.8+f+d_3&=u_3
+\end{aligned}\]
+<p>Here \(f\) is a contact force and \(d_1,d_2,d_3\) are disturbances. The structure has unmodelled resonances at <strong>4.5 Hz, 3 Hz and 7 Hz</strong>.</p>
+<div data-item="Q2a"><h3>(a) <span class="marks">9</span></h3>
+<p>Let \(f=0\) and \(d_1=d_2=d_3=0\). Design a computed-torque controller with \(\zeta=1.2\), as fast as the resonances allow. Write \(\alpha\), \(\beta\), the full servo law \(v\), the gains and the error equation. Evaluate \(u_2\) at the instant when \(q_1=\pi/3\), \(q_2=0\), \(\dot q_1=1\), \(\dot q_2=0.5\), with \(\ddot q_{1d}=0\), \(e_1=0.02\), \(\dot e_1=0\), \(\ddot q_{2d}=0.4\), \(e_2=0.01\), \(\dot e_2=-0.05\).</p></div>
+<div data-item="Q2b"><h3>(b) <span class="marks">8</span></h3>
+<p>Joint 3 now presses on a surface, and a sensor measures \(f=60\,(q_3-0.15)\). Take \(d=0\). Design a hybrid position/force controller with the motion subspace as in (a) and the force subspace critically damped, as fast as allowed. Write the force servo law and \(u_3\), and derive both error equations. Evaluate \(u_3\) when \(\dot q_3=0.1\), the sensor reads \(f=12\) N, and the desired force is a constant 18 N. Find \(q_3\) at steady state.</p></div>
+<div data-item="Q2c"><h3>(c) <span class="marks">3</span></h3>
+<p>With the controller of (b), \(d_3\) is an unknown constant of 3 N. Derive the force error equation, find the steady-state force error, and state how to remove it.</p></div>
+
+<h2 class="sec" id="q3">Q3 · Mobile platform and arm <span class="marks">20 marks</span></h2>
+<p>The platform in Figure 2 has a local frame \(\{X_R, Y_R\}\) at \(P\). It has:</p>
+<ul>
+<li>two fixed standard wheels, A at \((-0.24,\ 0.07)\) m and B at \((-0.24,\ -0.07)\) m, radius 0.05 m. Both wheel planes are parallel to \(X_R\), and positive spin drives the platform towards \(+X_R\);</li>
+<li>one steered standard wheel, C at \((0.30,\ 0.10)\) m, radius 0.04 m, with steering angle \(\beta_C(t)\).</li>
+</ul>
+<p>Measure \(\alpha\), \(\beta\) and \(l\) as in the lecture.</p>
+<figure style="margin:1rem 0">
+<svg viewBox="0 0 480 330" style="width:100%;max-width:480px;display:block;margin:auto;color:var(--ink)" role="img" aria-label="Figure 2. Top view. P at the centre with X_R to the right and Y_R up. Fixed wheel A at (-0.24, 0.07) and fixed wheel B at (-0.24, -0.07), both aligned with X_R. Steered wheel C at (0.30, 0.10), drawn turned at an angle." font-family="system-ui,sans-serif" font-size="16">
+<g stroke="currentColor" fill="none" stroke-width="2">
+<rect x="70" y="70" width="330" height="190" rx="18" stroke-dasharray="7 5" stroke-width="1.4"/>
+<line x1="210" y1="165" x2="440" y2="165" stroke-width="1.6"/><path d="M440 165l-10 -5v10z" fill="currentColor"/>
+<line x1="210" y1="165" x2="210" y2="20" stroke-width="1.6"/><path d="M210 20l-5 10h10z" fill="currentColor"/>
+<rect x="64" y="122" width="56" height="16" rx="5" fill="var(--card)"/>
+<rect x="64" y="192" width="56" height="16" rx="5" fill="var(--card)"/>
+<g transform="translate(360 115) rotate(-40)"><rect x="-26" y="-8" width="52" height="16" rx="5" fill="var(--card)"/></g>
+<g stroke-width="1" stroke-dasharray="3 4"><line x1="92" y1="130" x2="92" y2="165"/><line x1="92" y1="130" x2="210" y2="130"/><line x1="360" y1="115" x2="360" y2="165"/><line x1="210" y1="115" x2="360" y2="115"/></g>
+</g>
+<g fill="currentColor"><circle cx="210" cy="165" r="4.5"/><circle cx="92" cy="130" r="3.5"/><circle cx="92" cy="200" r="3.5"/><circle cx="360" cy="115" r="3.5"/>
+<text x="216" y="186">P</text><text x="444" y="185">X_R</text><text x="218" y="26">Y_R</text>
+<text x="34" y="118">A</text><text x="34" y="228">B</text><text x="384" y="96">C</text>
+<text x="112" y="112" font-size="14">A (−0.24, 0.07)</text><text x="112" y="232" font-size="14">B (−0.24, −0.07)</text><text x="250" y="96" font-size="14">C (0.30, 0.10)</text>
+<text x="250" y="296" font-size="14">C drawn at an arbitrary angle</text></g>
+</svg>
+<figcaption style="text-align:center;font-weight:600">Figure 2 (top view, metres)</figcaption>
+</figure>
+<div data-item="Q3a"><h3>(a) <span class="marks">10</span></h3>
+<p>Give \(l\), \(\alpha\) and \(\beta\) for wheels A, B and C. Derive the rolling and sliding constraints of the platform in matrix form, keeping \(\beta_C\) symbolic. The platform moves with \(\dot x_r=0.6\) m/s and \(\dot\theta=-0.5\) rad/s in the robot frame. Find \(\dot y_r\), the spin rates of A and B, and the steering angle \(\beta_C\in(-\pi/2,\pi/2)\) and spin rate of C for which \(\dot\varphi_C\gt0\).</p></div>
+<p>A four-joint arm on the platform has joint 3 prismatic and joint 4 rolling the tool, with</p>
+\[T^4_0=\begin{bmatrix}C_{124}&S_{124}&0&0.35C_1+0.25C_{12}\\S_{124}&-C_{124}&0&0.35S_1+0.25S_{12}\\0&0&-1&0.5-q_3\\0&0&0&1\end{bmatrix}\]
+<p>in metres.</p>
+<div data-item="Q3b"><h3>(b) <span class="marks">10</span></h3>
+<p>Write the tool-configuration vector \(w(q)\) and the tool-configuration Jacobian \(V(q)\). Then find every solution of the inverse kinematics for
+\[w=\begin{bmatrix}0.3&0.35&0.18&0&0&-e^{0.75}\end{bmatrix}^T.\]</p></div>
+
+<h2 class="sec" id="q4">Q4 · Homography <span class="marks">20 marks</span></h2>
+<p>Seven feature points lie on one plane (Figure 3): the corners of a rectangle \(O_1(0,0)\), \(O_2(4,0)\), \(O_3(4,2)\) and \(O_4(0,2)\); its centre \(O_5(2,1)\); and the midpoints \(O_6(2,0)\) and \(O_7(2,2)\) of its long sides. A camera takes images from three poses:</p>
+<ul>
+<li>\(F_a\) sees \(O_1, O_2, O_4, O_6, O_7\);</li>
+<li>\(F_b\) sees all seven points;</li>
+<li>\(F_c\) sees \(O_3, O_4, O_5, O_6, O_7\).</li>
+</ul>
+<p>\(G\), \(H\) and \(K\) are the Euclidean homographies from \(F_a\) to \(F_b\), from \(F_b\) to \(F_c\), and from \(F_a\) to \(F_c\). \(G_n\), \(H_n\) and \(K_n\) are the same matrices divided by their (3,3) element.</p>
+<figure style="margin:1rem 0">
+<svg viewBox="0 0 440 260" style="width:100%;max-width:440px;display:block;margin:auto;color:var(--ink)" role="img" aria-label="Figure 3. A rectangle 4 units wide and 2 units tall. O1 at (0,0), O2 at (4,0), O3 at (4,2), O4 at (0,2), centre O5 at (2,1), O6 at (2,0) and O7 at (2,2)." font-family="system-ui,sans-serif" font-size="16">
+<g stroke="currentColor" stroke-width="1" opacity=".25"><path d="M60 210H380M60 160H380M60 110H380M60 60H380M60 210V40M140 210V40M220 210V40M300 210V40M380 210V40"/></g>
+<rect x="60" y="60" width="320" height="150" fill="none" stroke="currentColor" stroke-width="2"/>
+<g fill="currentColor"><circle cx="60" cy="210" r="5"/><circle cx="380" cy="210" r="5"/><circle cx="380" cy="60" r="5"/><circle cx="60" cy="60" r="5"/><circle cx="220" cy="135" r="5"/><circle cx="220" cy="210" r="5"/><circle cx="220" cy="60" r="5"/>
+<text x="30" y="236">O1</text><text x="386" y="236">O2</text><text x="386" y="52">O3</text><text x="30" y="52">O4</text><text x="230" y="130">O5</text><text x="210" y="236">O6</text><text x="210" y="50">O7</text></g>
+</svg>
+<figcaption style="text-align:center;font-weight:600">Figure 3 (object plane; grid 1 unit; the rectangle is 4 × 2)</figcaption>
+</figure>
+<div data-item="Q4a"><h3>(a) <span class="marks">10</span></h3>
+<p>How many four-point groups can be used to derive \(G_n\)? List them and explain why every other group fails. Derive the linear system that gives \(G_n\) from one group. Then write the two equations contributed by \(O_7\) if it appears at \((1.5,\ 2.2)\) in the \(F_a\) image and at \((2.1,\ 1.8)\) in the \(F_b\) image.</p></div>
+<div data-item="Q4b"><h3>(b) <span class="marks">4</span></h3>
+<p>How many four-point groups can be used to derive \(H_n\)? Name them.</p></div>
+<div data-item="Q4c"><h3>(c) <span class="marks">6</span></h3>
+<p>Can \(K_n\) be obtained? Justify your answer and give the expression if it can. Would your answer change if \(F_b\) did not see \(O_6\)?</p></div>
+
+<h2 class="sec" id="q5">Q5 · Sensor integration <span class="marks">20 marks</span></h2>
+<p>Three sensors measure a constant state, \(x_{k+1}=x_k\), with \(y_{ik}=x_k+v_{ik}\). The noises are zero-mean, mutually uncorrelated and uncorrelated with \(\tilde x_k=x_k-\hat x_k\). Their variances are \(3a^2\) for \(S_1\), \(6a^2\) for \(S_2\) and \(a^2\) for \(S_3\). Let \(p_k=E[\tilde x_k^2]\).</p>
+<div data-item="Q5a"><h3>(a) <span class="marks">8</span></h3>
+<p>For \(\hat x_{k+1}=\hat x_k+\sum_{i=1}^3L_{ik}(y_{ik}-\hat x_k)\), derive \(p_{k+1}\) in terms of the gains, then derive the gains that minimise it. Show every step. Evaluate the gains and \(p_{k+1}\) for \(p_k=2a^2\).</p></div>
+<div data-item="Q5b"><h3>(b) <span class="marks">6</span></h3>
+<p>Only one group can be used: group A is \(S_3\) alone; group B is \(S_1\) and \(S_2\), each with its own optimal gain. Which group gives the smaller \(p_{k+1}\)? Justify your answer.</p></div>
+<div data-item="Q5c"><h3>(c) <span class="marks">6</span></h3>
+<p>All three sensors are now fused with <em>one shared gain</em>. Derive that gain and \(p_{k+1}\) for \(p_k=2a^2\). Is this better than using \(S_3\) alone with its optimal gain? Explain why.</p></div>
+<p class="meta">End of paper.</p>
+</main></div>
+
+<div id="bar"><span id="timer">3:00:00</span><button id="start">Start</button><button id="pause">Pause</button><button id="reset">Reset</button><button id="export">Export</button><button id="wipe">Clear saved</button></div>
+<dialog id="dlg"><p>Copy this into a new chat with your photographed working for grading.</p><textarea id="out" readonly></textarea>
+<p><button id="copy">Copy</button> <button id="dl">Download .txt</button> <button id="close">Close</button></p></dialog>
+
+<script>
+(function () {
+  var KEY = "ee6221-final-mock-c-v1", LIMIT = 10800, st = {};
+  try { st = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { st = {}; }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
+  var items = Array.prototype.slice.call(document.querySelectorAll("[data-item]")), toc = document.getElementById("toc");
+  items.forEach(function (box) {
+    var id = box.getAttribute("data-item"), html = "";
+    if (false) {
+      html += '<div class="tf">' + ["True", "False"].map(function (v) {
+        return '<label><input type="radio" name="' + id + '" value="' + v + '" data-q="' + id + '"> ' + v + '</label>'; }).join("") + "</div>";
+    }
+    html += '<label class="answered-toggle"><input type="checkbox" data-q="' + id + '-paper"> Answered on paper</label>';
+    html += '<textarea class="work" data-q="' + id + '-note" placeholder="Optional typed note (handwritten working is what gets graded)"></textarea>';
+    box.insertAdjacentHTML("beforeend", html);
+    box.id = "q-" + id;
+    toc.insertAdjacentHTML("beforeend", '<li><a href="#q-' + id + '">' + id + '</a><span class="sc" id="sc-' + id + '">·</span></li>');
+  });
+  function isDone(id) { return !!st[id + "-paper"]; }
+  function tally() {
+    var n = 0;
+    items.forEach(function (b) { var id = b.getAttribute("data-item"), d = isDone(id), s = document.getElementById("sc-" + id);
+      s.textContent = d ? "✓" : "·"; s.className = "sc" + (d ? " done" : ""); if (d) n++; });
+    document.getElementById("tally").textContent = n + " / " + items.length;
+  }
+  document.querySelectorAll("[data-q]").forEach(function (el) {
+    var q = el.getAttribute("data-q");
+    if (el.type === "radio") { el.checked = st[q] === el.value; el.addEventListener("change", function () { st[q] = el.value; save(); tally(); }); }
+    else if (el.type === "checkbox") { el.checked = !!st[q]; el.addEventListener("change", function () { st[q] = el.checked; save(); tally(); }); }
+    else { el.value = st[q] || ""; el.addEventListener("input", function () { st[q] = el.value; save(); }); }
+  });
+  tally();
+  var t = st.elapsed || 0, tick = null, tEl = document.getElementById("timer");
+  function fmt(s) { var r = Math.abs(LIMIT - s); return (s > LIMIT ? "+" : "") + Math.floor(r / 3600) + ":" + ("0" + Math.floor(r / 60) % 60).slice(-2) + ":" + ("0" + r % 60).slice(-2); }
+  function render() { tEl.textContent = fmt(t); tEl.className = t > LIMIT ? "over" : ""; }
+  document.getElementById("start").onclick = function () { if (!tick) tick = setInterval(function () { t++; st.elapsed = t; save(); render(); }, 1000); };
+  function pause() { clearInterval(tick); tick = null; }
+  document.getElementById("pause").onclick = pause;
+  document.getElementById("reset").onclick = function () { pause(); t = 0; st.elapsed = 0; save(); render(); };
+  document.getElementById("wipe").onclick = function () { if (confirm("Clear saved answers and timer?")) { try { localStorage.removeItem(KEY); } catch (e) {} location.reload(); } };
+  render();
+  var stems = { Q1a: "D-H diagram, L-pose arm, x y z of frames 0-6 (11)", Q1b: "table with offsets + T01 T12 T23 simplified (9)", Q2a: "computed torque, zeta 1.2, resonances in Hz, u2 (9)",
+    Q2b: "hybrid, f = 60(q3-0.15), u3 and q3 steady (8)", Q2c: "unknown d3 = 3 N on force joint (3)", Q3a: "wheels A B C (C off axis), rows, speeds (10)",
+    Q3b: "tool-config vector, Jacobian, IK both elbows (10)", Q4a: "groups for G_n, system, O7 rows (10)", Q4b: "groups for H_n (4)", Q4c: "K_n by chaining, twist (6)",
+    Q5a: "3 sensors separate gains, derivation (8)", Q5b: "S3 alone vs S1+S2 (6)", Q5c: "shared gain for all three vs S3 alone (6)" };
+  function build() {
+    var L = ["EE6221 Final Mock C (unofficial)", "Key: EE-6221/quizzes/final/final-mock-c.md", "Marks: Q1 11+9, Q2 9+8+3, Q3 10+10, Q4 10+4+6, Q5 8+6+6 = 100",
+      "Elapsed: " + Math.floor(t / 60) + " min " + t % 60 + " s (limit 180 min)", ""];
+    items.forEach(function (b) { var id = b.getAttribute("data-item");
+      L.push(id + " [" + stems[id] + "]: " + "" + (st[id + "-paper"] ? "answered on paper" : "not marked on paper") +
+        (st[id + "-note"] ? " | note: " + st[id + "-note"].replace(/\s+/g, " ") : "")); });
+    L.push("", "Attach photos of every handwritten sheet.");
+    return L.join("\n");
+  }
+  var dlg = document.getElementById("dlg"), out = document.getElementById("out");
+  document.getElementById("export").onclick = function () { out.value = build(); dlg.showModal(); };
+  document.getElementById("close").onclick = function () { dlg.close(); };
+  document.getElementById("copy").onclick = function () { out.select(); try { navigator.clipboard.writeText(out.value); } catch (e) { document.execCommand("copy"); } };
+  document.getElementById("dl").onclick = function () { var a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([out.value], { type: "text/plain" })); a.download = "ee6221-final-mock-c-attempt.txt"; a.click(); };
+})();
+</script>
+</body>
+</html>
