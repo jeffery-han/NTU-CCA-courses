@@ -345,3 +345,15 @@ Rubric (6):
 Wrong paths:
 - **Averaging the variances.**
 - **Writing 1/p₊ = 1/p + 3/(10a²).** This drops the n² factor.
+
+---
+
+## Your attempt, graded 2026-11-26 (Q1 and Q2 only; Q3–Q5 not sat)
+
+Scans: `attempts/final-mock-b-q1-2026-11-26.jpg`, `attempts/final-mock-b-q2-2026-11-26.jpg`.
+
+**Q1: 19 / 20.** (a) 11/11, (b) rows 6/6, matrices 2/3. The arrow ↗ means into the page and ↙ means out of it. Your z1 and z2 point into the page, the opposite of the model, which is allowed; that is why your α1, α3, α4 are −90° and your θ3 offset is −90°. Forward kinematics of your six rows at q = 0, d4 = 20 reproduces every drawn x, y, z and the tip (57, 35) cm. All seven y axes are drawn and right-handed, which closes mistakes-log item 4. Frame 3 is drawn displaced along a dashed line; the table (d3 = a3 = 0) puts it at the elbow, so it is accepted, but write "O3 = O2" next to it in the exam. Lost mark: T23. With θ = θ3 − 90°, cos = +S3 and sin = −C3, so T23 = [S3 0 C3 0; −C3 0 S3 0; 0 −1 0 0]. You wrote −S3 in (1,1) and −S3 in (2,3).
+
+**Q2: 7 / 20.** (a) 7/9: α 2, β 2, resonance 1/2 (lowest one and the 0.5 factor right, the 2π missing), gains 1 (follow-through), error equation 1, u1 0. (b) 0/8 and (c) 0/3: blank. Note that "v = q̈" should be written as the servo v = q̈d + kv ė + kp e.
+
+Running total for the parts sat: 26 / 40.

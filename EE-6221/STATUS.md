@@ -5,7 +5,7 @@ Robotics and Intelligent Sensors.  Part 1: manipulator kinematics, robot control
 ## Now
 
 - **Next assessment: final exam.**  Date and venue **not verified** (no NTULearn announcement on 2026-11-20; check the exam timetable).  Format, from all five official past papers in `tests/` (git-ignored): 3 h, closed book, 5 compulsory questions × 20 marks, fixed slots Q1 D-H, Q2 robot control, Q3 mobile-platform constraints + arm IK, Q4 homography, Q5 multi-sensor Kalman.  Part 2 scope HGQ Lec 2–4 (Week 8 transcript).  Evidence and conventions: `quizzes/final/final-intel.md`.
-- Prep protocol (8 steps, as EE-6407): steps 1–2 built (`final-primer.html`, `final-mock-a-guided.html`).  Mock A Q1 graded 12/20; retry on official 2024-25 S2 Q1 (relearn Part 6) graded 19/20, closing every D-H item in `quizzes/final/final-mistakes.md` except y = z × x (draw all y axes).  **Next: sit Mock B cold** (`quizzes/final/final-mock-b.html`, 3 h, handwritten), then grade (step 4).  Official 2025-26 S1 and S2 are reserved for steps 7–8.
+- Prep protocol (8 steps, as EE-6407): steps 1–2 built (`final-primer.html`, `final-mock-a-guided.html`).  Mock A Q1 12/20 → 2024-25 S2 Q1 19/20 → Mock B Q1 19/20 (every Mock A D-H item now closed).  Mock B Q2 7/20: Hz→rad/s missed, (b) hybrid force control and (c) blank; Q3–Q5 not yet sat.  **Next: relearn Q2 (hybrid force/position), then sit Mock B Q3–Q5 cold** (`quizzes/final/final-mock-b.html`).  Open items: `quizzes/final/final-mistakes.md` #6–9.  Official 2025-26 S1 and S2 are reserved for steps 7–8.
 - Open loops:
   1. Robot control, mobile-robot kinematics and all of Part 2 are in no LaTeX note (HTML pages only; HGQ Lec 5–6 has none).
   2. No Quiz 2 mistake record exists (`quizzes/quiz-02/quiz-02-mistakes.md` was never created).
