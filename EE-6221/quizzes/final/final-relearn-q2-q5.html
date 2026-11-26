@@ -105,9 +105,41 @@ figure svg { max-width: 720px; }
 
 <!-- ======================= Part 1 ======================= -->
 <h2 id="p1">1 &middot; Computed torque in three moves <span class="badge">Exam focus</span></h2>
-<p><b>The one picture.</b> The robot's equation is "push = mass &times; acceleration + everything else". The controller does three things. It <b>cancels</b> everything else (\(\beta\)). It <b>scales</b> by the mass (\(\alpha\)). Then it <b>commands</b> the acceleration it wants (\(v\)). <a class="cite" href="../../resources/lecture-02-robot-control.pdf#page=6" data-pages="lecture-02-robot-control:6,7,8,9,10,11,12,13">Lec 2 pp. 6&ndash;13 (partitioned control, gains, resonance rule, disturbances)</a></p>
-\[u=\alpha v+\beta,\qquad v=\ddot q_d+k_v\dot e+k_pe,\qquad e=q_d-q.\]
-<p>If you substitute this into \(M\ddot q+(\text{rest})=u\), with \(\alpha=M\) and \(\beta=\text{rest}\), you get \(M\ddot q=Mv\), so \(\ddot q=v\), which is \(\ddot e+k_v\dot e+k_pe=0\). <b>In the exam, write all three lines</b>: the law, the servo \(v\) written out in full, and the error equation. Writing "\(v=\ddot q\)" loses the servo (mistake #8).</p>
+<p><b>The one picture.</b> The robot's equation is "push = mass &times; acceleration + everything else": \(M(q)\ddot q+\text{rest}=u\). Computed-torque ("partitioned") control splits the controller into two cascade blocks so that a messy nonlinear robot behaves like a simple unit mass (\(\ddot q=v\)) driven by a spring-damper tracker. <a class="cite" href="../../resources/lecture-02-robot-control.pdf#page=6" data-pages="lecture-02-robot-control:6,7,8,9,10,11,12,13">Lec 2 pp. 6&ndash;13 (partitioned control, gains, resonance rule, disturbances)</a> &middot; <a class="cite" href="../../resources/lecture-02-robot-control.pdf#page=20" data-pages="lecture-02-robot-control:20,21,22,23,24,25,26,27,28,29,30,31">Lec 2 pp. 20&ndash;31 (\(M(q)\), \(n\)-joint PD-computed torque)</a> &middot; <a class="cite" href="../../resources/additional-materials/review-week-06-control.pdf#page=1" data-pages="review-week-06-control:1">Week 6 review sheet</a></p>
+<figure>
+<svg viewBox="0 0 720 175" role="img" aria-label="Block diagram of partitioned computed-torque control: 1. Servo law computes commanded acceleration v from qd and q; 2. Control law u = alpha v + beta converts v to motor torque u; Robot M qddot + rest = u reduces with alpha and beta to unit mass qddot = v; combining Servo law with qddot = v gives 3. Error equation eddot + kv edot + kp e = 0.">
+  <defs><marker id="ar1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#14181f"/></marker></defs>
+  <rect x="252" y="10" width="456" height="106" rx="10" fill="#eef6ff" stroke="#1f6feb" stroke-dasharray="6 4" stroke-width="1.5"/>
+  <text x="480" y="28" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12.5" font-weight="700" fill="#1f6feb">Inner loop cancels dynamics &rArr; acts like a unit mass: q&#776; = v</text>
+  <rect x="12" y="38" width="196" height="64" rx="8" fill="#e2f5ec" stroke="#17794b" stroke-width="1.8"/>
+  <text x="110" y="59" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#14181f">2. Servo law (chooses v)</text>
+  <text x="110" y="80" text-anchor="middle" font-family="ui-monospace,monospace" font-size="12.5" fill="#14181f">v = q&#776;d + kv e&#775; + kp e</text>
+  <text x="110" y="95" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#5b6472">(e = qd &minus; q)</text>
+  <line x1="208" y1="70" x2="264" y2="70" stroke="#14181f" stroke-width="1.8" marker-end="url(#ar1)"/>
+  <text x="236" y="63" text-anchor="middle" font-family="ui-monospace,monospace" font-size="12.5" font-weight="700" fill="#14181f">v</text>
+  <rect x="266" y="38" width="196" height="64" rx="8" fill="#fff" stroke="#1f6feb" stroke-width="1.8"/>
+  <text x="364" y="59" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#14181f">1. Control law (motor push)</text>
+  <text x="364" y="80" text-anchor="middle" font-family="ui-monospace,monospace" font-size="12.5" fill="#14181f">u = &alpha; v + &beta;</text>
+  <text x="364" y="95" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#5b6472">&alpha; = M,  &beta; = rest</text>
+  <line x1="462" y1="70" x2="512" y2="70" stroke="#14181f" stroke-width="1.8" marker-end="url(#ar1)"/>
+  <text x="487" y="63" text-anchor="middle" font-family="ui-monospace,monospace" font-size="12.5" font-weight="700" fill="#14181f">u</text>
+  <rect x="514" y="38" width="182" height="64" rx="8" fill="#fff" stroke="#5b6472" stroke-width="1.8"/>
+  <text x="605" y="59" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#14181f">Robot plant</text>
+  <text x="605" y="80" text-anchor="middle" font-family="ui-monospace,monospace" font-size="12.5" fill="#14181f">M q&#776; + rest = u</text>
+  <text x="605" y="95" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#5b6472">output: actual q, q&#775;</text>
+  <rect x="110" y="128" width="500" height="36" rx="8" fill="#fdf1dc" stroke="#9a6200" stroke-width="1.5"/>
+  <text x="360" y="151" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12.8" font-weight="700" fill="#14181f">3. Closed-loop error equation (put q&#776; = v into servo):   e&#776; + kv e&#775; + kp e = 0</text>
+</svg>
+<figcaption>How the three exam equations fit together: (1) motor torque law, (2) acceleration servo law, (3) resulting error ODE.</figcaption>
+</figure>
+<p><b>What each of the three exam lines actually is</b> (in Q2(a), always write and label all three):</p>
+<table class="sym">
+<tr><th>Name on the slides</th><th>Equation to write</th><th>What it means &amp; what goes inside</th></tr>
+<tr><td><b>1. Control law</b><br>(model-based portion, Lec 2 pp. 8, 29)</td><td>\[u=\alpha v+\beta\]</td><td><b>The torque/force sent to the motors.</b> Set \(\alpha=M(q)\) (the mass or \(n\times n\) inertia matrix multiplying \(\ddot q\)) and \(\beta=\text{rest}\) (Coriolis/centrifugal, known friction, gravity, and measured contact force \(f\)&mdash;never an unknown disturbance \(d\)). Plugging \(u=\alpha v+\beta\) into \(M\ddot q+\text{rest}=u\) cancels \(\text{rest}\) and leaves \(M\ddot q=Mv\), i.e. the unit-mass plant \(\ddot q=v\).</td></tr>
+<tr><td><b>2. Servo law</b><br>(servo portion, Lec 2 pp. 9, 30)</td><td>\[v=\ddot q_d+k_v\dot e+k_p e\]<span style="font-size:.86rem">(for \(n\) joints: \(v=\ddot q_d+K_v\dot e+K_p e\), with \(e=q_d-q\), \(\dot e=\dot q_d-\dot q\))</span></td><td><b>How the computer calculates the commanded acceleration \(v\).</b> \(\ddot q_d\) is the feedforward acceleration along the desired path; \(k_pe\) is a virtual spring pulling \(q\) toward \(q_d\); \(k_v\dot e\) is a virtual damper stopping overshoot. Once you compute the number \(v\), you plug it into \(u=\alpha v+\beta\).</td></tr>
+<tr><td><b>3. Error equation</b><br>(closed-loop dynamics, Lec 2 pp. 9, 30)</td><td>\[\ddot e+k_v\dot e+k_p e=0\]<span style="font-size:.86rem">(with unknown disturbance \(d\): \(\alpha(\ddot e+K_v\dot e+K_p e)=d\))</span></td><td><b>The proof that tracking error dies out</b> (not a formula inside the controller). Combine \(\ddot q=v\) from line 1 with line 2: \(\ddot q=\ddot q_d+k_v\dot e+k_pe\iff(\ddot q_d-\ddot q)+k_v\dot e+k_pe=0\iff\ddot e+k_v\dot e+k_pe=0\). Matching this with \(s^2+2\zeta\omega_ns+\omega_n^2=0\) gives the gain formulas \(k_p=\omega_n^2\) and \(k_v=2\zeta\omega_n\).</td></tr>
+</table>
+<div class="pit"><p style="margin:0"><b>Pitfall &mdash; why writing "\(v=\ddot q\)" loses the servo mark (mistake #8):</b> \(\ddot q=v\) is the <i>plant result</i> after \(\alpha\) and \(\beta\) cancel the robot dynamics ("whatever acceleration \(v\) we command, the joint achieves it"). It does <b>not</b> define how \(v\) is computed from the error \(e=q_d-q\), and it gives you no number for \(v\) when the question asks you to evaluate \(u_1\)! Always write \(v=\ddot q_d+k_v\dot e+k_pe\).</p></div>
 <p><b>Gains: the resonance rule.</b> The loop must be slower than half the lowest structural resonance: \(\omega_n\le\tfrac12\omega_{res,\min}\) (Lec 2 pp. 10&ndash;11). Then \(k_p=\omega_n^2\) and \(k_v=2\zeta\omega_n\). The trap (mistake #7) is that \(\omega_n\) must be in <b>rad/s</b>. If the paper gives Hz, multiply by \(2\pi\) <i>first</i>:</p>
 \[\omega_n=\tfrac12\cdot(2\pi\cdot f_{\min}).\]
 <div class="ex"><p style="margin:0"><b>Worked example</b> (Mock B Q2(a)). Resonances 2, 3.5 and 5 Hz, \(\zeta=1.1\). Lowest = 2 Hz = \(4\pi=12.566\) rad/s, so \(\omega_n=6.2832\), \(k_p=39.478\) and \(k_v=2(1.1)(6.2832)=13.823\). Your answer used \(\omega_n=1\), which is 2&pi; times too slow.</p></div>
