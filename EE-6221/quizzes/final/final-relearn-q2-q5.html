@@ -427,9 +427,16 @@ figure.wf-fig figcaption { color: var(--muted); margin-top: 6px; }
 <!-- ======================= Part 8 ======================= -->
 <h2 id="p8">8 &middot; Homography: two rows per point, and who counts <span class="badge">Exam focus</span></h2>
 <p><b>The one picture.</b> A flat poster photographed from two poses. Every point of image a maps to image b through one \(3\times3\) matrix, up to an unknown scale: \(\lambda\,m_b=G\,m_a\), with \(m=(x,y,1)^T\). <a class="cite" href="../../resources/part-2/part-2-lecture-03-structure-and-pose-estimation.pdf#page=28" data-pages="part-2-lecture-03-structure-and-pose-estimation:28,29,30,31,32">HGQ Lec 3 pp. 28&ndash;32 (homography, four-point algorithm)</a></p>
-<p><b>Rebuild the rows.</b> Divide \(G\) by \(g_{33}\), which leaves 8 unknowns. The third row says \(\lambda=g_{31}a_x+g_{32}a_y+1\). Put that into rows 1 and 2 and move everything with \(b\) to the left:</p>
-\[\begin{bmatrix}a_x&a_y&1&0&0&0&-a_xb_x&-a_yb_x\\0&0&0&a_x&a_y&1&-a_xb_y&-a_yb_y\end{bmatrix}g=\begin{bmatrix}b_x\\b_y\end{bmatrix}.\]
-<p><b>Memory hook:</b> <i>"a, a, 1, then zeros; zeros, then a, a, 1; then minus a-times-b for the last two."</i> 8 unknowns at 2 rows per point means 4 points. If three of them are collinear, the rows become dependent, so \(\det M=0\) and you cannot solve.</p>
+<p><b>Rebuild the linear system \(Mg=y\) in 4 steps.</b></p>
+<ol>
+<li><b>Normalise \(G\) and define \(g\):</b> divide \(G\) by \(g_{33}\) to leave 8 unknowns,
+\[G_n=\frac{G}{g_{33}}=\begin{bmatrix}g_{11}&g_{12}&g_{13}\\ g_{21}&g_{22}&g_{23}\\ g_{31}&g_{32}&1\end{bmatrix},\qquad g=\begin{bmatrix}g_{11}&g_{12}&g_{13}&g_{21}&g_{22}&g_{23}&g_{31}&g_{32}\end{bmatrix}^T.\]</li>
+<li><b>Expand \(\lambda_i m_{b,i}=G_n m_{a,i}\) for point \(i\)</b> with \(m_{a,i}=[a_{ix},a_{iy},1]^T\) and \(m_{b,i}=[b_{ix},b_{iy},1]^T\): row 1 gives \(\lambda_i b_{ix}=g_{11}a_{ix}+g_{12}a_{iy}+g_{13}\), row 2 gives \(\lambda_i b_{iy}=g_{21}a_{ix}+g_{22}a_{iy}+g_{23}\), and row 3 gives \(\lambda_i=g_{31}a_{ix}+g_{32}a_{iy}+1\).</li>
+<li><b>Eliminate \(\lambda_i\):</b> put row 3 into rows 1 and 2 and move all \(g\)-terms to the left:
+\[\begin{bmatrix}a_{ix}&a_{iy}&1&0&0&0&-a_{ix}b_{ix}&-a_{iy}b_{ix}\\0&0&0&a_{ix}&a_{iy}&1&-a_{ix}b_{iy}&-a_{iy}b_{iy}\end{bmatrix}g=\begin{bmatrix}b_{ix}\\b_{iy}\end{bmatrix}.\]</li>
+<li><b>Stack 4 points into \(Mg=y\):</b> pick 4 points with no 3 collinear and stack their 2 rows each to form an \(8\times8\) matrix \(M\) and \(8\times1\) right-hand side \(y=[b_{1x},b_{1y},\dots,b_{4x},b_{4y}]^T\). Because no 3 points are collinear, \(\det M\neq0\), so \(g=M^{-1}y\) gives all 8 entries of \(G_n\).</li>
+</ol>
+<p><b>Memory hook:</b> <i>"a, a, 1, then zeros; zeros, then a, a, 1; then minus a-times-b for the last two."</i></p>
 <p><b>Counting groups.</b> Take the points that both views see. Count \(\binom{n}{4}\). Then list every line that holds 3 of those points. Check the sides, but also the <b>diagonals, medians and lines through a centre</b>, which are the usual trap. A line with exactly 3 points removes \(n-3\) groups. <b>Chaining:</b> if \(m_b\propto Gm_a\) and \(m_c\propto Hm_b\), then \(m_c\propto HGm_a\). The first map goes on the right, and \(K_n=HG/(HG)_{33}\). A chain needs every link to exist.</p>
 <div class="step" data-k="hg_row"><p>Check 8.1. Point \(a=(2,1)\) maps to \(b=(3,4)\). The last two entries of row 1 are <input size="4">, <input size="4">, and the last two entries of row 2 are <input size="4">, <input size="4"></p>
 <details class="work"><summary>Worked line</summary>Row 1: \(-a_xb_x=-6\), \(-a_yb_x=-3\). Row 2: \(-a_xb_y=-8\), \(-a_yb_y=-4\).</details></div>
