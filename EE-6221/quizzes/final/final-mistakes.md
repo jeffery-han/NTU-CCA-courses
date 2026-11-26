@@ -1,6 +1,6 @@
 # EE-6221 final: mistakes log
 
-One row per lost mark.  An item stays open until a fresh-variant retry is right.  Full grading: the "Your attempt" box under Q1 in `final-mock-a-guided.html`.
+One row per lost mark.  An item stays open until a fresh-variant retry is right.  Full grading: one `<paper>-attempt-<date>-marked.md` per sitting in this folder (transcription of the script, marks, verdicts).
 
 | # | Paper, Q | What was written | Why wrong | Rule | Retry |
 |---|---|---|---|---|---|

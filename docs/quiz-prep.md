@@ -105,6 +105,7 @@ Mark against the rubric part by part and state the total.
 - Separate arithmetic slips from concept errors.
 - State how sure each mark is: *derivable* (method is unambiguous: mark firmly), *convention-dependent* (depends on the lecturer's wording: say what the course material supports), or *disputed* (sources conflict: show both and say which is safer to write).
 - Where the learner was wrong, show the correct derivation, not only the answer.
+- Save the grading as `quizzes/<assessment>/<paper>-attempt-<date>-marked.md`, one per paper sitting, extended as later questions are graded: a marks table by rubric item, a transcription of what was written (tables, matrices, key numbers), the verdict and correct value for each lost mark, and mistakes-log numbers.  Later sessions read this file instead of re-reading the scan; grading boxes in HTML pages may repeat it for the learner.
 
 ## Step 7 – Retrain on every mistake (most of the time goes here)
 
