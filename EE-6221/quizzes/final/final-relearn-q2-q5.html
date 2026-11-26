@@ -82,6 +82,22 @@ table.sym th { background: var(--surface-2); }
 .why { color: var(--danger); font-size: .9rem; margin: 3px 0; }
 .step select { margin: 2px 4px 2px 0; }
 figure svg { max-width: 720px; }
+figure.wf-fig { background: var(--surface); padding: 12px; }
+figure.wf-fig svg { background: #fff; border: 1px solid var(--border); border-radius: 8px; max-width: 680px; }
+.wf-ctrl { margin-top: 10px; display: flex; flex-direction: column; gap: 8px; font-size: .88rem; }
+.wf-presets { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.wf-presets .btn { font-size: .82rem; padding: 3px 8px; }
+.wf-presets .btn.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+.wf-sliders { display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); gap: 8px 14px; }
+.wf-sliders label { display: flex; flex-direction: column; gap: 2px; font-weight: 600; color: var(--text); }
+.wf-sliders label span { display: flex; justify-content: space-between; font-family: var(--mono); font-weight: 500; font-size: .84rem; }
+.wf-sliders input[type=range] { width: 100%; accent-color: var(--accent); }
+.wf-readout { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 6px 12px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; font-family: var(--mono); font-size: .83rem; line-height: 1.5; }
+.wf-readout b { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+.wf-c-roll { color: var(--success); font-weight: 700; }
+.wf-c-axle { color: var(--accent); font-weight: 700; }
+.wf-c-rad { color: var(--warning); font-weight: 700; }
+figure.wf-fig figcaption { color: var(--muted); margin-top: 6px; }
 </style>
 <script defer src="quiz-assets/katex/katex.min.js"></script>
 <script defer src="quiz-assets/katex/contrib/auto-render.min.js"></script>
@@ -192,6 +208,53 @@ figure svg { max-width: 720px; }
 <p><b>The one picture.</b> Draw an arrow from \(P\) to the wheel centre \(A\). Its <b>length</b> is \(l\), and its <b>angle from \(X_R\)</b> is \(\alpha\). The wheel's rolling direction then points at angle \(\alpha+\beta-90^\circ\), so \(\beta\) is whatever makes that come out right. <a class="cite" href="../../resources/lecture-03-mobile-robot-kinematics.pdf#page=20" data-pages="lecture-03-mobile-robot-kinematics:20,21,22,23,24,25">Lec 3 pp. 20&ndash;25 (robot frame, fixed standard wheel)</a> &middot; <a class="cite" href="../../resources/lecture-03-mobile-robot-kinematics.pdf#page=26" data-pages="lecture-03-mobile-robot-kinematics:26,27,28,29,30,31">Lec 3 pp. 26&ndash;31 (steered wheel, constraints in matrix form)</a></p>
 \[l=\sqrt{x_A^2+y_A^2},\qquad\alpha=\operatorname{atan2}(y_A,x_A),\qquad\underbrace{\alpha+\beta-90^\circ}_{\text{rolling direction}}=\text{given direction}.\]
 <p>For the usual fixed rear wheel that rolls along \(+X_R\), the rolling direction is \(0^\circ\), so \(\beta=90^\circ-\alpha\).</p>
+<figure class="wf-fig" id="wf-fig">
+  <svg id="wf-svg" viewBox="0 0 640 360" role="img" aria-label="Interactive robot coordinate frame XR, YR centered at P showing wheel center A, distance l, polar angle alpha, steering angle beta, axle direction alpha + beta, and rolling direction alpha + beta - 90 degrees.">
+    <defs>
+      <marker id="wf-ar-axis" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#475569"/></marker>
+      <marker id="wf-ar-rad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#b45309"/></marker>
+      <marker id="wf-ar-axle" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#1f6feb"/></marker>
+      <marker id="wf-ar-roll" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#17794b"/></marker>
+    </defs>
+    <g id="wf-grid" stroke="#eef1f5" stroke-width="1"></g>
+    <!-- Faint robot chassis outline -->
+    <rect x="200" y="95" width="240" height="180" rx="18" fill="#f8fafc" stroke="#cbd5e1" stroke-dasharray="5 4" stroke-width="1.4"/>
+    <text x="210" y="112" font-family="system-ui,sans-serif" font-size="11" fill="#94a3b8" font-weight="600">Robot chassis</text>
+    <!-- Frame axes XR, YR -->
+    <line x1="60" y1="185" x2="585" y2="185" stroke="#475569" stroke-width="1.8" marker-end="url(#wf-ar-axis)"/>
+    <line x1="320" y1="335" x2="320" y2="25" stroke="#475569" stroke-width="1.8" marker-end="url(#wf-ar-axis)"/>
+    <text x="593" y="190" font-family="system-ui,sans-serif" font-size="14" font-weight="700" font-style="italic" fill="#14181f">X<tspan dy="3" font-size="10">R</tspan></text>
+    <text x="328" y="34" font-family="system-ui,sans-serif" font-size="14" font-weight="700" font-style="italic" fill="#14181f">Y<tspan dy="3" font-size="10">R</tspan></text>
+    <circle cx="320" cy="185" r="3.5" fill="#14181f"/>
+    <text x="305" y="202" font-family="system-ui,sans-serif" font-size="13" font-weight="700" font-style="italic" fill="#14181f">P</text>
+    <!-- Dynamic layer updated by script -->
+    <g id="wf-dyn"></g>
+    <!-- Legend -->
+    <g transform="translate(12,12)" font-family="system-ui,sans-serif" font-size="11.5" fill="#14181f">
+      <rect x="0" y="0" width="174" height="74" rx="7" fill="#ffffff" fill-opacity="0.92" stroke="#d8dee7"/>
+      <line x1="10" y1="17" x2="30" y2="17" stroke="#b45309" stroke-width="2.2"/><text x="36" y="21">l, &alpha; (hub position)</text>
+      <line x1="10" y1="38" x2="30" y2="38" stroke="#1f6feb" stroke-width="2.2"/><text x="36" y="42">Axle (&alpha;+&beta;, no slide)</text>
+      <line x1="10" y1="59" x2="30" y2="59" stroke="#17794b" stroke-width="2.5"/><text x="36" y="63">Roll (&alpha;+&beta;&minus;90&deg;, v=r&phi;&#775;)</text>
+    </g>
+  </svg>
+  <div class="wf-ctrl">
+    <div class="wf-presets">
+      <span style="color:var(--muted);font-weight:600">Presets:</span>
+      <button type="button" class="btn active" data-wf="0.35,0.20,30">Textbook (Lec 3 p.22)</button>
+      <button type="button" class="btn" data-wf="-0.20,0.15,-53.13">Mock B rear-left</button>
+      <button type="button" class="btn" data-wf="-0.20,-0.15,-126.87">Rear-right (+X<sub>R</sub>)</button>
+      <button type="button" class="btn" data-wf="0.25,0,60">Front steered (&beta;=60&deg;)</button>
+      <button type="button" class="btn" id="wf-snap">Snap roll &rarr; +X<sub>R</sub></button>
+    </div>
+    <div class="wf-sliders">
+      <label><span><b>x<sub>A</sub></b><output id="wf-ox">0.35 m</output></span><input type="range" id="wf-x" min="-0.45" max="0.45" step="0.01" value="0.35"></label>
+      <label><span><b>y<sub>A</sub></b><output id="wf-oy">0.20 m</output></span><input type="range" id="wf-y" min="-0.45" max="0.45" step="0.01" value="0.20"></label>
+      <label><span><b>&beta;</b><output id="wf-ob">30.0&deg;</output></span><input type="range" id="wf-b" min="-180" max="180" step="1" value="30"></label>
+    </div>
+    <div class="wf-readout" id="wf-out"></div>
+  </div>
+  <figcaption>Interactive robot frame {X<sub>R</sub>, Y<sub>R</sub>} at origin P. Drag x<sub>A</sub>, y<sub>A</sub>, and &beta; (or pick a preset) to see how l, &alpha;, the axle (&alpha;+&beta;), the rolling direction (&alpha;+&beta;&minus;90&deg;), and both Part 5 constraint rows move together.</figcaption>
+</figure>
 <p><b>What went wrong in Mock B</b> (mistakes #10&ndash;#12). You wrote \(l=\sqrt{0.2^2-0.15^2}\). A distance is Pythagoras with a <b>plus</b>: \(\sqrt{0.04+0.0225}=0.25\). You also wrote \(\operatorname{atan2}(2,-1.5)\). The order is \(\operatorname{atan2}(y,x)\), so for \(A(-0.2,0.15)\) it is \(\operatorname{atan2}(0.15,-0.2)=143.13^\circ\), in the second quadrant because \(A\) is behind and to the left. Then \(\beta=90^\circ-143.13^\circ=-53.13^\circ\).</p>
 <div class="step" data-k="w_geo"><p>Check 4.1. Fixed wheel at \(A(-0.3,\ 0.4)\) m, rolling along \(+X_R\). \(l=\) <input size="7">, \(\alpha=\) <input size="7">&deg;, \(\beta=\) <input size="7">&deg;</p>
 <details class="hint"><summary>Hint</summary>\(l=\sqrt{0.09+0.16}\). \(\alpha=\operatorname{atan2}(0.4,-0.3)\) is in the second quadrant. \(\beta=90^\circ-\alpha\).</details>
@@ -211,6 +274,69 @@ figure svg { max-width: 720px; }
 </ol>
 <p>Take the dot products. The \(\dot\theta\) coefficient collapses with \(\sin(A-B)\) and \(\cos(A-B)\): for the axle, \(l(-\sin\alpha\cos(\alpha+\beta)+\cos\alpha\sin(\alpha+\beta))=l\sin\beta\). For rolling, \(l(-\sin\alpha\sin(\alpha+\beta)-\cos\alpha\cos(\alpha+\beta))=-l\cos\beta\). That gives the two slide rows (Lec 3 pp. 26&ndash;31):</p>
 \[\underbrace{[\sin(\alpha+\beta)\ \ -\cos(\alpha+\beta)\ \ -l\cos\beta]}_{\text{rolling}}\,R(\theta)\dot\xi_I-r\dot\varphi=0,\qquad\underbrace{[\cos(\alpha+\beta)\ \ \sin(\alpha+\beta)\ \ l\sin\beta]}_{\text{sliding}}\,R(\theta)\dot\xi_I=0.\]
+<figure class="wf-fig" id="vp-fig">
+  <svg id="vp-svg" viewBox="0 0 640 370" role="img" aria-label="Interactive velocity projection diagram for Part 5: shows inertial frame XI, YI rotated by theta to robot frame XR, YR, hub velocity vA = vP + theta_dot x rA at wheel A, and its orthogonal projections onto the green rolling direction and blue axle no-sliding direction.">
+    <defs>
+      <marker id="vp-ar-ax" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#475569"/></marker>
+      <marker id="vp-ar-vp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#64748b"/></marker>
+      <marker id="vp-ar-rot" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#7c3aed"/></marker>
+      <marker id="vp-ar-va" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#14181f"/></marker>
+      <marker id="vp-ar-roll" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#17794b"/></marker>
+      <marker id="vp-ar-axle" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#1f6feb"/></marker>
+      <marker id="vp-ar-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#b32130"/></marker>
+    </defs>
+    <!-- Mini inertial-to-robot frame inset (why R(theta) is needed) -->
+    <g transform="translate(12,12)">
+      <rect x="0" y="0" width="170" height="106" rx="8" fill="#f8fafc" stroke="#cbd5e1"/>
+      <text x="85" y="16" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10.5" font-weight="700" fill="#475569">Why R(&theta;) is there</text>
+      <line x1="28" y1="82" x2="96" y2="82" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#vp-ar-ax)"/>
+      <line x1="28" y1="82" x2="28" y2="28" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#vp-ar-ax)"/>
+      <text x="100" y="86" font-family="system-ui,sans-serif" font-size="10" font-style="italic" fill="#64748b">X<tspan dy="2" font-size="8">I</tspan></text>
+      <text x="33" y="32" font-family="system-ui,sans-serif" font-size="10" font-style="italic" fill="#64748b">Y<tspan dy="2" font-size="8">I</tspan></text>
+      <line x1="28" y1="82" x2="88" y2="54" stroke="#1f6feb" stroke-width="1.7" marker-end="url(#vp-ar-axle)"/>
+      <line x1="28" y1="82" x2="54" y2="30" stroke="#1f6feb" stroke-width="1.7" marker-end="url(#vp-ar-axle)"/>
+      <path d="M 60 82 A 32 32 0 0 0 57 68.5" fill="none" stroke="#1f6feb" stroke-width="1.3"/>
+      <text x="68" y="75" font-family="system-ui,sans-serif" font-size="10.5" font-weight="700" fill="#1f6feb">&theta;</text>
+      <text x="92" y="54" font-family="system-ui,sans-serif" font-size="10" font-weight="700" font-style="italic" fill="#1f6feb">X<tspan dy="2" font-size="8">R</tspan></text>
+      <text x="58" y="32" font-family="system-ui,sans-serif" font-size="10" font-weight="700" font-style="italic" fill="#1f6feb">Y<tspan dy="2" font-size="8">R</tspan></text>
+      <text x="85" y="100" text-anchor="middle" font-family="ui-monospace,monospace" font-size="10.5" font-weight="700" fill="#14181f">&xi;&#775;<tspan dy="2" font-size="8">R</tspan><tspan dy="-2"> = R(&theta;)&xi;&#775;</tspan><tspan dy="2" font-size="8">I</tspan></text>
+    </g>
+    <!-- Legend -->
+    <g transform="translate(12,262)" font-family="system-ui,sans-serif" font-size="11" fill="#14181f">
+      <rect x="0" y="0" width="170" height="96" rx="7" fill="#ffffff" fill-opacity="0.94" stroke="#d8dee7"/>
+      <line x1="10" y1="16" x2="28" y2="16" stroke="#64748b" stroke-width="2" stroke-dasharray="4 2"/><text x="34" y="20">v<tspan dy="2" font-size="8">P</tspan><tspan dy="-2"> = (x&#775;</tspan><tspan dy="2" font-size="8">r</tspan><tspan dy="-2">, y&#775;</tspan><tspan dy="2" font-size="8">r</tspan><tspan dy="-2">)</tspan></text>
+      <line x1="10" y1="35" x2="28" y2="35" stroke="#7c3aed" stroke-width="2"/><text x="34" y="39">&theta;&#775; &times; r<tspan dy="2" font-size="8">A</tspan><tspan dy="-2"> (&perp; to l)</tspan></text>
+      <line x1="10" y1="54" x2="28" y2="54" stroke="#14181f" stroke-width="2.5"/><text x="34" y="58">Hub velocity v<tspan dy="2" font-size="8">A</tspan></text>
+      <line x1="10" y1="73" x2="28" y2="73" stroke="#17794b" stroke-width="3"/><text x="34" y="77">Roll proj. (= r&phi;&#775;)</text>
+      <line x1="10" y1="89" x2="28" y2="89" stroke="#b32130" stroke-width="3"/><text x="34" y="93">Axle proj. (must = 0)</text>
+    </g>
+    <!-- Robot frame axes at P(270, 260) -->
+    <line x1="205" y1="260" x2="610" y2="260" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#vp-ar-ax)"/>
+    <line x1="270" y1="340" x2="270" y2="25" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#vp-ar-ax)"/>
+    <text x="616" y="264" font-family="system-ui,sans-serif" font-size="13" font-weight="700" font-style="italic" fill="#475569">X<tspan dy="3" font-size="9">R</tspan></text>
+    <text x="278" y="34" font-family="system-ui,sans-serif" font-size="13" font-weight="700" font-style="italic" fill="#475569">Y<tspan dy="3" font-size="9">R</tspan></text>
+    <circle cx="270" cy="260" r="3.5" fill="#14181f"/>
+    <text x="255" y="276" font-family="system-ui,sans-serif" font-size="13" font-weight="700" font-style="italic" fill="#14181f">P</text>
+    <g id="vp-dyn"></g>
+  </svg>
+  <div class="wf-ctrl">
+    <div class="wf-presets">
+      <span style="color:var(--muted);font-weight:600">Test each column:</span>
+      <button type="button" class="btn active" data-vp="0,0,1,30">Pure spin (&theta;&#775; = 1)</button>
+      <button type="button" class="btn" data-vp="1,0,0,30">Pure forward (x&#775;<sub>r</sub> = 1)</button>
+      <button type="button" class="btn" data-vp="0,1,0,30">Pure sideways (y&#775;<sub>r</sub> = 1)</button>
+      <button type="button" class="btn" id="vp-noslide">Valid no-slide motion</button>
+    </div>
+    <div class="wf-sliders">
+      <label><span><b>x&#775;<sub>r</sub></b><output id="vp-ox">0.00 m/s</output></span><input type="range" id="vp-x" min="-1" max="1" step="0.05" value="0"></label>
+      <label><span><b>y&#775;<sub>r</sub></b><output id="vp-oy">0.00 m/s</output></span><input type="range" id="vp-y" min="-1" max="1" step="0.05" value="0"></label>
+      <label><span><b>&theta;&#775;</b><output id="vp-ot">1.00 rad/s</output></span><input type="range" id="vp-t" min="-2" max="2" step="0.1" value="1"></label>
+      <label><span><b>&beta;</b><output id="vp-ob">30&deg;</output></span><input type="range" id="vp-b" min="-180" max="180" step="5" value="30"></label>
+    </div>
+    <div class="wf-readout" id="vp-out"></div>
+  </div>
+  <figcaption>Interactive velocity projection at hub A(0.30, 0.20) m (l = 0.361 m, &alpha; = 33.7&deg;). Click the first three presets to isolate each column of the rolling and sliding rows, then click <b>Valid no-slide motion</b> to see the sideways axle projection drop to 0.</figcaption>
+</figure>
 <p><b>Memory hook:</b> <i>sliding = cos, sin, + l sin. Rolling = that turned &minus;90&deg;: sin, &minus;cos, &minus; l cos.</i> In Mock B you had sin and cos swapped between the rows and the wrong sign on \(l\cos\beta\) (mistake #13). You also left out \(R(\theta)\). The rows act on the robot-frame velocity \(\dot\xi_R=R(\theta)\dot\xi_I\), so write \(R(\theta)\dot\xi_I\), or say explicitly that you use robot-frame velocities.</p>
 <p><b>Sanity check you can always do.</b> For a fixed wheel at \((x_A,y_A)\) rolling along \(+X_R\), the hub velocity is \((\dot x_r-\dot\theta y_A,\ \dot y_r+\dot\theta x_A)\). So the rows must come out as rolling \([1,\ 0,\ -y_A]\) and sliding \([0,\ 1,\ x_A]\). If the general formula does not reproduce that, you have a sign wrong.</p>
 <div class="step" data-k="w_rows"><p>Check 5.1. Wheel \(A(-0.3,0.4)\) from Check 4.1. Rolling row: [<input size="5">, <input size="5">, <input size="5">]. Sliding row: [<input size="5">, <input size="5">, <input size="5">]</p>
@@ -230,6 +356,48 @@ figure svg { max-width: 720px; }
 <li>Its <b>rolling row</b> gives \(\dot\varphi_C\). Check it: \(r\dot\varphi_C\) equals the hub speed.</li>
 </ol>
 <p><a class="cite" href="../../resources/lecture-03-mobile-robot-kinematics.pdf#page=36" data-pages="lecture-03-mobile-robot-kinematics:36,37,38,39,40">Lec 3 pp. 36&ndash;40 (worked platform examples)</a> &middot; <a class="cite" href="../../resources/additional-materials/review-week-07-mobile-robot-kinematics.pdf#page=1" data-pages="review-week-07-mobile-robot-kinematics:1,2,3,4,5,6">Week 7 review sheet</a></p>
+<figure class="wf-fig" id="sp-fig">
+  <svg id="sp-svg" viewBox="0 0 640 350" role="img" aria-label="Interactive top-down tricycle platform diagram for Part 6: shows two fixed rear wheels at (xA, +/-0.4), point P at the origin, steered front wheel C at (0.3, 0), velocity vectors vP, vL, vR, vC, and the steered axle perpendicular to vC.">
+    <defs>
+      <marker id="sp-ar-ax" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#475569"/></marker>
+      <marker id="sp-ar-vp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#64748b"/></marker>
+      <marker id="sp-ar-roll" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#17794b"/></marker>
+      <marker id="sp-ar-axle" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#1f6feb"/></marker>
+      <marker id="sp-ar-vc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#14181f"/></marker>
+    </defs>
+    <!-- Legend -->
+    <g transform="translate(12,12)" font-family="system-ui,sans-serif" font-size="11" fill="#14181f">
+      <rect x="0" y="0" width="182" height="96" rx="7" fill="#ffffff" fill-opacity="0.94" stroke="#d8dee7"/>
+      <line x1="10" y1="16" x2="28" y2="16" stroke="#64748b" stroke-width="2" stroke-dasharray="4 2"/><text x="34" y="20">v<tspan dy="2" font-size="8">P</tspan><tspan dy="-2"> = (x&#775;</tspan><tspan dy="2" font-size="8">r</tspan><tspan dy="-2">, y&#775;</tspan><tspan dy="2" font-size="8">r</tspan><tspan dy="-2">) at P</tspan></text>
+      <line x1="10" y1="35" x2="28" y2="35" stroke="#17794b" stroke-width="2.5"/><text x="34" y="39">Wheel roll speed (= r&phi;&#775;)</text>
+      <line x1="10" y1="54" x2="28" y2="54" stroke="#14181f" stroke-width="2.5"/><text x="34" y="58">Hub velocity v<tspan dy="2" font-size="8">C</tspan></text>
+      <line x1="10" y1="73" x2="28" y2="73" stroke="#1f6feb" stroke-width="2"/><text x="34" y="77">Axle (&perp; to v, angle &beta;<tspan dy="2" font-size="8">C</tspan><tspan dy="-2">)</tspan></text>
+      <line x1="10" y1="90" x2="28" y2="90" stroke="#b45309" stroke-width="1.6" stroke-dasharray="3 3"/><text x="34" y="93">Axle lines meet at ICR</text>
+    </g>
+    <!-- Robot frame axes at P(310, 185) -->
+    <line x1="80" y1="185" x2="610" y2="185" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#sp-ar-ax)"/>
+    <line x1="310" y1="335" x2="310" y2="20" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#sp-ar-ax)"/>
+    <text x="615" y="189" font-family="system-ui,sans-serif" font-size="13" font-weight="700" font-style="italic" fill="#475569">X<tspan dy="3" font-size="9">R</tspan></text>
+    <text x="318" y="29" font-family="system-ui,sans-serif" font-size="13" font-weight="700" font-style="italic" fill="#475569">Y<tspan dy="3" font-size="9">R</tspan></text>
+    <g id="sp-dyn"></g>
+  </svg>
+  <div class="wf-ctrl">
+    <div class="wf-presets">
+      <span style="color:var(--muted);font-weight:600">Try a case:</span>
+      <button type="button" class="btn active" data-sp="0.6,0.5,-0.3">Offset axle (x<sub>A</sub> = &minus;0.3)</button>
+      <button type="button" class="btn" data-sp="0.6,0.5,0">Axle through P (x<sub>A</sub> = 0)</button>
+      <button type="button" class="btn" data-sp="0.6,0,-0.3">Straight ahead (&theta;&#775; = 0)</button>
+      <button type="button" class="btn" data-sp="0,0.8,-0.3">Pure spin (x&#775;<sub>r</sub> = 0)</button>
+    </div>
+    <div class="wf-sliders">
+      <label><span><b>x&#775;<sub>r</sub></b><output id="sp-ox">0.60 m/s</output></span><input type="range" id="sp-x" min="-1" max="1" step="0.05" value="0.6"></label>
+      <label><span><b>&theta;&#775;</b><output id="sp-ot">0.50 rad/s</output></span><input type="range" id="sp-t" min="-1.5" max="1.5" step="0.1" value="0.5"></label>
+      <label><span><b>x<sub>A</sub> (rear axle)</b><output id="sp-oa">-0.30 m</output></span><input type="range" id="sp-xa" min="-0.4" max="0" step="0.05" value="-0.3"></label>
+    </div>
+    <div class="wf-readout" id="sp-out"></div>
+  </div>
+  <figcaption>Interactive 4-step solver for a tricycle platform (fixed wheels at (x<sub>A</sub>, &plusmn;0.4) m, r = 0.05 m; steered wheel C at (0.3, 0) m, r<sub>C</sub> = 0.04 m). Compare <b>Offset axle</b> with <b>Axle through P</b> to see why y&#775;<sub>r</sub> is non-zero whenever the rear axle misses P.</figcaption>
+</figure>
 <div class="step" data-k="w_speed"><p>Check 6.1. Fixed wheels at \((-0.3,\pm0.4)\), radius 0.05, rolling along \(+X_R\). Steered wheel at \((0.3,0)\), radius 0.04. The robot moves with \(\dot x_r=0.5\) m/s and \(\dot\theta=0.4\) rad/s. \(\dot y_r=\) <input size="6"> m/s, \(\dot\varphi\) of the left wheel \((-0.3,0.4)=\) <input size="6">, \(\dot\varphi\) of the right wheel \(=\) <input size="6">, \(\beta_C\in(0,\pi)=\) <input size="6"> rad, \(\dot\varphi_C=\) <input size="6"> rad/s</p>
 <details class="hint"><summary>Hint</summary>\(\dot y_r=0.3\dot\theta\). C's hub velocity is \((0.5,\ \dot y_r+0.3\dot\theta)=(0.5,0.24)\). Its axle must be perpendicular to that: \(0.5\cos\beta_C+0.24\sin\beta_C=0\).</details>
 <details class="work"><summary>Worked line</summary>\(\dot y_r=0.12\); left \((0.5-0.16)/0.05=6.8\); right \((0.5+0.16)/0.05=13.2\); \(\tan\beta_C=-0.5/0.24\), so \(\beta_C=\pi-\tan^{-1}(2.0833)=2.0183\) rad; \(\dot\varphi_C=\sqrt{0.5^2+0.24^2}/0.04=13.865\) rad/s.</details></div>
@@ -372,6 +540,368 @@ figure svg { max-width: 720px; }
   });
   document.getElementById('srcClose').onclick = function () { dlg.close(); };
   dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+})();
+(function () {
+  var svgNS = 'http://www.w3.org/2000/svg';
+  var cx = 320, cy = 185, S = 300;
+  var grid = document.getElementById('wf-grid'), dyn = document.getElementById('wf-dyn');
+  var sx = document.getElementById('wf-x'), sy = document.getElementById('wf-y'), sb = document.getElementById('wf-b');
+  var ox = document.getElementById('wf-ox'), oy = document.getElementById('wf-oy'), ob = document.getElementById('wf-ob');
+  var out = document.getElementById('wf-out'), presets = document.querySelectorAll('[data-wf]');
+  if (!dyn) return;
+  function el(tag, attrs, txt) {
+    var n = document.createElementNS(svgNS, tag);
+    for (var k in attrs) n.setAttribute(k, attrs[k]);
+    if (txt !== undefined) n.textContent = txt;
+    return n;
+  }
+  for (var gx = -0.8; gx <= 0.81; gx += 0.1) {
+    var px = cx + gx * S;
+    grid.appendChild(el('line', { x1: px, y1: 25, x2: px, y2: 340 }));
+  }
+  for (var gy = -0.5; gy <= 0.51; gy += 0.1) {
+    var py = cy - gy * S;
+    grid.appendChild(el('line', { x1: 60, y1: py, x2: 585, y2: py }));
+  }
+  [-0.4, -0.2, 0.2, 0.4].forEach(function (v) {
+    grid.appendChild(el('text', { x: cx + v * S, y: cy + 14, 'text-anchor': 'middle', 'font-family': 'ui-monospace,monospace', 'font-size': 10, fill: '#94a3b8', stroke: 'none' }, v.toFixed(1)));
+    grid.appendChild(el('text', { x: cx - 7, y: cy - v * S + 3, 'text-anchor': 'end', 'font-family': 'ui-monospace,monospace', 'font-size': 10, fill: '#94a3b8', stroke: 'none' }, v.toFixed(1)));
+  });
+  function wrapDeg(d) { d = ((d + 180) % 360 + 360) % 360 - 180; return d === -180 ? 180 : d; }
+  function fmt(v, n) { var s = v.toFixed(n); return Math.abs(parseFloat(s)) === 0 ? (0).toFixed(n) : s; }
+  function arcPath(ox0, oy0, r, a1, a2) {
+    var d = a2 - a1;
+    var x1 = ox0 + r * Math.cos(a1), y1 = oy0 - r * Math.sin(a1);
+    var x2 = ox0 + r * Math.cos(a2), y2 = oy0 - r * Math.sin(a2);
+    var large = Math.abs(d) > Math.PI ? 1 : 0;
+    var sweep = d >= 0 ? 0 : 1;
+    return 'M ' + x1.toFixed(1) + ' ' + y1.toFixed(1) + ' A ' + r + ' ' + r + ' 0 ' + large + ' ' + sweep + ' ' + x2.toFixed(1) + ' ' + y2.toFixed(1);
+  }
+  function render() {
+    var xA = parseFloat(sx.value), yA = parseFloat(sy.value), bDeg = parseFloat(sb.value);
+    ox.textContent = fmt(xA, 2) + ' m'; oy.textContent = fmt(yA, 2) + ' m'; ob.textContent = fmt(bDeg, 1) + '\u00B0';
+    var l = Math.hypot(xA, yA);
+    var aRad = l > 1e-6 ? Math.atan2(yA, xA) : 0;
+    var aDeg = aRad * 180 / Math.PI;
+    var bRad = bDeg * Math.PI / 180;
+    var abRad = aRad + bRad;
+    var rollRad = abRad - Math.PI / 2;
+    var ax = cx + xA * S, ay = cy - yA * S;
+    dyn.innerHTML = '';
+    if (l > 1e-6) {
+      // Right-triangle projections (Pythagoras for l)
+      dyn.appendChild(el('line', { x1: ax, y1: ay, x2: ax, y2: cy, stroke: '#94a3b8', 'stroke-dasharray': '4 3', 'stroke-width': 1.2 }));
+      dyn.appendChild(el('line', { x1: ax, y1: ay, x2: cx, y2: ay, stroke: '#94a3b8', 'stroke-dasharray': '4 3', 'stroke-width': 1.2 }));
+      // Radial ray PA + dashed extension past A
+      var extX = ax + 72 * Math.cos(aRad), extY = ay - 72 * Math.sin(aRad);
+      dyn.appendChild(el('line', { x1: ax, y1: ay, x2: extX, y2: extY, stroke: '#b45309', 'stroke-dasharray': '5 4', 'stroke-width': 1.5 }));
+      dyn.appendChild(el('line', { x1: cx, y1: cy, x2: ax, y2: ay, stroke: '#b45309', 'stroke-width': 2.2, 'marker-end': 'url(#wf-ar-rad)' }));
+      // Label l at midpoint
+      var lx = (cx + ax) / 2 - 12 * Math.sin(aRad), ly = (cy + ay) / 2 - 12 * Math.cos(aRad);
+      dyn.appendChild(el('text', { x: lx, y: ly, 'text-anchor': 'middle', 'font-family': 'system-ui,sans-serif', 'font-size': 13, 'font-weight': 700, 'font-style': 'italic', fill: '#b45309' }, 'l'));
+      // Alpha arc at P
+      var rA = Math.min(44, Math.max(20, l * S * 0.45));
+      if (Math.abs(aRad) > 0.04) {
+        dyn.appendChild(el('path', { d: arcPath(cx, cy, rA, 0, aRad), fill: 'none', stroke: '#b45309', 'stroke-width': 1.7 }));
+        var midA = aRad / 2;
+        dyn.appendChild(el('text', { x: cx + (rA + 13) * Math.cos(midA), y: cy - (rA + 13) * Math.sin(midA) + 4, 'text-anchor': 'middle', 'font-family': 'system-ui,sans-serif', 'font-size': 13, 'font-weight': 700, fill: '#b45309' }, '\u03B1'));
+      }
+    }
+    // Axle vector (alpha + beta) and Rolling vector (alpha + beta - 90)
+    var axleLen = 68, rollLen = 74;
+    var axX = ax + axleLen * Math.cos(abRad), axY = ay - axleLen * Math.sin(abRad);
+    var rlX = ax + rollLen * Math.cos(rollRad), rlY = ay - rollLen * Math.sin(rollRad);
+    // Right-angle square between axle and rolling direction
+    var sq = 11;
+    var p1x = ax + sq * Math.cos(abRad), p1y = ay - sq * Math.sin(abRad);
+    var p2x = p1x + sq * Math.cos(rollRad), p2y = p1y - sq * Math.sin(rollRad);
+    var p3x = ax + sq * Math.cos(rollRad), p3y = ay - sq * Math.sin(rollRad);
+    dyn.appendChild(el('polyline', { points: p1x.toFixed(1) + ',' + p1y.toFixed(1) + ' ' + p2x.toFixed(1) + ',' + p2y.toFixed(1) + ' ' + p3x.toFixed(1) + ',' + p3y.toFixed(1), fill: 'none', stroke: '#64748b', 'stroke-width': 1.2 }));
+    // Beta arc from radial extension (aRad) to axle (abRad)
+    if (l > 1e-6 && Math.abs(bRad) > 0.04) {
+      var rB = 34;
+      dyn.appendChild(el('path', { d: arcPath(ax, ay, rB, aRad, abRad), fill: 'none', stroke: '#1f6feb', 'stroke-width': 1.7 }));
+      var midB = aRad + bRad / 2;
+      dyn.appendChild(el('text', { x: ax + (rB + 13) * Math.cos(midB), y: ay - (rB + 13) * Math.sin(midB) + 4, 'text-anchor': 'middle', 'font-family': 'system-ui,sans-serif', 'font-size': 13, 'font-weight': 700, fill: '#1f6feb' }, '\u03B2'));
+    }
+    // Wheel rectangle aligned with rolling direction
+    var rollDegSvg = -(rollRad * 180 / Math.PI);
+    var wg = el('g', { transform: 'translate(' + ax.toFixed(1) + ',' + ay.toFixed(1) + ') rotate(' + rollDegSvg.toFixed(2) + ')' });
+    wg.appendChild(el('rect', { x: -20, y: -7, width: 40, height: 14, rx: 5, fill: '#94a3b8', 'fill-opacity': 0.85, stroke: '#14181f', 'stroke-width': 1.8 }));
+    dyn.appendChild(wg);
+    // Axle arrow (blue) and Rolling arrow (green)
+    dyn.appendChild(el('line', { x1: ax, y1: ay, x2: axX, y2: axY, stroke: '#1f6feb', 'stroke-width': 2.1, 'marker-end': 'url(#wf-ar-axle)' }));
+    dyn.appendChild(el('line', { x1: ax, y1: ay, x2: rlX, y2: rlY, stroke: '#17794b', 'stroke-width': 2.5, 'marker-end': 'url(#wf-ar-roll)' }));
+    dyn.appendChild(el('text', { x: rlX + 12 * Math.cos(rollRad), y: rlY - 12 * Math.sin(rollRad) + 4, 'text-anchor': 'middle', 'font-family': 'system-ui,sans-serif', 'font-size': 12.5, 'font-weight': 700, 'font-style': 'italic', fill: '#17794b' }, 'v'));
+    // Hub dot A
+    dyn.appendChild(el('circle', { cx: ax, cy: ay, r: 3.5, fill: '#14181f' }));
+    dyn.appendChild(el('text', { x: ax - 13 * Math.cos(abRad), y: ay + 13 * Math.sin(abRad) + 4, 'text-anchor': 'middle', 'font-family': 'system-ui,sans-serif', 'font-size': 13, 'font-weight': 700, 'font-style': 'italic', fill: '#14181f' }, 'A'));
+    // Live readout (Part 4 geometry + Part 5 rows)
+    var abDeg = wrapDeg(aDeg + bDeg), rlDeg = wrapDeg(aDeg + bDeg - 90);
+    var r1 = Math.sin(abRad), r2 = -Math.cos(abRad), r3 = -l * Math.cos(bRad);
+    var s1 = Math.cos(abRad), s2 = Math.sin(abRad), s3 = l * Math.sin(bRad);
+    out.innerHTML =
+      '<div><b>Geometry (Part 4)</b><br>' +
+      '<span class="wf-c-rad">l</span> = ' + fmt(l, 3) + ' m, <span class="wf-c-rad">\u03B1</span> = ' + fmt(aDeg, 2) + '\u00B0<br>' +
+      '<span class="wf-c-axle">Axle (\u03B1+\u03B2)</span> = ' + fmt(abDeg, 2) + '\u00B0<br>' +
+      '<span class="wf-c-roll">Roll (\u03B1+\u03B2\u221290\u00B0)</span> = ' + fmt(rlDeg, 2) + '\u00B0</div>' +
+      '<div><b>Constraint rows (Part 5)</b><br>' +
+      '<span class="wf-c-roll">Rolling:</span> [' + fmt(r1, 3) + ', ' + fmt(r2, 3) + ', ' + fmt(r3, 3) + ']<br>' +
+      '<span class="wf-c-axle">Sliding:</span> [' + fmt(s1, 3) + ', ' + fmt(s2, 3) + ', ' + fmt(s3, 3) + ']</div>';
+  }
+  function clearActive() { presets.forEach(function (b) { b.classList.remove('active'); }); }
+  [sx, sy, sb].forEach(function (inp) { inp.addEventListener('input', function () { clearActive(); render(); }); });
+  presets.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var p = btn.dataset.wf.split(',');
+      sx.value = p[0]; sy.value = p[1]; sb.value = p[2];
+      clearActive(); btn.classList.add('active'); render();
+    });
+  });
+  document.getElementById('wf-snap').addEventListener('click', function () {
+    var xA = parseFloat(sx.value), yA = parseFloat(sy.value);
+    var aDeg = Math.hypot(xA, yA) > 1e-6 ? Math.atan2(yA, xA) * 180 / Math.PI : 0;
+    sb.value = wrapDeg(90 - aDeg).toFixed(2);
+    clearActive(); render();
+  });
+  render();
+})();
+(function () {
+  var svgNS = 'http://www.w3.org/2000/svg';
+  var dyn = document.getElementById('vp-dyn'), out = document.getElementById('vp-out');
+  var sx = document.getElementById('vp-x'), sy = document.getElementById('vp-y'), st = document.getElementById('vp-t'), sb = document.getElementById('vp-b');
+  var ox = document.getElementById('vp-ox'), oy = document.getElementById('vp-oy'), ot = document.getElementById('vp-ot'), ob = document.getElementById('vp-ob');
+  var presets = document.querySelectorAll('[data-vp]');
+  if (!dyn) return;
+  var px = 270, py = 260, xA = 0.30, yA = 0.20, Sp = 400;
+  var ax = px + xA * Sp, ay = py - yA * Sp;
+  var l = Math.hypot(xA, yA), aRad = Math.atan2(yA, xA), aDeg = aRad * 180 / Math.PI;
+  function el(tag, attrs, txt) {
+    var n = document.createElementNS(svgNS, tag);
+    for (var k in attrs) n.setAttribute(k, attrs[k]);
+    if (txt !== undefined) n.textContent = txt;
+    return n;
+  }
+  function fmt(v, n) { var s = v.toFixed(n); return Math.abs(parseFloat(s)) === 0 ? (0).toFixed(n) : s; }
+  function render() {
+    var xr = parseFloat(sx.value), yr = parseFloat(sy.value), th = parseFloat(st.value), bDeg = parseFloat(sb.value);
+    ox.textContent = fmt(xr, 2) + ' m/s'; oy.textContent = fmt(yr, 2) + ' m/s';
+    ot.textContent = fmt(th, 2) + ' rad/s'; ob.textContent = fmt(bDeg, 0) + '\u00B0';
+    var bRad = bDeg * Math.PI / 180, abRad = aRad + bRad, rollRad = abRad - Math.PI / 2;
+    var uAx = [Math.cos(abRad), Math.sin(abRad)], uRl = [Math.sin(abRad), -Math.cos(abRad)];
+    var rotX = -th * yA, rotY = th * xA;
+    var vAx = xr + rotX, vAy = yr + rotY;
+    var vRoll = vAx * uRl[0] + vAy * uRl[1];
+    var vSlide = vAx * uAx[0] + vAy * uAx[1];
+    var vMag = Math.max(Math.hypot(vAx, vAy), Math.hypot(xr, yr), Math.hypot(rotX, rotY));
+    var Sv = Math.min(135, 145 / Math.max(0.01, vMag));
+    dyn.innerHTML = '';
+    // Radial arm P -> A
+    dyn.appendChild(el('line', { x1: px, y1: py, x2: ax, y2: ay, stroke: '#b45309', 'stroke-width': 2 }));
+    dyn.appendChild(el('text', { x: (px + ax) / 2 - 12, y: (py + ay) / 2 - 6, 'font-family': 'system-ui,sans-serif', 'font-size': 12.5, 'font-weight': 700, 'font-style': 'italic', fill: '#b45309' }, 'l'));
+    // Infinite dashed rolling line (green) and axle line (blue) through A
+    var L = 145;
+    dyn.appendChild(el('line', { x1: ax - L * uRl[0], y1: ay + L * uRl[1], x2: ax + L * uRl[0], y2: ay - L * uRl[1], stroke: '#17794b', 'stroke-opacity': 0.35, 'stroke-dasharray': '5 4', 'stroke-width': 1.5 }));
+    dyn.appendChild(el('line', { x1: ax - L * uAx[0], y1: ay + L * uAx[1], x2: ax + L * uAx[0], y2: ay - L * uAx[1], stroke: '#1f6feb', 'stroke-opacity': 0.35, 'stroke-dasharray': '5 4', 'stroke-width': 1.5 }));
+    // Unit direction hints near ends
+    dyn.appendChild(el('text', { x: ax + (L - 12) * uRl[0], y: ay - (L - 12) * uRl[1] - 6, 'text-anchor': 'middle', 'font-family': 'system-ui,sans-serif', 'font-size': 10.5, 'font-weight': 700, fill: '#17794b' }, '+roll'));
+    dyn.appendChild(el('text', { x: ax + (L - 12) * uAx[0], y: ay - (L - 12) * uAx[1] - 6, 'text-anchor': 'middle', 'font-family': 'system-ui,sans-serif', 'font-size': 10.5, 'font-weight': 700, fill: '#1f6feb' }, '+axle'));
+    // Wheel rectangle at A
+    var wg = el('g', { transform: 'translate(' + ax + ',' + ay + ') rotate(' + (-(rollRad * 180 / Math.PI)).toFixed(2) + ')' });
+    wg.appendChild(el('rect', { x: -20, y: -7, width: 40, height: 14, rx: 5, fill: '#cbd5e1', 'fill-opacity': 0.75, stroke: '#475569', 'stroke-width': 1.6 }));
+    dyn.appendChild(wg);
+    // Component arrows: vP (dashed slate) and theta_dot x rA (purple)
+    var vpTipX = ax + xr * Sv, vpTipY = ay - yr * Sv;
+    var vaTipX = ax + vAx * Sv, vaTipY = ay - vAy * Sv;
+    if (Math.hypot(xr, yr) > 0.01) {
+      dyn.appendChild(el('line', { x1: ax, y1: ay, x2: vpTipX, y2: vpTipY, stroke: '#64748b', 'stroke-width': 1.8, 'stroke-dasharray': '4 3', 'marker-end': 'url(#vp-ar-vp)' }));
+    }
+    if (Math.hypot(rotX, rotY) > 0.01) {
+      // Draw theta_dot x rA starting from tip of vP so vector sum vP + rot = vA is visual!
+      dyn.appendChild(el('line', { x1: vpTipX, y1: vpTipY, x2: vaTipX, y2: vaTipY, stroke: '#7c3aed', 'stroke-width': 2, 'marker-end': 'url(#vp-ar-rot)' }));
+    }
+    // Projections of vA onto rolling axis and axle axis
+    var prX = ax + vRoll * uRl[0] * Sv, prY = ay - vRoll * uRl[1] * Sv;
+    var psX = ax + vSlide * uAx[0] * Sv, psY = ay - vSlide * uAx[1] * Sv;
+    if (Math.hypot(vAx, vAy) > 0.01) {
+      // Dashed drop lines from tip of vA to both axes
+      dyn.appendChild(el('line', { x1: vaTipX, y1: vaTipY, x2: prX, y2: prY, stroke: '#17794b', 'stroke-dasharray': '3 3', 'stroke-width': 1.3 }));
+      dyn.appendChild(el('line', { x1: vaTipX, y1: vaTipY, x2: psX, y2: psY, stroke: '#b32130', 'stroke-dasharray': '3 3', 'stroke-width': 1.3 }));
+      // Thick rolling projection (green)
+      if (Math.abs(vRoll) > 0.008) {
+        dyn.appendChild(el('line', { x1: ax, y1: ay, x2: prX, y2: prY, stroke: '#17794b', 'stroke-width': 3.5, 'marker-end': 'url(#vp-ar-roll)' }));
+      }
+      // Thick sliding projection (red if non-zero)
+      if (Math.abs(vSlide) > 0.008) {
+        dyn.appendChild(el('line', { x1: ax, y1: ay, x2: psX, y2: psY, stroke: '#b32130', 'stroke-width': 3.5, 'marker-end': 'url(#vp-ar-bad)' }));
+      }
+      // Total hub velocity vA (bold black)
+      dyn.appendChild(el('line', { x1: ax, y1: ay, x2: vaTipX, y2: vaTipY, stroke: '#14181f', 'stroke-width': 2.5, 'marker-end': 'url(#vp-ar-va)' }));
+      var vLabelX = vaTipX + (vAx / Math.hypot(vAx, vAy)) * 14, vLabelY = vaTipY - (vAy / Math.hypot(vAx, vAy)) * 14 + 4;
+      dyn.appendChild(el('text', { x: vLabelX, y: vLabelY, 'text-anchor': 'middle', 'font-family': 'system-ui,sans-serif', 'font-size': 12.5, 'font-weight': 700, 'font-style': 'italic', fill: '#14181f' }, 'vA'));
+    }
+    // Hub dot A
+    dyn.appendChild(el('circle', { cx: ax, cy: ay, r: 3.5, fill: '#14181f' }));
+    dyn.appendChild(el('text', { x: ax - 14, y: ay + 16, 'font-family': 'system-ui,sans-serif', 'font-size': 12.5, 'font-weight': 700, 'font-style': 'italic', fill: '#14181f' }, 'A'));
+    // Live readout
+    var r1 = Math.sin(abRad), r2 = -Math.cos(abRad), r3 = -l * Math.cos(bRad);
+    var s1 = Math.cos(abRad), s2 = Math.sin(abRad), s3 = l * Math.sin(bRad);
+    var noSkid = Math.abs(vSlide) < 0.01;
+    var slideBadge = noSkid ? '<span style="color:var(--success);font-weight:700">\u2713 = 0 (no skid!)</span>' : '<span style="color:var(--danger);font-weight:700">\u2717 skids!</span>';
+    out.innerHTML =
+      '<div><b>Hub velocity v<sub>A</sub> = v<sub>P</sub> + &theta;&#775;&times;r<sub>A</sub></b><br>' +
+      'v<sub>A</sub> = (' + fmt(vAx, 3) + ', ' + fmt(vAy, 3) + ') m/s<br>' +
+      '<span class="wf-c-roll">Roll row:</span> [' + fmt(r1, 3) + ', ' + fmt(r2, 3) + ', ' + fmt(r3, 3) + ']<br>' +
+      '<span class="wf-c-axle">Slide row:</span> [' + fmt(s1, 3) + ', ' + fmt(s2, 3) + ', ' + fmt(s3, 3) + ']</div>' +
+      '<div><b>Dot products (= projections)</b><br>' +
+      '<span class="wf-c-roll">v<sub>A</sub>&middot;u&#770;<sub>roll</sub> (= r&phi;&#775;)</span> = ' + fmt(vRoll, 3) + ' m/s<br>' +
+      '<span class="wf-c-axle">v<sub>A</sub>&middot;u&#770;<sub>axle</sub> (slide)</span> = ' + fmt(vSlide, 3) + ' m/s ' + slideBadge + '</div>';
+  }
+  function clearActive() { presets.forEach(function (b) { b.classList.remove('active'); }); document.getElementById('vp-noslide').classList.remove('active'); }
+  [sx, sy, st, sb].forEach(function (inp) { inp.addEventListener('input', function () { clearActive(); render(); }); });
+  presets.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var p = btn.dataset.vp.split(',');
+      sx.value = p[0]; sy.value = p[1]; st.value = p[2]; sb.value = p[3];
+      clearActive(); btn.classList.add('active'); render();
+    });
+  });
+  document.getElementById('vp-noslide').addEventListener('click', function () {
+    sx.value = '0.6'; st.value = '1.0'; sb.value = '30';
+    var bRad = 30 * Math.PI / 180, abRad = aRad + bRad;
+    var yrSol = -(0.6 * Math.cos(abRad) + 1.0 * l * Math.sin(bRad)) / Math.sin(abRad);
+    sy.value = Math.max(-1, Math.min(1, yrSol)).toFixed(2);
+    clearActive(); this.classList.add('active'); render();
+  });
+  render();
+})();
+(function () {
+  var svgNS = 'http://www.w3.org/2000/svg';
+  var dyn = document.getElementById('sp-dyn'), out = document.getElementById('sp-out');
+  var sx = document.getElementById('sp-x'), st = document.getElementById('sp-t'), sxa = document.getElementById('sp-xa');
+  var ox = document.getElementById('sp-ox'), ot = document.getElementById('sp-ot'), oa = document.getElementById('sp-oa');
+  var presets = document.querySelectorAll('[data-sp]');
+  if (!dyn) return;
+  var px = 310, py = 185, Sp = 280, yW = 0.4, xC = 0.3, rF = 0.05, rC = 0.04;
+  function el(tag, attrs, txt) {
+    var n = document.createElementNS(svgNS, tag);
+    for (var k in attrs) n.setAttribute(k, attrs[k]);
+    if (txt !== undefined) n.textContent = txt;
+    return n;
+  }
+  function fmt(v, n) { var s = v.toFixed(n); return Math.abs(parseFloat(s)) === 0 ? (0).toFixed(n) : s; }
+  function arcPath(cx, cy, r, a0, a1) {
+    var x0 = cx + r * Math.cos(a0), y0 = cy - r * Math.sin(a0);
+    var x1 = cx + r * Math.cos(a1), y1 = cy - r * Math.sin(a1);
+    var d = a1 - a0;
+    while (d > Math.PI) d -= 2 * Math.PI;
+    while (d < -Math.PI) d += 2 * Math.PI;
+    return 'M ' + x0.toFixed(1) + ' ' + y0.toFixed(1) + ' A ' + r + ' ' + r + ' 0 ' + (Math.abs(d) > Math.PI ? 1 : 0) + ' ' + (d >= 0 ? 0 : 1) + ' ' + x1.toFixed(1) + ' ' + y1.toFixed(1);
+  }
+  function render() {
+    var xr = parseFloat(sx.value), th = parseFloat(st.value), xA = parseFloat(sxa.value);
+    ox.textContent = fmt(xr, 2) + ' m/s';
+    ot.textContent = fmt(th, 2) + ' rad/s';
+    oa.textContent = fmt(xA, 2) + ' m';
+    // Step 1: fixed wheel sliding row -> yr + th * xA = 0
+    var yr = -th * xA;
+    // Step 2: fixed wheel rolling speeds
+    var vL = xr - th * yW, vR = xr + th * yW;
+    var phiL = vL / rF, phiR = vR / rF;
+    // Step 3: steered wheel C(xC, 0) hub velocity vC = (xr, yr + th * xC)
+    var vCx = xr, vCy = yr + th * xC;
+    var vCmag = Math.hypot(vCx, vCy);
+    var bC = vCmag > 1e-6 ? Math.atan2(vCx, -vCy) : Math.PI / 2;
+    if (bC < 0) bC += Math.PI;
+    // Step 4: steered wheel spin
+    var phiC = vCmag / rC;
+    // Coordinates in SVG
+    var axX = px + xA * Sp, lY = py - yW * Sp, rY = py + yW * Sp, cX = px + xC * Sp, cY = py;
+    var Sv = 95 / Math.max(0.5, Math.abs(vL), Math.abs(vR), vCmag, Math.hypot(xr, yr));
+    dyn.innerHTML = '';
+    // Chassis triangle
+    dyn.appendChild(el('polygon', { points: axX + ',' + lY + ' ' + axX + ',' + rY + ' ' + cX + ',' + cY, fill: '#f1f5f9', 'fill-opacity': 0.7, stroke: '#cbd5e1', 'stroke-width': 2 }));
+    dyn.appendChild(el('line', { x1: axX, y1: py, x2: cX, y2: cY, stroke: '#cbd5e1', 'stroke-width': 1.5, 'stroke-dasharray': '4 3' }));
+    // ICR & axle lines when turning
+    if (Math.abs(th) > 0.05) {
+      var icrY_m = xr / th;
+      var icrSvgX = axX, icrSvgY = py - icrY_m * Sp;
+      // Draw rear axle line through L, R and towards ICR
+      var yMin = Math.min(20, Math.max(-40, icrSvgY)), yMax = Math.max(330, Math.min(390, icrSvgY));
+      dyn.appendChild(el('line', { x1: axX, y1: Math.max(15, yMin), x2: axX, y2: Math.min(335, yMax), stroke: '#b45309', 'stroke-width': 1.3, 'stroke-dasharray': '4 4', 'stroke-opacity': 0.7 }));
+      // Steered axle line from C along (cos bC, sin bC)
+      var uAx = [Math.cos(bC), Math.sin(bC)];
+      dyn.appendChild(el('line', { x1: cX - 240 * uAx[0], y1: cY + 240 * uAx[1], x2: cX + 240 * uAx[0], y2: cY - 240 * uAx[1], stroke: '#b45309', 'stroke-width': 1.3, 'stroke-dasharray': '4 4', 'stroke-opacity': 0.7 }));
+      if (icrSvgY >= 18 && icrSvgY <= 335) {
+        dyn.appendChild(el('circle', { cx: icrSvgX, cy: icrSvgY, r: 4.5, fill: '#b45309' }));
+        dyn.appendChild(el('text', { x: icrSvgX + 8, y: icrSvgY + 4, 'font-family': 'system-ui,sans-serif', 'font-size': 11, 'font-weight': 700, fill: '#b45309' }, 'ICR'));
+      }
+    }
+    // Fixed wheels L and R (rolling along +XR, so horizontal rectangles)
+    dyn.appendChild(el('rect', { x: axX - 20, y: lY - 7, width: 40, height: 14, rx: 4, fill: '#94a3b8', 'fill-opacity': 0.85, stroke: '#14181f', 'stroke-width': 1.7 }));
+    dyn.appendChild(el('rect', { x: axX - 20, y: rY - 7, width: 40, height: 14, rx: 4, fill: '#94a3b8', 'fill-opacity': 0.85, stroke: '#14181f', 'stroke-width': 1.7 }));
+    dyn.appendChild(el('text', { x: axX - 26, y: lY + 4, 'text-anchor': 'end', 'font-family': 'system-ui,sans-serif', 'font-size': 11.5, 'font-weight': 700, fill: '#14181f' }, 'L'));
+    dyn.appendChild(el('text', { x: axX - 26, y: rY + 4, 'text-anchor': 'end', 'font-family': 'system-ui,sans-serif', 'font-size': 11.5, 'font-weight': 700, fill: '#14181f' }, 'R'));
+    // Fixed wheel velocity vectors (purely along XR)
+    if (Math.abs(vL) > 0.01) {
+      dyn.appendChild(el('line', { x1: axX, y1: lY, x2: axX + vL * Sv, y2: lY, stroke: '#17794b', 'stroke-width': 2.6, 'marker-end': 'url(#sp-ar-roll)' }));
+    }
+    if (Math.abs(vR) > 0.01) {
+      dyn.appendChild(el('line', { x1: axX, y1: rY, x2: axX + vR * Sv, y2: rY, stroke: '#17794b', 'stroke-width': 2.6, 'marker-end': 'url(#sp-ar-roll)' }));
+    }
+    // Velocity vP at P = (xr, yr)
+    if (Math.hypot(xr, yr) > 0.01) {
+      var vpTipX = px + xr * Sv, vpTipY = py - yr * Sv;
+      // Show yr sideways component if non-zero
+      if (Math.abs(yr) > 0.005) {
+        dyn.appendChild(el('line', { x1: px + xr * Sv, y1: py, x2: vpTipX, y2: vpTipY, stroke: '#b32130', 'stroke-width': 1.8, 'stroke-dasharray': '3 2' }));
+        dyn.appendChild(el('text', { x: vpTipX + 6, y: (py + vpTipY) / 2 + 3, 'font-family': 'system-ui,sans-serif', 'font-size': 10.5, 'font-weight': 700, fill: '#b32130' }, 'y\u0307r'));
+      }
+      dyn.appendChild(el('line', { x1: px, y1: py, x2: vpTipX, y2: vpTipY, stroke: '#64748b', 'stroke-width': 2.2, 'stroke-dasharray': '4 2', 'marker-end': 'url(#sp-ar-vp)' }));
+    }
+    // Point P dot
+    dyn.appendChild(el('circle', { cx: px, cy: py, r: 3.5, fill: '#14181f' }));
+    dyn.appendChild(el('text', { x: px - 14, y: py + 15, 'font-family': 'system-ui,sans-serif', 'font-size': 12.5, 'font-weight': 700, 'font-style': 'italic', fill: '#14181f' }, 'P'));
+    // Steered wheel C at (0.3, 0): rolling direction = bC - pi/2
+    var rollRad = bC - Math.PI / 2;
+    var wg = el('g', { transform: 'translate(' + cX + ',' + cY + ') rotate(' + (-(rollRad * 180 / Math.PI)).toFixed(2) + ')' });
+    wg.appendChild(el('rect', { x: -20, y: -7, width: 40, height: 14, rx: 4, fill: '#94a3b8', 'fill-opacity': 0.85, stroke: '#14181f', 'stroke-width': 1.7 }));
+    dyn.appendChild(wg);
+    // Axle arrow at C (blue) and beta_C arc
+    var axLen = 50;
+    dyn.appendChild(el('line', { x1: cX, y1: cY, x2: cX + axLen * Math.cos(bC), y2: cY - axLen * Math.sin(bC), stroke: '#1f6feb', 'stroke-width': 2.1, 'marker-end': 'url(#sp-ar-axle)' }));
+    if (bC > 0.08) {
+      dyn.appendChild(el('path', { d: arcPath(cX, cY, 28, 0, bC), fill: 'none', stroke: '#1f6feb', 'stroke-width': 1.6 }));
+      dyn.appendChild(el('text', { x: cX + 38 * Math.cos(bC / 2), y: cY - 38 * Math.sin(bC / 2) + 4, 'text-anchor': 'middle', 'font-family': 'system-ui,sans-serif', 'font-size': 12, 'font-weight': 700, fill: '#1f6feb' }, '\u03B2C'));
+    }
+    // Hub velocity vC at C
+    if (vCmag > 0.01) {
+      var vcTipX = cX + vCx * Sv, vcTipY = cY - vCy * Sv;
+      dyn.appendChild(el('line', { x1: cX, y1: cY, x2: vcTipX, y2: vcTipY, stroke: '#14181f', 'stroke-width': 2.5, 'marker-end': 'url(#sp-ar-vc)' }));
+      dyn.appendChild(el('text', { x: vcTipX + (vCx / vCmag) * 14, y: vcTipY - (vCy / vCmag) * 14 + 4, 'text-anchor': 'middle', 'font-family': 'system-ui,sans-serif', 'font-size': 12, 'font-weight': 700, 'font-style': 'italic', fill: '#14181f' }, 'vC'));
+    }
+    dyn.appendChild(el('circle', { cx: cX, cy: cY, r: 3.5, fill: '#14181f' }));
+    dyn.appendChild(el('text', { x: cX + 10, y: cY + 16, 'font-family': 'system-ui,sans-serif', 'font-size': 12.5, 'font-weight': 700, 'font-style': 'italic', fill: '#14181f' }, 'C'));
+    // 4-step live readout
+    var yrNote = Math.abs(yr) < 1e-4 ? '<span style="color:var(--success);font-weight:700">(0: no sideways slide)</span>' : '<span style="color:var(--warning);font-weight:700">(P slides sideways!)</span>';
+    out.innerHTML =
+      '<div><b>1 &amp; 2 &middot; Fixed wheels (r = 0.05)</b><br>' +
+      '1. y&#775;<sub>r</sub> = &minus;\u03B8&#775; x<sub>A</sub> = <b>' + fmt(yr, 3) + '</b> m/s ' + yrNote + '<br>' +
+      '2. <span class="wf-c-roll">\u03C6&#775;<sub>L</sub></span> = ' + fmt(phiL, 2) + ' rad/s, <span class="wf-c-roll">\u03C6&#775;<sub>R</sub></span> = ' + fmt(phiR, 2) + ' rad/s</div>' +
+      '<div><b>3 &amp; 4 &middot; Steered wheel C (r<sub>C</sub> = 0.04)</b><br>' +
+      '3. v<sub>C</sub> = (' + fmt(vCx, 2) + ', ' + fmt(vCy, 2) + ') &rArr; <span class="wf-c-axle">\u03B2<sub>C</sub></span> = ' + fmt(bC * 180 / Math.PI, 1) + '&deg; (' + fmt(bC, 3) + ' rad)<br>' +
+      '4. <span class="wf-c-roll">\u03C6&#775;<sub>C</sub></span> = ||v<sub>C</sub>||/r<sub>C</sub> = <b>' + fmt(phiC, 2) + '</b> rad/s</div>';
+  }
+  function clearActive() { presets.forEach(function (b) { b.classList.remove('active'); }); }
+  [sx, st, sxa].forEach(function (inp) { inp.addEventListener('input', function () { clearActive(); render(); }); });
+  presets.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var p = btn.dataset.sp.split(',');
+      sx.value = p[0]; st.value = p[1]; sxa.value = p[2];
+      clearActive(); btn.classList.add('active'); render();
+    });
+  });
+  render();
 })();
 </script>
 </body>
