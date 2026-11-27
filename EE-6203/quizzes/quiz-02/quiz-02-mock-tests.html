@@ -107,7 +107,7 @@
     <ul class="rules">
       <li>45 minutes, written answers (no MCQ), closed book, no formula sheet, own calculator.</li>
       <li>The transform table is supplied:
-        <a href="../resources/lph-transform-table-ay2018-19-s1.pdf">lph-transform-table-ay2018-19-s1.pdf</a>.</li>
+        <a href="../../resources/lph-transform-table-ay2018-19-s1.pdf">lph-transform-table-ay2018-19-s1.pdf</a>.</li>
       <li>Scope: LPH Lectures 1&ndash;3, up to Example 3.13. Observers (Lecture 4) are out.</li>
       <li>Marks per part are <em>estimated</em> (25 per paper); no sitting recalled the split. Show all working.</li>
     </ul>
@@ -171,7 +171,7 @@
         (ii) With \(\mathbf x(0)=[1\ \ 1]^T\), compute \(\mathbf x(1)\) and \(\mathbf x(2)\) and show that the response is deadbeat. <em>(2)</em></p>
     </div>
     <div class="card export"><strong>Submit Test A for marking.</strong>
-      <p>Photograph your working into <code>EE-6203/quizzes/attempts/</code>, then paste the export below into the chat with the photo paths.</p>
+      <p>Photograph your working into <code>EE-6203/quizzes/quiz-02/attempts/</code>, then paste the export below into the chat with the photo paths.</p>
       <p><button class="primary make">Build export</button> <button class="copy">Copy</button> <button class="clear">Clear Test A</button></p>
       <textarea readonly aria-label="Test A export block"></textarea></div>
   </section>
@@ -208,7 +208,7 @@
         (iii) <span class="pred">added</span> Verify that the closed-loop characteristic polynomial is \(z^2\). <em>(1)</em></p>
     </div>
     <div class="card export"><strong>Submit Test B for marking.</strong>
-      <p>Photograph your working into <code>EE-6203/quizzes/attempts/</code>, then paste the export below into the chat with the photo paths.</p>
+      <p>Photograph your working into <code>EE-6203/quizzes/quiz-02/attempts/</code>, then paste the export below into the chat with the photo paths.</p>
       <p><button class="primary make">Build export</button> <button class="copy">Copy</button> <button class="clear">Clear Test B</button></p>
       <textarea readonly aria-label="Test B export block"></textarea></div>
   </section>
@@ -266,7 +266,7 @@
         (\(u=-\mathbf K\mathbf x+v\)). What happens to the zero? <em>(2)</em></p>
     </div>
     <div class="card export"><strong>Submit Test C for marking.</strong>
-      <p>Photograph your working into <code>EE-6203/quizzes/attempts/</code>, then paste the export below into the chat with the photo paths.</p>
+      <p>Photograph your working into <code>EE-6203/quizzes/quiz-02/attempts/</code>, then paste the export below into the chat with the photo paths.</p>
       <p><button class="primary make">Build export</button> <button class="copy">Copy</button> <button class="clear">Clear Test C</button></p>
       <textarea readonly aria-label="Test C export block"></textarea></div>
   </section>
@@ -316,7 +316,7 @@
     sec.querySelector('.make').onclick = function () {
       var lines = [
         'EE6203 Quiz 2 mock - ' + sec.dataset.name + ' (UNOFFICIAL) - attempt export',
-        'Key file: EE-6203/quizzes/quiz-02-mock-tests.md  (section ' + sec.dataset.name + '; 25 marks: ' + sec.dataset.marks + ')',
+        'Key file: EE-6203/quizzes/quiz-02/quiz-02-mock-tests.md  (section ' + sec.dataset.name + '; 25 marks: ' + sec.dataset.marks + ')',
         'Exported: ' + new Date().toISOString() + (state.started ? '   Started: ' + state.started : '   Timer not started'),
         'Time used: ' + fmt(TOTAL - state.left) + ' of 45:00' + (state.left < 0 ? '  (OVER TIME)' : ''), ''];
       sec.querySelectorAll('.part').forEach(function (el) {
@@ -324,7 +324,7 @@
         lines.push(el.dataset.part + ' [' + el.dataset.marks + ' marks] ' + el.dataset.label + ': ' +
           (s.paper ? 'answered on paper' : '<blank>') + (s.final.trim() ? ' | final: ' + s.final.trim() : ''));
       });
-      lines.push('', 'Working photos: EE-6203/quizzes/attempts/<list paths here>');
+      lines.push('', 'Working photos: EE-6203/quizzes/quiz-02/attempts/<list paths here>');
       out.value = lines.join('\n');
     };
     sec.querySelector('.copy').onclick = function () {

@@ -113,7 +113,7 @@ dialog.pages img { width:100%; height:auto; border:1px solid var(--border); bord
 <label><input type="radio" name="c-a1" value="B"> (B) \(P(-1)\lt0\)</label>
 <label><input type="radio" name="c-a1" value="C"> (C) \(|P(-1)|\lt a_0\)</label>
 <label><input type="radio" name="c-a1" value="D"> (D) \(P(-1)=0\) is acceptable, since a pole on the unit circle is marginally stable</label>
-<div class="sol" hidden><h4>Answer: B</h4>The rule is \((-1)^nP(-1)\gt0\) <a class="src" href="../resources/lecture-notes-weeks-01-04.pdf#page=166" data-pages="c14:164-166">pp. 164–166</a>. For odd \(n=3\) this is \(P(-1)\lt0\). Reason: with all roots inside the circle, each factor \((-1-p_i)\) is negative for a real root (and a conjugate pair gives a positive product), so the sign is \((-1)^n\). (D) is wrong in this course: stable means strictly inside the unit circle.</div>
+<div class="sol" hidden><h4>Answer: B</h4>The rule is \((-1)^nP(-1)\gt0\) <a class="src" href="../../resources/lecture-notes-weeks-01-04.pdf#page=166" data-pages="c14:164-166">pp. 164–166</a>. For odd \(n=3\) this is \(P(-1)\lt0\). Reason: with all roots inside the circle, each factor \((-1-p_i)\) is negative for a real root (and a conjugate pair gives a positive product), so the sign is \((-1)^n\). (D) is wrong in this course: stable means strictly inside the unit circle.</div>
 </div>
 
 <div class="q mcq" data-id="c-a2" data-key="D" data-marks="3">
@@ -122,7 +122,7 @@ dialog.pages img { width:100%; height:auto; border:1px solid var(--border); bord
 <label><input type="radio" name="c-a2" value="B"> (B) Pole-zero matching needs no gain factor, because \(e^{0}=1\) keeps the DC gain automatically.</label>
 <label><input type="radio" name="c-a2" value="C"> (C) In the bilinear rule you must add a factor \((z+1)\) by hand for each zero of \(D(s)\) at infinity.</label>
 <label><input type="radio" name="c-a2" value="D"> (D) The bilinear rule maps the whole left half s-plane into the unit disc, so a stable \(D(s)\) gives a stable \(D(z)\) with \(D(z)\big|_{z=1}=D(s)\big|_{s=0}\).</label>
-<div class="sol" hidden><h4>Answer: D</h4>\(s=\frac2T\frac{z-1}{z+1}\) sends \(\mathrm{Re}\,s\lt0\) to \(|z|\lt1\), and \(z=1\) to \(s=0\), so stability and DC gain carry over with no extra factor <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=7" data-pages="c56:7-8">pp. 7–8</a>. (A) describes pole-zero matching, not bilinear. Bilinear poles differ (frequency warping). (B) is wrong: matching the poles and zeros changes the gain, so \(\alpha\) is fixed by the DC gain <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=14" data-pages="c56:14-15">pp. 14–15</a>. (C) is wrong: the substitution creates the \((z+1)\) factors by itself; adding them by hand is the pole-zero matching rule.</div>
+<div class="sol" hidden><h4>Answer: D</h4>\(s=\frac2T\frac{z-1}{z+1}\) sends \(\mathrm{Re}\,s\lt0\) to \(|z|\lt1\), and \(z=1\) to \(s=0\), so stability and DC gain carry over with no extra factor <a class="src" href="../../resources/lecture-notes-chapters-05-06.pdf#page=7" data-pages="c56:7-8">pp. 7–8</a>. (A) describes pole-zero matching, not bilinear. Bilinear poles differ (frequency warping). (B) is wrong: matching the poles and zeros changes the gain, so \(\alpha\) is fixed by the DC gain <a class="src" href="../../resources/lecture-notes-chapters-05-06.pdf#page=14" data-pages="c56:14-15">pp. 14–15</a>. (C) is wrong: the substitution creates the \((z+1)\) factors by itself; adding them by hand is the pole-zero matching rule.</div>
 </div>
 
 <div class="q mcq" data-id="c-a3" data-key="A" data-marks="3">
@@ -131,7 +131,7 @@ dialog.pages img { width:100%; height:auto; border:1px solid var(--border); bord
 <label><input type="radio" name="c-a3" value="B"> (B) \(G_{cl}(z)\) has a zero at \(z=1.2\)</label>
 <label><input type="radio" name="c-a3" value="C"> (C) \(C(z)\) has a zero at \(z=1.2\) so that it cancels the plant pole</label>
 <label><input type="radio" name="c-a3" value="D"> (D) nothing extra: \(G_{cl}(1)=1\) is enough</label>
-<div class="sol" hidden><h4>Answer: A</h4>Condition (iii) <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=53" data-pages="c56:51-56">pp. 51–56</a>: unstable plant poles must be zeros of \(1-G_{cl}\). Then the factor \((z-1.2)\) cancels inside the formula and \(C\) has no zero there. (C) is exactly the cancellation that hides an unstable mode. (B) is the rule for unstable plant <em>zeros</em>, condition (ii).</div>
+<div class="sol" hidden><h4>Answer: A</h4>Condition (iii) <a class="src" href="../../resources/lecture-notes-chapters-05-06.pdf#page=53" data-pages="c56:51-56">pp. 51–56</a>: unstable plant poles must be zeros of \(1-G_{cl}\). Then the factor \((z-1.2)\) cancels inside the formula and \(C\) has no zero there. (C) is exactly the cancellation that hides an unstable mode. (B) is the rule for unstable plant <em>zeros</em>, condition (ii).</div>
 </div>
 
 <div class="q mcq" data-id="c-a4" data-key="C" data-marks="3">
@@ -140,7 +140,7 @@ dialog.pages img { width:100%; height:auto; border:1px solid var(--border); bord
 <label><input type="radio" name="c-a4" value="B"> (B) Standard programming, because using the fewest delays removes coefficient sensitivity</label>
 <label><input type="radio" name="c-a4" value="C"> (C) Series or parallel programming with 1st/2nd-order sections, because pole errors grow when poles are clustered</label>
 <label><input type="radio" name="c-a4" value="D"> (D) Any form works equally well: sensitivity depends only on the sampling period</label>
-<div class="sol" hidden><h4>Answer: C</h4>A pole's error is \(|\Delta p_i|=\left|\sum_j\frac{p_i^{\,n-j}}{\prod_{k\ne i}(p_i-p_k)}\Delta a_j\right|\) <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=117" data-pages="c56:116-119">pp. 116–119</a>. Clustered poles make the product of differences tiny, so small coefficient errors move the poles a lot. Breaking \(C\) into low-order sections keeps each section's polynomial short <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=120" data-pages="c56:120-125">pp. 120–125</a>. Direct and standard programming both use the full high-order coefficients. Standard programming saves memory, not accuracy.</div>
+<div class="sol" hidden><h4>Answer: C</h4>A pole's error is \(|\Delta p_i|=\left|\sum_j\frac{p_i^{\,n-j}}{\prod_{k\ne i}(p_i-p_k)}\Delta a_j\right|\) <a class="src" href="../../resources/lecture-notes-chapters-05-06.pdf#page=117" data-pages="c56:116-119">pp. 116–119</a>. Clustered poles make the product of differences tiny, so small coefficient errors move the poles a lot. Breaking \(C\) into low-order sections keeps each section's polynomial short <a class="src" href="../../resources/lecture-notes-chapters-05-06.pdf#page=120" data-pages="c56:120-125">pp. 120–125</a>. Direct and standard programming both use the full high-order coefficients. Standard programming saves memory, not accuracy.</div>
 </div>
 
 <h2>Section B · Structured questions <small>28 marks</small></h2>
@@ -160,15 +160,15 @@ dialog.pages img { width:100%; height:auto; border:1px solid var(--border); bord
 <div class="sol" hidden><h4>Worked solution</h4>
 <p><strong>(a)</strong> The ZOH gives \(G(z)=(1-z^{-1})\,\mathcal Z\!\left\{\dfrac{K}{s^2(s+2)}\right\}\). Write \(\dfrac{K}{s^2(s+2)}=\dfrac K2\cdot\dfrac{2}{s^2(s+2)}\) to use the table row with \(a=2\), \(aT=0.4\), \(e^{-0.4}=0.6703\):</p>
 \[\mathcal Z\!\left\{\frac{2}{s^2(s+2)}\right\}=\frac{z\,[0.07032z+0.06155]}{2(z-1)^2(z-0.6703)}.\]
-<p>Multiply by \(\frac{z-1}{z}\cdot\frac K2\): \(G(z)=\dfrac{K(0.07032z+0.06155)}{4(z-1)(z-0.6703)}=\dfrac{K(0.01758z+0.01539)}{(z-1)(z-0.6703)}\). Same method as Ex 4.8 <a class="src" href="../resources/lecture-notes-weeks-01-04.pdf#page=174" data-pages="c14:174-175">pp. 174–175</a>.</p>
-<p><strong>(b)</strong> \(P(z)=(z-1)(z-0.6703)+K(0.01758z+0.01539)=z^2+(0.01758K-1.6703)z+(0.6703+0.01539K)\). For \(n=2\) the three conditions are enough <a class="src" href="../resources/lecture-notes-weeks-01-04.pdf#page=166" data-pages="c14:164-166">pp. 164–166</a>:</p>
+<p>Multiply by \(\frac{z-1}{z}\cdot\frac K2\): \(G(z)=\dfrac{K(0.07032z+0.06155)}{4(z-1)(z-0.6703)}=\dfrac{K(0.01758z+0.01539)}{(z-1)(z-0.6703)}\). Same method as Ex 4.8 <a class="src" href="../../resources/lecture-notes-weeks-01-04.pdf#page=174" data-pages="c14:174-175">pp. 174–175</a>.</p>
+<p><strong>(b)</strong> \(P(z)=(z-1)(z-0.6703)+K(0.01758z+0.01539)=z^2+(0.01758K-1.6703)z+(0.6703+0.01539K)\). For \(n=2\) the three conditions are enough <a class="src" href="../../resources/lecture-notes-weeks-01-04.pdf#page=166" data-pages="c14:164-166">pp. 164–166</a>:</p>
 <ul>
 <li>\(|a_2|\lt a_0\): \(-1\lt0.6703+0.01539K\lt1\) → \(-108.6\lt K\lt21.42\).</li>
 <li>\(P(1)=0.03297K\gt0\) → \(K\gt0\).</li>
 <li>\(n\) even, \(P(-1)\gt0\): \(1+1.6703+0.6703-0.00219K=3.3406-0.00219K\gt0\) → \(K\lt1524\).</li>
 </ul>
 <p>Intersection: <strong>\(0\lt K\lt21.42\)</strong>. At \(K=21.42\) the poles are a complex pair on \(|z|=1\).</p>
-<p><strong>(c)</strong> \(K_v=\dfrac1T\lim_{z\to1}(1-z^{-1})G(z)=\dfrac{1}{0.2}\cdot\dfrac{K(0.03297)}{0.3297}=\dfrac K2\) <a class="src" href="../resources/lecture-notes-weeks-01-04.pdf#page=186" data-pages="c14:186-187">pp. 186–187</a>. At \(K=4\) (inside the stable range ✓): <strong>\(K_v=2\), \(e_{ss}=1/K_v=0.5\)</strong>. Cross-check: the continuous loop \(K/(s(s+2))\) also has \(K_v=K/2\); a ZOH does not change \(K_v\).</p>
+<p><strong>(c)</strong> \(K_v=\dfrac1T\lim_{z\to1}(1-z^{-1})G(z)=\dfrac{1}{0.2}\cdot\dfrac{K(0.03297)}{0.3297}=\dfrac K2\) <a class="src" href="../../resources/lecture-notes-weeks-01-04.pdf#page=186" data-pages="c14:186-187">pp. 186–187</a>. At \(K=4\) (inside the stable range ✓): <strong>\(K_v=2\), \(e_{ss}=1/K_v=0.5\)</strong>. Cross-check: the continuous loop \(K/(s(s+2))\) also has \(K_v=K/2\); a ZOH does not change \(K_v\).</p>
 <div class="pit">Common slips: forgetting the \(\frac K2\) when using the \(\frac{a}{s^2(s+a)}\) row; using \(\frac{a}{s(s+a)}\) (no ZOH integrator); dropping \(1/T\) in \(K_v\) (gives 0.4 instead of 2).</div>
 <ul class="rubric">
 <li><label><input type="checkbox" data-id="c-1-r1" data-marks="1"> (a) ZOH written as \((1-z^{-1})\mathcal Z\{G_p/s\}\)</label></li>
@@ -194,13 +194,13 @@ dialog.pages img { width:100%; height:auto; border:1px solid var(--border); bord
 <span class="num" data-id="c-2b-b0" data-ans="6/77"><label>\(d_0=\) <input type="text" inputmode="decimal"></label><span class="key"></span></span>
 </div>
 <div class="sol" hidden><h4>Worked solution</h4>
-<p><strong>(a)</strong> Map each pole and zero by \(z=e^{sT}\) <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=14" data-pages="c56:14-17">pp. 14–17</a>: zero \(e^{-0.4}=0.6703\); poles \(e^{-0.2}=0.8187\), \(e^{-0.8}=0.4493\). Here \(n-m=1\), so a strictly proper result adds \(n-m-1=0\) factors \((z+1)\):</p>
+<p><strong>(a)</strong> Map each pole and zero by \(z=e^{sT}\) <a class="src" href="../../resources/lecture-notes-chapters-05-06.pdf#page=14" data-pages="c56:14-17">pp. 14–17</a>: zero \(e^{-0.4}=0.6703\); poles \(e^{-0.2}=0.8187\), \(e^{-0.8}=0.4493\). Here \(n-m=1\), so a strictly proper result adds \(n-m-1=0\) factors \((z+1)\):</p>
 \[G(z)=\alpha\frac{z-0.6703}{(z-0.8187)(z-0.4493)}.\]
 <p>DC gain: \(G(s{=}0)=\frac{2}{4}=0.5\). So \(\alpha\dfrac{0.3297}{(0.1813)(0.5507)}=0.5\), giving <strong>\(\alpha=0.1514\)</strong>.</p>
-<p><strong>(b)</strong> \(\frac2T=10\), so \(s=10\frac{z-1}{z+1}\) <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=7" data-pages="c56:7-8">pp. 7–8</a>. Then \(s+2=\frac{12z-8}{z+1}\), \(s+1=\frac{11z-9}{z+1}\), \(s+4=\frac{14z-6}{z+1}\):</p>
+<p><strong>(b)</strong> \(\frac2T=10\), so \(s=10\frac{z-1}{z+1}\) <a class="src" href="../../resources/lecture-notes-chapters-05-06.pdf#page=7" data-pages="c56:7-8">pp. 7–8</a>. Then \(s+2=\frac{12z-8}{z+1}\), \(s+1=\frac{11z-9}{z+1}\), \(s+4=\frac{14z-6}{z+1}\):</p>
 \[G(z)=\frac{(12z-8)(z+1)}{(11z-9)(14z-6)}=\frac{2(3z-2)(z+1)}{(11z-9)(7z-3)}=\frac{6z^2+2z-4}{77z^2-96z+27}.\]
 <p>DC: \(G(1)=\frac{6+2-4}{77-96+27}=\frac48=0.5\) ✓. (Poles \(0.818\), \(0.429\): close to the matched \(0.819\), \(0.449\); the faster pole is warped more.)</p>
-<p><strong>(c)</strong> Divide top and bottom by \(77z^2\): \(G=\dfrac{\frac{6}{77}+\frac{2}{77}z^{-1}-\frac{4}{77}z^{-2}}{1-\frac{96}{77}z^{-1}+\frac{27}{77}z^{-2}}\). Standard programming <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=108" data-pages="c56:108-110">pp. 108–110</a> flips the denominator signs in the recursion:</p>
+<p><strong>(c)</strong> Divide top and bottom by \(77z^2\): \(G=\dfrac{\frac{6}{77}+\frac{2}{77}z^{-1}-\frac{4}{77}z^{-2}}{1-\frac{96}{77}z^{-1}+\frac{27}{77}z^{-2}}\). Standard programming <a class="src" href="../../resources/lecture-notes-chapters-05-06.pdf#page=108" data-pages="c56:108-110">pp. 108–110</a> flips the denominator signs in the recursion:</p>
 \[h(k)=x(k)+1.2468\,h(k-1)-0.3506\,h(k-2),\qquad y(k)=0.07792\,h(k)+0.02597\,h(k-1)-0.05195\,h(k-2).\]
 <p>So <strong>\(c_1=96/77=1.2468\), \(c_2=-27/77=-0.3506\), \(d_0=6/77=0.0779\)</strong>, with 2 delays.</p>
 <div class="pit">Common slips: adding a \((z+1)\) in (a). That is the <em>proper</em> version, \(\alpha=0.0757\). Forgetting to normalise by 77 in (c). Keeping \(-96/77\) in the recursion instead of flipping it to \(+96/77\).</div>
@@ -229,7 +229,7 @@ dialog.pages img { width:100%; height:auto; border:1px solid var(--border); bord
 <span class="num" data-id="c-3c-y2" data-ans="1"><label>\(y(2)=\) <input type="text" inputmode="decimal"></label><span class="key"></span></span>
 </div>
 <div class="sol" hidden><h4>Worked solution</h4>
-<p><strong>(a)</strong> The four conditions <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=51" data-pages="c56:51-56">pp. 51–56</a>:</p>
+<p><strong>(a)</strong> The four conditions <a class="src" href="../../resources/lecture-notes-chapters-05-06.pdf#page=51" data-pages="c56:51-56">pp. 51–56</a>:</p>
 <ol>
 <li>Realisable: \(G_{ZAS}\) has relative degree \(2-1=1\); \(z^{-1}\) has relative degree 1 ✓.</li>
 <li>Zeros of \(G_{ZAS}\) outside the circle must appear in \(G_{cl}\): the only zero is \(-0.4\), inside ✓.</li>

@@ -81,7 +81,7 @@ textarea { width:100%; min-height:14rem; font:13px/1.5 ui-monospace,Menlo,monosp
   </div>
 </nav>
 <main>
-<div class="rules"><strong>Unofficial practice paper.</strong> 30 marks, 45 minutes, closed book, calculator allowed. Write every derivation <strong>on paper</strong>; that is where the marks are. Click the T/F items here, tick "done on paper" for each written part, and optionally type your final answer so I can compare. Once time is up, press <em>Export</em> and paste the block into the chat, together with a photo of your working (save it as <code>quizzes/attempts/quiz-03-mock-a-&lt;date&gt;.jpg</code>). There is no answer key on this page.</div>
+<div class="rules"><strong>Unofficial practice paper.</strong> 30 marks, 45 minutes, closed book, calculator allowed. Write every derivation <strong>on paper</strong>; that is where the marks are. Click the T/F items here, tick "done on paper" for each written part, and optionally type your final answer so I can compare. Once time is up, press <em>Export</em> and paste the block into the chat, together with a photo of your working (save it as <code>quizzes/quiz-03/attempts/quiz-03-mock-a-&lt;date&gt;.jpg</code>). There is no answer key on this page.</div>
 
 <section id="q1" data-title="Q1 · short items + Jury">
 <h2>Question 1 <small>10 marks</small></h2>
@@ -211,7 +211,7 @@ textarea { width:100%; min-height:14rem; font:13px/1.5 ui-monospace,Menlo,monosp
     const m = Math.floor(st.elapsed / 60), s = st.elapsed % 60;
     const L = [
       'EE6203 Quiz 3 — Mock A attempt (unofficial practice paper)',
-      'Key + rubric: EE-6203/quizzes/quiz-03-mock-a.md   (marks: Q1 10 [a 6x1, b 4], Q2 10 [a 4, b 3, c 3], Q3 10 [a 3, b 3, c 2, d 2]; total 30)',
+      'Key + rubric: EE-6203/quizzes/quiz-03/quiz-03-mock-a.md   (marks: Q1 10 [a 6x1, b 4], Q2 10 [a 4, b 3, c 3], Q3 10 [a 3, b 3, c 2, d 2]; total 30)',
       `Exported: ${new Date().toISOString().slice(0, 16).replace('T', ' ')}   Elapsed on timer: ${m} min ${s} s of 45`,
       '',
       'Q1(a) True/False:'
@@ -219,7 +219,7 @@ textarea { width:100%; min-height:14rem; font:13px/1.5 ui-monospace,Menlo,monosp
     for (let i = 1; i <= 6; i++) L.push(`  ${i}. [${STEM[i]}] ${st.tf[i] || '<blank>'}`);
     L.push(`  reasons on paper: ${st.paper['1a'] ? 'yes' : 'no'}`, '');
     PARTS.filter(p => p !== '1a').forEach(p => L.push(`Q${p[0]}(${p[1]}): on paper: ${st.paper[p] ? 'yes' : 'NO'}; typed final: ${(st.final[p] || '').trim() || '<blank>'}`));
-    L.push('', 'Paper photos: quizzes/attempts/quiz-03-mock-a-<date>*.jpg (attach or name the path)');
+    L.push('', 'Paper photos: quizzes/quiz-03/attempts/quiz-03-mock-a-<date>*.jpg (attach or name the path)');
     document.getElementById('out').value = L.join('\n');
   };
   document.getElementById('copy').onclick = async () => { const o = document.getElementById('out'); if (!o.value) document.getElementById('do-export').click(); try { await navigator.clipboard.writeText(o.value); } catch (e) { o.select(); document.execCommand('copy'); } };

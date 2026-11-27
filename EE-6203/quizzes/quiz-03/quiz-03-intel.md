@@ -7,7 +7,7 @@ Compiled 2026-11-04. Official facts and unofficial evidence are kept apart. Noth
 | Item | Announcement text (condensed) |
 |---|---|
 | Date / time | Sat 7 Nov 2026, 2:30–3:15 pm; be seated by 2:25 pm (starts and ends on time) |
-| Venue | LT 2A; grouping and seating as Quiz 1 (`quizzes/quiz-01-03-grouping.pdf`, `quiz-01-03-seating-arrangement.pdf`), with an empty seat on each side |
+| Venue | LT 2A; grouping and seating as Quiz 1 (`quizzes/quiz-01/quiz-01-03-grouping.pdf`, `quiz-01-03-seating-arrangement.pdf`), with an empty seat on each side |
 | Duration | 45 min |
 | Format | Closed book. "For non-MCQ type questions, all workings must be clearly shown on the question paper provided." This wording suggests the paper may also contain MCQs, but the announcement does not say so. |
 | Scope | All topics in Wen's lectures in Weeks 4, 10, 11 and 12, i.e. Chapters 4, 5 and 6 of his notes (`resources/lecture-notes-weeks-01-04.pdf` pp. 144–195 for Ch 4; `resources/lecture-notes-chapters-05-06.pdf` pp. 1–126 for Ch 5–6) |

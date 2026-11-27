@@ -112,7 +112,7 @@ dialog.pages img { width:100%; height:auto; border:1px solid var(--border); bord
 <label><input type="radio" name="d-a1" value="B"> (B) 0</label>
 <label><input type="radio" name="d-a1" value="C"> (C) 0.348</label>
 <label><input type="radio" name="d-a1" value="D"> (D) 0.652</label>
-<div class="sol" hidden><h4>Answer: C</h4>The loop is type 0, so the step error is finite: \(K_p=\lim_{z\to1}G(z)=\frac{0.5(1.5)}{(0.5)(0.8)}=1.875\) and \(e_{ss}=\frac{1}{1+K_p}=\frac{1}{2.875}=0.348\) <a class="src" href="../resources/lecture-notes-weeks-01-04.pdf#page=186" data-pages="c14:186-188">pp. 186–188</a>. (A) is \(1/K_p\), (B) would need a pole at \(z=1\), (D) is \(K_p/(1+K_p)\), the final output value. (Closed-loop poles \(0.1\pm0.583j\), inside the circle ✓.)</div>
+<div class="sol" hidden><h4>Answer: C</h4>The loop is type 0, so the step error is finite: \(K_p=\lim_{z\to1}G(z)=\frac{0.5(1.5)}{(0.5)(0.8)}=1.875\) and \(e_{ss}=\frac{1}{1+K_p}=\frac{1}{2.875}=0.348\) <a class="src" href="../../resources/lecture-notes-weeks-01-04.pdf#page=186" data-pages="c14:186-188">pp. 186–188</a>. (A) is \(1/K_p\), (B) would need a pole at \(z=1\), (D) is \(K_p/(1+K_p)\), the final output value. (Closed-loop poles \(0.1\pm0.583j\), inside the circle ✓.)</div>
 </div>
 
 <div class="q mcq" data-id="d-a2" data-key="B" data-marks="3">
@@ -121,7 +121,7 @@ dialog.pages img { width:100%; height:auto; border:1px solid var(--border); bord
 <label><input type="radio" name="d-a2" value="B"> (B) 1</label>
 <label><input type="radio" name="d-a2" value="C"> (C) 2</label>
 <label><input type="radio" name="d-a2" value="D"> (D) 3</label>
-<div class="sol" hidden><h4>Answer: B</h4>\(G(s)\) has \(n-m=3-1=2\) zeros at \(s=\infty\). These map to \(z=-1\), but a strictly proper \(G(z)\) keeps one sample of delay, so it takes \(n-m-1=1\) factor \((z+1)\). A proper result would take \(n-m=2\) <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=14" data-pages="c56:14-15">pp. 14–15</a>.</div>
+<div class="sol" hidden><h4>Answer: B</h4>\(G(s)\) has \(n-m=3-1=2\) zeros at \(s=\infty\). These map to \(z=-1\), but a strictly proper \(G(z)\) keeps one sample of delay, so it takes \(n-m-1=1\) factor \((z+1)\). A proper result would take \(n-m=2\) <a class="src" href="../../resources/lecture-notes-chapters-05-06.pdf#page=14" data-pages="c56:14-15">pp. 14–15</a>.</div>
 </div>
 
 <div class="q mcq" data-id="d-a3" data-key="D" data-marks="3">
@@ -130,7 +130,7 @@ dialog.pages img { width:100%; height:auto; border:1px solid var(--border); bord
 <label><input type="radio" name="d-a3" value="B"> (B) Because the w-plane removes the frequency warping of the bilinear rule</label>
 <label><input type="radio" name="d-a3" value="C"> (C) To make an unstable \(G(z)\) stable before the design starts</label>
 <label><input type="radio" name="d-a3" value="D"> (D) Because \(G(e^{j\omega T})\) is not rational in \(\omega\), while \(G(w)\) is, so ordinary Bode asymptote rules apply</label>
-<div class="sol" hidden><h4>Answer: D</h4>On the unit circle \(z=e^{j\omega T}\), so \(G\) is a function of \(e^{j\omega T}\), not a rational function of \(\omega\), and straight-line Bode rules fail. The w-transform maps the unit disc onto the left half w-plane, and \(G(w)\) is rational in the fictitious frequency \(v\) <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=23" data-pages="c56:23-24">pp. 23–24</a>. (B) is backwards: the w-plane has the same warping, \(v=\frac2T\tan\frac{\omega T}{2}\). The ZOH stays inside \(G(z)\), and the transform does not change stability.</div>
+<div class="sol" hidden><h4>Answer: D</h4>On the unit circle \(z=e^{j\omega T}\), so \(G\) is a function of \(e^{j\omega T}\), not a rational function of \(\omega\), and straight-line Bode rules fail. The w-transform maps the unit disc onto the left half w-plane, and \(G(w)\) is rational in the fictitious frequency \(v\) <a class="src" href="../../resources/lecture-notes-chapters-05-06.pdf#page=23" data-pages="c56:23-24">pp. 23–24</a>. (B) is backwards: the w-plane has the same warping, \(v=\frac2T\tan\frac{\omega T}{2}\). The ZOH stays inside \(G(z)\), and the transform does not change stability.</div>
 </div>
 
 <div class="q mcq" data-id="d-a4" data-key="A" data-marks="3">
@@ -139,7 +139,7 @@ dialog.pages img { width:100%; height:auto; border:1px solid var(--border); bord
 <label><input type="radio" name="d-a4" value="B"> (B) The ability to cancel plant zeros outside the unit circle safely</label>
 <label><input type="radio" name="d-a4" value="C"> (C) A guarantee of zero steady-state error without any integrator</label>
 <label><input type="radio" name="d-a4" value="D"> (D) Fewer delay elements than standard programming</label>
-<div class="sol" hidden><h4>Answer: A</h4>With one block on the error \(r-y\), choosing \(T\) fixes \(S=1-T\): there is one free function, not two. The 2-DOF form \(U=\gamma\frac{T_c}{R_c}R-\frac{S_c}{R_c}Y\) lets \(R_c,S_c\) place the closed-loop poles (stability, disturbance) while \(T_c,\gamma\) shape the reaction to \(r\) <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=85" data-pages="c56:84-87">pp. 84–87</a>. Unstable plant zeros still cannot be cancelled in any structure.</div>
+<div class="sol" hidden><h4>Answer: A</h4>With one block on the error \(r-y\), choosing \(T\) fixes \(S=1-T\): there is one free function, not two. The 2-DOF form \(U=\gamma\frac{T_c}{R_c}R-\frac{S_c}{R_c}Y\) lets \(R_c,S_c\) place the closed-loop poles (stability, disturbance) while \(T_c,\gamma\) shape the reaction to \(r\) <a class="src" href="../../resources/lecture-notes-chapters-05-06.pdf#page=85" data-pages="c56:84-87">pp. 84–87</a>. Unstable plant zeros still cannot be cancelled in any structure.</div>
 </div>
 
 <h2>Section B · Structured questions <small>28 marks</small></h2>
@@ -155,7 +155,7 @@ dialog.pages img { width:100%; height:auto; border:1px solid var(--border); bord
 <span class="num" data-id="d-1b-ess" data-ans="0.25"><label>\(e_{ss}=\) <input type="text" inputmode="decimal"></label><span class="key"></span></span>
 </div>
 <div class="sol" hidden><h4>Worked solution</h4>
-<p><strong>(a)</strong> \(1+G=0\) gives \(P(z)=z^3-1.5z^2+0.5z+K\), so \(a_0=1,\ a_1=-1.5,\ a_2=0.5,\ a_3=K\). This is third order, so the table row is needed as well <a class="src" href="../resources/lecture-notes-weeks-01-04.pdf#page=164" data-pages="c14:164-166">pp. 164–166</a>:</p>
+<p><strong>(a)</strong> \(1+G=0\) gives \(P(z)=z^3-1.5z^2+0.5z+K\), so \(a_0=1,\ a_1=-1.5,\ a_2=0.5,\ a_3=K\). This is third order, so the table row is needed as well <a class="src" href="../../resources/lecture-notes-weeks-01-04.pdf#page=164" data-pages="c14:164-166">pp. 164–166</a>:</p>
 <ul>
 <li>(1) \(|a_3|\lt a_0\): \(-1\lt K\lt1\).</li>
 <li>(2) \(P(1)=1-1.5+0.5+K=K\gt0\).</li>
@@ -163,7 +163,7 @@ dialog.pages img { width:100%; height:auto; border:1px solid var(--border); bord
 <li>(4) Row 3 uses \(b_k=a_na_{k+1}-a_0a_{n-1-k}\): \(b_0=a_3a_1-a_0a_2=-1.5K-0.5\) and \(b_2=a_3^2-a_0^2=K^2-1\). The condition is \(|b_2|\gt|b_0|\). With \(0\lt K\lt1\) this reads \(1-K^2\gt1.5K+0.5\), i.e. \(K^2+1.5K-0.5\lt0\), so \(K\lt\frac{-1.5+\sqrt{4.25}}{2}=0.2808\).</li>
 </ul>
 <p>Intersection: <strong>\(0\lt K\lt0.2808\)</strong>. Here the table row is the binding condition. Stopping after (1)–(3) gives the wrong answer \(0\lt K\lt1\). Spot check at \(K=0.2\): \(|b_2|=0.96\gt|b_0|=0.8\) ✓.</p>
-<p><strong>(b)</strong> \(K_v=\frac1T\lim_{z\to1}\frac{z-1}{z}\cdot\frac{K}{z(z-1)(z-0.5)}=\frac{1}{0.1}\cdot\frac{K}{0.5}=20K\) <a class="src" href="../resources/lecture-notes-weeks-01-04.pdf#page=186" data-pages="c14:186-187">pp. 186–187</a>. At \(K=0.2\) (stable ✓): <strong>\(K_v=4\), \(e_{ss}=0.25\)</strong>.</p>
+<p><strong>(b)</strong> \(K_v=\frac1T\lim_{z\to1}\frac{z-1}{z}\cdot\frac{K}{z(z-1)(z-0.5)}=\frac{1}{0.1}\cdot\frac{K}{0.5}=20K\) <a class="src" href="../../resources/lecture-notes-weeks-01-04.pdf#page=186" data-pages="c14:186-187">pp. 186–187</a>. At \(K=0.2\) (stable ✓): <strong>\(K_v=4\), \(e_{ss}=0.25\)</strong>.</p>
 <div class="pit">Common slips: using \(P(-1)\gt0\) (the even-\(n\) rule); stopping at \(K\lt1\) without building the \(b\) row; mixing up the \(b_k\) index order (the \(z^0\) column of row 3 is \(b_{n-1}=b_2\)).</div>
 <ul class="rubric">
 <li><label><input type="checkbox" data-id="d-1-r1" data-marks="1"> (a) characteristic equation</label></li>
@@ -190,11 +190,11 @@ dialog.pages img { width:100%; height:auto; border:1px solid var(--border); bord
 <span class="num" data-id="d-2c-u1" data-ans="94/49"><label>\(u(1)=\) <input type="text" inputmode="decimal"></label><span class="key"></span></span>
 </div>
 <div class="sol" hidden><h4>Worked solution</h4>
-<p><strong>(a)</strong> \(\frac2T=20\), \(s=20\frac{z-1}{z+1}\) <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=7" data-pages="c56:7-8">pp. 7–8</a>. Then \(s+2=\frac{22z-18}{z+1}\) and \(s+8=\frac{28z-12}{z+1}\), and the \((z+1)\) cancels:</p>
+<p><strong>(a)</strong> \(\frac2T=20\), \(s=20\frac{z-1}{z+1}\) <a class="src" href="../../resources/lecture-notes-chapters-05-06.pdf#page=7" data-pages="c56:7-8">pp. 7–8</a>. Then \(s+2=\frac{22z-18}{z+1}\) and \(s+8=\frac{28z-12}{z+1}\), and the \((z+1)\) cancels:</p>
 \[D(z)=\frac{4(22z-18)}{28z-12}=\frac{22z-18}{7z-3}=\frac{22}{7}\cdot\frac{z-0.8182}{z-0.4286}.\]
 <p><strong>\(K_d=3.143\), \(z_0=0.8182\), \(p_0=0.4286\)</strong>. DC check: \(D(1)=\frac{4}{4}=1=D(s{=}0)=\frac{4\cdot2}{8}\) ✓.</p>
-<p><strong>(b)</strong> \(z_1=e^{-0.2}=0.8187\), \(p_1=e^{-0.8}=0.4493\). Since \(n=m\) there is no zero at infinity, so no \((z+1)\) factor <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=14" data-pages="c56:14-15">pp. 14–15</a>. DC: \(\alpha\frac{1-0.8187}{1-0.4493}=1\), so <strong>\(\alpha=\frac{0.5507}{0.1813}=3.038\)</strong>.</p>
-<p><strong>(c)</strong> Divide by \(7z\): \(D=\dfrac{\frac{22}{7}-\frac{18}{7}z^{-1}}{1-\frac37z^{-1}}\). Direct programming <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=106" data-pages="c56:104-107">pp. 104–107</a>:</p>
+<p><strong>(b)</strong> \(z_1=e^{-0.2}=0.8187\), \(p_1=e^{-0.8}=0.4493\). Since \(n=m\) there is no zero at infinity, so no \((z+1)\) factor <a class="src" href="../../resources/lecture-notes-chapters-05-06.pdf#page=14" data-pages="c56:14-15">pp. 14–15</a>. DC: \(\alpha\frac{1-0.8187}{1-0.4493}=1\), so <strong>\(\alpha=\frac{0.5507}{0.1813}=3.038\)</strong>.</p>
+<p><strong>(c)</strong> Divide by \(7z\): \(D=\dfrac{\frac{22}{7}-\frac{18}{7}z^{-1}}{1-\frac37z^{-1}}\). Direct programming <a class="src" href="../../resources/lecture-notes-chapters-05-06.pdf#page=106" data-pages="c56:104-107">pp. 104–107</a>:</p>
 \[u(k)=\tfrac37u(k-1)+\tfrac{22}{7}e(k)-\tfrac{18}{7}e(k-1).\]
 <p>\(u(0)=\frac{22}{7}=\mathbf{3.143}\). \(u(1)=\frac37\cdot\frac{22}{7}+\frac{22}{7}-\frac{18}{7}=\frac{66}{49}+\frac{28}{49}=\frac{94}{49}=\mathbf{1.918}\). (It decays toward the DC gain 1, the lead "kick" you expect.)</p>
 <div class="pit">Common slips: writing \(-\frac37u(k-1)\) (the denominator sign must flip); using \(2/T=2\); adding a \((z+1)\) in (b) even though \(n=m\).</div>
@@ -223,7 +223,7 @@ dialog.pages img { width:100%; height:auto; border:1px solid var(--border); bord
 <span class="num" data-id="d-3c-u0" data-ans="20/9"><label>(c) \(u(0)=\) <input type="text" inputmode="decimal"></label><span class="key"></span></span>
 </div>
 <div class="sol" hidden><h4>Worked solution</h4>
-<p><strong>(a)</strong> Check the four conditions <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=51" data-pages="c56:51-56">pp. 51–56</a>:</p>
+<p><strong>(a)</strong> Check the four conditions <a class="src" href="../../resources/lecture-notes-chapters-05-06.pdf#page=51" data-pages="c56:51-56">pp. 51–56</a>:</p>
 <ol>
 <li>Relative degree: the plant's is 1, and \(z^{-1}\)'s is 1 ✓.</li>
 <li>The plant zero \(-0.8\) is inside the circle ✓.</li>
@@ -232,8 +232,8 @@ dialog.pages img { width:100%; height:auto; border:1px solid var(--border); bord
 </ol>
 \[C=\frac{1}{G_{ZAS}}\cdot\frac{z^{-1}}{1-z^{-1}}=\frac{(z-1)(z-0.5)}{0.25(z+0.8)}\cdot\frac{1}{z-1}=\mathbf{\frac{4(z-0.5)}{z+0.8}}.\]
 <p>The plant already has an integrator, so \(C\) needs none.</p>
-<p><strong>(b)</strong> \(U=\dfrac{G_{cl}}{G_{ZAS}}R=\dfrac{4(z-0.5)}{z+0.8}\), so \(u=4,\ -5.2,\ 4.16,\ -3.328,\dots\), i.e. \(u(k)=-5.2(-0.8)^{k-1}\) for \(k\ge1\). \(C\) cancels the plant zero at \(-0.8\), so \(u\) keeps alternating and only decays slowly. The samples give \(y(k)=1\) for \(k\ge1\), but the continuous output <strong>ripples between samples</strong> (Example 5.8 <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=66" data-pages="c56:66-67">pp. 66–67</a>).</p>
-<p><strong>(c)</strong> Ripple-free means \(G_{cl}\) keeps <em>all</em> plant zeros, so that \(u\) settles in finitely many steps <a class="src" href="../resources/lecture-notes-chapters-05-06.pdf#page=73" data-pages="c56:73-77">pp. 73–77</a>. From \(G_{cl}(1)=K(1+0.8)=1\), <strong>\(K=1/1.8=5/9=0.5556\)</strong>. Then</p>
+<p><strong>(b)</strong> \(U=\dfrac{G_{cl}}{G_{ZAS}}R=\dfrac{4(z-0.5)}{z+0.8}\), so \(u=4,\ -5.2,\ 4.16,\ -3.328,\dots\), i.e. \(u(k)=-5.2(-0.8)^{k-1}\) for \(k\ge1\). \(C\) cancels the plant zero at \(-0.8\), so \(u\) keeps alternating and only decays slowly. The samples give \(y(k)=1\) for \(k\ge1\), but the continuous output <strong>ripples between samples</strong> (Example 5.8 <a class="src" href="../../resources/lecture-notes-chapters-05-06.pdf#page=66" data-pages="c56:66-67">pp. 66–67</a>).</p>
+<p><strong>(c)</strong> Ripple-free means \(G_{cl}\) keeps <em>all</em> plant zeros, so that \(u\) settles in finitely many steps <a class="src" href="../../resources/lecture-notes-chapters-05-06.pdf#page=73" data-pages="c56:73-77">pp. 73–77</a>. From \(G_{cl}(1)=K(1+0.8)=1\), <strong>\(K=1/1.8=5/9=0.5556\)</strong>. Then</p>
 \[1-G_{cl}=\frac{z^2-\frac59z-\frac49}{z^2}=\frac{(z-1)(z+\frac49)}{z^2},\qquad C=\frac{G_{cl}}{G_{ZAS}(1-G_{cl})}=\mathbf{\frac{20}{9}\cdot\frac{z-0.5}{z+0.4444}}.\]
 <p>\(Y=G_{cl}R\) gives \(y=0,\ \tfrac59,\ 1,\ 1\), so <strong>\(y(1)=0.5556\)</strong>. \(U=\frac{G_{cl}}{G_{ZAS}}R=\frac{20}{9}(1-0.5z^{-1})\) gives \(u=\tfrac{20}{9},\ -\tfrac{10}{9},\ 0,\ 0\), so <strong>\(u(0)=2.222\)</strong>. \(u\) reaches 0 (the plant integrator holds \(y=1\)), so there is no ripple. The cost is one extra sample to settle, and a gentler control signal.</p>
 <div class="pit">Common slips: \(K=1/0.8\) (the condition is \(G_{cl}(1)=K(1+0.8)=1\)); saying (a) is ripple-free because \(y(k)=1\) at the samples; adding an integrator to \(C\) for a type-1 plant.</div>

@@ -98,7 +98,7 @@
     <ul class="rules">
       <li>Practise closed book, 45 minutes, pen and paper (the real rules are not yet announced). Show all working: the working carries most of the marks.</li>
       <li>Allowed: the transform table LPH says is issued in the quiz &mdash;
-        <a href="../resources/lph-transform-table-ay2018-19-s1.pdf">lph-transform-table-ay2018-19-s1.pdf</a> &mdash; and the facts given in the question.</li>
+        <a href="../../resources/lph-transform-table-ay2018-19-s1.pdf">lph-transform-table-ay2018-19-s1.pdf</a> &mdash; and the facts given in the question.</li>
       <li>No calculator is needed: \(T=\ln 2\) is chosen so that \(e^{-T}=\tfrac12\) and \(e^{-2T}=\tfrac14\).</li>
       <li>Parts (c) and (d)(ii)&ndash;(iii) use Lecture 3, taught on 26 Sep. Sit the full paper after that session.</li>
     </ul>
@@ -153,7 +153,7 @@
   <section class="card" id="export">
     <strong>Submit for marking.</strong>
     <p>Photograph your written working (one photo per part is easiest to read) into
-      <code>EE-6203/quizzes/attempts/</code>, then paste the export block below into the chat along with the photo paths.</p>
+      <code>EE-6203/quizzes/quiz-02/attempts/</code>, then paste the export block below into the chat along with the photo paths.</p>
     <p><button class="primary" id="make">Build export</button> <button id="copy">Copy</button> <button id="clear">Clear my answers</button></p>
     <textarea id="out" readonly aria-label="Export block"></textarea>
   </section>
@@ -198,7 +198,7 @@
   document.getElementById('make').onclick = function () {
     var used = TOTAL - state.left, lines = [
       'EE6203 Quiz 2 prediction paper (UNOFFICIAL) - attempt export',
-      'Key file: EE-6203/quizzes/quiz-02-prediction-paper.md   (single question, 25 marks: a8 b5 c6 d6)',
+      'Key file: EE-6203/quizzes/quiz-02/quiz-02-prediction-paper.md   (single question, 25 marks: a8 b5 c6 d6)',
       'Exported: ' + new Date().toISOString() + (state.started ? '   Started: ' + state.started : '   Timer not started'),
       'Time used: ' + fmt(used) + ' of 45:00' + (state.left < 0 ? '  (OVER TIME)' : ''),
       ''];
@@ -207,7 +207,7 @@
       lines.push('(' + p + ') [' + MARKS[p] + ' marks] ' + LABEL[p] + ': ' + (s.paper ? 'answered on paper' : '<blank>') +
         (s.final.trim() ? ' | final: ' + s.final.trim() : ''));
     });
-    lines.push('', 'Working photos: EE-6203/quizzes/attempts/<list paths here>');
+    lines.push('', 'Working photos: EE-6203/quizzes/quiz-02/attempts/<list paths here>');
     document.getElementById('out').value = lines.join('\n');
   };
   document.getElementById('copy').onclick = function () {
