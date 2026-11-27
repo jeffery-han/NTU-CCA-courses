@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en" data-theme="system">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EE6203 Final Primer</title>
+<link rel="stylesheet" href="quiz-assets/katex/katex.min.css">
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: #f6f7f9; --surface: #fff; --surface-2: #eef1f5; --text: #14181f; --muted: #5b6472; --border: #d8dee7;
+  --accent: #1f6feb; --accent-soft: #e5efff; --success: #17794b; --success-soft: #e2f5ec;
+  --warning: #9a6200; --warning-soft: #fdf1dc; --danger: #b32130; --danger-soft: #fdeaec;
+  --radius: 14px; --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0e1117; --surface: #161b23; --surface-2: #1d232d; --text: #e7ecf3; --muted: #99a3b3; --border: #2a323e;
+  --accent: #6ea8ff; --accent-soft: #17233a; --success: #56d39b; --success-soft: #10281f;
+  --warning: #e5b567; --warning-soft: #2b2113; --danger: #ff8189; --danger-soft: #2e1519; } }
+:root[data-theme="dark"] {
+  --bg: #0e1117; --surface: #161b23; --surface-2: #1d232d; --text: #e7ecf3; --muted: #99a3b3; --border: #2a323e;
+  --accent: #6ea8ff; --accent-soft: #17233a; --success: #56d39b; --success-soft: #10281f;
+  --warning: #e5b567; --warning-soft: #2b2113; --danger: #ff8189; --danger-soft: #2e1519; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+a { color: var(--accent); }
+.app { display: grid; grid-template-columns: 270px minmax(0, 1fr); }
+nav.toc { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 18px 14px; border-right: 1px solid var(--border); background: var(--surface); font-size: .9rem; }
+nav.toc b { display: block; margin-bottom: 8px; }
+nav.toc a { display: flex; justify-content: space-between; gap: 8px; padding: 4px 6px; border-radius: 7px; text-decoration: none; color: var(--text); }
+nav.toc a:hover { background: var(--surface-2); }
+nav.toc .sc { color: var(--muted); font-family: var(--mono); font-size: .8rem; }
+nav.toc .sc.ok { color: var(--success); font-weight: 700; }
+nav.toc .tools { margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--border); }
+main { min-width: 0; max-width: 920px; padding: 24px 22px 120px; }
+h1 { font-size: 1.65rem; margin: 0 0 .4rem; }
+h2 { font-size: 1.28rem; margin: 2.4rem 0 .5rem; padding-top: .7rem; border-top: 2px solid var(--border); }
+h3 { font-size: 1.08rem; margin: 0 0 .6rem; }
+h4 { font-size: .95rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin: 1.1rem 0 .35rem; }
+p { margin: .5rem 0; }
+.sub { color: var(--muted); }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; margin: 16px 0; }
+.card.done { border-color: var(--success); }
+.notice { background: var(--warning-soft); border: 1px solid var(--border); border-radius: 12px; padding: 12px 15px; margin: 14px 0; }
+.notice.info { background: var(--accent-soft); }
+.tag { float: right; color: var(--muted); font-size: .82rem; font-weight: 600; margin-left: 8px; }
+.badge { display: inline-block; border-radius: 999px; padding: 0 9px; font-size: .78rem; font-weight: 700; vertical-align: middle; }
+.badge.focus { background: var(--danger-soft); color: var(--danger); }
+.badge.ref { background: var(--surface-2); color: var(--muted); }
+.formula { background: var(--accent-soft); border-left: 3px solid var(--accent); border-radius: 8px; padding: 10px 14px; margin: 10px 0; }
+.steps { margin: 8px 0 10px; padding-left: 1.35rem; } .steps li { margin: .45rem 0; }
+.why { background: var(--success-soft); border-left: 3px solid var(--success); border-radius: 8px; padding: 9px 13px; margin: 10px 0; font-size: .95rem; }
+.ex { background: var(--surface-2); border-radius: 10px; padding: 10px 14px; margin: 10px 0; font-size: .95rem; }
+.ex p:first-child { margin-top: 0; } .ex p:last-child { margin-bottom: 0; }
+.pit { background: var(--warning-soft); border-left: 3px solid var(--warning); border-radius: 8px; padding: 9px 13px; margin: 10px 0; font-size: .95rem; }
+details.start { border: 1px solid var(--border); border-radius: 10px; padding: 8px 14px; margin: 10px 0; background: var(--surface-2); }
+details.start summary { cursor: pointer; font-weight: 700; }
+.tbl-wrap { overflow-x: auto; margin: 10px 0; }
+table.sym { width: 100%; border-collapse: collapse; font-size: .92rem; }
+table.sym th, table.sym td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+table.sym th { background: var(--surface-2); font-weight: 600; color: var(--muted); font-size: .84rem; }
+.refs { margin: 10px 0 4px; padding-top: 8px; border-top: 1px solid var(--border); font-size: .88rem; color: var(--muted); }
+.chk { border-top: 1px dashed var(--border); padding-top: 10px; margin-top: 12px; }
+.chk input, .chk select, .btn { font: inherit; font-size: .92rem; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 4px 10px; }
+.chk input { width: 7.5em; }
+.btn { cursor: pointer; } .btn:hover { border-color: var(--accent); }
+.btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 600; text-decoration: none; padding: 8px 16px; }
+.fb { font-weight: 600; margin-left: 6px; }
+.katex-display { overflow-x: auto; overflow-y: hidden; }
+a.cite { font-size: .86rem; }
+dialog { max-width: min(900px, 94vw); border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text); padding: 14px; }
+dialog img { width: 100%; display: block; margin: 8px 0; border: 1px solid var(--border); background: #fff; }
+dialog::backdrop { background: rgba(0, 0, 0, .5); }
+.row { display: flex; gap: 10px; align-items: center; }
+@media (max-width: 860px) {
+  .app { grid-template-columns: 1fr; }
+  nav.toc { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--border); }
+  nav.toc #toc-links { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 8px; }
+  main { padding: 16px 14px 80px; }
+  .card { padding: 14px 14px; }
+  .tag { float: none; display: inline-block; margin-left: 0; margin-top: 2px; }
+}
+</style>
+<script defer src="quiz-assets/katex/katex.min.js"></script>
+<script defer src="quiz-assets/katex/contrib/auto-render.min.js"></script>
+<script defer src="quiz-assets/render-math.js"></script>
+</head>
+<body>
+<div class="app">
+<nav class="toc" aria-label="Contents">
+  <b>EE6203 Final &mdash; Primer</b>
+  <div id="toc-links"></div>
+  <div class="tools">
+    <div>Score <b id="score" style="display:inline">0</b>/<span id="total">0</span></div>
+    <p><button class="btn" id="reset">Reset my answers</button> <button class="btn" id="theme">Theme</button></p>
+    <a href="final-mock-b.html">Next: Mock B (cold, 3 h) &rarr;</a>
+  </div>
+</nav>
+<main>
+<h1>EE6203 Final &mdash; Step 1: Light primer</h1>
+<p class="sub">One card per exam topic: the idea, the formulas in the lecturers' conventions, one worked example and a check. Where you already have a full study page, the card links to it instead of repeating it. The two topics with no page so far (observers and optimal control, Dr Lee Lect 4&ndash;5) and the open Quiz 3 gap (ripple-free deadbeat) are taught in full. Every citation opens the cited slides.</p>
+<p class="sub">Links to Quiz 1&ndash;3 pages and notes point into other folders: Chrome opens them, Safari blocks them, so in Safari open those pages from the course <code>index.html</code>.</p>
+<p class="sub">Badges: <span class="badge focus">Exam focus</span> new for the final, or still an open mistake. <span class="badge ref">Refresh</span> covered for a quiz; recall it.</p>
+
+<div class="notice info" id="protocol">
+<h3>The paper and the plan</h3>
+<p style="margin:.2rem 0"><b>Final: 3 h, four questions of 25 marks, 60 % of the course</b> (Prof. Wen in the Week 1 and Week 2 lectures). The z-transform table is given; not every property is. The 2022&ndash;23 sittings, recalled in student walkthroughs, put <b>Q1</b> = Wen Ch 1&ndash;3, <b>Q2</b> = Wen Ch 4&ndash;6, <b>Q3</b> = Lee state-space models, <b>Q4</b> = Lee design (pole placement, observers, LQR). Date and venue: <b>check the exam timetable</b>; they are not in the course files. Evidence and conventions: <code>final-intel.md</code>.</p>
+<ol style="margin:.3rem 0">
+  <li><b>Primer</b> (this page): one evening.</li>
+  <li><b>Mock B</b>, cold: 3 h, handwritten, graded against <code>final-mock-b.md</code>.</li>
+  <li><b>Retrain</b> every lost mark in <code>final-mistakes.md</code>, retry a fresh variant.</li>
+  <li><b>Official past paper</b> (NTU Library), cold under exam conditions, then graded and retrained.</li>
+</ol>
+</div>
+
+<!-- ======================== Q1 ======================== -->
+<h2 id="s-q1">Q1 &middot; Signals, z-transform, difference equations</h2>
+
+<div class="card" data-k="fvt" data-sel="sampled-data signal">
+<h3>Z1. Signals, the z-transform and the final value theorem <span class="badge ref">Refresh</span><span class="tag">every recalled Q1</span></h3>
+<p><b>Signals.</b> A <em>continuous-time</em> signal is defined for every \(t\), jumps allowed. Sampling it gives a <em>discrete-time</em> signal. If its amplitude is still continuous it is a <em>sampled-data</em> signal; only if the amplitude is also quantised is it <em>digital</em>. Past Q1s open with exactly this classification.</p>
+<div class="formula">\[X(z)=\sum_{k=0}^{\infty}x(kT)\,z^{-k},\qquad \lim_{k\to\infty}x(k)=\lim_{z\to1}\,(1-z^{-1})X(z)\]
+valid only when every pole of \((1-z^{-1})X(z)\) is strictly inside the unit circle.</div>
+<div class="ex"><p><b>Example.</b> \(x(kT)=3,1,1,1,\dots\) (a 3 at \(k=0\), then a step of 1): \(X(z)=3+\sum_{k\ge1}z^{-k}=3+\dfrac{1}{z-1}\). Its final value: \((1-z^{-1})X(z)=\dfrac{z-1}{z}\cdot3+\dfrac1z\to 1\) as \(z\to1\). Correct: the sequence settles at 1.</p></div>
+<div class="pit"><b>Pitfalls.</b> At a jump, the sample takes the value of the branch that holds at that instant (\(t\ge1\) means the new branch at \(t=1\)). A pole at \(z=-1\) or a double pole at \(z=1\) forbids the FVT: say so, do not compute a number.</div>
+<div class="refs"><b>References:</b> <a class="cite" href="../../resources/lecture-notes-weeks-01-04.pdf#page=12" data-pages="lecture-notes-weeks-01-04:12-15">Wen notes pp. 12&ndash;15 (types of signals)</a> &middot; <a class="cite" href="../../resources/lecture-notes-weeks-01-04.pdf#page=24" data-pages="lecture-notes-weeks-01-04:24-33">pp. 24&ndash;33 (z-transform, elementary functions)</a> &middot; <a class="cite" href="../../resources/lecture-notes-weeks-01-04.pdf#page=34" data-pages="lecture-notes-weeks-01-04:34-48">pp. 34&ndash;48 (properties, initial and final value theorems)</a> &middot; full drill: <a href="../../notes/quiz1-prep-learning.html">Quiz 1 learning page</a></div>
+<div class="chk">Final value of \(X(z)=\dfrac{0.6z^2}{(z-1)(z-0.8)}\): <input aria-label="final value"> <button class="btn">check</button><span class="fb"></span></div>
+<div class="chk">The samples \(e^{-0.5k}\), stored with full precision, form a&hellip; <select><option value="">&mdash;</option><option>digital signal</option><option>sampled-data signal</option><option>continuous-time signal</option></select> <button class="btn">check</button><span class="fb"></span></div>
+</div>
+
+<div class="card" data-k="de">
+<h3>Z2. Difference equations by z-transform <span class="badge ref">Refresh</span><span class="tag">every recalled Q1</span></h3>
+<p>Shift theorem: \(\mathcal Z[y(k+1)]=zY(z)-zy(0)\), \(\mathcal Z[y(k+2)]=z^2Y(z)-z^2y(0)-zy(1)\). So you need \(y(0)\) and \(y(1)\). If the question gives \(y(k)=0\) for \(k&lt;0\) instead, <b>compute them</b> by putting \(k=-2\) and \(k=-1\) into the equation (Prof. Wen: do not assume initial values the question does not give).</p>
+<ol class="steps"><li>Initial values from the equation at negative \(k\).</li><li>Transform, solve for \(Y(z)\).</li><li>Partial fractions on \(Y(z)/z\), then the table.</li><li>Check one value against the recursion.</li></ol>
+<div class="ex"><p><b>Example.</b> \(y(k+1)-0.5y(k)=x(k)\), unit step \(x\), \(y(k)=0\) for \(k&lt;0\). At \(k=-1\): \(y(0)=0\). Then \((z-0.5)Y=\dfrac{z}{z-1}\), \(\dfrac{Y}{z}=\dfrac{2}{z-1}-\dfrac{2}{z-0.5}\), so \(y(k)=2-2(0.5)^k\). Check: \(y(1)=0.5y(0)+x(0)=1=2-1\).</p></div>
+<div class="refs"><b>References:</b> <a class="cite" href="../../resources/lecture-notes-weeks-01-04.pdf#page=49" data-pages="lecture-notes-weeks-01-04:49-66">Wen notes pp. 49&ndash;66 (inverse z-transform, partial fractions)</a> &middot; <a class="cite" href="../../resources/lecture-notes-weeks-01-04.pdf#page=67" data-pages="lecture-notes-weeks-01-04:67-69">pp. 67&ndash;69 (solving difference equations)</a></div>
+<div class="chk">\(y(k+2)-0.5y(k+1)=x(k)\), unit step \(x\), \(y(k)=0\) for \(k&lt;0\). Find \(y(3)\): <input aria-label="y(3)"> <button class="btn">check</button><span class="fb"></span></div>
+</div>
+
+<div class="card" data-k="zas">
+<h3>Z3. Pulse transfer function with a zero-order hold <span class="badge ref">Refresh</span><span class="tag">most recalled papers</span></h3>
+<div class="formula">\[G_{ZAS}(z)=(1-z^{-1})\,\mathcal Z\!\left[\frac{G(s)}{s}\right],\qquad \frac{Y(z)}{R(z)}=\frac{C(z)G_{ZAS}(z)}{1+C(z)G_{ZAS}(z)}\ \text{(unity feedback)}\]</div>
+<p>Do the partial fractions of \(G(s)/s\) in \(s\), use the table, then multiply by \((z-1)/z\). A sampling period such as \(T=\ln 2\) makes \(e^{-T}=\tfrac12\): the examiner wants clean numbers.</p>
+<div class="ex"><p><b>Example.</b> \(G(s)=\dfrac{1}{s+1}\): \(\dfrac{G}{s}=\dfrac1s-\dfrac1{s+1}\to\dfrac{z}{z-1}-\dfrac{z}{z-e^{-T}}\). Times \((z-1)/z\): \(G_{ZAS}=\dfrac{1-e^{-T}}{z-e^{-T}}\).</p></div>
+<div class="pit"><b>Pitfall.</b> Block diagrams with samplers in different places give different results: \(\mathcal Z[G_1G_2]\ne G_1(z)G_2(z)\). Re-read the sampler positions.</div>
+<div class="refs"><b>References:</b> <a class="cite" href="../../resources/lecture-notes-weeks-01-04.pdf#page=111" data-pages="lecture-notes-weeks-01-04:111-115">Wen notes pp. 111&ndash;115 (DAC + analog plant, Example 3-4)</a> &middot; <a class="cite" href="../../resources/lecture-notes-weeks-01-04.pdf#page=122" data-pages="lecture-notes-weeks-01-04:122-129">pp. 122&ndash;129 (closed-loop pulse transfer functions)</a></div>
+<div class="chk">\(G(s)=\dfrac{2}{s+2}\), \(T=\ln 2\): \(G_{ZAS}(z)=\dfrac{b}{z-a}\). Find \(b\): <input aria-label="b"> <button class="btn">check</button><span class="fb"></span></div>
+</div>
+
+<!-- ======================== Q2 ======================== -->
+<h2 id="s-q2">Q2 &middot; Stability, errors, direct design, implementation</h2>
+
+<div class="card" data-k="jury" data-k2="ess">
+<h3>J1. Jury range of K and steady-state errors <span class="badge ref">Refresh</span><span class="tag">recalled 2019&ndash;2023</span></h3>
+<p>Closed-loop CE \(P(z)=1+C(z)G(z)\) cleared of fractions, written \(a_0z^n+\dots+a_n\) with \(a_0>0\). For \(n=2\) the Jury test is three inequalities:</p>
+<div class="formula">\[|a_2|&lt;a_0,\qquad P(1)>0,\qquad P(-1)>0\ (n \text{ even}).\]
+Type = number of poles of \(CG\) at \(z=1\). \(K_p=\lim_{z\to1}CG\), \(K_v=\lim_{z\to1}\dfrac{(z-1)CG}{Tz}\); step error \(1/(1+K_p)\), ramp error \(1/K_v\).</div>
+<p>For \(n=3\) you also need the \(b\)-row: \(|b_2|>|b_0|\) with \(b_0=a_3a_1-a_0a_2\)&hellip; you lost this in Quiz 3 Mock D, so practise it from <a href="../quiz-03/quiz-03-primer.html">the Quiz 3 primer</a>.</p>
+<div class="ex"><p><b>Example.</b> \(CG=\dfrac{K}{z-0.5}\): \(P=z-0.5+K\), root \(0.5-K\), stable for \(-0.5&lt;K&lt;1.5\). Type 0: \(K_p=2K\).</p></div>
+<div class="pit"><b>Pitfalls.</b> The range is strict (marginal stability is not stable). Do not forget the \(1/T\) in \(K_v\).</div>
+<div class="refs"><b>References:</b> <a class="cite" href="../../resources/lecture-notes-weeks-01-04.pdf#page=164" data-pages="lecture-notes-weeks-01-04:164-175">Wen notes pp. 164&ndash;175 (Jury test, Examples 4.4&ndash;4.8)</a> &middot; <a class="cite" href="../../resources/lecture-notes-weeks-01-04.pdf#page=183" data-pages="lecture-notes-weeks-01-04:183-191">pp. 183&ndash;191 (steady-state error, error constants)</a></div>
+<div class="chk">\(G=\dfrac{0.2(z+1)}{(z-1)(z-0.4)}\), \(C=K\): the largest stable \(K\) is <input aria-label="K max"> <button class="btn">check</button><span class="fb"></span></div>
+<div class="chk">Same loop, \(K=1\), \(T=0.2\) s: ramp error <input data-num="2" aria-label="ramp error"> <button class="btn">check</button><span class="fb"></span></div>
+</div>
+
+<div class="card" data-k="rf" data-k2="rfu">
+<h3>D1. Direct design: deadbeat and ripple-free <span class="badge focus">Exam focus &middot; open mistake</span><span class="tag">recalled in 5 of 5 papers 2019&ndash;2023</span></h3>
+<p>You choose the closed loop \(G_{cl}(z)\) you want, then the controller follows from \(G_{cl}=\dfrac{CG}{1+CG}\):</p>
+<div class="formula">\[C(z)=\frac{G_{cl}(z)}{G(z)\,[1-G_{cl}(z)]},\qquad U(z)=\frac{G_{cl}(z)}{G(z)}R(z),\qquad Y(z)=G_{cl}(z)R(z).\]</div>
+<details class="start"><summary>Start here: why a plain deadbeat ripples, and how to fix it</summary>
+<p><b>Picture.</b> \(G_{cl}=z^{-1}\) means "output equals the reference one sample later". At the sampling instants that is perfect. But \(C\) must contain \(1/G\), so it <em>cancels every plant zero</em>. A cancelled zero at \(z=-b\) becomes a pole of \(U(z)\): the control keeps alternating as \((-b)^k\). The plant integrates those alternating pushes, so between samples \(y(t)\) wobbles: <b>intersample ripple</b>.</p>
+<p><b>Fix.</b> Do not cancel the zero: put it into \(G_{cl}\). Then \(U=G_{cl}R/G\) has no \((-b)^k\) mode and becomes constant after a few samples.</p>
+<div class="tbl-wrap"><table class="sym"><thead><tr><th>Condition on \(G_{cl}\)</th><th>Why</th></tr></thead><tbody>
+<tr><td>relative degree \(\ge\) that of \(G\)</td><td>\(C\) must be causal</td></tr>
+<tr><td>contains the plant zeros you must not cancel (outside the circle, or all of them for ripple-free)</td><td>otherwise \(C\) has an unstable or ringing pole</td></tr>
+<tr><td>\(1-G_{cl}\) contains the plant poles on or outside the circle</td><td>otherwise \(C\) cancels an unstable pole</td></tr>
+<tr><td>\(G_{cl}(1)=1\)</td><td>zero steady-state error for a step</td></tr>
+</tbody></table></div>
+<p><b>Recipe for a ripple-free deadbeat</b> (step input), plant \(G=\dfrac{c(z+b)}{(z-1)(z-p)}\): take \(G_{cl}=K\,z^{-1}(1+bz^{-1})=\dfrac{K(z+b)}{z^2}\) and \(K=\dfrac1{1+b}\) from \(G_{cl}(1)=1\). Settling takes one sample more than the plain deadbeat.</p>
+</details>
+<div class="ex"><p><b>Example.</b> \(G=\dfrac{0.5(z+0.2)}{(z-1)(z-0.5)}\). Ripple-free: \(G_{cl}=\dfrac{(z+0.2)}{1.2z^2}\). \(U=\dfrac{G_{cl}}{G}\cdot\dfrac{z}{z-1}=\dfrac{(z-0.5)}{0.6z}=\tfrac53(1-0.5z^{-1})\): \(u=1.667,-0.833,0,0,\dots\) settles, so no ripple. \(y=0,\tfrac1{1.2},1,1,\dots\)</p></div>
+<div class="pit"><b>Pitfall from your Quiz 3 mocks.</b> This question was left blank twice. In the final it is worth about 10 marks: write \(G_{cl}\), the four conditions, \(C\), then \(u(k)\) and \(y(k)\) as sequences.</div>
+<div class="refs"><b>References:</b> <a class="cite" href="../../resources/lecture-notes-chapters-05-06.pdf#page=49" data-pages="lecture-notes-chapters-05-06:49-63">Wen Ch 5 pp. 49&ndash;63 (direct design, conditions on \(G_{cl}\), Examples 5.6&ndash;5.7)</a> &middot; <a class="cite" href="../../resources/lecture-notes-chapters-05-06.pdf#page=64" data-pages="lecture-notes-chapters-05-06:64-72">pp. 64&ndash;72 (finite settling time, deadbeat)</a> &middot; <a class="cite" href="../../resources/lecture-notes-chapters-05-06.pdf#page=73" data-pages="lecture-notes-chapters-05-06:73-82">pp. 73&ndash;82 (ripple-free, Examples 5.10&ndash;5.12)</a></div>
+<div class="chk">\(G=\dfrac{0.2(z+0.6)}{(z-1)(z-0.3)}\), ripple-free deadbeat \(G_{cl}=K\dfrac{z+0.6}{z^2}\): \(K=\) <input aria-label="K"> <button class="btn">check</button><span class="fb"></span></div>
+<div class="chk">Same design, unit step: \(u(0)=\) <input data-num="2" aria-label="u(0)"> <button class="btn">check</button><span class="fb"></span></div>
+</div>
+
+<div class="card" data-k="pz" data-sel="1">
+<h3>P1. Pole-zero matching, bilinear transform, programming <span class="badge ref">Refresh</span><span class="tag">recalled 2016<span class="tag">recalled 2018, 2021, 2022</span>ndash;2022</span></h3>
+<div class="formula">\[\text{P-Z: } s=a\mapsto z=e^{aT},\ \text{zeros at } s=\infty\mapsto z=-1,\ \alpha \text{ from } D(z)\big|_{z=1}=D(s)\big|_{s=0}.\qquad \text{Bilinear: } s=\frac2T\,\frac{z-1}{z+1}.\]</div>
+<p><b>Implementation.</b> Write \(D(z)\) in powers of \(z^{-1}\) with leading denominator coefficient 1. <em>Direct</em> programming needs \(n+m\) delays; <em>standard</em> programming needs \(n\) (the larger of the two degrees). Series and parallel programming split \(D\) into first- and second-order sections to reduce coefficient sensitivity.</p>
+<div class="ex"><p><b>Example.</b> \(D(z)=\dfrac{2(1-0.5z^{-1})}{1-0.2z^{-1}}\), standard: \(m(k)=e(k)+0.2m(k-1)\), \(u(k)=2[m(k)-0.5m(k-1)]\). One delay.</p></div>
+<div class="pit"><b>Pitfalls (Quiz 3 Mock D).</b> Divide by the leading coefficient before reading off the difference equation; the denominator signs flip when moved to the right-hand side.</div>
+<div class="refs"><b>References:</b> <a class="cite" href="../../resources/lecture-notes-chapters-05-06.pdf#page=14" data-pages="lecture-notes-chapters-05-06:14-20">Wen Ch 5 pp. 14&ndash;20 (pole-zero matching, Examples 5.2&ndash;5.3)</a> &middot; <a class="cite" href="../../resources/lecture-notes-chapters-05-06.pdf#page=104" data-pages="lecture-notes-chapters-05-06:104-110">Ch 6 pp. 104&ndash;110 (direct and standard programming)</a> &middot; bilinear and series programming: <a href="../quiz-03/quiz-03-primer.html">Quiz 3 primer</a></div>
+<div class="chk">\(D(s)=\dfrac{2(s+1)}{s+4}\), \(T=0.5\) s, pole-zero matched with DC gain kept: \(\alpha=\) <input aria-label="alpha"> <button class="btn">check</button><span class="fb"></span></div>
+<div class="chk">Standard programming of a first-order \(D(z)\) needs how many delays? <select><option value="">&mdash;</option><option>1</option><option>2</option><option>3</option></select> <button class="btn">check</button><span class="fb"></span></div>
+</div>
+
+<!-- ======================== Q3 ======================== -->
+<h2 id="s-q3">Q3 &middot; Discrete state-space models</h2>
+
+<div class="card" data-k="th">
+<h3>S1. From a continuous model to \(\Phi\) and \(\Theta\) <span class="badge ref">Refresh</span><span class="tag">7 of 7 recalled papers</span></h3>
+<p>With a zero-order hold, the input is constant over each period, so the exact discrete model is</p>
+<div class="formula">\[\mathbf x(k+1)=\mathbf\Phi\mathbf x(k)+\mathbf\Theta u(k),\qquad \mathbf\Phi=e^{\mathbf AT}=\mathcal L^{-1}\!\left[(s\mathbf I-\mathbf A)^{-1}\right]_{t=T},\qquad \mathbf\Theta=\int_0^T e^{\mathbf A\tau}\,d\tau\,\mathbf B,\]
+and \(\mathbf C,\mathbf D\) are unchanged.</div>
+<p>Modelling first: from an ODE, choose \(x_1=y\), \(x_2=\dot y\); from a circuit, the capacitor voltages and inductor currents (Lee's RLC and servo-motor examples).</p>
+<div class="ex"><p><b>Example.</b> \(\ddot y=u\): \(\mathbf A=\begin{bmatrix}0&1\\0&0\end{bmatrix}\), \(e^{\mathbf At}=\begin{bmatrix}1&t\\0&1\end{bmatrix}\), \(\mathbf\Phi=\begin{bmatrix}1&T\\0&1\end{bmatrix}\), \(\mathbf\Theta=\begin{bmatrix}T^2/2\\T\end{bmatrix}\).</p></div>
+<div class="pit"><b>Pitfall.</b> Lee's Week 5 remark: give the final numbers, do not stop at \(e^{-0.1}\). \(\mathbf\Theta\ne T\mathbf B\).</div>
+<div class="refs"><b>References:</b> <a class="cite" href="../../resources/lph-lecture-01-discrete-state-space-models.pdf#page=16" data-pages="lph-lecture-01-discrete-state-space-models:16-20">Lee Lect 1 pp. 16&ndash;20 (sample and hold, \(\Phi\), \(\Theta\), Examples 1.4&ndash;1.5)</a> &middot; full module: <a href="../../notes/quiz2-prep-learning.html">Quiz 2 learning page</a></div>
+<div class="chk">\(\ddot y=u\), \(T=0.5\) s: first entry of \(\mathbf\Theta\) = <input aria-label="Theta1"> <button class="btn">check</button><span class="fb"></span></div>
+</div>
+
+<div class="card" data-k="rec">
+<h3>S2. Transfer function, poles, state recursion <span class="badge ref">Refresh</span></h3>
+<div class="formula">\[G(z)=\mathbf C(z\mathbf I-\mathbf\Phi)^{-1}\mathbf\Theta+D,\qquad \text{poles}=\text{roots of }\det(z\mathbf I-\mathbf\Phi),\qquad \mathbf x(k)=\mathbf\Phi^k\mathbf x(0)+\sum_{j=0}^{k-1}\mathbf\Phi^{k-1-j}\mathbf\Theta u(j).\]</div>
+<p>Discrete poles are \(e^{s_iT}\). Two quick checks for any \(G(z)\) you derive: its poles are those numbers, and \(G(1)\) equals the continuous DC gain.</p>
+<div class="ex"><p><b>Example.</b> "Find \(u(0),u(1)\) so that \(\mathbf x(2)=\mathbf 0\)": write \(\mathbf 0=\mathbf\Phi^2\mathbf x(0)+\mathbf\Phi\mathbf\Theta u(0)+\mathbf\Theta u(1)\) and solve the \(2\times2\) system. It is solvable exactly when \([\mathbf\Theta\ \ \mathbf\Phi\mathbf\Theta]\) is non-singular: controllability.</p></div>
+<div class="refs"><b>References:</b> <a class="cite" href="../../resources/lph-lecture-01-discrete-state-space-models.pdf#page=21" data-pages="lph-lecture-01-discrete-state-space-models:21-28">Lee Lect 1 pp. 21&ndash;28 (transfer function, poles, state transition equation)</a></div>
+<div class="chk">Double integrator, \(T=0.5\), \(\mathbf x(0)=\mathbf 0\), \(u(0)=u(1)=1\): \(y(2)=x_1(2)=\) <input aria-label="y(2)"> <button class="btn">check</button><span class="fb"></span></div>
+</div>
+
+<div class="card" data-k="k1" data-k2="k2">
+<h3>S3. Controllability, observability, Ackermann, deadbeat control <span class="badge ref">Refresh</span><span class="tag">Ackermann K in 7 of 7</span></h3>
+<div class="formula">\[\mathbf W_C=[\mathbf B\ \ \mathbf{AB}\ \cdots\ \mathbf A^{n-1}\mathbf B],\quad \mathbf W_O=\begin{bmatrix}\mathbf C\\ \mathbf{CA}\\ \vdots\\ \mathbf{CA}^{n-1}\end{bmatrix},\quad \mathbf K=[0\ \cdots\ 0\ 1]\,\mathbf W_C^{-1}\,\alpha_c(\mathbf A),\quad u=-\mathbf K\mathbf x.\]</div>
+<p>\(\alpha_c(z)\) is the desired closed-loop polynomial; \(\alpha_c(\mathbf A)\) replaces \(z^i\) by \(\mathbf A^i\) and the constant by a multiple of \(\mathbf I\). <b>Deadbeat control</b>: all poles at 0, \(\alpha_c=z^n\), the state reaches zero in at most \(n\) steps. Always verify: \(\det(z\mathbf I-\mathbf A+\mathbf{BK})=\alpha_c(z)\).</p>
+<div class="ex"><p><b>Example.</b> Lee's Example 3.12 (double integrator) gives the deadbeat gain \(\mathbf K=\left[\tfrac1{T^2}\ \ \tfrac{3}{2T}\right]\).</p></div>
+<div class="refs"><b>References:</b> <a class="cite" href="../../resources/lph-lecture-02-canonical-forms-controllability.pdf#page=13" data-pages="lph-lecture-02-canonical-forms-controllability:13-18">Lee Lect 2 pp. 13&ndash;18 (controllability)</a> &middot; <a class="cite" href="../../resources/lph-lecture-03-observability-state-feedback-deadbeat.pdf#page=1" data-pages="lph-lecture-03-observability-state-feedback-deadbeat:1-5">Lect 3 pp. 1&ndash;5 (observability)</a> &middot; <a class="cite" href="../../resources/lph-lecture-03-observability-state-feedback-deadbeat.pdf#page=10" data-pages="lph-lecture-03-observability-state-feedback-deadbeat:10-14">pp. 10&ndash;14 (state feedback, pole placement)</a> &middot; <a class="cite" href="../../resources/lph-lecture-03-observability-state-feedback-deadbeat.pdf#page=21" data-pages="lph-lecture-03-observability-state-feedback-deadbeat:21-30">pp. 21&ndash;30 (Ackermann, deadbeat control)</a></div>
+<div class="chk">Double integrator, \(T=0.5\), \(\mathbf\Theta=[0.125\ \ 0.5]^T\), deadbeat: \(k_1=\) <input aria-label="k1"> <button class="btn">check</button><span class="fb"></span></div>
+<div class="chk">\(k_2=\) <input data-num="2" aria-label="k2"> <button class="btn">check</button><span class="fb"></span></div>
+</div>
+
+<!-- ======================== Q4 ======================== -->
+<h2 id="s-q4">Q4 &middot; Observers and optimal control</h2>
+
+<div class="card" data-k="lo1" data-k2="lo2">
+<h3>O1. Prediction observer and its gain <span class="badge focus">Exam focus</span><span class="tag">observer gain in 4 of 7 recalled papers</span></h3>
+<p><b>Why.</b> State feedback \(u=-\mathbf K\mathbf x\) needs every state, but usually only \(y\) is measured. An observer runs a copy of the model and corrects it with the output error.</p>
+<div class="formula">\[\hat{\mathbf x}(k+1)=\mathbf A\hat{\mathbf x}(k)+\mathbf Bu(k)+\mathbf L_O\,[y(k)-\mathbf C\hat{\mathbf x}(k)],\qquad \mathbf e(k+1)=(\mathbf A-\mathbf L_O\mathbf C)\,\mathbf e(k),\ \ \mathbf e=\mathbf x-\hat{\mathbf x}.\]
+\[\mathbf L_O=\alpha_O(\mathbf A)\,\mathbf W_O^{-1}\begin{bmatrix}0\\ \vdots\\ 1\end{bmatrix}\quad\text{(Ackermann, dual of the controller formula)}.\]</div>
+<p>Choose the observer poles (roots of \(\alpha_O\)) <b>2&ndash;4 times faster</b> than the controller poles, or all at 0 for a <b>deadbeat error</b>: then \((\mathbf A-\mathbf L_O\mathbf C)^n=\mathbf 0\) and the estimate is exact after \(n\) samples. "Prediction" because \(\hat{\mathbf x}(k+1)\) uses measurements only up to \(k\). The observer needs \((\mathbf A,\mathbf C)\) observable.</p>
+<div class="ex"><p><b>Example (Lee Ex 4.3).</b> Double integrator, \(\mathbf C=[1\ 0]\), deadbeat error: \(\mathbf L_O=\left[2\ \ \tfrac1T\right]^T\). With \(T=0.5\): \(\mathbf A-\mathbf L_O\mathbf C=\begin{bmatrix}-1&0.5\\-2&1\end{bmatrix}\), whose square is \(\mathbf 0\).</p></div>
+<div class="pit"><b>Pitfall.</b> The observer equation has <em>two</em> inputs, \(u(k)\) and \(y(k)\): write it as \(\hat{\mathbf x}(k+1)=(\mathbf A-\mathbf L_O\mathbf C)\hat{\mathbf x}(k)+\mathbf Bu(k)+\mathbf L_Oy(k)\).</div>
+<div class="refs"><b>References:</b> <a class="cite" href="../../resources/lph-lecture-04-observers-integral-control.pdf#page=1" data-pages="lph-lecture-04-observers-integral-control:1-10">Lee Lect 4 pp. 1&ndash;10 (open- and closed-loop observers, Ackermann for \(\mathbf L_O\), Examples 4.1&ndash;4.3)</a></div>
+<div class="chk">Double integrator, \(T=0.5\), \(\mathbf C=[1\ 0]\), both observer poles at \(z=0.2\): \(l_1=\) <input aria-label="l1"> <button class="btn">check</button><span class="fb"></span></div>
+<div class="chk">\(l_2=\) <input data-num="2" aria-label="l2"> <button class="btn">check</button><span class="fb"></span></div>
+</div>
+
+<div class="card" data-k="lr">
+<h3>O2. Reduced-order and current observers <span class="badge focus">Exam focus</span><span class="tag">reduced-order: recalled 2019</span></h3>
+<p><b>Reduced-order.</b> If \(y=x_a\) is measured directly, estimate only the rest, \(x_b\). Partition \(\mathbf A=\begin{bmatrix}A_{aa}&A_{ab}\\A_{ba}&A_{bb}\end{bmatrix}\), \(\mathbf B=\begin{bmatrix}B_a\\B_b\end{bmatrix}\):</p>
+<div class="formula">\[e_b(k+1)=(A_{bb}-L_rA_{ab})\,e_b(k),\qquad \hat x_b(k+1)=(A_{bb}-L_rA_{ab})\hat x_b(k)+L_r\,y(k+1)+(A_{ba}-L_rA_{aa})\,y(k)+(B_b-L_rB_a)\,u(k).\]</div>
+<p>For a scalar \(x_b\), \(L_r\) comes from matching \(z-A_{bb}+L_rA_{ab}\) to the desired \(z-p\).</p>
+<p><b>Current observer.</b> Predict, then correct with the measurement taken at the <em>same</em> instant: \(\bar{\mathbf x}(k+1)=\mathbf A\hat{\mathbf x}(k)+\mathbf Bu(k)\), \(\hat{\mathbf x}(k+1)=\bar{\mathbf x}(k+1)+\mathbf L_C[y(k+1)-\mathbf C\bar{\mathbf x}(k+1)]\). Its error matrix is \(\mathbf A-\mathbf L_C\mathbf{CA}\) and</p>
+<div class="formula">\[\mathbf L_C=\alpha_O(\mathbf A)\begin{bmatrix}\mathbf{CA}\\ \vdots\\ \mathbf{CA}^n\end{bmatrix}^{-1}\begin{bmatrix}0\\ \vdots\\ 1\end{bmatrix}.\]</div>
+<div class="ex"><p><b>Example (Lee Ex 4.4).</b> \(T=0.1\) double integrator, pole at 0.5: \(z-1+0.1L_r=z-0.5\Rightarrow L_r=5\).</p></div>
+<div class="refs"><b>References:</b> <a class="cite" href="../../resources/lph-lecture-04-observers-integral-control.pdf#page=11" data-pages="lph-lecture-04-observers-integral-control:11-15">Lee Lect 4 pp. 11&ndash;15 (reduced-order observer, Example 4.4)</a> &middot; <a class="cite" href="../../resources/lph-lecture-04-observers-integral-control.pdf#page=16" data-pages="lph-lecture-04-observers-integral-control:16-18">pp. 16&ndash;18 (current observer, Example 4.5)</a></div>
+<div class="chk">Double integrator, \(T=0.5\), reduced-order observer for the velocity with its pole at \(z=0.4\): \(L_r=\) <input aria-label="Lr"> <button class="btn">check</button><span class="fb"></span></div>
+</div>
+
+<div class="card" data-k="kr">
+<h3>O3. Separation principle, reference gain, integral control <span class="badge focus">Exam focus</span><span class="tag">\(k_r\): recalled 2021, 2022</span></h3>
+<p><b>Separation.</b> Feeding back \(\hat{\mathbf x}\) instead of \(\mathbf x\) gives closed-loop poles = controller poles \(\cup\) observer poles: the characteristic polynomial is \(\alpha_c(z)\,\alpha_O(z)\). Design the two separately.</p>
+<p><b>Reference input.</b> \(u(k)=-\mathbf K\mathbf x(k)+k_r\,r(k)\) gives \(\dfrac{Y(z)}{R(z)}=k_r\,\mathbf C(z\mathbf I-\mathbf A+\mathbf{BK})^{-1}\mathbf B\). \(k_r\) does not move the poles; choose it so the DC gain (\(z=1\)) is 1.</p>
+<p><b>Integral control.</b> Add a state that sums the error. Lee defines the error as \(e=y-r\) (opposite sign to Wen's \(e=r-y\)):</p>
+<div class="formula">\[x_I(k+1)=x_I(k)+\mathbf C\mathbf x(k)-r(k),\quad \begin{bmatrix}\mathbf x\\x_I\end{bmatrix}(k+1)=\begin{bmatrix}\mathbf A&\mathbf 0\\ \mathbf C&1\end{bmatrix}\begin{bmatrix}\mathbf x\\x_I\end{bmatrix}(k)+\begin{bmatrix}\mathbf B\\0\end{bmatrix}u(k)-\begin{bmatrix}\mathbf 0\\1\end{bmatrix}r(k),\quad u=-[\mathbf K\ \ K_I]\begin{bmatrix}\mathbf x\\x_I\end{bmatrix}+\dots\]</div>
+<p>Then place the poles of the augmented system as usual.</p>
+<div class="ex"><p><b>Example (Lee Ex 4.8).</b> Servo motor, \(\mathbf K=[4.52\ \ 1.12]\): the final value theorem gives \(k_r=4.52=k_1\). Same pattern whenever \(y=x_1\) and the plant has an integrator.</p></div>
+<div class="refs"><b>References:</b> <a class="cite" href="../../resources/lph-lecture-04-observers-integral-control.pdf#page=19" data-pages="lph-lecture-04-observers-integral-control:19-26">Lee Lect 4 pp. 19&ndash;26 (combined controller and observer, Examples 4.6&ndash;4.7)</a> &middot; <a class="cite" href="../../resources/lph-lecture-04-observers-integral-control.pdf#page=27" data-pages="lph-lecture-04-observers-integral-control:27-30">pp. 27&ndash;30 (systems with inputs, integral control)</a></div>
+<div class="chk">Double integrator, \(T=0.5\), \(\mathbf K=[4\ \ 3]\) (card S3), \(y=x_1\): \(k_r=\) <input aria-label="kr"> <button class="btn">check</button><span class="fb"></span></div>
+</div>
+
+<div class="card" data-k="lq1">
+<h3>L1. Linear quadratic regulator: finite horizon <span class="badge focus">Exam focus</span><span class="tag">recalled 2020, 2022</span></h3>
+<p><b>Idea.</b> Instead of choosing pole positions, choose how much you care about state error (\(\mathbf Q\)) versus control effort (\(\mathbf R\)). Bellman's principle: solve backwards from the last step.</p>
+<div class="formula">\[J=\tfrac12\mathbf x^T(N)\mathbf S_N\mathbf x(N)+\tfrac12\sum_{k=0}^{N-1}\left[\mathbf x^T\mathbf Q\mathbf x+\mathbf u^T\mathbf R\mathbf u\right]\]
+\[\mathbf K(k)=\left[\mathbf B^T\mathbf S(k+1)\mathbf B+\mathbf R\right]^{-1}\mathbf B^T\mathbf S(k+1)\mathbf A,\qquad \mathbf S(k)=(\mathbf A-\mathbf B\mathbf K(k))^T\mathbf S(k+1)(\mathbf A-\mathbf B\mathbf K(k))+\mathbf K^T(k)\mathbf R\mathbf K(k)+\mathbf Q,\]
+\[u^*(k)=-\mathbf K(k)\mathbf x(k),\qquad J^*=\tfrac12\mathbf x^T(0)\mathbf S(0)\mathbf x(0).\]</div>
+<div class="pit"><b>The ½ trap.</b> Lee's cost carries a ½. So a question written \(J=\sum(x^2+u^2)\) means \(Q=R=2\) (his Example 5.2 does exactly this). The gains do not change, but \(\mathbf S\) and \(J^*\) do.</div>
+<div class="ex"><p><b>Example (Lee Ex 5.2).</b> \(x(k+1)=2x+u\), \(J=\sum_{k=0}^{2}(x^2+u^2)\), \(S(3)=0\): \(K(2)=0,\ S(2)=2;\ K(1)=1,\ S(1)=6;\ K(0)=1.5,\ S(0)=8\).</p></div>
+<div class="refs"><b>References:</b> <a class="cite" href="../../resources/lph-lecture-05-optimal-control-lqr.pdf#page=10" data-pages="lph-lecture-05-optimal-control-lqr:10-17">Lee Lect 5 pp. 10&ndash;17 (principle of optimality, LQR by dynamic programming, Example 5.2)</a> &middot; <a class="cite" href="../../resources/lph-lecture-05-optimal-control-lqr.pdf#page=17" data-pages="lph-lecture-05-optimal-control-lqr:17-22">pp. 17&ndash;22 (Riccati difference equation, Example 5.3)</a></div>
+<div class="chk">\(x(k+1)=0.5x+u\), \(J=\sum_{k=0}^{1}(x^2+u^2)\): \(K(0)=\) <input aria-label="K(0)"> <button class="btn">check</button><span class="fb"></span></div>
+</div>
+
+<div class="card" data-k="lq2" data-k2="lq2s">
+<h3>L2. Infinite horizon: the algebraic Riccati equation <span class="badge focus">Exam focus</span><span class="tag">recalled 2017&ndash;2023, 5 times</span></h3>
+<p>As \(N\to\infty\), \(\mathbf S(k)\) settles to a constant \(\hat{\mathbf S}\), and the gain becomes constant:</p>
+<div class="formula">\[\hat{\mathbf S}=\mathbf A^T\hat{\mathbf S}\mathbf A-\mathbf A^T\hat{\mathbf S}\mathbf B\left(\mathbf B^T\hat{\mathbf S}\mathbf B+\mathbf R\right)^{-1}\mathbf B^T\hat{\mathbf S}\mathbf A+\mathbf Q,\qquad \mathbf K=\left(\mathbf B^T\hat{\mathbf S}\mathbf B+\mathbf R\right)^{-1}\mathbf B^T\hat{\mathbf S}\mathbf A.\]</div>
+<p>For a scalar plant this is a quadratic in \(S\): take the <b>positive</b> root (the other gives an unstable loop). Stability needs \((\mathbf A,\mathbf B)\) controllable and \((\mathbf A,\mathbf C)\) observable with \(\mathbf Q=\mathbf C^T\mathbf C\). Past papers then ask for \(u^*(k)\), the closed-loop pole and \(\mathbf x(k)\) for a few steps.</p>
+<div class="ex"><p><b>Example (Lee Ex 5.4).</b> \(\mathbf A=\begin{bmatrix}1&1\\1&0\end{bmatrix}\), \(\mathbf B=[1\ 0]^T\): \(\mathbf K=[1\ \ 0.7913]\), closed loop \(\begin{bmatrix}0&0.2087\\1&0\end{bmatrix}\), poles \(\pm0.4568\), so \(\mathbf x(2)=[0.2087\ \ 0]^T\). The slide prints 0.2807: a typo (its own \(\mathbf x(30)=0.62\times10^{-10}=0.2087^{15}\) confirms 0.2087).</p></div>
+<div class="refs"><b>References:</b> <a class="cite" href="../../resources/lph-lecture-05-optimal-control-lqr.pdf#page=23" data-pages="lph-lecture-05-optimal-control-lqr:23-26">Lee Lect 5 pp. 23&ndash;26 (infinite-time problem, Example 5.4)</a></div>
+<div class="chk">\(x(k+1)=2x+u\), \(J=\sum_{k=0}^{\infty}(x^2+u^2)\): optimal gain \(K=\) <input aria-label="K inf"> <button class="btn">check</button><span class="fb"></span></div>
+<div class="chk">Same problem, steady-state \(S\) (with Lee's ½ convention): <input data-num="2" aria-label="S"> <button class="btn">check</button><span class="fb"></span></div>
+</div>
+
+<p style="text-align:center;margin-top:28px"><a class="btn btn-primary" href="final-mock-b.html">Step 2: Mock B, cold &rarr;</a></p>
+<p class="sub" style="font-size:.85rem">Unofficial study aid. Formulas follow the cited slides; every key is recomputed by <code>final-check.py</code>.</p>
+</main>
+</div>
+
+<dialog id="srcDlg"><div class="row" style="justify-content:space-between"><b id="srcTitle"></b><span><a id="srcOpen" target="_blank">Open PDF</a> <button class="btn" id="srcClose">Close</button></span></div><div id="srcImgs"></div></dialog>
+
+<script type="application/json" id="keys">{"fvt": 3, "de": 1.5, "zas": 0.75, "jury": 3, "ess": 0.3, "rf": 0.625, "rfu": 3.125, "pz": 1.0988, "th": 0.125, "rec": 0.5, "k1": 4, "k2": 3, "lo1": 1.6, "lo2": 1.28, "lr": 1.2, "kr": 4, "lq1": 0.25, "lq2": 1.618, "lq2s": 8.4721}</script>
+<script>
+(function () {
+  var KEY = 'ee6203-final-primer-v1', KEYS = JSON.parse(document.getElementById('keys').textContent);
+  var st = {}; try { st = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) {}
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
+  var checks = [];
+  document.querySelectorAll('.card[data-k]').forEach(function (card) {
+    var k = card.dataset.k;
+    card.querySelectorAll('.chk button').forEach(function (btn, i) {
+      var field = btn.previousElementSibling, fb = btn.nextElementSibling, id = k + '#' + i, ok;
+      if (field.tagName === 'SELECT') ok = function () { return field.value === card.dataset.sel; };
+      else { var ans = KEYS[field.dataset.num === '2' ? card.dataset.k2 : k];
+        ok = function () { var s = field.value.trim(), m = s.match(/^(-?[\d.]+)\s*\/\s*(-?[\d.]+)$/), v = m ? m[1] / m[2] : parseFloat(s);
+          return isFinite(v) && Math.abs(v - ans) <= Math.max(0.0015, Math.abs(ans) * 0.002); }; }
+      function show(good) { fb.textContent = good ? '✓ correct' : '✗ not yet — reread the card'; fb.style.color = good ? 'var(--success)' : 'var(--danger)'; }
+      checks.push({ id: id, card: card });
+      if (st[id]) { field.value = st[id].v; show(st[id].ok); }
+      btn.addEventListener('click', function () { var g = ok(); st[id] = { v: field.value, ok: g }; save(); show(g); refresh(); });
+    });
+  });
+  var toc = document.getElementById('toc-links');
+  var secs = Array.prototype.map.call(document.querySelectorAll('main h2[id]'), function (h) {
+    var a = document.createElement('a'); a.href = '#' + h.id; a.innerHTML = '<span>' + h.firstChild.textContent + '</span><span class="sc"></span>'; toc.appendChild(a);
+    var cards = []; var n = h.nextElementSibling; while (n && n.tagName !== 'H2') { if (n.matches('.card[data-k]')) cards.push(n); n = n.nextElementSibling; }
+    return { a: a, cards: cards };
+  });
+  function refresh() {
+    var tot = 0, ok = 0;
+    secs.forEach(function (s) {
+      var t = 0, o = 0;
+      checks.forEach(function (c) { if (s.cards.indexOf(c.card) >= 0) { t++; if (st[c.id] && st[c.id].ok) o++; } });
+      var sc = s.a.querySelector('.sc'); sc.textContent = o + '/' + t; sc.classList.toggle('ok', t > 0 && o === t); tot += t; ok += o;
+    });
+    document.querySelectorAll('.card[data-k]').forEach(function (card) {
+      var mine = checks.filter(function (c) { return c.card === card; });
+      card.classList.toggle('done', mine.length > 0 && mine.every(function (c) { return st[c.id] && st[c.id].ok; }));
+    });
+    document.getElementById('score').textContent = ok; document.getElementById('total').textContent = tot;
+  }
+  refresh();
+  document.getElementById('reset').onclick = function () { try { localStorage.removeItem(KEY); } catch (e) {} location.reload(); };
+  var root = document.documentElement; try { var th = localStorage.getItem('ee6203-theme'); if (th) root.dataset.theme = th; } catch (e) {}
+  document.getElementById('theme').onclick = function () { var n = root.dataset.theme === 'dark' ? 'light' : 'dark'; root.dataset.theme = n; try { localStorage.setItem('ee6203-theme', n); } catch (e) {} };
+  var dlg = document.getElementById('srcDlg');
+  function pages(spec) { var r = spec.split('-').map(Number), out = []; for (var p = r[0]; p <= (r[1] || r[0]); p++) out.push(p); return out; }
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('a[data-pages]'); if (!a) return; e.preventDefault();
+    var parts = a.dataset.pages.split(':'), box = document.getElementById('srcImgs'); box.innerHTML = '';
+    pages(parts[1]).forEach(function (p) { var img = document.createElement('img'); img.loading = 'lazy'; img.alt = parts[0] + ' page ' + p; img.src = 'final-pages/' + parts[0] + '-p' + ('00' + p).slice(-3) + '.jpg'; box.appendChild(img); });
+    var t = a.cloneNode(true); t.querySelectorAll('.katex-mathml').forEach(function (m) { m.remove(); }); document.getElementById('srcTitle').textContent = t.textContent; document.getElementById('srcOpen').href = a.getAttribute('href'); dlg.showModal();
+  });
+  document.getElementById('srcClose').onclick = function () { dlg.close(); };
+  dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EE6203 Final Mock B</title>
+<link rel="stylesheet" href="quiz-assets/katex/katex.min.css">
+<style>
+:root { --ink:#172334; --muted:#435366; --bg:#eef2f5; --card:#fff; --line:#c8d2dc; --pill:#f3f6f9; --accent:#205d87; --ok:#1d7a46; --warn:#b47412; --warnbg:#fff5e1;
+        font: 17px/1.55 system-ui,sans-serif; color: var(--ink); background: var(--bg); }
+@media (prefers-color-scheme: dark) { :root { --ink:#dfe7ef; --muted:#9fb0c2; --bg:#11181f; --card:#18222c; --line:#34475a; --pill:#1f2c38; --accent:#6fb3e0; --ok:#5fc48a; --warn:#e0a54a; --warnbg:#2b2416; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); }
+.app { display: grid; grid-template-columns: 270px minmax(0,1fr); }
+nav { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 20px 16px 5rem; border-right: 1px solid var(--line); background: var(--card); font-size: .9rem; }
+nav h2 { font-size: 1rem; margin: 0 0 .6rem; } nav a { color: var(--ink); text-decoration: none; }
+nav ol { list-style: none; padding: 0; margin: 0; } nav li { display: flex; justify-content: space-between; gap: .5em; padding: .25em .4em; border-radius: 6px; }
+nav li:hover { background: var(--pill); } nav .sc { color: var(--muted); font-variant-numeric: tabular-nums; } nav .sc.done { color: var(--ok); font-weight: 600; }
+nav .tools { margin-top: 1rem; border-top: 1px solid var(--line); padding-top: .7rem; color: var(--muted); }
+main { min-width: 0; width: 100%; max-width: 880px; margin: 24px auto; padding: 34px 46px 6rem; background: var(--card); box-shadow: 0 2px 18px #14263a19; }
+h1 { margin: 0; line-height: 1.2; } h2.sec { margin: 2.2rem 0 .5rem; border-top: 2px solid var(--accent); padding-top: 1rem; }
+h3 { margin: 1.8rem 0 .3rem; } p,li { max-width: 76ch; }
+.meta { color: var(--muted); } .notice { border-left: 4px solid var(--warn); background: var(--warnbg); padding: .65rem 1rem; }
+.marks { float: right; color: var(--muted); font-size: .92rem; }
+.katex-display { overflow-x: auto; overflow-y: hidden; }
+.answered-toggle { display: flex; align-items: center; gap: .55em; margin: .6em 0 .2em; font-size: .92rem; padding: .45em .7em; border: 1px dashed var(--line); border-radius: 8px; background: var(--pill); }
+textarea.work { width: 100%; min-height: 2.6em; font: 14px ui-monospace, monospace; padding: .6em; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); resize: vertical; }
+#bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 5; background: var(--card); border-top: 1px solid var(--line); padding: .55em 1rem; display: flex; gap: .7em; align-items: center; justify-content: center; flex-wrap: wrap; font-size: .92rem; }
+#timer { font: 600 1.05rem ui-monospace, monospace; } #timer.over { color: #c0392b; }
+button { font: inherit; padding: .4em .85em; border: 1px solid var(--line); border-radius: 8px; background: var(--pill); color: var(--ink); cursor: pointer; }
+dialog { max-width: 46rem; width: 92%; border: 1px solid var(--line); border-radius: 12px; background: var(--card); color: var(--ink); }
+dialog textarea { width: 100%; min-height: 20em; font: 12px ui-monospace, monospace; background: var(--bg); color: var(--ink); }
+@media (max-width: 860px) { .app { display: block; } nav { position: static; height: auto; padding-bottom: 1rem; border-right: 0; border-bottom: 1px solid var(--line); }
+  nav ol { display: grid; grid-template-columns: 1fr 1fr; gap: 0 .6em; } main { margin: 0; padding: 20px 16px 6rem; box-shadow: none; } }
+@media print { #bar, nav, .answered-toggle, textarea.work { display: none; } .app { display: block; } main { margin: 0; padding: 0; box-shadow: none; max-width: none; } }
+</style>
+<script defer src="quiz-assets/katex/katex.min.js"></script>
+<script defer src="quiz-assets/katex/contrib/auto-render.min.js"></script>
+<script defer src="quiz-assets/render-math.js"></script>
+</head>
+<body><div class="app">
+<nav><h2>Final · Mock B</h2><ol id="toc"></ol>
+<div class="tools">Parts done on paper: <span id="tally">0</span><br>Key (after attempting): <code>final-mock-b.md</code><br>Intel: <code>final-intel.md</code><br><a href="final-primer.html">Primer</a></div></nav>
+<main>
+<h1>EE6203 · Final examination · Mock B</h1>
+<p class="meta">100 marks · 3 hours · closed book · answer all four questions · 25 marks each · handwritten · own calculator</p>
+<p class="notice"><strong>Unofficial practice paper.</strong> The shape follows the lecturer's description (four questions of 25 marks, 3 hours) and the 2022–23 papers as recalled in student walkthroughs: Q1 and Q2 are Prof. Wen's chapters, Q3 and Q4 are Dr Lee's lectures. The questions and numbers are new. Sit it <strong>cold and timed</strong>: no notes, no primer. A z-transform table is supplied in the real paper; use <a href="../../resources/lph-transform-table-ay2018-19-s1.pdf">the issued table</a> only. Write everything on paper, tick “Answered on paper” for each part, press Export, and send the text with photos of your sheets. The key is in <code>final-mock-b.md</code>; do not open it until you have finished.</p>
+
+<h2 class="sec" id="q1">Question 1 <span class="marks">25 marks</span></h2>
+<p>A signal is given by</p>
+\[x(t)=\begin{cases}0, & t<0\\ 2, & 0\le t<1\\ e^{-(t-1)}, & t\ge 1\end{cases}\]
+<p>and it is sampled with period \(T=0.5\) s.</p>
+<div data-item="Q1a"><h3>(a) <span class="marks">7</span></h3>
+<p>(i) Is \(x(t)\) a continuous-time signal? Is the sampled sequence \(x(kT)\) a digital signal? Give one line of reason for each.</p>
+<p>(ii) Find \(X(z)=\mathcal Z[x(kT)]\) in closed form, starting from the definition of the z-transform.</p></div>
+<div data-item="Q1b"><h3>(b) <span class="marks">5</span></h3>
+<p>For each of the following, state whether the final value theorem may be applied. Where it may, find \(\lim_{k\to\infty}y(k)\); where it may not, say why and describe what \(y(k)\) does.</p>
+\[Y_1(z)=\frac{0.6\,z^2}{(z-1)(z-0.4)},\qquad Y_2(z)=\frac{z}{(z-1)(z+1)}\]</div>
+<div data-item="Q1c"><h3>(c) <span class="marks">8</span></h3>
+<p>A system is described by</p>
+\[y(k+2)-0.9\,y(k+1)+0.2\,y(k)=x(k),\]
+<p>where \(x(k)\) is the unit step sequence (\(x(k)=1\) for \(k\ge0\), \(x(k)=0\) for \(k&lt;0\)) and \(y(k)=0\) for \(k&lt;0\). Find \(y(0)\) and \(y(1)\), then use the z-transform to find \(y(k)\) in closed form. Check your answer at \(k=2\).</p></div>
+<div data-item="Q1d"><h3>(d) <span class="marks">5</span></h3>
+<p>A plant \(G(s)=\dfrac{1}{s(s+1)}\) is driven through a zero-order hold, and its output is sampled with \(T=\ln 2\) s. Find the pulse transfer function \(G_{ZAS}(z)\). Give its coefficients to four significant figures.</p></div>
+
+<h2 class="sec" id="q2">Question 2 <span class="marks">25 marks</span></h2>
+<p>Figure 1 shows a unity-feedback digital control system with sampling period \(T=0.1\) s. The plant together with its zero-order hold has the pulse transfer function</p>
+\[G_{ZAS}(z)=\frac{0.4\,(z+0.5)}{(z-1)(z-0.6)}.\]
+<figure style="margin:1rem 0">
+<svg viewBox="0 0 640 150" style="width:100%;max-width:640px;display:block;margin:auto;color:var(--ink)" role="img" aria-label="Figure 1. Reference R(z) enters a summing junction with a minus sign on the feedback path, giving E(z), which passes through the controller C(z) to give U(z), then the zero-order hold and plant block G_ZAS(z), giving the output Y(z). Y(z) is fed back to the summing junction." font-family="system-ui,sans-serif" font-size="16">
+<defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="currentColor"/></marker></defs>
+<g stroke="currentColor" stroke-width="2" fill="none">
+<circle cx="110" cy="60" r="16"/>
+<rect x="200" y="36" width="110" height="48" rx="6"/>
+<rect x="380" y="36" width="140" height="48" rx="6"/>
+<line x1="30" y1="60" x2="92" y2="60" marker-end="url(#ar)"/>
+<line x1="126" y1="60" x2="198" y2="60" marker-end="url(#ar)"/>
+<line x1="310" y1="60" x2="378" y2="60" marker-end="url(#ar)"/>
+<line x1="520" y1="60" x2="620" y2="60" marker-end="url(#ar)"/>
+<polyline points="580,60 580,126 110,126 110,78" marker-end="url(#ar)"/>
+</g>
+<g fill="currentColor">
+<text x="30" y="50">R(z)</text><text x="140" y="50">E(z)</text><text x="322" y="50">U(z)</text><text x="566" y="50">Y(z)</text>
+<text x="230" y="66">C(z)</text><text x="404" y="66">G_ZAS(z)</text><text x="88" y="98">−</text><text x="78" y="56">+</text>
+</g>
+</svg>
+<figcaption style="text-align:center;font-weight:600">Figure 1</figcaption>
+</figure>
+<div data-item="Q2a"><h3>(a) <span class="marks">8</span></h3>
+<p>Let \(C(z)=K\). Use the Jury test to find the range of \(K\) for which the closed loop is stable. For \(K=1\), find the steady-state error for a unit-step input and for a unit-ramp input \(r(t)=t\).</p></div>
+<div data-item="Q2b"><h3>(b) <span class="marks">10</span></h3>
+<p>(i) Design the controller \(C(z)\) that gives the closed-loop transfer function \(G_{cl}(z)=z^{-1}\). For a unit-step reference, find \(U(z)\) and the first four values \(u(0),\dots,u(3)\). Explain what this implies for the plant output between sampling instants.</p>
+<p>(ii) Design a ripple-free deadbeat controller for a unit-step reference. Give \(G_{cl}(z)\), \(C(z)\), the sequence \(u(k)\) and the sequence \(y(k)\). After how many sampling periods does the output settle?</p></div>
+<div data-item="Q2c"><h3>(c) <span class="marks">7</span></h3>
+<p>An analog lead compensator \(D(s)=\dfrac{5(s+1)}{s+5}\) is to be implemented with \(T=0.2\) s.</p>
+<p>(i) Find its digital equivalent \(D(z)\) by pole-zero matching, with the DC gain matched.</p>
+<p>(ii) Realise \(D(z)\) by standard programming: give the difference equations and state how many delay elements are needed.</p></div>
+
+<h2 class="sec" id="q3">Question 3 <span class="marks">25 marks</span></h2>
+<p>A continuous-time plant is described by</p>
+\[\ddot y(t)+4\,\dot y(t)+3\,y(t)=u(t).\]
+<p>The input \(u\) is applied through a zero-order hold, and the output is sampled with \(T=\ln 2\) s.</p>
+<div data-item="Q3a"><h3>(a) <span class="marks">9</span></h3>
+<p>With the state variables \(x_1=y\) and \(x_2=\dot y\), write the continuous-time state-space model. Then derive the discrete-time model</p>
+\[\mathbf x(k+1)=\mathbf\Phi\,\mathbf x(k)+\mathbf\Theta\,u(k),\qquad y(k)=\mathbf C\,\mathbf x(k),\]
+<p>giving \(\mathbf\Phi\) and \(\mathbf\Theta\) exactly (as fractions).</p></div>
+<div data-item="Q3b"><h3>(b) <span class="marks">6</span></h3>
+<p>Find the pulse transfer function \(Y(z)/U(z)\) from your discrete-time model. State the discrete-time poles and check the DC gain against the continuous plant.</p></div>
+<div data-item="Q3c"><h3>(c) <span class="marks">5</span></h3>
+<p>Is the discrete-time system completely controllable? Is it completely observable from \(y\)? Justify each answer with the relevant matrix.</p></div>
+<div data-item="Q3d"><h3>(d) <span class="marks">5</span></h3>
+<p>The initial state is \(\mathbf x(0)=\begin{bmatrix}1&0\end{bmatrix}^T\). Find the control sequence \(u(0),u(1)\) that brings the state to \(\mathbf x(2)=\mathbf 0\).</p></div>
+
+<h2 class="sec" id="q4">Question 4 <span class="marks">25 marks</span></h2>
+<p>A discrete-time plant is</p>
+\[\mathbf x(k+1)=\begin{bmatrix}1&1\\0&0.5\end{bmatrix}\mathbf x(k)+\begin{bmatrix}0\\1\end{bmatrix}u(k),\qquad y(k)=\begin{bmatrix}1&0\end{bmatrix}\mathbf x(k).\]
+<div data-item="Q4a"><h3>(a) <span class="marks">7</span></h3>
+<p>Use Ackermann's formula to find the state-feedback gain \(\mathbf K\), with \(u(k)=-\mathbf K\mathbf x(k)\), that places the closed-loop poles at \(z=0.5\pm j0.3\). Verify your answer.</p></div>
+<div data-item="Q4b"><h3>(b) <span class="marks">7</span></h3>
+<p>(i) Design a prediction observer whose estimation error is deadbeat. Give the observer gain \(\mathbf L_O\) and the observer equation, and show that the error is zero after two samples for any initial error.</p>
+<p>(ii) Design a current observer, also with deadbeat estimation error. Give its gain \(\mathbf L_C\).</p></div>
+<div data-item="Q4c"><h3>(c) <span class="marks">5</span></h3>
+<p>(i) The controller of (a) is driven by the estimates of the prediction observer of (b)(i). Write the characteristic polynomial of the complete closed-loop system and name the principle you used.</p>
+<p>(ii) With the true states fed back, the control law is changed to \(u(k)=-\mathbf K\mathbf x(k)+k_r\,r(k)\). Find \(k_r\) so that the output follows a constant reference with zero steady-state error.</p></div>
+<div data-item="Q4d"><h3>(d) <span class="marks">6</span></h3>
+<p>A scalar plant \(x(k+1)=x(k)+2u(k)\) has \(x(0)=2\).</p>
+<p>(i) Find the optimal control law that minimises \(J=\sum_{k=0}^{1}\left[x^2(k)+u^2(k)\right]\), and the minimum cost.</p>
+<p>(ii) Repeat for the infinite-horizon cost \(J=\sum_{k=0}^{\infty}\left[x^2(k)+u^2(k)\right]\): find the steady-state Riccati solution, the optimal gain, the closed-loop pole, \(u^*(0)\), \(x(1)\) and the minimum cost.</p></div>
+<p class="meta">End of paper.</p>
+</main></div>
+
+<div id="bar"><span id="timer">3:00:00</span><button id="start">Start</button><button id="pause">Pause</button><button id="reset">Reset</button><button id="export">Export</button><button id="wipe">Clear saved</button></div>
+<dialog id="dlg"><p>Copy this into a new chat with your photographed working for grading.</p><textarea id="out" readonly></textarea>
+<p><button id="copy">Copy</button> <button id="dl">Download .txt</button> <button id="close">Close</button></p></dialog>
+
+<script>
+(function () {
+  var KEY = "ee6203-final-mock-b-v1", LIMIT = 10800, st = {};
+  try { st = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { st = {}; }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
+  var items = Array.prototype.slice.call(document.querySelectorAll("[data-item]")), toc = document.getElementById("toc");
+  items.forEach(function (box) {
+    var id = box.getAttribute("data-item");
+    box.insertAdjacentHTML("beforeend", '<label class="answered-toggle"><input type="checkbox" data-q="' + id + '-paper"> Answered on paper</label>' +
+      '<textarea class="work" data-q="' + id + '-note" placeholder="Optional typed note: final answers or where you stopped (handwritten working is what gets graded)"></textarea>');
+    box.id = "q-" + id;
+    toc.insertAdjacentHTML("beforeend", '<li><a href="#q-' + id + '">' + id + '</a><span class="sc" id="sc-' + id + '">·</span></li>');
+  });
+  function tally() {
+    var n = 0;
+    items.forEach(function (b) { var id = b.getAttribute("data-item"), d = !!st[id + "-paper"], s = document.getElementById("sc-" + id);
+      s.textContent = d ? "✓" : "·"; s.className = "sc" + (d ? " done" : ""); if (d) n++; });
+    document.getElementById("tally").textContent = n + " / " + items.length;
+  }
+  document.querySelectorAll("[data-q]").forEach(function (el) {
+    var q = el.getAttribute("data-q");
+    if (el.type === "checkbox") { el.checked = !!st[q]; el.addEventListener("change", function () { st[q] = el.checked; save(); tally(); }); }
+    else { el.value = st[q] || ""; el.addEventListener("input", function () { st[q] = el.value; save(); }); }
+  });
+  tally();
+  var t = st.elapsed || 0, tick = null, tEl = document.getElementById("timer");
+  function fmt(s) { var r = Math.abs(LIMIT - s); return (s > LIMIT ? "+" : "") + Math.floor(r / 3600) + ":" + ("0" + Math.floor(r / 60) % 60).slice(-2) + ":" + ("0" + r % 60).slice(-2); }
+  function render() { tEl.textContent = fmt(t); tEl.className = t > LIMIT ? "over" : ""; }
+  document.getElementById("start").onclick = function () { if (!tick) tick = setInterval(function () { t++; st.elapsed = t; save(); render(); }, 1000); };
+  function pause() { clearInterval(tick); tick = null; }
+  document.getElementById("pause").onclick = pause;
+  document.getElementById("reset").onclick = function () { pause(); t = 0; st.elapsed = 0; save(); render(); };
+  document.getElementById("wipe").onclick = function () { if (confirm("Clear saved answers and timer?")) { try { localStorage.removeItem(KEY); } catch (e) {} location.reload(); } };
+  render();
+  var stems = { Q1a: "signal types + X(z) of piecewise x(t), T=0.5 (7)", Q1b: "FVT applicable? Y1, Y2 (5)", Q1c: "difference equation, y(0), y(1), closed form (8)",
+    Q1d: "G_ZAS of 1/(s(s+1)), T=ln2 (5)", Q2a: "Jury K range, step and ramp ess (8)", Q2b: "deadbeat z^-1 vs ripple-free (10)", Q2c: "pole-zero matching + standard programming (7)",
+    Q3a: "state model, Phi, Theta, T=ln2 (9)", Q3b: "pulse TF from state model (6)", Q3c: "controllability, observability (5)", Q3d: "u(0), u(1) to reach x(2)=0 (5)",
+    Q4a: "Ackermann K, poles 0.5 +- j0.3 (7)", Q4b: "deadbeat prediction + current observer (7)", Q4c: "separation, k_r (5)", Q4d: "scalar LQR finite + infinite (6)" };
+  function build() {
+    var L = ["EE6203 Final Mock B (unofficial)", "Key: EE-6203/quizzes/final/final-mock-b.md", "Marks: Q1 7+5+8+5, Q2 8+10+7, Q3 9+6+5+5, Q4 7+7+5+6 = 100",
+      "Elapsed: " + Math.floor(t / 60) + " min " + t % 60 + " s (limit 180 min)", ""];
+    items.forEach(function (b) { var id = b.getAttribute("data-item");
+      L.push(id + " [" + stems[id] + "]: " + (st[id + "-paper"] ? "answered on paper" : "<blank>") +
+        (st[id + "-note"] ? " | note: " + st[id + "-note"].replace(/\s+/g, " ") : "")); });
+    L.push("", "Attach photos of every handwritten sheet.");
+    return L.join("\n");
+  }
+  var dlg = document.getElementById("dlg"), out = document.getElementById("out");
+  document.getElementById("export").onclick = function () { out.value = build(); dlg.showModal(); };
+  document.getElementById("close").onclick = function () { dlg.close(); };
+  document.getElementById("copy").onclick = function () { out.select(); try { navigator.clipboard.writeText(out.value); } catch (e) { document.execCommand("copy"); } };
+  document.getElementById("dl").onclick = function () { var a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([out.value], { type: "text/plain" })); a.download = "ee6203-final-mock-b-attempt.txt"; a.click(); };
+})();
+</script>
+</body>
+</html>

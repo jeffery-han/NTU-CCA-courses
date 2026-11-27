@@ -4,12 +4,13 @@ Computer Control Systems.  Three teaching blocks: C. Wen Ch 1–4 (Weeks 1–4),
 
 ## Now
 
-- **Next assessment: final exam.**  Date, venue, format and scope are **not recorded locally**; read NTULearn / the exam timetable before any prep.  Quizzes 1–3 are over (Quiz 3 was 7 Nov 2026).
+- **Next assessment: final exam, Tue 1 Dec 2026** (date from the learner; time, venue and calculator rule not verified).  Format: 3 h, four questions × 25 marks, 60 % (Wen Weeks 1–2, Lee Week 5 transcripts).  Slots, unofficial (2022–23 walkthroughs): Q1 Wen Ch 1–3, Q2 Wen Ch 4–6, Q3 Lee Lect 1–3, Q4 Lee Lect 3–5.  Evidence and conventions: `quizzes/final/final-intel.md`.
+- Prep (shortened protocol, `final-intel.md`): step 1 `final-primer.html` built.  **Next: sit `quizzes/final/final-mock-b.html` cold (3 h, handwritten), then grade against `final-mock-b.md`.**
 - Open loops:
-  1. Quiz 3 mistakes are still open: retries R1–R6 and the Mock D items in `quizzes/quiz-03/quiz-03-mistakes.md`.  Ripple-free deadbeat was left blank in both Mock A and Mock D.
-  2. No LaTeX note covers anything after Ch 4 (LPH Lect 1–5, Wen Ch 5–6).  Those topics exist only as HTML study pages.
-  3. LPH Lect 4–5 (observers, integral control, LQR) have no study page and no note at all.
-  4. No final-exam intel file yet (`quizzes/final-intel.md` does not exist).
+  1. No official past paper is local: download EE6203 papers from the NTU Library into `tests/` (git-ignored) for the last protocol step.
+  2. NTULearn not synced since 27 Oct (no browser on 27 Nov): check for a final-exam announcement.
+  3. Quiz 3 mistakes carried into `quizzes/final/final-mistakes.md` C1–C7; they close through Mock B Q2.
+  4. No LaTeX note covers anything after Ch 4 (LPH Lect 1–5, Wen Ch 5–6).  Those topics exist only as HTML study pages.
 
 ## Notes
 
@@ -28,17 +29,21 @@ This course uses its own note filenames instead of `beginner-notes.tex` / `notes
 | `course-exercises.pdf`, `course-exercises-solutions.pdf` | 1–5, 1–26 | both `.tex` notes (representative methods) | Solutions are an unofficial compilation; re-derive before use. |
 | `lph-lecture-01-…pdf`, `-02-…`, `-03-…` (§1–13) | 28, 20, 31 pp. | `notes/quiz2-prep-learning.html` only | No LaTeX.  Ex 1.3, 1.8, 2.8, 2.9, 3.6 summarised, not worked. |
 | `lph-lecture-01-slide-40-theta-note.pdf`, `lph-matrix-basics-summary.pdf` | 1, 3 pp. | `notes/quiz2-prep-learning.html` Modules 3, 0 | |
-| `lph-lecture-04-observers-integral-control.pdf` (§14–21) | 30 pp. | not covered | |
-| `lph-lecture-05-optimal-control-lqr.pdf` (§22–23) | 26 pp. | not covered | |
+| `lph-lecture-04-observers-integral-control.pdf` (§14–21) | 30 pp. | pp. 1–30 in `quizzes/final/final-primer.html` O1–O3 | Primer depth; no LaTeX. |
+| `lph-lecture-05-optimal-control-lqr.pdf` (§22–23) | 26 pp. | pp. 10–26 in `quizzes/final/final-primer.html` L1–L2 | Primer depth; pp. 1–9 (dynamic-programming intro) not covered.  p. 26 typo (0.2807 for 0.2087). |
 | `lph-transform-table-ay2018-19-s1.pdf` | 2 pp. | not covered | The table issued in LPH's quiz and exam. |
 | `lecture-notes-chapters-05-06.pdf` (Wen Ch 5–6) | 1–151 | `quizzes/quiz-03/quiz-03-primer.html` only | Primer depth.  Ex 5.5, Ex 5.13 and §6.6–6.7 summarised.  No LaTeX. |
 | `week-01…07-transcript.txt` (cleaned) | Weeks 1–7 | Weeks 1–3 in the `.tex` notes; 4–7 mined for quiz rules only | Week 7 file is the 26 Sep make-up lecture. |
-| `transcripts-raw/week-01…12-transcript.txt` | Weeks 1–12 | Weeks 8–12 raw only; 10–12 mined for Quiz 3 intel | Machine transcripts; do not adopt their wording. |
-| `public-archive-2026-08-24/` | 163 files | four 2022–23 walkthroughs, one Ch 4 example, two explainers used as question-pattern evidence | Unofficial student material; index in its `README.md`.  Rest unread. |
+| `transcripts-raw/week-01…12-transcript.txt` | Weeks 1–12 | Weeks 8–12 raw only; 10–12 mined for Quiz 3 intel; 1–2, 5, 8–9 for final intel | Machine transcripts; do not adopt their wording. |
+| `public-archive-2026-08-24/` | 163 files | 2022–23 walkthroughs, the past-final topic spreadsheet, one Ch 4 example, two explainers used as question-pattern evidence (`quizzes/final/final-intel.md`) | Unofficial student material; index in its `README.md`.  Rest unread. |
 
 ## Study pages
 
 Open from `index.html`.  All are unofficial practice.
+
+- `quizzes/final/final-primer.html` – light final primer, 14 cards over the four slots, 21 checks, slide pop-ups from `quizzes/final/final-pages/`; checker `final-check.py`.
+- `quizzes/final/final-mock-b.html` / `.md` – cold 4 × 25 paper, 3 h, with key and rubric; checker `final-mock-b-check.py`.
+- Final records: `quizzes/final/final-intel.md`, `final-mistakes.md`.
 
 - `notes/quiz1-prep-learning.html` – Ch 1–4 course, 6 modules, 48 checks, 2 mocks.
 - `notes/quiz2-prep-learning.html` – LPH Lect 1–3 from zero, 12 modules, 71 checks; checker `notes/quiz2-prep-learning-check.py`; slide images `notes/quiz2-slides/`.
@@ -56,5 +61,5 @@ Open from `index.html`.  All are unofficial practice.
 
 ## Unresolved
 
-- Final-exam date, format and scope (see Now).
-- Whether the final follows the quiz pattern per block; no 2024–2026 exam paper is held locally (the archive stops at AY2018-19 solutions and 2015–2023 personal walkthroughs).
+- Final-exam time, venue and calculator rule (not on NTULearn as of the 27 Oct sync).
+- Whether 2024–2026 papers keep the 23-S1 slot split; no official paper is held locally (the archive stops at AY2018-19 solutions and 2015–2023 personal walkthroughs).
