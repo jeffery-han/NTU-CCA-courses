@@ -4,6 +4,8 @@ History only: file moves, update records and settled assessment details.  Do not
 
 ## Entries since 2026-11-16
 
+- 2026-11-27 Graded official 2025–26 S1 Q2–Q5 (`attempts/final-2025-26-s1-q{2,3,4,5}-2026-11-27.jpg`, record `quizzes/final/final-2025-26-s1-attempt-2026-11-27-marked.md`): **39/80** (Q2 15/20, Q3 11.5/20, Q4 10.5/20, Q5 2/20; 18 marks blank in Q3(b)(iii) & Q5(b)–(c)). Closed Mistakes #8–#12 (servo `v`, hybrid `1/k_e` force servo & separate gains, wheel `l/α/β`); opened #16 (`d` in `β`), #17 (homography line-split counting), #18 (homography row entries `-b_x(a_x,a_y)` / `-b_y(a_x,a_y)`), #19 (Kalman `+ Σ L_i² σ_i²` & keeping `p_k` in `∂p/∂L_i`).
+
 - 2026-11-27 Built local NTU-only HTML exam page `quizzes/final/ntu-only/final-2025-26-s1.html` (official 2025–26 S1 paper, 5 × 20, 3 h timer, autosave, paper toggles, export, cropped Figures 1–3, self-contained `quiz-assets/` for Safari) with worked key `ntu-only/final-2025-26-s1.md` and checker `ntu-only/final-2025-26-s1-check.py` (all 18 values verified, no leaks, no `../`). Added to `index.html` and `STATUS.md`. Everything inside `ntu-only/` remains git-ignored.
 
 - 2026-11-26 Added two interactive visualized frames to `quizzes/final/final-relearn-q2-q5.html`: Part 4 robot coordinate frame (`{X_R, Y_R}` at `P`, hub `A(x_A, y_A)`, `l`, `α`, `β`, axle `α + β`, rolling `α + β − 90°`, presets, sliders, live constraint rows) and Part 5 velocity-projection diagram (`{X_I, Y_I} → {X_R, Y_R}` `R(θ)` inset, `v_A = v_P + θ̇ × r_A`, orthogonal projections onto rolling and axle axes, per-column presets, and valid no-slide mode). `final-relearn-q2-q5-check.py` passes.
