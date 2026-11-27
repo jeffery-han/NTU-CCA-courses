@@ -5,7 +5,7 @@ Computer Control Systems.  Three teaching blocks: C. Wen Ch 1–4 (Weeks 1–4),
 ## Now
 
 - **Next assessment: final exam, Tue 1 Dec 2026** (date from the learner; time, venue and calculator rule not verified).  Format: 3 h, four questions × 25 marks, 60 % (Wen Weeks 1–2, Lee Week 5 transcripts).  Slots, unofficial (2022–23 walkthroughs): Q1 Wen Ch 1–3, Q2 Wen Ch 4–6, Q3 Lee Lect 1–3, Q4 Lee Lect 3–5.  Evidence and conventions: `quizzes/final/final-intel.md`.
-- Prep (shortened protocol, `final-intel.md`): step 1 `final-primer.html` built.  **Next: sit `quizzes/final/final-mock-b.html` cold (3 h, handwritten), then grade against `final-mock-b.md`.**
+- Prep (`final-intel.md` protocol): primer part by part, each part closed by its exam-style exercise E1–E4 (25 marks, 45 min, graded in chat; move on at ≥ 20/25, no blank part).  **Next: primer part Q1, then exercise E1.**  Mock B (cold, 3 h) after E1–E4 pass.
 - Open loops:
   1. No official past paper is local: download EE6203 papers from the NTU Library into `tests/` (git-ignored) for the last protocol step.
   2. NTULearn not synced since 27 Oct (no browser on 27 Nov): check for a final-exam announcement.
@@ -41,7 +41,7 @@ This course uses its own note filenames instead of `beginner-notes.tex` / `notes
 
 Open from `index.html`.  All are unofficial practice.
 
-- `quizzes/final/final-primer.html` – light final primer, 14 cards over the four slots, 21 checks, slide pop-ups from `quizzes/final/final-pages/`; checker `final-check.py`.
+- `quizzes/final/final-primer.html` – light final primer, 14 cards over the four slots, 21 checks, slide pop-ups from `quizzes/final/final-pages/`, plus one answer-free exam-style exercise per part (E1–E4, key `final-primer-exercises.md`); checker `final-check.py`.
 - `quizzes/final/final-mock-b.html` / `.md` – cold 4 × 25 paper, 3 h, with key and rubric; checker `final-mock-b-check.py`.
 - Final records: `quizzes/final/final-intel.md`, `final-mistakes.md`.
 

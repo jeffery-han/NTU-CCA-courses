@@ -58,8 +58,8 @@ No official EE6203 paper is local.  For EE-6221 the learner downloaded five pape
 
 | Step | Material | Status |
 |---|---|---|
-| 1 | `final-primer.html` (14 cards, 21 checks) | built 2026-11-27 |
-| 2 | `final-mock-b.html` cold, 3 h, handwritten; key `final-mock-b.md` | built 2026-11-27 — **next** |
+| 1 | `final-primer.html` (14 cards, 21 checks), one part at a time; after each part its exercise E1–E4 (exam-style, 25 marks, 45 min; key `final-primer-exercises.md`), graded; next part at ≥ 20/25 with no blank part | built 2026-11-27 — **next: Q1 part + E1** |
+| 2 | `final-mock-b.html` cold, 3 h, handwritten; key `final-mock-b.md` | built 2026-11-27; after E1–E4 pass |
 | 3 | Retrain every lost mark in `final-mistakes.md` | after grading |
 | 4 | Most recent official paper, cold | needs the NTU Library download |
 

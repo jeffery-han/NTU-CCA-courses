@@ -72,6 +72,13 @@ dialog { max-width: min(900px, 94vw); border: 1px solid var(--border); border-ra
 dialog img { width: 100%; display: block; margin: 8px 0; border: 1px solid var(--border); background: #fff; }
 dialog::backdrop { background: rgba(0, 0, 0, .5); }
 .row { display: flex; gap: 10px; align-items: center; }
+.card.exercise { border: 2px solid var(--accent); background: var(--surface); }
+.card.exercise [data-part] { border-top: 1px solid var(--border); padding-top: 4px; margin-top: 10px; }
+.exbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 8px 0; }
+.extimer { font: 600 1rem var(--mono); } .extimer.over { color: var(--danger); }
+.exwork { display: block; margin-top: 6px; font-size: .9rem; color: var(--muted); }
+.exwork textarea, #exOut { width: 100%; font: 13px var(--mono); background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; }
+#exOut { min-height: 18em; }
 @media (max-width: 860px) {
   .app { grid-template-columns: 1fr; }
   nav.toc { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--border); }
@@ -106,7 +113,7 @@ dialog::backdrop { background: rgba(0, 0, 0, .5); }
 <h3>The paper and the plan</h3>
 <p style="margin:.2rem 0"><b>Final: 3 h, four questions of 25 marks, 60 % of the course</b> (Prof. Wen in the Week 1 and Week 2 lectures). The z-transform table is given; not every property is. The 2022&ndash;23 sittings, recalled in student walkthroughs, put <b>Q1</b> = Wen Ch 1&ndash;3, <b>Q2</b> = Wen Ch 4&ndash;6, <b>Q3</b> = Lee state-space models, <b>Q4</b> = Lee design (pole placement, observers, LQR). Date and venue: <b>check the exam timetable</b>; they are not in the course files. Evidence and conventions: <code>final-intel.md</code>.</p>
 <ol style="margin:.3rem 0">
-  <li><b>Primer</b> (this page): one evening.</li>
+  <li><b>Primer, one part at a time</b> (this page). Each of the four parts ends with an <b>exam-style exercise</b> (25 marks, 45 min, the shape of that exam question, new numbers). Do it on paper, then send me the photo and the export. Move on to the next part at <b>20/25 or more with no part blank</b>; below that, we fix each lost mark and you redo a fresh variant first.</li>
   <li><b>Mock B</b>, cold: 3 h, handwritten, graded against <code>final-mock-b.md</code>.</li>
   <li><b>Retrain</b> every lost mark in <code>final-mistakes.md</code>, retry a fresh variant.</li>
   <li><b>Official past paper</b> (NTU Library), cold under exam conditions, then graded and retrained.</li>
@@ -145,6 +152,26 @@ valid only when every pole of \((1-z^{-1})X(z)\) is strictly inside the unit cir
 <div class="pit"><b>Pitfall.</b> Block diagrams with samplers in different places give different results: \(\mathcal Z[G_1G_2]\ne G_1(z)G_2(z)\). Re-read the sampler positions.</div>
 <div class="refs"><b>References:</b> <a class="cite" href="../../resources/lecture-notes-weeks-01-04.pdf#page=111" data-pages="lecture-notes-weeks-01-04:111-115">Wen notes pp. 111&ndash;115 (DAC + analog plant, Example 3-4)</a> &middot; <a class="cite" href="../../resources/lecture-notes-weeks-01-04.pdf#page=122" data-pages="lecture-notes-weeks-01-04:122-129">pp. 122&ndash;129 (closed-loop pulse transfer functions)</a></div>
 <div class="chk">\(G(s)=\dfrac{2}{s+2}\), \(T=\ln 2\): \(G_{ZAS}(z)=\dfrac{b}{z-a}\). Find \(b\): <input aria-label="b"> <button class="btn">check</button><span class="fb"></span></div>
+</div>
+
+<div class="card exercise" data-ex="E1" data-marks="a:6,b:5,c:8,d:6">
+<h3>Exercise E1 &middot; exam-style Question 1 <span class="tag">25 marks &middot; 45 min &middot; on paper</span></h3>
+<p class="sub">Same shape as the recalled Q1s (23-S1, 22-S1): signal types, X(z) from the definition, the FVT, a difference equation, a ZOH pulse transfer function. New numbers. Closed book; the z-transform table is assumed given.</p>
+<div class="exbar"></div>
+<div data-part="a"><h4>(a) 6 marks</h4>
+<p>\(x(t)=0\) for \(t&lt;0\), \(x(t)=t\) for \(0\le t&lt;1\), \(x(t)=1\) for \(t\ge1\).</p>
+<p>(i) Is \(x(t)\) a continuous-time signal? Is the sampled sequence \(x(kT)\) a digital signal? Give a reason for each. <b>(2)</b></p>
+<p>(ii) The signal is sampled with \(T=0.25\) s. Find \(X(z)\) from the definition of the z-transform and write it as a single rational function of \(z\). <b>(4)</b></p></div>
+<div data-part="b"><h4>(b) 5 marks</h4>
+<p>For each signal, say whether the final value theorem may be used. If it may, find the final value; if not, say what \(y(k)\) does as \(k\to\infty\).</p>
+<p>\[Y_1(z)=\frac{0.5z}{(z-1)(z-0.6)},\qquad Y_2(z)=\frac{z}{(z-1)^2},\qquad Y_3(z)=\frac{z}{(z-1)(z-1.2)}.\]</p></div>
+<div data-part="c"><h4>(c) 8 marks</h4>
+<p>\(y(k+2)-0.7\,y(k+1)+0.1\,y(k)=2\,x(k+1)\), where \(x(k)\) is the unit step and \(x(k)=y(k)=0\) for \(k&lt;0\).</p>
+<p>(i) Find \(y(0)\) and \(y(1)\). <b>(2)</b> (ii) Find \(y(k)\) in closed form using the z-transform. <b>(5)</b> (iii) Check your answer with \(y(2)\) from the recursion. <b>(1)</b></p></div>
+<div data-part="d"><h4>(d) 6 marks</h4>
+<p>The plant \(G(s)=\dfrac{1}{(s+1)(s+2)}\) is driven through a zero-order hold, \(T=\ln 2\) s.</p>
+<p>(i) Find the pulse transfer function \(G_{ZAS}(z)\) in factored form. <b>(4)</b></p>
+<p>(ii) The loop is closed with unity negative feedback and a digital gain \(C(z)=2\). Find the closed-loop pulse transfer function \(Y(z)/R(z)\) and its poles. Is the loop stable? <b>(2)</b></p></div>
 </div>
 
 <!-- ======================== Q2 ======================== -->
@@ -196,6 +223,24 @@ Type = number of poles of \(CG\) at \(z=1\). \(K_p=\lim_{z\to1}CG\), \(K_v=\lim_
 <div class="chk">Standard programming of a first-order \(D(z)\) needs how many delays? <select><option value="">&mdash;</option><option>1</option><option>2</option><option>3</option></select> <button class="btn">check</button><span class="fb"></span></div>
 </div>
 
+<div class="card exercise" data-ex="E2" data-marks="a:8,b:10,c:7">
+<h3>Exercise E2 &middot; exam-style Question 2 <span class="tag">25 marks &middot; 45 min &middot; on paper</span></h3>
+<p class="sub">Same shape as the recalled Q2s (2019&ndash;2023): a given \(G_{ZAS}(z)\) with a gain, Jury and errors, then deadbeat and ripple-free design, then emulation and programming. New numbers.</p>
+<div class="exbar"></div>
+<p>A unity negative-feedback loop (\(e=r-y\)) has the ZOH plant \(\displaystyle G(z)=\frac{0.1(z+0.8)}{(z-1)(z-0.7)}\), \(T=0.1\) s, and a digital controller \(C(z)\).</p>
+<div data-part="a"><h4>(a) 8 marks</h4>
+<p>(i) With \(C(z)=K\), find the characteristic equation and use the Jury test to find the range of \(K\) for stability. <b>(5)</b></p>
+<p>(ii) At the upper limit of that range, at what frequency (rad/s) does the loop oscillate? <b>(1)</b></p>
+<p>(iii) With \(K=2\), find the steady-state error for a unit step and for a unit ramp \(r(t)=t\). <b>(2)</b></p></div>
+<div data-part="b"><h4>(b) 10 marks</h4>
+<p>(i) Design the minimal-time deadbeat controller for a step input, \(G_{cl}(z)=z^{-1}\). Find \(C(z)\) and the first four control samples \(u(0),\dots,u(3)\), and explain what the plant output does <em>between</em> samples. <b>(4)</b></p>
+<p>(ii) Design a <b>ripple-free</b> deadbeat controller for a step input. State the conditions \(G_{cl}(z)\) must satisfy, then find \(G_{cl}(z)\), \(C(z)\), the sequences \(u(k)\) and \(y(k)\), and the settling time. <b>(6)</b></p></div>
+<div data-part="c"><h4>(c) 7 marks</h4>
+<p>An analog lead compensator \(D(s)=\dfrac{s+2}{s+10}\) is to be implemented with \(T=0.1\) s.</p>
+<p>(i) Find \(D(z)\) by the bilinear (Tustin) transformation and check its DC gain. <b>(4)</b></p>
+<p>(ii) Write the difference equations for the <b>standard</b> programming of \(D(z)\). How many delay elements does it need, and how many would direct programming need? <b>(3)</b></p></div>
+</div>
+
 <!-- ======================== Q3 ======================== -->
 <h2 id="s-q3">Q3 &middot; Discrete state-space models</h2>
 
@@ -228,6 +273,23 @@ and \(\mathbf C,\mathbf D\) are unchanged.</div>
 <div class="refs"><b>References:</b> <a class="cite" href="../../resources/lph-lecture-02-canonical-forms-controllability.pdf#page=13" data-pages="lph-lecture-02-canonical-forms-controllability:13-18">Lee Lect 2 pp. 13&ndash;18 (controllability)</a> &middot; <a class="cite" href="../../resources/lph-lecture-03-observability-state-feedback-deadbeat.pdf#page=1" data-pages="lph-lecture-03-observability-state-feedback-deadbeat:1-5">Lect 3 pp. 1&ndash;5 (observability)</a> &middot; <a class="cite" href="../../resources/lph-lecture-03-observability-state-feedback-deadbeat.pdf#page=10" data-pages="lph-lecture-03-observability-state-feedback-deadbeat:10-14">pp. 10&ndash;14 (state feedback, pole placement)</a> &middot; <a class="cite" href="../../resources/lph-lecture-03-observability-state-feedback-deadbeat.pdf#page=21" data-pages="lph-lecture-03-observability-state-feedback-deadbeat:21-30">pp. 21&ndash;30 (Ackermann, deadbeat control)</a></div>
 <div class="chk">Double integrator, \(T=0.5\), \(\mathbf\Theta=[0.125\ \ 0.5]^T\), deadbeat: \(k_1=\) <input aria-label="k1"> <button class="btn">check</button><span class="fb"></span></div>
 <div class="chk">\(k_2=\) <input data-num="2" aria-label="k2"> <button class="btn">check</button><span class="fb"></span></div>
+</div>
+
+<div class="card exercise" data-ex="E3" data-marks="a:3,b:8,c:6,d:8">
+<h3>Exercise E3 &middot; exam-style Question 3 <span class="tag">25 marks &middot; 45 min &middot; on paper</span></h3>
+<p class="sub">Same shape as the recalled Q3s: build the state model, discretise with a ZOH, transfer function, controllability and observability, then a recursion question. New numbers. Give final numbers to 4 significant figures (Dr Lee, Week 5).</p>
+<div class="exbar"></div>
+<p>A motor position loop is modelled by \(\ddot y(t)+2\dot y(t)=u(t)\), with the position \(y\) measured. The input comes through a zero-order hold, \(T=0.2\) s.</p>
+<div data-part="a"><h4>(a) 3 marks</h4>
+<p>With \(x_1=y\), \(x_2=\dot y\), write the continuous state model: \(\mathbf A\), \(\mathbf B\), \(\mathbf C\).</p></div>
+<div data-part="b"><h4>(b) 8 marks</h4>
+<p>Find \(e^{\mathbf At}\) from \((s\mathbf I-\mathbf A)^{-1}\), then the discrete model matrices \(\mathbf\Phi\) and \(\mathbf\Theta\) as numbers.</p></div>
+<div data-part="c"><h4>(c) 6 marks</h4>
+<p>Find the pulse transfer function \(G(z)=\mathbf C(z\mathbf I-\mathbf\Phi)^{-1}\mathbf\Theta\). Check its poles against the continuous poles, and check \(\displaystyle\lim_{z\to1}\frac{(z-1)G(z)}{Tz}\) against \(\displaystyle\lim_{s\to0}sG(s)\).</p></div>
+<div data-part="d"><h4>(d) 8 marks</h4>
+<p>(i) Is the discrete system controllable? Show the determinant. <b>(3)</b></p>
+<p>(ii) With \(u(k)=0\), the measurements are \(y(0)=0\) and \(y(1)=0.1\). Find the initial state \(\mathbf x(0)\). <b>(3)</b></p>
+<p>(iii) Suppose only the velocity were measured, \(y=x_2\). Is the system observable? Explain what that means physically. <b>(2)</b></p></div>
 </div>
 
 <!-- ======================== Q4 ======================== -->
@@ -293,12 +355,34 @@ and \(\mathbf C,\mathbf D\) are unchanged.</div>
 <div class="chk">Same problem, steady-state \(S\) (with Lee's ½ convention): <input data-num="2" aria-label="S"> <button class="btn">check</button><span class="fb"></span></div>
 </div>
 
-<p style="text-align:center;margin-top:28px"><a class="btn btn-primary" href="final-mock-b.html">Step 2: Mock B, cold &rarr;</a></p>
+<div class="card exercise" data-ex="E4" data-marks="a:7,b:7,c:5,d:6">
+<h3>Exercise E4 &middot; exam-style Question 4 <span class="tag">25 marks &middot; 45 min &middot; on paper</span></h3>
+<p class="sub">Same shape as the recalled Q4s: Ackermann gain, an observer, a reference gain, infinite-time LQR. New numbers. As Dr Lee promised (Weeks 8&ndash;9), the long observer and Riccati equations are given; Ackermann's formula is not.</p>
+<div class="exbar"></div>
+<p>\[\mathbf x(k+1)=\begin{bmatrix}1&0.4\\0&0.6\end{bmatrix}\mathbf x(k)+\begin{bmatrix}0.2\\1\end{bmatrix}u(k),\qquad y(k)=\begin{bmatrix}1&0\end{bmatrix}\mathbf x(k).\]</p>
+<div class="formula" style="font-size:.92rem"><b>Given.</b> Prediction observer: \(\hat{\mathbf x}(k+1)=\mathbf A\hat{\mathbf x}(k)+\mathbf Bu(k)+\mathbf L_O[y(k)-\mathbf C\hat{\mathbf x}(k)]\).
+Reduced-order observer: \(\hat x_b(k+1)=(A_{bb}-L_rA_{ab})\hat x_b(k)+L_r\,y(k+1)+(A_{ba}-L_rA_{aa})\,y(k)+(B_b-L_rB_a)\,u(k)\).
+Infinite-time LQR with \(J=\tfrac12\sum_{k=0}^{\infty}(\mathbf x^T\mathbf Q\mathbf x+\mathbf u^T\mathbf R\mathbf u)\): \(\mathbf S=\mathbf A^T\mathbf S\mathbf A-\mathbf A^T\mathbf S\mathbf B(\mathbf B^T\mathbf S\mathbf B+\mathbf R)^{-1}\mathbf B^T\mathbf S\mathbf A+\mathbf Q\), \(\mathbf K=(\mathbf B^T\mathbf S\mathbf B+\mathbf R)^{-1}\mathbf B^T\mathbf S\mathbf A\).</div>
+<div data-part="a"><h4>(a) 7 marks</h4>
+<p>Check that the system is controllable, then use Ackermann's formula to find \(\mathbf K\) in \(u=-\mathbf K\mathbf x\) that places the closed-loop poles at \(z=0.4\pm j0.3\). Verify your answer.</p></div>
+<div data-part="b"><h4>(b) 7 marks</h4>
+<p>(i) Design a prediction observer whose estimation error reaches zero in at most two steps. Find \(\mathbf L_O\) and show that the error matrix is nilpotent. <b>(4)</b></p>
+<p>(ii) Since \(y=x_1\) is measured, design instead a reduced-order observer for \(x_2\) with its pole at \(z=0.2\). Find \(L_r\) and write the observer equation with numbers. <b>(3)</b></p></div>
+<div data-part="c"><h4>(c) 5 marks</h4>
+<p>(i) Using \(\mathbf K\) from (a) with the observer from (b)(i), write the characteristic polynomial of the whole closed loop and name the principle you used. <b>(2)</b></p>
+<p>(ii) With \(u(k)=-\mathbf K\mathbf x(k)+k_r\,r(k)\) (full state feedback), find \(k_r\) so that \(y\) follows a constant reference with zero steady-state error. <b>(3)</b></p></div>
+<div data-part="d"><h4>(d) 6 marks</h4>
+<p>A scalar plant \(x(k+1)=1.5\,x(k)+u(k)\), \(x(0)=1\), is to minimise \(J=\sum_{k=0}^{\infty}\left[x^2(k)+u^2(k)\right]\).</p>
+<p>(i) Write \(Q\) and \(R\) for the given form of \(J\). <b>(1)</b> (ii) Solve for \(S\) and the optimal gain \(K\). <b>(3)</b> (iii) Find the closed-loop pole, \(x(1)\), \(x(2)\) and the minimum cost \(J^*\). <b>(2)</b></p></div>
+</div>
+
+<p style="text-align:center;margin-top:28px"><a class="btn btn-primary" href="final-mock-b.html">Step 2 (after E1&ndash;E4 pass): Mock B, cold &rarr;</a></p>
 <p class="sub" style="font-size:.85rem">Unofficial study aid. Formulas follow the cited slides; every key is recomputed by <code>final-check.py</code>.</p>
 </main>
 </div>
 
 <dialog id="srcDlg"><div class="row" style="justify-content:space-between"><b id="srcTitle"></b><span><a id="srcOpen" target="_blank">Open PDF</a> <button class="btn" id="srcClose">Close</button></span></div><div id="srcImgs"></div></dialog>
+<dialog id="exDlg"><p>Copy this into the chat together with a photo of your handwritten working.</p><textarea id="exOut" readonly></textarea><p><button class="btn" id="exCopy">Copy</button> <button class="btn" id="exClose">Close</button></p></dialog>
 
 <script type="application/json" id="keys">{"fvt": 3, "de": 1.5, "zas": 0.75, "jury": 3, "ess": 0.3, "rf": 0.625, "rfu": 3.125, "pz": 1.0988, "th": 0.125, "rec": 0.5, "k1": 4, "k2": 3, "lo1": 1.6, "lo2": 1.28, "lr": 1.2, "kr": 4, "lq1": 0.25, "lq2": 1.618, "lq2s": 8.4721}</script>
 <script>
@@ -354,6 +438,46 @@ and \(\mathbf C,\mathbf D\) are unchanged.</div>
   });
   document.getElementById('srcClose').onclick = function () { dlg.close(); };
   dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+})();
+</script>
+<script>
+(function () {
+  var KEY = 'ee6203-final-primer-exercises-v1', LIMIT = 2700, st = {};
+  try { st = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) {}
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
+  function fmt(s) { var a = Math.abs(s); return (s < 0 ? '-' : '') + Math.floor(a / 3600) + ':' + ('0' + Math.floor(a % 3600 / 60)).slice(-2) + ':' + ('0' + a % 60).slice(-2); }
+  var dlg = document.getElementById('exDlg'), out = document.getElementById('exOut');
+  document.querySelectorAll('.card.exercise').forEach(function (card) {
+    var ex = card.dataset.ex, s = st[ex] = st[ex] || { t: 0, p: {} }, tick = null;
+    var marks = {}; card.dataset.marks.split(',').forEach(function (m) { var kv = m.split(':'); marks[kv[0]] = kv[1]; });
+    card.querySelectorAll('[data-part]').forEach(function (part) {
+      var id = part.dataset.part, v = s.p[id] = s.p[id] || { paper: false, note: '' };
+      part.insertAdjacentHTML('beforeend', '<label class="exwork"><input type="checkbox"> Answered on paper</label>' +
+        '<label class="exwork"><textarea rows="2" placeholder="Optional typed note: final answers, or where you got stuck"></textarea></label>');
+      var cb = part.querySelector('.exwork input'), ta = part.querySelector('.exwork textarea');
+      cb.checked = v.paper; ta.value = v.note;
+      cb.onchange = function () { v.paper = cb.checked; save(); };
+      ta.oninput = function () { v.note = ta.value; save(); };
+    });
+    var bar = card.querySelector('.exbar');
+    bar.innerHTML = '<span class="extimer"></span><button class="btn">Start</button><button class="btn">Pause</button><button class="btn">Export for grading</button><button class="btn">Clear</button>';
+    var tEl = bar.querySelector('.extimer'), b = bar.querySelectorAll('button');
+    function show() { tEl.textContent = fmt(LIMIT - s.t); tEl.classList.toggle('over', s.t > LIMIT); }
+    show();
+    b[0].onclick = function () { if (!tick) tick = setInterval(function () { s.t++; show(); if (s.t % 5 === 0) save(); }, 1000); };
+    b[1].onclick = function () { clearInterval(tick); tick = null; save(); };
+    b[2].onclick = function () {
+      var lines = ['EE6203 Final primer - Exercise ' + ex + ' (unofficial)', 'Key: EE-6203/quizzes/final/final-primer-exercises.md',
+        'Marks: ' + Object.keys(marks).map(function (k) { return k + ' ' + marks[k]; }).join(', ') + ' = 25',
+        'Elapsed: ' + Math.floor(s.t / 60) + ' min ' + s.t % 60 + ' s (limit 45 min)', ''];
+      Object.keys(marks).forEach(function (k) { var v = s.p[k];
+        lines.push(ex + k + ' (' + marks[k] + '): ' + (v.paper ? 'answered on paper' : 'not ticked') + (v.note.trim() ? ' | note: ' + v.note.trim().replace(/\n/g, ' / ') : ' | <blank note>')); });
+      out.value = lines.join('\n'); dlg.showModal(); out.select();
+    };
+    b[3].onclick = function () { clearInterval(tick); tick = null; st[ex] = { t: 0, p: {} }; save(); location.reload(); };
+  });
+  document.getElementById('exCopy').onclick = function () { out.select(); try { navigator.clipboard.writeText(out.value); } catch (e) { document.execCommand('copy'); } };
+  document.getElementById('exClose').onclick = function () { dlg.close(); };
 })();
 </script>
 </body>
