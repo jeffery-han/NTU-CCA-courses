@@ -207,6 +207,36 @@ valid only when every pole of \((1-z^{-1})X(z)\) is strictly inside the unit cir
 <div class="formula">\[|a_2|&lt;a_0,\qquad P(1)>0,\qquad P(-1)>0\ (n \text{ even}).\]
 Type = number of poles of \(CG\) at \(z=1\). \(K_p=\lim_{z\to1}CG\), \(K_v=\lim_{z\to1}\dfrac{(z-1)CG}{Tz}\); step error \(1/(1+K_p)\), ramp error \(1/K_v\).</div>
 <p>For \(n=3\) you also need the \(b\)-row: \(|b_2|>|b_0|\) with \(b_0=a_3a_1-a_0a_2\)&hellip; you lost this in Quiz 3 Mock D, so practise it from <a href="../quiz-03/quiz-03-primer.html">the Quiz 3 primer</a>.</p>
+<details class="start"><summary>Start here: where the three Jury inequalities and the error formulas come from, worked on the check below</summary>
+<p><b>Picture.</b> A digital loop is stable when every closed-loop pole is strictly inside the unit circle, so each mode \(p^k\) dies away. The poles are the roots of \(P(z)\). For a 2nd-order \(P\) you could solve the quadratic, but with an unknown \(K\) that is messy. The Jury test only asks three sign questions about \(P\), and those give a range of \(K\) directly (<a class="cite" href="../../resources/lecture-notes-weeks-01-04.pdf#page=164" data-pages="lecture-notes-weeks-01-04:164-166">Wen notes pp. 164&ndash;166, eq. 4-5 and the criterion</a>).</p>
+<div class="tbl-wrap"><table class="sym"><thead><tr><th>Symbol</th><th>Meaning</th></tr></thead><tbody>
+<tr><td>\(G(z)\)</td><td>plant pulse transfer function (given)</td></tr>
+<tr><td>\(C(z)=K\)</td><td>controller gain (you choose it)</td></tr>
+<tr><td>\(P(z)=a_0z^2+a_1z+a_2\)</td><td>numerator of \(1+CG\) after clearing fractions; its roots are the closed-loop poles</td></tr>
+<tr><td>type</td><td>how many factors \((z-1)\) the denominator of \(CG\) has; each is a digital integrator (running sum)</td></tr>
+<tr><td>\(e_{ss}\)</td><td>error \(r-y\) at the sampling instants as \(k\to\infty\)</td></tr>
+</tbody></table></div>
+<p><b>Why each inequality</b> (\(n=2\), \(a_0>0\)).</p>
+<ol class="steps">
+<li>\(P(1)>0\). With \(a_0>0\), \(P(z)\) is positive for very large \(z\). If \(P(1)\le0\) it must cross zero somewhere at \(z\ge1\): a real pole on or outside the circle on the right.</li>
+<li>\(P(-1)>0\) for \(n\) even (\(&lt;0\) for \(n\) odd). The same argument on the left: for \(n\) even, \(P\) is positive for very negative \(z\), so \(P(-1)\le0\) means a real pole at \(z\le-1\).</li>
+<li>\(|a_2|&lt;a_0\). The product of the two roots is \(a_2/a_0\). If both have size below 1, the product does too. This one catches the complex pair that leaves the circle sideways, which the first two cannot see.</li>
+</ol>
+<p>For \(n=2\) the three together are also enough (Wen p. 166: the 4th condition is null). For \(n=3\) they are not, which is why the \(b\)-row is added.</p>
+<p><b>Worked on the check.</b> \(G=\dfrac{0.2(z+1)}{(z-1)(z-0.4)}\), \(C=K\). \(1+CG=0\), times \((z-1)(z-0.4)\):</p>
+<p>\[P(z)=(z-1)(z-0.4)+0.2K(z+1)=z^2+(0.2K-1.4)z+(0.4+0.2K).\]</p>
+<p>(1) \(P(1)=0+0.2K(2)=0.4K>0\ \Rightarrow\ K>0\). (2) \(P(-1)=(-2)(-1.4)+0=2.8>0\) for every \(K\): the plant zero at \(z=-1\) kills the \(K\) term. (3) \(|0.4+0.2K|&lt;1\ \Rightarrow\ -7&lt;K&lt;3\). Together: \(0&lt;K&lt;3\). At \(K=3\), \(P=z^2-0.8z+1\): complex poles with \(|z|^2=1\), on the circle, so marginal, not stable. The "largest stable \(K\)" is the strict bound 3.</p>
+<p><b>Why the error formulas</b> (<a class="cite" href="../../resources/lecture-notes-weeks-01-04.pdf#page=184" data-pages="lecture-notes-weeks-01-04:184-187">Wen notes pp. 184&ndash;187, eqs. 4.6&ndash;4.9</a>). Around the loop \(E=R-CG\,E\), so \(E=\dfrac{R}{1+CG}\). The final value theorem gives \(e_{ss}=\lim_{z\to1}(1-z^{-1})\dfrac{R}{1+CG}\), valid only if the loop is stable, so do Jury first.</p>
+<ul>
+<li>Step, \(R=\dfrac{z}{z-1}\): the \((1-z^{-1})=\dfrac{z-1}{z}\) cancels it, leaving \(e_{ss}=\dfrac{1}{1+K_p}\), \(K_p=\lim_{z\to1}CG\).</li>
+<li>Ramp, \(R=\dfrac{Tz}{(z-1)^2}\): one \((z-1)\) is left in the denominator, so \(e_{ss}=\lim\dfrac{T}{(1-z^{-1})CG}=\dfrac{1}{K_v}\), \(K_v=\lim_{z\to1}\dfrac{(1-z^{-1})CG}{T}=\lim_{z\to1}\dfrac{(z-1)CG}{Tz}\). The \(T\) comes from the ramp itself: \(r(kT)=kT\) climbs \(T\) per sample.</li>
+</ul>
+<p>So the type decides which error is finite. Type 0: \(K_p\) finite, \(K_v=0\), ramp error \(\infty\). Type 1: \(K_p=\infty\), step error 0, ramp error finite. In words: an integrator keeps adding the error until the error is gone, so one integrator removes a constant error, and against a ramp it leaves a constant lag.</p>
+<p><b>Worked on the second check.</b> \(K=1\) is inside \(0&lt;K&lt;3\). \(CG\) has one \((z-1)\): type 1, step error 0. \(K_v=\dfrac{1}{T}\cdot\dfrac{0.2(1+1)}{1\cdot(1-0.4)}=\dfrac{1}{0.2}\cdot\dfrac{0.4}{0.6}=3.33\), ramp error \(=1/K_v=0.3\). A 400-step simulation of the loop with \(r(k)=0.2k\) settles at \(e=0.300\) (my own check).</p>
+<p><b>Method to remember:</b> clear fractions to get \(P(z)\) → \(P(1)>0\), \(P(-1)\) sign, \(|a_n|&lt;a_0\) → intersect the ranges, strict → check \(K\) is in the range → count the \((z-1)\) factors → \(K_p\) or \(K_v\) (with \(1/T\)) → error.</p>
+<p><b>Self-check.</b> \(G=\dfrac{0.5}{(z-1)(z-0.5)}\), \(C=K\). Find the stable range of \(K\), then the ramp error for \(K=0.5\), \(T=0.1\) s.</p>
+<details><summary>Answer</summary><p>\(P=z^2-1.5z+(0.5+0.5K)\). \(P(1)=0.5K>0\Rightarrow K>0\); \(P(-1)=3+0.5K>0\Rightarrow K>-6\); \(|0.5+0.5K|&lt;1\Rightarrow-3&lt;K&lt;1\). Stable for \(0&lt;K&lt;1\). \(K=0.5\) is inside; type 1; \(K_v=\dfrac{1}{0.1}\cdot\dfrac{0.5(0.5)}{0.5}=5\), ramp error \(0.2\) (simulation: 0.200).</p></details>
+</details>
 <div class="ex"><p><b>Example.</b> \(CG=\dfrac{K}{z-0.5}\): \(P=z-0.5+K\), root \(0.5-K\), stable for \(-0.5&lt;K&lt;1.5\). Type 0: \(K_p=2K\).</p></div>
 <div class="pit"><b>Pitfalls.</b> The range is strict (marginal stability is not stable). Do not forget the \(1/T\) in \(K_v\).</div>
 <div class="refs"><b>References:</b> <a class="cite" href="../../resources/lecture-notes-weeks-01-04.pdf#page=164" data-pages="lecture-notes-weeks-01-04:164-175">Wen notes pp. 164&ndash;175 (Jury test, Examples 4.4&ndash;4.8)</a> &middot; <a class="cite" href="../../resources/lecture-notes-weeks-01-04.pdf#page=183" data-pages="lecture-notes-weeks-01-04:183-191">pp. 183&ndash;191 (steady-state error, error constants)</a></div>
