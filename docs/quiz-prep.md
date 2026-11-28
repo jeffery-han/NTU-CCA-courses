@@ -69,7 +69,7 @@ Everything from student recollection is unofficial: label it so in every file it
 
 ## Step 3 – Light primer
 
-`quizzes/<assessment>/<assessment>-primer.html`: per in-scope topic, the idea in two or three sentences, the formulas, one worked example, one or two checks with immediate feedback.  No long derivations.  Link to an existing study page instead of rewriting it.  Skip topics the learner already passes.
+`quizzes/<assessment>/<assessment>-primer.html`: per in-scope topic, the idea in two or three sentences, the base equations, then each derived formula as a short derivation chain from them (a few lines, collapsible; full proofs stay out), one worked example, one or two checks with immediate feedback.  Link to an existing study page instead of rewriting it.  Skip topics the learner already passes.
 
 If the learner then asks for more explanation of one part, rebuild that part from zero as a collapsible "Start here" block: picture first, a symbol table, each formula derived, the reason behind each condition, one verified example, one self-check.
 

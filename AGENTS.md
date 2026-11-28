@@ -67,4 +67,5 @@ Update `STATUS.md` in the same change as the work.  When an item is finished, se
 1. Answer the question directly first.
 2. Ground course-specific claims in the source: inspect the relevant pages before writing, and cite the file and page.  Mark anything that is your own explanation or example as such.
 3. If the question is ambiguous or the source is missing, say so and ask for the page or context before making a source-specific claim.
-4. Do not invent course policies, deadlines, weightings or official interpretations.  Mark unofficial information (student recollections, transcripts) as unofficial.
+4. Teach formulas by derivation, not memorization (the learner's stated preference).  Separate the few *base equations* worth remembering from the *derived results* built on them; for each derived result, show the short chain of steps from a base equation and say why each step is taken, so the learner can rebuild it instead of recalling it.  In study pages and notes, label each formula `base` or `derived from …`.
+5. Do not invent course policies, deadlines, weightings or official interpretations.  Mark unofficial information (student recollections, transcripts) as unofficial.
