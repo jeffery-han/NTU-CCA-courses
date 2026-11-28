@@ -72,6 +72,8 @@ dialog { max-width: min(900px, 94vw); border: 1px solid var(--border); border-ra
 dialog img { width: 100%; display: block; margin: 8px 0; border: 1px solid var(--border); background: #fff; }
 dialog::backdrop { background: rgba(0, 0, 0, .5); }
 .row { display: flex; gap: 10px; align-items: center; }
+.tbl { background: var(--surface-2); border: 1px dashed var(--border); border-radius: 10px; padding: 8px 14px; margin: 10px 0; font-size: .92rem; }
+.tbl ul { margin: 6px 0 2px; padding-left: 1.1rem; } .tbl li { margin: .35rem 0; overflow-x: auto; overflow-y: hidden; padding-bottom: 2px; } .tbl li .katex-html { white-space: nowrap; } .tbl p { margin: .3rem 0 0; color: var(--muted); }
 .card.exercise { border: 2px solid var(--accent); background: var(--surface); }
 .card.exercise [data-part] { border-top: 1px solid var(--border); padding-top: 4px; margin-top: 10px; }
 .exbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 8px 0; }
@@ -130,6 +132,7 @@ dialog::backdrop { background: rgba(0, 0, 0, .5); }
 valid only when every pole of \((1-z^{-1})X(z)\) is strictly inside the unit circle.</div>
 <div class="ex"><p><b>Example.</b> \(x(kT)=3,1,1,1,\dots\) (a 3 at \(k=0\), then a step of 1): \(X(z)=3+\sum_{k\ge1}z^{-k}=3+\dfrac{1}{z-1}\). Its final value: \((1-z^{-1})X(z)=\dfrac{z-1}{z}\cdot3+\dfrac1z\to 1\) as \(z\to1\). Correct: the sequence settles at 1.</p></div>
 <div class="pit"><b>Pitfalls.</b> At a jump, the sample takes the value of the branch that holds at that instant (\(t\ge1\) means the new branch at \(t=1\)). A pole at \(z=-1\) or a double pole at \(z=1\) forbids the FVT: say so, do not compute a number.</div>
+<div class="tbl"><b>Table rows used here (supplied table, \(X(s)\to x(kT)\to X(z)\) columns; <a class="cite" href="../../resources/lph-transform-table-ay2018-19-s1.pdf#page=1" data-pages="lph-transform-table-ay2018-19-s1:1-2">full table</a>)</b><ul><li><b>Row 3</b> \(\dfrac1s\ \to\ 1(k)\ \to\ \dfrac{1}{1-z^{-1}}=\dfrac{z}{z-1}\)</li><li><b>Row 18</b> \(a^k\ \to\ \dfrac{1}{1-az^{-1}}=\dfrac{z}{z-a}\)</li></ul><p>Row 18 is the geometric series \(\sum_k a^kz^{-k}\); with \(a=1\) it is row 3.</p></div>
 <div class="refs"><b>References:</b> <a class="cite" href="../../resources/lecture-notes-weeks-01-04.pdf#page=12" data-pages="lecture-notes-weeks-01-04:12-15">Wen notes pp. 12&ndash;15 (types of signals)</a> &middot; <a class="cite" href="../../resources/lecture-notes-weeks-01-04.pdf#page=24" data-pages="lecture-notes-weeks-01-04:24-33">pp. 24&ndash;33 (z-transform, elementary functions)</a> &middot; <a class="cite" href="../../resources/lecture-notes-weeks-01-04.pdf#page=34" data-pages="lecture-notes-weeks-01-04:34-48">pp. 34&ndash;48 (properties, initial and final value theorems)</a> &middot; full drill: <a href="../../notes/quiz1-prep-learning.html">Quiz 1 learning page</a></div>
 <div class="chk">Final value of \(X(z)=\dfrac{0.6z^2}{(z-1)(z-0.8)}\): <input aria-label="final value"> <button class="btn">check</button><span class="fb"></span></div>
 <div class="chk">The samples \(e^{-0.5k}\), stored with full precision, form a&hellip; <select><option value="">&mdash;</option><option>digital signal</option><option>sampled-data signal</option><option>continuous-time signal</option></select> <button class="btn">check</button><span class="fb"></span></div>
@@ -140,6 +143,7 @@ valid only when every pole of \((1-z^{-1})X(z)\) is strictly inside the unit cir
 <p>Shift theorem: \(\mathcal Z[y(k+1)]=zY(z)-zy(0)\), \(\mathcal Z[y(k+2)]=z^2Y(z)-z^2y(0)-zy(1)\). So you need \(y(0)\) and \(y(1)\). If the question gives \(y(k)=0\) for \(k&lt;0\) instead, <b>compute them</b> by putting \(k=-2\) and \(k=-1\) into the equation (Prof. Wen: do not assume initial values the question does not give).</p>
 <ol class="steps"><li>Initial values from the equation at negative \(k\).</li><li>Transform, solve for \(Y(z)\).</li><li>Partial fractions on \(Y(z)/z\), then the table.</li><li>Check one value against the recursion.</li></ol>
 <div class="ex"><p><b>Example.</b> \(y(k+1)-0.5y(k)=x(k)\), unit step \(x\), \(y(k)=0\) for \(k&lt;0\). At \(k=-1\): \(y(0)=0\). Then \((z-0.5)Y=\dfrac{z}{z-1}\), \(\dfrac{Y}{z}=\dfrac{2}{z-1}-\dfrac{2}{z-0.5}\), so \(y(k)=2-2(0.5)^k\). Check: \(y(1)=0.5y(0)+x(0)=1=2-1\).</p></div>
+<div class="tbl"><b>Table rows used here (supplied table, \(X(s)\to x(kT)\to X(z)\) columns; <a class="cite" href="../../resources/lph-transform-table-ay2018-19-s1.pdf#page=1" data-pages="lph-transform-table-ay2018-19-s1:1-2">full table</a>)</b><ul><li><b>Shift</b> \(x(k+1)\ \to\ zX(z)-zx(0)\)</li><li><b>Shift</b> \(x(k+2)\ \to\ z^2X(z)-z^2x(0)-zx(1)\)</li><li><b>Row 3</b> \(\dfrac1s\ \to\ 1(k)\ \to\ \dfrac{1}{1-z^{-1}}=\dfrac{z}{z-1}\)</li><li><b>Row 18</b> \(a^k\ \to\ \dfrac{1}{1-az^{-1}}=\dfrac{z}{z-a}\)</li></ul></div>
 <div class="refs"><b>References:</b> <a class="cite" href="../../resources/lecture-notes-weeks-01-04.pdf#page=49" data-pages="lecture-notes-weeks-01-04:49-66">Wen notes pp. 49&ndash;66 (inverse z-transform, partial fractions)</a> &middot; <a class="cite" href="../../resources/lecture-notes-weeks-01-04.pdf#page=67" data-pages="lecture-notes-weeks-01-04:67-69">pp. 67&ndash;69 (solving difference equations)</a></div>
 <div class="chk">\(y(k+2)-0.5y(k+1)=x(k)\), unit step \(x\), \(y(k)=0\) for \(k&lt;0\). Find \(y(3)\): <input aria-label="y(3)"> <button class="btn">check</button><span class="fb"></span></div>
 </div>
@@ -147,9 +151,10 @@ valid only when every pole of \((1-z^{-1})X(z)\) is strictly inside the unit cir
 <div class="card" data-k="zas">
 <h3>Z3. Pulse transfer function with a zero-order hold <span class="badge ref">Refresh</span><span class="tag">most recalled papers</span></h3>
 <div class="formula">\[G_{ZAS}(z)=(1-z^{-1})\,\mathcal Z\!\left[\frac{G(s)}{s}\right],\qquad \frac{Y(z)}{R(z)}=\frac{C(z)G_{ZAS}(z)}{1+C(z)G_{ZAS}(z)}\ \text{(unity feedback)}\]</div>
-<p>Do the partial fractions of \(G(s)/s\) in \(s\), use the table, then multiply by \((z-1)/z\). A sampling period such as \(T=\ln 2\) makes \(e^{-T}=\tfrac12\): the examiner wants clean numbers.</p>
+<p>Do the partial fractions of \(G(s)/s\) in \(s\), look up each term (rows below), then multiply by \((z-1)/z\). A sampling period such as \(T=\ln 2\) makes \(e^{-T}=\tfrac12\): the examiner wants clean numbers.</p>
 <div class="ex"><p><b>Example.</b> \(G(s)=\dfrac{1}{s+1}\): \(\dfrac{G}{s}=\dfrac1s-\dfrac1{s+1}\to\dfrac{z}{z-1}-\dfrac{z}{z-e^{-T}}\). Times \((z-1)/z\): \(G_{ZAS}=\dfrac{1-e^{-T}}{z-e^{-T}}\).</p></div>
 <div class="pit"><b>Pitfall.</b> Block diagrams with samplers in different places give different results: \(\mathcal Z[G_1G_2]\ne G_1(z)G_2(z)\). Re-read the sampler positions.</div>
+<div class="tbl"><b>Table rows used here (supplied table, \(X(s)\to x(kT)\to X(z)\) columns; <a class="cite" href="../../resources/lph-transform-table-ay2018-19-s1.pdf#page=1" data-pages="lph-transform-table-ay2018-19-s1:1-2">full table</a>)</b><ul><li><b>Row 3</b> \(\dfrac1s\ \to\ 1(k)\ \to\ \dfrac{1}{1-z^{-1}}=\dfrac{z}{z-1}\)</li><li><b>Row 4</b> \(\dfrac{1}{s+a}\ \to\ e^{-akT}\ \to\ \dfrac{1}{1-e^{-aT}z^{-1}}=\dfrac{z}{z-e^{-aT}}\)</li><li><b>Row 5</b> \(\dfrac{1}{s^2}\ \to\ kT\ \to\ \dfrac{Tz^{-1}}{(1-z^{-1})^2}=\dfrac{Tz}{(z-1)^2}\)</li><li><b>Row 8</b> \(\dfrac{a}{s(s+a)}\ \to\ 1-e^{-akT}\ \to\ \dfrac{(1-e^{-aT})z^{-1}}{(1-z^{-1})(1-e^{-aT}z^{-1})}=\dfrac{(1-e^{-aT})\,z}{(z-1)(z-e^{-aT})}\)</li></ul><p>Row 8 does \(\dfrac{1}{s(s+a)}=\dfrac1a\cdot\dfrac{a}{s(s+a)}\) in one step: the example above is row 8 with \(a=1\).</p></div>
 <div class="refs"><b>References:</b> <a class="cite" href="../../resources/lecture-notes-weeks-01-04.pdf#page=111" data-pages="lecture-notes-weeks-01-04:111-115">Wen notes pp. 111&ndash;115 (DAC + analog plant, Example 3-4)</a> &middot; <a class="cite" href="../../resources/lecture-notes-weeks-01-04.pdf#page=122" data-pages="lecture-notes-weeks-01-04:122-129">pp. 122&ndash;129 (closed-loop pulse transfer functions)</a></div>
 <div class="chk">\(G(s)=\dfrac{2}{s+2}\), \(T=\ln 2\): \(G_{ZAS}(z)=\dfrac{b}{z-a}\). Find \(b\): <input aria-label="b"> <button class="btn">check</button><span class="fb"></span></div>
 </div>
@@ -161,17 +166,21 @@ valid only when every pole of \((1-z^{-1})X(z)\) is strictly inside the unit cir
 <div data-part="a"><h4>(a) 6 marks</h4>
 <p>\(x(t)=0\) for \(t&lt;0\), \(x(t)=t\) for \(0\le t&lt;1\), \(x(t)=1\) for \(t\ge1\).</p>
 <p>(i) Is \(x(t)\) a continuous-time signal? Is the sampled sequence \(x(kT)\) a digital signal? Give a reason for each. <b>(2)</b></p>
-<p>(ii) The signal is sampled with \(T=0.25\) s. Find \(X(z)\) from the definition of the z-transform and write it as a single rational function of \(z\). <b>(4)</b></p></div>
+<p>(ii) The signal is sampled with \(T=0.25\) s. Find \(X(z)\) from the definition of the z-transform and write it as a single rational function of \(z\). <b>(4)</b></p>
+<div class="tbl"><b>Table rows used here (supplied table, \(X(s)\to x(kT)\to X(z)\) columns; <a class="cite" href="../../resources/lph-transform-table-ay2018-19-s1.pdf#page=1" data-pages="lph-transform-table-ay2018-19-s1:1-2">full table</a>)</b><ul><li><b>Row 3</b> \(\dfrac1s\ \to\ 1(k)\ \to\ \dfrac{1}{1-z^{-1}}=\dfrac{z}{z-1}\)</li><li><b>Shift</b> \(x(k-n)\ \to\ z^{-n}X(z)\)</li></ul></div></div>
 <div data-part="b"><h4>(b) 5 marks</h4>
 <p>For each signal, say whether the final value theorem may be used. If it may, find the final value; if not, say what \(y(k)\) does as \(k\to\infty\).</p>
-<p>\[Y_1(z)=\frac{0.5z}{(z-1)(z-0.6)},\qquad Y_2(z)=\frac{z}{(z-1)^2},\qquad Y_3(z)=\frac{z}{(z-1)(z-1.2)}.\]</p></div>
+<p>\[Y_1(z)=\frac{0.5z}{(z-1)(z-0.6)},\qquad Y_2(z)=\frac{z}{(z-1)^2},\qquad Y_3(z)=\frac{z}{(z-1)(z-1.2)}.\]</p>
+<div class="tbl"><b>Table rows used here (supplied table, \(X(s)\to x(kT)\to X(z)\) columns; <a class="cite" href="../../resources/lph-transform-table-ay2018-19-s1.pdf#page=1" data-pages="lph-transform-table-ay2018-19-s1:1-2">full table</a>)</b><ul><li><b>Row 3</b> \(\dfrac1s\ \to\ 1(k)\ \to\ \dfrac{1}{1-z^{-1}}=\dfrac{z}{z-1}\)</li><li><b>Row 18</b> \(a^k\ \to\ \dfrac{1}{1-az^{-1}}=\dfrac{z}{z-a}\)</li><li><b>Row 20</b> \(k\,a^{k-1}\ \to\ \dfrac{z^{-1}}{(1-az^{-1})^2}=\dfrac{z}{(z-a)^2}\)</li></ul></div></div>
 <div data-part="c"><h4>(c) 8 marks</h4>
 <p>\(y(k+2)-0.7\,y(k+1)+0.1\,y(k)=2\,x(k+1)\), where \(x(k)\) is the unit step and \(x(k)=y(k)=0\) for \(k&lt;0\).</p>
-<p>(i) Find \(y(0)\) and \(y(1)\). <b>(2)</b> (ii) Find \(y(k)\) in closed form using the z-transform. <b>(5)</b> (iii) Check your answer with \(y(2)\) from the recursion. <b>(1)</b></p></div>
+<p>(i) Find \(y(0)\) and \(y(1)\). <b>(2)</b> (ii) Find \(y(k)\) in closed form using the z-transform. <b>(5)</b> (iii) Check your answer with \(y(2)\) from the recursion. <b>(1)</b></p>
+<div class="tbl"><b>Table rows used here (supplied table, \(X(s)\to x(kT)\to X(z)\) columns; <a class="cite" href="../../resources/lph-transform-table-ay2018-19-s1.pdf#page=1" data-pages="lph-transform-table-ay2018-19-s1:1-2">full table</a>)</b><ul><li><b>Shift</b> \(x(k+1)\ \to\ zX(z)-zx(0)\)</li><li><b>Shift</b> \(x(k+2)\ \to\ z^2X(z)-z^2x(0)-zx(1)\)</li><li><b>Row 3</b> \(\dfrac1s\ \to\ 1(k)\ \to\ \dfrac{1}{1-z^{-1}}=\dfrac{z}{z-1}\)</li><li><b>Row 18</b> \(a^k\ \to\ \dfrac{1}{1-az^{-1}}=\dfrac{z}{z-a}\)</li></ul></div></div>
 <div data-part="d"><h4>(d) 6 marks</h4>
 <p>The plant \(G(s)=\dfrac{1}{(s+1)(s+2)}\) is driven through a zero-order hold, \(T=\ln 2\) s.</p>
 <p>(i) Find the pulse transfer function \(G_{ZAS}(z)\) in factored form. <b>(4)</b></p>
-<p>(ii) The loop is closed with unity negative feedback and a digital gain \(C(z)=2\). Find the closed-loop pulse transfer function \(Y(z)/R(z)\) and its poles. Is the loop stable? <b>(2)</b></p></div>
+<p>(ii) The loop is closed with unity negative feedback and a digital gain \(C(z)=2\). Find the closed-loop pulse transfer function \(Y(z)/R(z)\) and its poles. Is the loop stable? <b>(2)</b></p>
+<div class="tbl"><b>Table rows used here (supplied table, \(X(s)\to x(kT)\to X(z)\) columns; <a class="cite" href="../../resources/lph-transform-table-ay2018-19-s1.pdf#page=1" data-pages="lph-transform-table-ay2018-19-s1:1-2">full table</a>)</b><ul><li><b>Row 3</b> \(\dfrac1s\ \to\ 1(k)\ \to\ \dfrac{1}{1-z^{-1}}=\dfrac{z}{z-1}\)</li><li><b>Row 4</b> \(\dfrac{1}{s+a}\ \to\ e^{-akT}\ \to\ \dfrac{1}{1-e^{-aT}z^{-1}}=\dfrac{z}{z-e^{-aT}}\)</li></ul></div></div>
 </div>
 
 <!-- ======================== Q2 ======================== -->
@@ -207,6 +216,7 @@ Type = number of poles of \(CG\) at \(z=1\). \(K_p=\lim_{z\to1}CG\), \(K_v=\lim_
 </details>
 <div class="ex"><p><b>Example.</b> \(G=\dfrac{0.5(z+0.2)}{(z-1)(z-0.5)}\). Ripple-free: \(G_{cl}=\dfrac{(z+0.2)}{1.2z^2}\). \(U=\dfrac{G_{cl}}{G}\cdot\dfrac{z}{z-1}=\dfrac{(z-0.5)}{0.6z}=\tfrac53(1-0.5z^{-1})\): \(u=1.667,-0.833,0,0,\dots\) settles, so no ripple. \(y=0,\tfrac1{1.2},1,1,\dots\)</p></div>
 <div class="pit"><b>Pitfall from your Quiz 3 mocks.</b> This question was left blank twice. In the final it is worth about 10 marks: write \(G_{cl}\), the four conditions, \(C\), then \(u(k)\) and \(y(k)\) as sequences.</div>
+<div class="tbl"><b>Table rows used here (supplied table, \(X(s)\to x(kT)\to X(z)\) columns; <a class="cite" href="../../resources/lph-transform-table-ay2018-19-s1.pdf#page=1" data-pages="lph-transform-table-ay2018-19-s1:1-2">full table</a>)</b><ul><li><b>Shift</b> \(x(k-n)\ \to\ z^{-n}X(z)\)</li><li><b>Row 19</b> \(a^{k-1}\ (k\ge1)\ \to\ \dfrac{z^{-1}}{1-az^{-1}}=\dfrac{1}{z-a}\)</li><li><b>Row 24</b> \(a^k\cos k\pi=(-a)^k\ \to\ \dfrac{1}{1+az^{-1}}=\dfrac{z}{z+a}\)</li></ul><p>Use these to read \(u(k)\) and \(y(k)\) off \(U(z)\) and \(Y(z)\); a factor \(\dfrac{z}{z+b}\) left in \(U(z)\) is the ringing \((-b)^k\).</p></div>
 <div class="refs"><b>References:</b> <a class="cite" href="../../resources/lecture-notes-chapters-05-06.pdf#page=49" data-pages="lecture-notes-chapters-05-06:49-63">Wen Ch 5 pp. 49&ndash;63 (direct design, conditions on \(G_{cl}\), Examples 5.6&ndash;5.7)</a> &middot; <a class="cite" href="../../resources/lecture-notes-chapters-05-06.pdf#page=64" data-pages="lecture-notes-chapters-05-06:64-72">pp. 64&ndash;72 (finite settling time, deadbeat)</a> &middot; <a class="cite" href="../../resources/lecture-notes-chapters-05-06.pdf#page=73" data-pages="lecture-notes-chapters-05-06:73-82">pp. 73&ndash;82 (ripple-free, Examples 5.10&ndash;5.12)</a></div>
 <div class="chk">\(G=\dfrac{0.2(z+0.6)}{(z-1)(z-0.3)}\), ripple-free deadbeat \(G_{cl}=K\dfrac{z+0.6}{z^2}\): \(K=\) <input aria-label="K"> <button class="btn">check</button><span class="fb"></span></div>
 <div class="chk">Same design, unit step: \(u(0)=\) <input data-num="2" aria-label="u(0)"> <button class="btn">check</button><span class="fb"></span></div>
@@ -234,7 +244,8 @@ Type = number of poles of \(CG\) at \(z=1\). \(K_p=\lim_{z\to1}CG\), \(K_v=\lim_
 <p>(iii) With \(K=2\), find the steady-state error for a unit step and for a unit ramp \(r(t)=t\). <b>(2)</b></p></div>
 <div data-part="b"><h4>(b) 10 marks</h4>
 <p>(i) Design the minimal-time deadbeat controller for a step input, \(G_{cl}(z)=z^{-1}\). Find \(C(z)\) and the first four control samples \(u(0),\dots,u(3)\), and explain what the plant output does <em>between</em> samples. <b>(4)</b></p>
-<p>(ii) Design a <b>ripple-free</b> deadbeat controller for a step input. State the conditions \(G_{cl}(z)\) must satisfy, then find \(G_{cl}(z)\), \(C(z)\), the sequences \(u(k)\) and \(y(k)\), and the settling time. <b>(6)</b></p></div>
+<p>(ii) Design a <b>ripple-free</b> deadbeat controller for a step input. State the conditions \(G_{cl}(z)\) must satisfy, then find \(G_{cl}(z)\), \(C(z)\), the sequences \(u(k)\) and \(y(k)\), and the settling time. <b>(6)</b></p>
+<div class="tbl"><b>Table rows used here (supplied table, \(X(s)\to x(kT)\to X(z)\) columns; <a class="cite" href="../../resources/lph-transform-table-ay2018-19-s1.pdf#page=1" data-pages="lph-transform-table-ay2018-19-s1:1-2">full table</a>)</b><ul><li><b>Row 19</b> \(a^{k-1}\ (k\ge1)\ \to\ \dfrac{z^{-1}}{1-az^{-1}}=\dfrac{1}{z-a}\)</li><li><b>Row 24</b> \(a^k\cos k\pi=(-a)^k\ \to\ \dfrac{1}{1+az^{-1}}=\dfrac{z}{z+a}\)</li></ul></div></div>
 <div data-part="c"><h4>(c) 7 marks</h4>
 <p>An analog lead compensator \(D(s)=\dfrac{s+2}{s+10}\) is to be implemented with \(T=0.1\) s.</p>
 <p>(i) Find \(D(z)\) by the bilinear (Tustin) transformation and check its DC gain. <b>(4)</b></p>
@@ -252,6 +263,7 @@ and \(\mathbf C,\mathbf D\) are unchanged.</div>
 <p>Modelling first: from an ODE, choose \(x_1=y\), \(x_2=\dot y\); from a circuit, the capacitor voltages and inductor currents (Lee's RLC and servo-motor examples).</p>
 <div class="ex"><p><b>Example.</b> \(\ddot y=u\): \(\mathbf A=\begin{bmatrix}0&1\\0&0\end{bmatrix}\), \(e^{\mathbf At}=\begin{bmatrix}1&t\\0&1\end{bmatrix}\), \(\mathbf\Phi=\begin{bmatrix}1&T\\0&1\end{bmatrix}\), \(\mathbf\Theta=\begin{bmatrix}T^2/2\\T\end{bmatrix}\).</p></div>
 <div class="pit"><b>Pitfall.</b> Lee's Week 5 remark: give the final numbers, do not stop at \(e^{-0.1}\). \(\mathbf\Theta\ne T\mathbf B\).</div>
+<div class="tbl"><b>Table rows used here (supplied table, \(X(s)\to x(t)\) columns; <a class="cite" href="../../resources/lph-transform-table-ay2018-19-s1.pdf#page=1" data-pages="lph-transform-table-ay2018-19-s1:1-2">full table</a>)</b><ul><li><b>Row 3</b> \(\dfrac1s\ \to\ 1\)</li><li><b>Row 4</b> \(\dfrac{1}{s+a}\ \to\ e^{-at}\)</li><li><b>Row 5</b> \(\dfrac{1}{s^2}\ \to\ t\)</li><li><b>Row 8</b> \(\dfrac{a}{s(s+a)}\ \to\ 1-e^{-at}\)</li></ul><p>\(e^{\mathbf At}\) is the inverse Laplace transform of each entry of \((s\mathbf I-\mathbf A)^{-1}\).</p></div>
 <div class="refs"><b>References:</b> <a class="cite" href="../../resources/lph-lecture-01-discrete-state-space-models.pdf#page=16" data-pages="lph-lecture-01-discrete-state-space-models:16-20">Lee Lect 1 pp. 16&ndash;20 (sample and hold, \(\Phi\), \(\Theta\), Examples 1.4&ndash;1.5)</a> &middot; full module: <a href="../../notes/quiz2-prep-learning.html">Quiz 2 learning page</a></div>
 <div class="chk">\(\ddot y=u\), \(T=0.5\) s: first entry of \(\mathbf\Theta\) = <input aria-label="Theta1"> <button class="btn">check</button><span class="fb"></span></div>
 </div>
@@ -283,7 +295,8 @@ and \(\mathbf C,\mathbf D\) are unchanged.</div>
 <div data-part="a"><h4>(a) 3 marks</h4>
 <p>With \(x_1=y\), \(x_2=\dot y\), write the continuous state model: \(\mathbf A\), \(\mathbf B\), \(\mathbf C\).</p></div>
 <div data-part="b"><h4>(b) 8 marks</h4>
-<p>Find \(e^{\mathbf At}\) from \((s\mathbf I-\mathbf A)^{-1}\), then the discrete model matrices \(\mathbf\Phi\) and \(\mathbf\Theta\) as numbers.</p></div>
+<p>Find \(e^{\mathbf At}\) from \((s\mathbf I-\mathbf A)^{-1}\), then the discrete model matrices \(\mathbf\Phi\) and \(\mathbf\Theta\) as numbers.</p>
+<div class="tbl"><b>Table rows used here (supplied table, \(X(s)\to x(t)\) columns; <a class="cite" href="../../resources/lph-transform-table-ay2018-19-s1.pdf#page=1" data-pages="lph-transform-table-ay2018-19-s1:1-2">full table</a>)</b><ul><li><b>Row 3</b> \(\dfrac1s\ \to\ 1\)</li><li><b>Row 4</b> \(\dfrac{1}{s+a}\ \to\ e^{-at}\)</li><li><b>Row 8</b> \(\dfrac{a}{s(s+a)}\ \to\ 1-e^{-at}\)</li></ul></div></div>
 <div data-part="c"><h4>(c) 6 marks</h4>
 <p>Find the pulse transfer function \(G(z)=\mathbf C(z\mathbf I-\mathbf\Phi)^{-1}\mathbf\Theta\). Check its poles against the continuous poles, and check \(\displaystyle\lim_{z\to1}\frac{(z-1)G(z)}{Tz}\) against \(\displaystyle\lim_{s\to0}sG(s)\).</p></div>
 <div data-part="d"><h4>(d) 8 marks</h4>

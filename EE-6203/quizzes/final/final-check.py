@@ -220,4 +220,5 @@ for ex, marks, body in exs:
 ex_html = ''.join(e[2] for e in exs)
 for leak in ('3.75', '0.5556', '5.556', '0.1648', '0.9375', '0.6125', '1.0868', '5.2604', '0.4132', '0.7333', '8.466', '0.6066', '1.25'):
     assert leak not in ex_html, 'answer leaked into the page: ' + leak
+assert html.count('<div class="tbl">') == 11, 'table-row boxes missing'
 print('final-primer keys and citations OK (%d checks keyed, %d citations); part exercises E1-E4 keys OK' % (len(KEYS), len(cites)))

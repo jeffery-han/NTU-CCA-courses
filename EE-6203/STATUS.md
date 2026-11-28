@@ -31,7 +31,7 @@ This course uses its own note filenames instead of `beginner-notes.tex` / `notes
 | `lph-lecture-01-slide-40-theta-note.pdf`, `lph-matrix-basics-summary.pdf` | 1, 3 pp. | `notes/quiz2-prep-learning.html` Modules 3, 0 | |
 | `lph-lecture-04-observers-integral-control.pdf` (§14–21) | 30 pp. | pp. 1–30 in `quizzes/final/final-primer.html` O1–O3 | Primer depth; no LaTeX. |
 | `lph-lecture-05-optimal-control-lqr.pdf` (§22–23) | 26 pp. | pp. 10–26 in `quizzes/final/final-primer.html` L1–L2 | Primer depth; pp. 1–9 (dynamic-programming intro) not covered.  p. 26 typo (0.2807 for 0.2087). |
-| `lph-transform-table-ay2018-19-s1.pdf` | 2 pp. | not covered | The table issued in LPH's quiz and exam. |
+| `lph-transform-table-ay2018-19-s1.pdf` | 2 pp. | rows 3–5, 8, 18–20, 24, shifts quoted beside their use in `quizzes/final/final-primer.html` (cards Z1–Z3, D1, S1; E1–E3) | The table issued in LPH's quiz and exam (exam Appendix A); pages in `final-pages/`. |
 | `lecture-notes-chapters-05-06.pdf` (Wen Ch 5–6) | 1–151 | `quizzes/quiz-03/quiz-03-primer.html` only | Primer depth.  Ex 5.5, Ex 5.13 and §6.6–6.7 summarised.  No LaTeX. |
 | `week-01…07-transcript.txt` (cleaned) | Weeks 1–7 | Weeks 1–3 in the `.tex` notes; 4–7 mined for quiz rules only | Week 7 file is the 26 Sep make-up lecture. |
 | `transcripts-raw/week-01…12-transcript.txt` | Weeks 1–12 | Weeks 8–12 raw only; 10–12 mined for Quiz 3 intel; 1–2, 5, 8–9 for final intel | Machine transcripts; do not adopt their wording. |
