@@ -61,6 +61,7 @@ Wrong paths: Z{G(s)} without the hold (gives (z−1)-free answer with wrong nume
 
 - **R1 (E1-1).**  y(k+2) − 0.6y(k+1) + 0.08y(k) = 3x(k+1), x = unit step, at rest.  Y = 3z²/((z−1)(z−0.4)(z−0.2)); Y/z residues 25/4, −10, 15/4 → **y(k) = 6.25 − 10(0.4)ᵏ + 3.75(0.2)ᵏ**; y = 0, 3, 4.8, 5.64, 6 (matches the recursion).
 - **R1′ (E1-1, after R1 failed 2026-11-29).**  y(k+2) − 0.75y(k+1) + 0.125y(k) = x(k+1), unit step, at rest.  Y = z²/((z−1)(z−0.5)(z−0.25)); Y/z residues 8/3, −4, 4/3 → **y(k) = 8/3 − 4(0.5)ᵏ + (4/3)(0.25)ᵏ**; y = 0, 1, 7/4, 35/16 (matches the recursion).
+- **R5 (E1-5, after R1′ 2026-11-29).**  y(k+1) − 0.6y(k) = 2x(k), unit step, at rest.  (z − 0.6)Y = 2·z/(z−1); Y/z = 2/((z−1)(z−0.6)): A = 5, B = −5 → **y(k) = 5 − 5(0.6)ᵏ**; y = 0, 2, 3.2, 3.92; final value 5 = 2/(1 − 0.6).
 - **R2 (E1-3).**  x(t) = t for 0 ≤ t < 1.5, 1.5 for t ≥ 1.5, T = 0.5: samples 0, 0.5, 1, 1.5, 1.5, …  X = 0.5z⁻¹ + z⁻² + 1.5z⁻²/(z − 1) = **0.5(z² + z + 1)/(z²(z − 1))**; FVT → 1.5 ✓.
 - **R3 (E1-4).**  Yₐ = 3z/(z−1)²: FVT not allowed, yₐ = 3k → ∞.  Y_b = z²/((z−1)(z+1)): FVT not allowed (pole at −1), y_b = 0.5 + 0.5(−1)ᵏ = 1, 0, 1, 0, … no limit.
 - **R4 (E1-2).**  G(s) = 2/((s+1)(s+3)), ZOH, T = ln 2: G/s = (2/3)/s − 1/(s+1) + (1/3)/(s+3); **G_ZAS = (5/24)(z + 0.4)/((z − 0.5)(z − 0.125))**; checks G_ZAS(1) = 2/3 = G(0), leading 5/24 = 2/3 − 1/2 + 1/24.
