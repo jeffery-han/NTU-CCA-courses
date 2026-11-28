@@ -5,7 +5,7 @@ Computer Control Systems.  Three teaching blocks: C. Wen Ch 1–4 (Weeks 1–4),
 ## Now
 
 - **Next assessment: final exam, Tue 1 Dec 2026** (date from the learner; time, venue and calculator rule not verified).  Format: 3 h, four questions × 25 marks, 60 % (Wen Weeks 1–2, Lee Week 5 transcripts).  Slots, unofficial (2022–23 walkthroughs): Q1 Wen Ch 1–3, Q2 Wen Ch 4–6, Q3 Lee Lect 1–3, Q4 Lee Lect 3–5.  Evidence and conventions: `quizzes/final/final-intel.md`.
-- Prep (`final-intel.md` protocol): primer part by part, each part closed by its exam-style exercise E1–E4 (25 marks, 45 min, graded in chat; move on at ≥ 20/25, no blank part).  E1 sat 28 Nov: 16.5/25, below the line.  **Next: retries R1–R4 for mistakes E1-1…E1-4 (`final-mistakes.md`), then primer part Q2 and E2.**  Mock B (cold, 3 h) after E1–E4 pass.
+- Prep (`final-intel.md` protocol): primer part by part, each part closed by its exam-style exercise E1–E4 (25 marks, 45 min, graded in chat; move on at ≥ 20/25, no blank part).  E1 sat 28 Nov: 16.5/25, below the line.  R1 retry wrong 29 Nov.  **Next: retries R1′, R2–R4 for mistakes E1-1…E1-4 (`final-mistakes.md`), then primer part Q2 and E2.**  Mock B (cold, 3 h) after E1–E4 pass.
 - Open loops:
   1. No official past paper is local: download EE6203 papers from the NTU Library into `tests/` (git-ignored) for the last protocol step.
   2. NTULearn not synced since 27 Oct (no browser on 27 Nov): check for a final-exam announcement.
